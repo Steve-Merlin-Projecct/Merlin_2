@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Mount only the project directory - restricts access to this path only
+    volumes:
+      - /Volumes/Programming_Seagate_2022/Merlin_Project_Files/Code/project files/Merlin_2:/workspace:cached
+
+    # Network mode host allows direct access to host's PostgreSQL
+    network_mode: host
+
+    # Keep container running
+    command: sleep infinity
+
+    # Environment variables for database connection
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=development
+      - DATABASE_HOST=localhost
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=local_Merlin_3
+      - DATABASE_USER=postgres
+      - PGPASSWORD=goldmember
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Drop unnecessary capabilities
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+    # Resource limits optimized for Mac mini with 16GB RAM, 1 CPU
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 12G
+        reservations:
+          cpus: '0.5'
+          memory: 4G

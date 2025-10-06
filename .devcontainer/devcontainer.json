@@ -1,0 +1,90 @@
+{
+  "name": "Merlin Job Application System",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  // Features to install
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+
+  // VS Code customizations
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.debugpy",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "anthropics.claude-code"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackPath": "/usr/local/bin/black",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/*.pyc": true,
+          ".pytest_cache": true
+        },
+        // Restrict Claude Code workspace access
+        "claude-code.workspacePath": "/workspace"
+      }
+    }
+  },
+
+  // Forward PostgreSQL port for database access
+  "forwardPorts": [5432],
+
+  // Post-create command to install dependencies
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  "appPort": [5000],
+
+  // Run as non-root user for security
+  "remoteUser": "vscode",
+
+  // Mount settings
+  "mounts": [
+    // Mount SSH keys for GitHub authentication (read-only)
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+    // Mount Git config (read-only)
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,readonly"
+  ],
+
+  // Environment variables
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1",
+    "FLASK_ENV": "development",
+    "DATABASE_HOST": "host.docker.internal",
+    "DATABASE_PORT": "5432",
+    "DATABASE_NAME": "local_Merlin_3",
+    "DATABASE_USER": "postgres",
+    "DATABASE_PASSWORD": "goldmember"
+  },
+
+  // Run arguments for additional security
+  "runArgs": [
+    "--network=host",
+    "--cap-drop=ALL",
+    "--cap-add=NET_BIND_SERVICE",
+    "--security-opt=no-new-privileges"
+  ]
+}

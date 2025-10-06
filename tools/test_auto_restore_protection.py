@@ -13,24 +13,24 @@ from pathlib import Path
 # Add parent directory to path to import monitor
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tools.monitor_replit_md import ReplitMdMonitor
+from tools.monitor_claude_md import ClaudeMdMonitor
 from tools.auto_restore_protection import AutoRestoreProtection
 
 def test_auto_restore_protection():
     """Test the auto-restore protection system"""
     print("🧪 Testing Auto-Restore Protection System")
     print("=" * 50)
-    
-    monitor = ReplitMdMonitor()
+
+    monitor = ClaudeMdMonitor()
     auto_restore = AutoRestoreProtection()
-    
-    # Backup original replit.md
-    original_content = monitor.replit_md_path.read_text(encoding='utf-8')
-    backup_path = monitor.replit_md_path.with_suffix('.backup')
+
+    # Backup original CLAUDE.md
+    original_content = monitor.claude_md_path.read_text(encoding='utf-8')
+    backup_path = monitor.claude_md_path.with_suffix('.backup')
     
     try:
         # Create backup
-        shutil.copy2(monitor.replit_md_path, backup_path)
+        shutil.copy2(monitor.claude_md_path, backup_path)
         print(f"✅ Created backup: {backup_path}")
         
         # Test 1: Simulate agent modification of protected section
@@ -43,18 +43,18 @@ def test_auto_restore_protection():
         )
         
         # Write modified content
-        monitor.replit_md_path.write_text(modified_content, encoding='utf-8')
+        monitor.claude_md_path.write_text(modified_content, encoding='utf-8')
         print("   Agent simulation: Modified protected content")
-        
+
         # Run auto-restore
         print("   Running auto-restore check...")
         if auto_restore.auto_restore_protected_content(monitor):
             print("   ✅ Auto-restore successfully detected and restored protected content")
         else:
             print("   ❌ Auto-restore failed to detect/restore protected content")
-        
+
         # Verify restoration
-        restored_content = monitor.replit_md_path.read_text(encoding='utf-8')
+        restored_content = monitor.claude_md_path.read_text(encoding='utf-8')
         if "AGENT MODIFIED" not in restored_content:
             print("   ✅ Protected content successfully restored")
         else:
@@ -69,7 +69,7 @@ def test_auto_restore_protection():
             "## System Architecture (Modified by Agent)"
         )
         
-        monitor.replit_md_path.write_text(non_protected_mod, encoding='utf-8')
+        monitor.claude_md_path.write_text(non_protected_mod, encoding='utf-8')
         print("   Agent simulation: Modified non-protected content")
         
         # Run auto-restore
@@ -95,9 +95,9 @@ def test_auto_restore_protection():
     finally:
         # Restore original content
         if backup_path.exists():
-            shutil.copy2(backup_path, monitor.replit_md_path)
+            shutil.copy2(backup_path, monitor.claude_md_path)
             backup_path.unlink()  # Remove backup
-            print(f"\\n🔄 Restored original replit.md content")
+            print(f"\\n🔄 Restored original CLAUDE.md content")
         
     print("\\n🏁 Test completed!")
 
@@ -106,14 +106,14 @@ def demonstrate_usage():
     print("\\n📚 Auto-Restore Protection System Usage:")
     print("=" * 40)
     print("Manual commands:")
-    print("  python tools/monitor_replit_md.py restore  # Run protection check")
-    print("  python tools/monitor_replit_md.py check   # Check for changes (includes auto-restore)")
-    print("  python tools/monitor_replit_md.py watch   # Continuous monitoring")
+    print("  python tools/monitor_claude_md.py restore  # Run protection check")
+    print("  python tools/monitor_claude_md.py check   # Check for changes (includes auto-restore)")
+    print("  python tools/monitor_claude_md.py watch   # Continuous monitoring")
     print("")
     print("Automatic protection:")
     print("  - Auto-restore automatically runs when agent changes are detected")
     print("  - Protected section is between the critical comment tags")
-    print("  - Reference content stored in: tools/protected_replit_content.md")
+    print("  - Reference content stored in: tools/protected_claude_content.md")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'demo':

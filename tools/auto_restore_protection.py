@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Auto-Restore Protection System
-Automatically detects and reverts unauthorized changes to protected sections of replit.md
+Automatically detects and reverts unauthorized changes to protected sections of CLAUDE.md
 """
 
 import os
@@ -13,8 +13,8 @@ from pathlib import Path
 class AutoRestoreProtection:
     def __init__(self, project_root=None):
         self.project_root = project_root or Path(__file__).parent.parent
-        self.replit_md_path = self.project_root / "replit.md"
-        self.protected_content_file = self.project_root / "tools/protected_replit_content.md"
+        self.claude_md_path = self.project_root / "CLAUDE.md"
+        self.protected_content_file = self.project_root / "tools/protected_claude_content.md"
         
         # Protection tags
         self.start_protection_tag = "<!-- critical: do not change anything below this line -->"
@@ -26,26 +26,26 @@ class AutoRestoreProtection:
     
     def auto_restore_protected_content(self, monitor=None):
         """Automatically restore protected content if agent made unauthorized changes"""
-        if not self.replit_md_path.exists():
-            print("⚠️ replit.md not found")
+        if not self.claude_md_path.exists():
+            print("⚠️ CLAUDE.md not found")
             return False
-        
+
         if not self.protected_content_file.exists():
             print("⚠️ Protected content reference file not found")
             return False
-        
+
         try:
-            current_content = self.replit_md_path.read_text(encoding='utf-8')
-            
+            current_content = self.claude_md_path.read_text(encoding='utf-8')
+
             # Import here to avoid circular imports
             if monitor is None:
-                from tools.monitor_replit_md import ReplitMdMonitor
-                monitor = ReplitMdMonitor()
-            
+                from tools.monitor_claude_md import ClaudeMdMonitor
+                monitor = ClaudeMdMonitor()
+
             user_info = monitor.get_current_user()
-            
-            # Only act if the change was made by replit-agent (not user or content-syncer)
-            if user_info.get('entity') not in ['replit-agent']:
+
+            # Only act if the change was made by claude-agent (not user or content-syncer)
+            if user_info.get('entity') not in ['claude-agent']:
                 return False
             
             # Check if protected section was modified
@@ -56,7 +56,7 @@ class AutoRestoreProtection:
                 restored_content = self.restore_protected_section(current_content)
                 if restored_content and restored_content != current_content:
                     # Write restored content
-                    self.replit_md_path.write_text(restored_content, encoding='utf-8')
+                    self.claude_md_path.write_text(restored_content, encoding='utf-8')
                     
                     # Log the auto-restore action
                     restore_info = {

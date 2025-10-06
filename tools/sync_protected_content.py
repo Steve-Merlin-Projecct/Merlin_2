@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Sync Protected Content Script
-Updates tools/protected_replit_content.md when users modify the protected section of replit.md
+Updates tools/protected_claude_content.md when users modify the protected section of CLAUDE.md
 Only acts on user changes, not agent or automated changes
 """
 
@@ -14,13 +14,13 @@ from datetime import datetime
 # Add parent directory to path to import monitor
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tools.monitor_replit_md import ReplitMdMonitor
+from tools.monitor_claude_md import ClaudeMdMonitor
 
 class ProtectedContentSyncer:
     def __init__(self):
         self.project_root = Path(__file__).parent.parent
-        self.replit_md_path = self.project_root / "replit.md"
-        self.protected_content_file = self.project_root / "tools/protected_replit_content.md"
+        self.claude_md_path = self.project_root / "CLAUDE.md"
+        self.protected_content_file = self.project_root / "tools/protected_claude_content.md"
         
         # Protection tags
         self.start_protection_tag = "<!-- critical: do not change anything below this line -->"
@@ -75,22 +75,22 @@ class ProtectedContentSyncer:
     
     def sync_from_user_changes(self):
         """Sync protected content if last change was made by user"""
-        if not self.replit_md_path.exists():
-            print("⚠️ replit.md not found")
+        if not self.claude_md_path.exists():
+            print("⚠️ CLAUDE.md not found")
             return False
-        
+
         # Check who made the last change
-        monitor = ReplitMdMonitor()
+        monitor = ClaudeMdMonitor()
         user_info = monitor.get_current_user()
-        
+
         # Only sync if change was made by user (not agent or auto-restore)
-        if user_info.get('entity') in ['replit-agent', 'auto-restore-protection', 'content-syncer']:
+        if user_info.get('entity') in ['claude-agent', 'auto-restore-protection', 'content-syncer']:
             print(f"⏭️ Skipping sync - last change by: {user_info.get('entity')}")
             return False
-        
+
         try:
-            # Read current replit.md content
-            current_content = self.replit_md_path.read_text(encoding='utf-8')
+            # Read current CLAUDE.md content
+            current_content = self.claude_md_path.read_text(encoding='utf-8')
             
             # Extract protected section
             protected_content = self.extract_protected_section(current_content)
@@ -115,7 +115,7 @@ class ProtectedContentSyncer:
     def log_sync_action(self, original_user_info):
         """Log the sync action in the monitoring system"""
         try:
-            monitor = ReplitMdMonitor()
+            monitor = ClaudeMdMonitor()
             
             # Create sync action log entry
             sync_info = {
@@ -140,8 +140,8 @@ Timestamp: {sync_info['timestamp']}
 
 SYNC DETAILS:
 Protected content reference file updated with latest user modifications
-Source: replit.md protected section (between critical tags)
-Target: tools/protected_replit_content.md
+Source: CLAUDE.md protected section (between critical tags)
+Target: tools/protected_claude_content.md
 
 """
             
@@ -172,7 +172,7 @@ def main():
             print("🔄 Force syncing protected content...")
             # Force sync regardless of who made changes
             try:
-                current_content = syncer.replit_md_path.read_text(encoding='utf-8')
+                current_content = syncer.claude_md_path.read_text(encoding='utf-8')
                 protected_content = syncer.extract_protected_section(current_content)
                 
                 if protected_content.strip():
@@ -196,7 +196,7 @@ def main():
         print("  python tools/sync_protected_content.py force  # Force sync regardless of user")
         print("")
         print("This tool updates the protected content reference file when users")
-        print("modify the protected section of replit.md")
+        print("modify the protected section of CLAUDE.md")
 
 if __name__ == "__main__":
     main()

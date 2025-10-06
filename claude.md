@@ -8,6 +8,35 @@ The previous name of this file was "replit.md" it now has a new job of being "cl
 
 Right now, the git banch is showing as "refactor2.16". We need to repair the git branchs and reconnect with github.
 
+## Environment Variables
+
+All sensitive credentials are stored in the `.env` file (which is gitignored). The system now uses **environment-aware database configuration** that automatically detects Docker vs local environments.
+
+### Database Configuration
+The system automatically detects the runtime environment:
+- **Docker Container**: Uses `DATABASE_HOST=host.docker.internal` with container environment variables
+- **Local Development**: Uses `localhost` with `.env` file settings
+
+Key environment variables:
+- `PGPASSWORD`: PostgreSQL database password (required for both environments)
+- `DATABASE_NAME`: Database name (default: `local_Merlin_3`)
+- `DATABASE_URL`: Full PostgreSQL connection string (optional override)
+- `WEBHOOK_API_KEY`: API authentication key
+
+**Connection Priority:**
+1. Explicit `DATABASE_URL` (highest priority - bypasses auto-detection)
+2. Individual components (`DATABASE_HOST`, `DATABASE_PORT`, etc.)
+3. Fallback defaults (`localhost` for local, container settings for Docker)
+
+**Configuration Files:**
+- `.env`: Local development settings
+- `docker-compose.yml`: Docker container environment variables
+- `.devcontainer/devcontainer.json`: VS Code devcontainer settings
+
+See [Database Connection Guide](docs/database-connection-guide.md) for detailed configuration instructions.
+
+The `.claude/settings.local.json` file references these environment variables (e.g., `$PGPASSWORD`) instead of hardcoding credentials.
+
 ## Overview
 
 This AI-driven job application ecosystem automates and enhances the job search experience. It scrapes job postings, uses Google Gemini AI for sophisticated analysis and ranking, and generates personalized resumes and cover letters from variable-based templates. The system boasts a normalized PostgreSQL database across 32 tables, ensuring an optimal relational structure for comprehensive data management. The project's vision is to transform job searching through intelligent technology, offering a significant advantage in the job market.

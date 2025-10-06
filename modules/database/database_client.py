@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 from contextlib import contextmanager
+from .database_config import get_database_config
 
 # Create base class for database models
 Base = declarative_base()
@@ -16,23 +17,32 @@ class DatabaseClient:
 
     Provides connection management and session handling for all database operations.
     Uses SQLAlchemy for ORM functionality and connection pooling.
+    Automatically detects Docker vs local environment for connection configuration.
 
     Attributes:
-        database_url (str): PostgreSQL connection URL from environment
+        database_url (str): PostgreSQL connection URL from environment-aware config
         engine: SQLAlchemy engine with connection pooling
         SessionLocal: Session factory for creating database sessions
+        is_docker (bool): True if running in Docker container
     """
 
     def __init__(self):
         """
-        Initialize database connection.
+        Initialize database connection with environment detection.
+
+        Automatically detects Docker vs local environment and uses appropriate
+        connection configuration. Falls back gracefully if environment detection fails.
 
         Raises:
-            ValueError: If DATABASE_URL environment variable is not set
+            ValueError: If database configuration cannot be established
         """
-        self.database_url = os.environ.get("DATABASE_URL")
+        # Get environment-aware database configuration
+        db_config = get_database_config()
+        self.database_url = db_config.get_connection_url()
+        self.is_docker = db_config.is_docker
+
         if not self.database_url:
-            raise ValueError("DATABASE_URL environment variable not set")
+            raise ValueError("Database configuration could not be established")
 
         # Create engine with connection pooling
         self.engine = create_engine(
@@ -42,7 +52,8 @@ class DatabaseClient:
         # Create session factory
         self.SessionLocal = sessionmaker(bind=self.engine)
 
-        logging.info("Database client initialized successfully")
+        env_type = "Docker" if self.is_docker else "Local"
+        logging.info(f"Database client initialized successfully ({env_type} environment)")
 
     @contextmanager
     def get_session(self):
