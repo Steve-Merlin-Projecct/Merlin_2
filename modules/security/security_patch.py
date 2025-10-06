@@ -289,9 +289,8 @@ class SecurityPatch:
         """
         if allowed_origins is None:
             allowed_origins = [
-                "https://replit.com",
-                "https://*.replit.app",
                 "http://localhost:3000",  # Development only
+                "http://localhost:5000",  # Flask development server
             ]
 
         origin = request.headers.get("Origin")
@@ -383,7 +382,7 @@ class SecurityPatch:
         csp_policy = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.replit.com; "
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "font-src 'self' https://cdnjs.cloudflare.com; "
             "img-src 'self' data: https:; "
             "connect-src 'self'; "

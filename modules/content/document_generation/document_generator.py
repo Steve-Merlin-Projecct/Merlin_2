@@ -18,7 +18,7 @@ except ImportError as e:
             raise ImportError("python-docx not available - document generation disabled")
 
 
-from replit.object_storage import Client
+from modules.storage import get_storage_backend
 from .template_engine import TemplateEngine
 
 
@@ -52,12 +52,12 @@ class DocumentGenerator:
         self.storage_dir = os.path.join(os.getcwd(), "storage")
         self.template_engine = TemplateEngine()
 
-        # Initialize Replit Object Storage client (using default bucket)
+        # Initialize storage backend (local filesystem or cloud)
         try:
-            self.storage_client = Client()
-            logging.info("Connected to Replit Object Storage (default bucket)")
+            self.storage_client = get_storage_backend()
+            logging.info(f"Connected to storage backend: {self.storage_client.backend_name}")
         except Exception as e:
-            logging.error(f"Failed to initialize object storage: {str(e)}")
+            logging.error(f"Failed to initialize storage backend: {str(e)}")
             self.storage_client = None
 
         # Initialize CSV content mapper for dynamic content mapping
@@ -244,7 +244,7 @@ class DocumentGenerator:
 
     def upload_to_storage(self, file_path):
         """
-        Upload generated document to object storage with local fallback
+        Upload generated document to storage backend
 
         Args:
             file_path (str): Path to the generated document
@@ -256,36 +256,31 @@ class DocumentGenerator:
 
         if self.storage_client:
             try:
-                # Upload to Replit Object Storage
+                # Read file content
                 with open(file_path, "rb") as file:
                     file_content = file.read()
 
-                # Use documents/ prefix for organization
-                object_key = f"documents/{filename}"
+                # Save to storage backend using new abstraction layer
+                storage_result = self.storage_client.save(
+                    filename=filename,
+                    content=file_content,
+                    metadata={"document_type": "generated"}
+                )
 
-                # Upload to storage
-                self.storage_client.upload(object_key, file_content)
+                logging.info(f"Document uploaded to storage: {filename} ({storage_result['storage_type']})")
 
-                logging.info(f"Document uploaded to object storage: {object_key}")
-
-                return {
-                    "file_path": object_key,
-                    "filename": filename,
-                    "storage_type": "cloud",
-                    "local_path": file_path,
-                    "file_size": len(file_content),
-                }
+                return storage_result
 
             except Exception as e:
-                logging.error(f"Failed to upload to object storage: {str(e)}")
-                # Fall back to local storage
+                logging.error(f"Failed to upload to storage backend: {str(e)}")
+                # Fall back to local file path
                 pass
 
-        # Local storage fallback
+        # Fallback: return local file information
         return {
             "file_path": file_path,
             "filename": filename,
-            "storage_type": "local",
+            "storage_type": "local_fallback",
             "file_size": os.path.getsize(file_path),
         }
 

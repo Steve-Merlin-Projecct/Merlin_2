@@ -8,6 +8,7 @@ Version: 2.16.5
 Date: July 28, 2025
 """
 
+import os
 import uuid
 import hashlib
 import logging
@@ -15,7 +16,6 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
-import os
 from .security_controls import SecurityControls
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,8 @@ class SecureLinkTracker:
     def __init__(self):
         """Initialize the secure link tracker with security controls."""
         self.security = SecurityControls()
-        self.base_redirect_url = "https://automated-job-application-system.replit.app/track"
+        # TODO: Update base_redirect_url to production domain when deployed
+        self.base_redirect_url = os.getenv("BASE_REDIRECT_URL", "http://localhost:5000/track")
         self._setup_logging()
 
     def _setup_logging(self):
