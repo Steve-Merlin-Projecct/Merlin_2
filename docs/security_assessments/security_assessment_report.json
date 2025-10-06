@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-07-05 01:35:46",
+  "total_tests_run": 27,
+  "vulnerabilities_found": 1,
+  "tests_passed": 26,
+  "security_score": 98,
+  "vulnerabilities": [
+    {
+      "category": "Rate Limiting",
+      "type": "missing",
+      "details": "No rate limiting detected on endpoints",
+      "risk": "MEDIUM"
+    }
+  ],
+  "risk_summary": {
+    "by_risk": {
+      "HIGH": 0,
+      "MEDIUM": 1,
+      "LOW": 0,
+      "unknown": 0
+    },
+    "by_category": {
+      "Rate Limiting": 1
+    }
+  },
+  "recommendations": [
+    "Implement rate limiting on all public endpoints"
+  ]
+}

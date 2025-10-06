@@ -1,0 +1,149 @@
+# Automated Job Application System
+Version 4.0 (Update the version number during development: the x. for major changes, and .xx for minor changes)
+September 29, 2025
+Post migration from replit. First is to install tools, then the next task is cleaning out replit-specific coding.
+This project is written in Python 3.11
+
+The previous name of this file was "replit.md" it now has a new job of being "claude.md". Most of the same material will apply, although some of it should be improved with content that is better suited to coding with Claude. Sonnet 4.5 was released today.
+
+Right now, the git banch is showing as "refactor2.16". We need to repair the git branchs and reconnect with github.
+
+## Overview
+
+This AI-driven job application ecosystem automates and enhances the job search experience. It scrapes job postings, uses Google Gemini AI for sophisticated analysis and ranking, and generates personalized resumes and cover letters from variable-based templates. The system boasts a normalized PostgreSQL database across 32 tables, ensuring an optimal relational structure for comprehensive data management. The project's vision is to transform job searching through intelligent technology, offering a significant advantage in the job market.
+<!-- critical: do not change anything below this line -->
+## Communication & Implementation Guide
+
+Before implementing changes, explain what you're going to do and why.
+Break down complex tasks into clear, focused steps.
+Ask for clarification if requirements are unclear.
+Provide explanations for technical decisions.
+Create inline documentation for sensemaking of codebase.
+
+
+**Analysis vs Implementation Guidelines:**
+When to Provide Analysis Only:
+  - Questions starting with "How do we...", "What are...", "Why does...", "Can you explain..."
+  - Requests for recommendations, comparisons, or evaluations
+  - Asking about best practices, trade-offs, or architectural decisions
+  - Seeking understanding of current state or problem diagnosis
+  - Request to review or understand documents or data
+  - Explicit question words ALWAYS trigger analysis mode, regardless of context
+  - Compound statements: Problem + explanation request (e.g., "This is broken. Can you explain why?") and Mixed requests: When both informational and actionable elements are present, treat as analysis first
+  - "X is missing. Can you explain?" → Analysis (focuses on "explain")
+  - "This doesn't work. Why?" → Analysis (focuses on "Why")
+  - "The system failed. What happened?" → Analysis (focuses on "What")
+    
+When to Implement:
+  - Direct commands: "Fix...", "Update...", "Create...", "Implement..."
+  - "Please make these changes...", "Can you code..."
+  - Following up analysis with "Let's do that" or "Go ahead with option X"
+  - Specific bug reports with implied fix request
+
+Default Behavior:
+  - When intent is unclear, always default to analysis first.
+  - After providing analysis, ask "Would you like me to implement any of these suggestions?"
+  - Wait for explicit confirmation before making code changes.
+
+User Can Use Qualifier Phrases:
+  - "Just analyze..." or "Don't implement, but..."
+  - "I need information about..."
+  - "What's your assessment of..."
+
+**Proposed Communication Patterns:**
+For Analysis Requests The Agent should:
+  1. Provide clear, structured analysis.
+  2. Offer options with pros/cons.
+  3. Explain current state without changing it.
+  4. Ask "Would you like me to implement any of these suggestions?" at the end.
+
+For Implementation Requests the Agent should:
+  1. Briefly confirm understanding.
+  2. Outline the implementation plan.
+  3. Execute the changes.
+  4. Report results.
+
+- Before implementing changes, agent will explain what the agent is going to do and why.
+- Break down complex tasks into clear, focused steps.
+- Ask for clarification if requirements are unclear.
+- Provide brief explanations for technical decisions.
+
+**Database Schema Management Policy:**
+Always use automated database tools instead of manual changes.
+Required Workflow:
+1. Make schema changes to PostgreSQL database.
+2. Run: `python database_tools/update_schema.py`.
+3. Commit generated files to version control.
+
+Prohibited Actions:
+- Never manually edit `frontend_templates/database_schema.html`.
+- Never manually edit files in `docs/component_docs/database/`.
+- Never manually edit files in `database_tools/generated/`.
+- Never skip running automation after schema changes.
+
+**Documentation:**
+- Add detailed inline documentation on all new or changed code. Add comprehensive docstrings and comments directly in your code that explain relationships between functions and expected behaviors.
+- When new understanding of the project is gained, document the changes in replit.md.
+
+**Research Preferences:**
+- Always check for the latest versions of dependencies before suggesting updates.
+- Research current best practices for security implementations.
+
+**External Research Guidelines:**
+- When suggesting new libraries, ensure compatibility with our existing stack.
+- Adapt external examples to match our coding standards and project structure.
+
+**Style:**
+- Use consistent naming patterns and code organization. Group related functions together and use clear, descriptive names.
+<!-- critical: do not change anything above this line -->
+## System Architecture
+
+The application employs a modular Flask microservice architecture with a strong emphasis on security.
+
+**Core Architectural Decisions:**
+- **Flask Framework:** Chosen for its lightweight nature, ideal for focused webhook processing with enterprise-grade security.
+- **Modular Design:** Code is organized into separate modules (`/modules`) for clear separation of concerns, scalability, and security isolation.
+- **Blueprint Pattern:** Flask blueprints organize routes, separating webhook logic from the main application.
+- **Security-First:** All components implement comprehensive security controls including authentication, input validation, rate limiting, and audit logging.
+- **Template-Based Document Generation:** Utilizes a `BaseGenerator Class` and specialized generators to create personalized documents from `.docx` templates, preserving original formatting and structure.
+- **Cloud Storage:** Documents are stored in Replit Object Storage (Google Cloud) with local fallback for reliability.
+- **Automated Database Schema Management:** Uses a suite of tools (`database_tools/`) to generate SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes directly from the live PostgreSQL schema, ensuring documentation and code consistency. Pre-commit hooks prevent manual schema changes.
+- **Resilience System:** Includes a comprehensive failure recovery mechanism with intelligent retry logic, circuit breaker patterns, workflow checkpoints, and automatic data correction.
+
+**Key Components & Features:**
+
+- **Main Application (`app_modular.py`):** Flask application initialization and configuration, proxy middleware setup, health check endpoint, blueprint registration.
+- **Document Generation (`modules/document_generation/`):** Template-based generation from `.docx` files, preserving formatting, professional metadata, and Replit Object Storage integration.
+- **Gmail Integration (`modules/email_integration/`):** Official Gmail OAuth 2.0, robust email sending with attachments, enhanced error handling, and RFC-compliant validation.
+- **AI Job Description Analysis (`modules/ai_job_description_analysis/`):** Google Gemini integration for job analysis, secure REST API, LLM injection protection, usage tracking, and batch processing.
+- **Job Scraping (`modules/scraping/`):** Core scraping logic, context-aware scraping, data processing pipeline for cleaning and deduplication, and cost-effective usage tracking.
+- **Database Layer (`modules/database/`):** PostgreSQL connection management with SQLAlchemy, 32 normalized tables, comprehensive read/write operations, RESTful API, session handling, and API key authentication.
+- **Database Schema Automation (`database_tools/`):** Generates HTML visualizations, extracts schema information, auto-generates SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes from the live schema with change detection.
+- **Code Quality & Security Systems:** Security-first architecture, parameterized queries, automated code quality tools (Black, Flake8, Vulture), comprehensive inline documentation, and LSP diagnostic monitoring.
+
+## External Dependencies
+
+- **Flask:** Web framework.
+- **python-docx:** Library for creating and manipulating Word documents.
+- **Werkzeug:** WSGI utilities.
+- **replit-object-storage:** Replit Object Storage client for cloud file storage.
+- **Flask-SQLAlchemy:** ORM for database operations.
+- **psycopg2-binary:** PostgreSQL adapter for Python.
+- **Apify:** Third-party service for job scraping (specifically misceres/indeed-scraper).
+- **Google Gemini AI:** AI model for job analysis and content generation.
+- **PostgreSQL:** Primary database for job tracking and application history.
+- **Google Cloud:** Underlying infrastructure for Replit Object Storage.
+
+
+# Changelog
+input changes in docs/changelogs/master-changelog.md
+Use this formating:
+```
+Historical Changelog:
+- June 30, 2025. Initial setup
+- July 01, 2025. Fixed empty attachment issue in email integration
+  * Updated download endpoint to use direct Response mechanism instead of send_file with BytesIO
+  * Added explicit Content-Length header to ensure proper file transfer
+  * Reinstated API authentication with WEBHOOK_API_KEY
+  * Optimized cloud-first storage approach with no local file retention
+- July 01, 2025. **MILESTONE**: Service fully operational for production use

@@ -1,0 +1,104 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.sqlite
+*.db
+
+# Storage and cache
+storage/
+.cache/
+.local/
+
+# Sensitive files
+.env.local
+.env.production
+secrets.txt
+*.pem
+*.key
+*_key
+*_key.*
+ssh-keygen*
+*.pub
+credentials*.json
+token*.json
+
+# Replit specific (deprecated - migrated from Replit)
+.replit
+.upm
+.breakpoints
+.replit.nix
+replit.nix
+.config/
+pyproject.toml.replit_backup
+
+# Backup files
+*.tar.gz
+*.zip
+*backup*
+
+# Generated documents
+*.docx
+*.doc
+*.pdf
+test_*.docx
+
+# Temporary files
+tmp/
+temp/
+
+# Database automation files
+database_tools/.schema_hash
+database_tools/enforcement.log
+database_tools/__pycache__/
+# Generated files (commit these)
+# database_tools/generated/
+# database_tools/docs/

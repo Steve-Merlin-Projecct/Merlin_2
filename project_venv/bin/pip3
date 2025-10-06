@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/Volumes/Programming_Seagate_2022/Merlin_Project_Files/Code/project files/WordCraftManager_v4/project_venv/bin/python3.9" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

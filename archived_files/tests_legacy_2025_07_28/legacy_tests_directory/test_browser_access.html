@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser Test - Dashboard Access</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Access Test</h1>
+    <p>This page will test if your browser can access the dashboard.</p>
+    
+    <button onclick="testDashboard()">Test Dashboard Access</button>
+    <button onclick="testAuthentication()">Test Authentication</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testDashboard() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info">Testing dashboard access...</div>';
+            
+            try {
+                const response = await fetch('/dashboard');
+                const resultClass = response.ok ? 'success' : 'error';
+                const statusText = response.ok ? 'SUCCESS' : 'FAILED';
+                
+                resultsDiv.innerHTML += `
+                    <div class="test-result ${resultClass}">
+                        <strong>Dashboard Access Test: ${statusText}</strong><br>
+                        Status: ${response.status} ${response.statusText}<br>
+                        Headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}
+                    </div>
+                `;
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML += `
+                        <div class="test-result info">
+                            <strong>Success!</strong> The dashboard is accessible. 
+                            If you're still getting 403 errors, try:
+                            <ul>
+                                <li>Clear your browser cache completely</li>
+                                <li>Try incognito/private browsing mode</li>
+                                <li>Disable browser extensions</li>
+                                <li>Try a different browser</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `
+                    <div class="test-result error">
+                        <strong>Network Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testAuthentication() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML += '<div class="info">Testing authentication...</div>';
+            
+            try {
+                const response = await fetch('/dashboard/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: 'jellyfish–lantern–kisses' })
+                });
+                
+                const data = await response.json();
+                const resultClass = data.success ? 'success' : 'error';
+                const statusText = data.success ? 'SUCCESS' : 'FAILED';
+                
+                resultsDiv.innerHTML += `
+                    <div class="test-result ${resultClass}">
+                        <strong>Authentication Test: ${statusText}</strong><br>
+                        Status: ${response.status}<br>
+                        Message: ${data.message}
+                    </div>
+                `;
+                
+                if (data.success) {
+                    resultsDiv.innerHTML += `
+                        <div class="test-result success">
+                            <strong>Authentication successful!</strong> You can now access the dashboard.
+                            <button onclick="window.location.href='/dashboard'">Go to Dashboard</button>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `
+                    <div class="test-result error">
+                        <strong>Authentication Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

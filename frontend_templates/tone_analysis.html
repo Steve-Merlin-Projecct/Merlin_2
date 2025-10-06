@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tone Analysis - Merlin Job System</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="/static/css/unified-theme.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Unified light theme */
+        body {
+            background: #f8f9fa !important;
+        }
+        
+        .formula-box {
+            background: #b8b8b8;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #1a1a1a;
+        }
+        .calculation-step {
+            border-left: 3px solid #0066cc;
+            padding-left: 1rem;
+            margin: 0.5rem 0;
+        }
+        .document-text {
+            max-height: 400px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            color: #1a1a1a;
+        }
+        .metric-card {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: #b8b8b8;
+            color: #1a1a1a;
+        }
+        .disabled-notice {
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #ffeaa7;
+        }
+        
+        /* Navigation */
+        .nav-horizontal {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-horizontal a {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-horizontal a:hover {
+            background: rgba(0, 102, 204, 0.1);
+            color: #0066cc;
+            border-color: rgba(0, 102, 204, 0.3);
+        }
+        
+        .nav-horizontal a.active {
+            background: #0066cc;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        {% include 'shared_navigation.html' %}
+
+        <!-- Header -->
+        <div class="enhanced-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-chart-line me-3"></i>Tone Analysis
+                    </h1>
+                    <p class="mb-0 text-muted">
+                        Formula logic and calculations from recent documents
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mb-2">
+                        <span class="status-available">
+                            <i class="fas fa-calculator me-1"></i>Analysis: Ready
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Tone Analysis & Formula Logic</h1>
+                    <button class="btn btn-primary" onclick="refreshAnalysis()">
+                        <i class="fas fa-sync"></i> Refresh Analysis
+                    </button>
+                </div>
+
+                <div class="disabled-notice">
+                    <strong>⚠️ Tone Calculations Temporarily Disabled</strong><br>
+                    Tone Strength, Inter-tone Strength, and Tone Jump calculations are disabled until scraping and application package conversion is completed.
+                </div>
+
+                <!-- Formula Logic Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Tone Analysis Formula Logic</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="formula-box">
+                            <h5>Primary Tone Coherence Score (TCS)</h5>
+                            <code>TCS = (∑(tone_strength_i × weight_i) / total_sentences) × coherence_multiplier</code>
+                            <p class="mt-2 text-muted">Where tone_strength_i represents the strength of tone i across all sentences</p>
+                        </div>
+
+                        <div class="formula-box">
+                            <h5>Tone Transition Score (TTS)</h5>
+                            <code>TTS = 1 - (∑|tone_jump_i| / (total_sentences - 1))</code>
+                            <p class="mt-2 text-muted">Measures smoothness of tone transitions between sentences</p>
+                        </div>
+
+                        <div class="formula-box">
+                            <h5>Tone Jump Score (TJS)</h5>
+                            <code>TJS = exp(-α × max_tone_jump) × consistency_factor</code>
+                            <p class="mt-2 text-muted">Where α = 0.5 (exponential decay factor) and max_tone_jump is the largest tone change</p>
+                        </div>
+
+                        <div class="formula-box">
+                            <h5>Final Coherence Score</h5>
+                            <code>Final_Score = (TCS × 0.5) + (TTS × 0.3) + (TJS × 0.2)</code>
+                            <p class="mt-2 text-muted">Weighted combination of all tone metrics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Document Analysis -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Most Recent Document Analysis</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="documentInfo">
+                                    <h6>Document: <span id="docTitle">Loading...</span></h6>
+                                    <p>Generated: <span id="docDate">Loading...</span></p>
+                                    <p>Type: <span id="docType">Loading...</span></p>
+                                </div>
+
+                                <div class="metric-card">
+                                    <h6>Tone Coherence Score</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>TCS:</span>
+                                        <strong id="tcsValue">--</strong>
+                                    </div>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar" id="tcsBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <h6>Tone Transition Score</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>TTS:</span>
+                                        <strong id="ttsValue">--</strong>
+                                    </div>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar bg-info" id="ttsBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <h6>Tone Jump Score</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>TJS:</span>
+                                        <strong id="tjsValue">--</strong>
+                                    </div>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar bg-warning" id="tjsBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-card bg-success">
+                                    <h6>Final Coherence Score</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Overall:</span>
+                                        <strong id="finalScore">--</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Tone Analysis Visualization</h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="toneChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculation Steps -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>Step-by-Step Calculations</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="calculationSteps">
+                            <div class="calculation-step">
+                                <h6>Step 1: Sentence Tone Analysis</h6>
+                                <p>Analyzing tone strength across <span id="sentenceCount">--</span> sentences...</p>
+                                <div id="sentenceAnalysis"></div>
+                            </div>
+
+                            <div class="calculation-step">
+                                <h6>Step 2: Tone Transition Calculation</h6>
+                                <p>Calculating tone jumps between consecutive sentences...</p>
+                                <div id="transitionAnalysis"></div>
+                            </div>
+
+                            <div class="calculation-step">
+                                <h6>Step 3: Final Score Computation</h6>
+                                <p>Combining weighted scores using formula...</p>
+                                <div id="finalCalculation"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Context -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>Document Context</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="document-text" id="documentText">
+                            Loading document content...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize chart
+        const ctx = document.getElementById('toneChart').getContext('2d');
+        const toneChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Coherence Score', 'Transition Score', 'Jump Score', 'Consistency', 'Flow'],
+                datasets: [{
+                    label: 'Tone Analysis',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                }
+            }
+        });
+
+        // Load analysis data
+        function loadAnalysisData() {
+            // Temporarily disabled - showing placeholder data
+            const placeholderData = {
+                document: {
+                    title: "Marketing Manager Cover Letter",
+                    date: "2025-01-04",
+                    type: "Cover Letter"
+                },
+                metrics: {
+                    tcs: 0.85,
+                    tts: 0.78,
+                    tjs: 0.92,
+                    final: 0.84
+                },
+                sentences: 12,
+                calculations: {
+                    step1: "Tone analysis disabled",
+                    step2: "Transition analysis disabled", 
+                    step3: "Final calculation disabled"
+                },
+                text: "This is a placeholder document text that would show the actual content of the most recently generated document. The tone analysis system would analyze this text for coherence, transitions, and overall flow quality."
+            };
+
+            updateDisplay(placeholderData);
+        }
+
+        function updateDisplay(data) {
+            // Update document info
+            document.getElementById('docTitle').textContent = data.document.title;
+            document.getElementById('docDate').textContent = data.document.date;
+            document.getElementById('docType').textContent = data.document.type;
+
+            // Update metrics
+            document.getElementById('tcsValue').textContent = data.metrics.tcs.toFixed(3);
+            document.getElementById('ttsValue').textContent = data.metrics.tts.toFixed(3);
+            document.getElementById('tjsValue').textContent = data.metrics.tjs.toFixed(3);
+            document.getElementById('finalScore').textContent = data.metrics.final.toFixed(3);
+
+            // Update progress bars
+            document.getElementById('tcsBar').style.width = (data.metrics.tcs * 100) + '%';
+            document.getElementById('ttsBar').style.width = (data.metrics.tts * 100) + '%';
+            document.getElementById('tjsBar').style.width = (data.metrics.tjs * 100) + '%';
+
+            // Update chart
+            toneChart.data.datasets[0].data = [
+                data.metrics.tcs,
+                data.metrics.tts,
+                data.metrics.tjs,
+                data.metrics.final,
+                (data.metrics.tcs + data.metrics.tts + data.metrics.tjs) / 3
+            ];
+            toneChart.update();
+
+            // Update calculations
+            document.getElementById('sentenceCount').textContent = data.sentences;
+            document.getElementById('sentenceAnalysis').innerHTML = `<em>${data.calculations.step1}</em>`;
+            document.getElementById('transitionAnalysis').innerHTML = `<em>${data.calculations.step2}</em>`;
+            document.getElementById('finalCalculation').innerHTML = `<em>${data.calculations.step3}</em>`;
+
+            // Update document text
+            document.getElementById('documentText').textContent = data.text;
+        }
+
+        function refreshAnalysis() {
+            loadAnalysisData();
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadAnalysisData);
+    </script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Override - Merlin Job System</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="/static/css/unified-theme.css" rel="stylesheet">
+    <style>
+        /* Unified light theme */
+        body {
+            background: #f8f9fa !important;
+        }
+        
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+        }
+        .job-result {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .job-result:hover {
+            background: #b8b8b8;
+        }
+        .job-result.selected {
+            background: #0066cc;
+            color: white;
+        }
+        .rating-group {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+        }
+        .rating-slider {
+            width: 100%;
+        }
+        .rating-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        .rating-low { color: #d32f2f; }
+        .rating-medium { color: #f57c00; }
+        .rating-high { color: #2e7d32; }
+        .disabled-notice {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            color: var(--bs-dark);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .job-details {
+            background: var(--bs-gray-800);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .search-filters {
+            background: var(--bs-gray-900);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .override-history {
+            max-height: 200px;
+            overflow-y: auto;
+            background: var(--bs-gray-900);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.375rem;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        {% include 'shared_navigation.html' %}
+
+        <!-- Header -->
+        <div class="enhanced-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-edit me-3"></i>Job Override
+                    </h1>
+                    <p class="mb-0 text-muted">
+                        Manual job override for post-interview adjustments
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mb-2">
+                        <span class="status-available">
+                            <i class="fas fa-pen me-1"></i>Override: Ready
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Job Manual Override</h1>
+                    <button class="btn btn-primary" onclick="saveOverrides()" id="saveButton" disabled>
+                        Save Changes
+                    </button>
+                </div>
+
+                <div class="disabled-notice">
+                    <strong>⚠️ Calculations Temporarily Disabled</strong><br>
+                    Override calculations are disabled until scraping and application package conversion is completed.
+                </div>
+
+                <!-- Job Search Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Find Job to Override</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="search-filters">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Search Jobs</label>
+                                    <input type="text" class="form-control" id="jobSearch" 
+                                           placeholder="Company name, position, or job ID..." 
+                                           oninput="searchJobs()">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Date Range</label>
+                                    <select class="form-select" id="dateFilter" onchange="searchJobs()">
+                                        <option value="all">All Time</option>
+                                        <option value="week" selected>Last Week</option>
+                                        <option value="month">Last Month</option>
+                                        <option value="3months">Last 3 Months</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="statusFilter" onchange="searchJobs()">
+                                        <option value="all">All Statuses</option>
+                                        <option value="new">New</option>
+                                        <option value="reviewed">Reviewed</option>
+                                        <option value="applied">Applied</option>
+                                        <option value="interviewed">Interviewed</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button class="btn btn-outline-primary w-100" onclick="clearSearch()">
+                                        Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="search-results" id="searchResults">
+                            <div class="p-3 text-center text-muted">
+                                Enter search terms to find jobs...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Job Details -->
+                <div class="card mb-4" id="jobDetailsCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>Selected Job Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="job-details" id="jobDetails">
+                            <!-- Job details will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Override Controls -->
+                <div class="card" id="overrideCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>Manual Overrides</h3>
+                        <p class="text-muted mb-0">Adjust ratings based on interview insights and research</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Cultural Fit Rating -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Cultural Fit Rating</h5>
+                                    <p class="text-muted">Rate how well you'd fit with the company culture</p>
+                                    <input type="range" class="rating-slider" id="culturalFit" 
+                                           min="1" max="10" value="5" onchange="updateRating('cultural')">
+                                    <div class="rating-display" id="culturalDisplay">5/10 - Neutral</div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <small>Poor Fit</small>
+                                        <small>Perfect Fit</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Skill Growth Potential -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Skill Growth Potential</h5>
+                                    <p class="text-muted">Opportunity for professional development</p>
+                                    <input type="range" class="rating-slider" id="skillGrowth" 
+                                           min="1" max="10" value="5" onchange="updateRating('skill')">
+                                    <div class="rating-display" id="skillDisplay">5/10 - Moderate</div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <small>No Growth</small>
+                                        <small>High Growth</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stress Level -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Perceived Stress Level</h5>
+                                    <p class="text-muted">Expected workplace stress and pressure</p>
+                                    <input type="range" class="rating-slider" id="stressLevel" 
+                                           min="1" max="10" value="5" onchange="updateRating('stress')">
+                                    <div class="rating-display" id="stressDisplay">5/10 - Moderate</div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <small>Very Relaxed</small>
+                                        <small>Very Stressful</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Prestige -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Company Prestige</h5>
+                                    <p class="text-muted">Company reputation and market standing</p>
+                                    <input type="range" class="rating-slider" id="companyPrestige" 
+                                           min="1" max="10" value="5" onchange="updateRating('company')">
+                                    <div class="rating-display" id="companyDisplay">5/10 - Average</div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <small>Unknown</small>
+                                        <small>Industry Leader</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Industry Prestige -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Industry Prestige</h5>
+                                    <p class="text-muted">Industry reputation and growth potential</p>
+                                    <input type="range" class="rating-slider" id="industryPrestige" 
+                                           min="1" max="10" value="5" onchange="updateRating('industry')">
+                                    <div class="rating-display" id="industryDisplay">5/10 - Stable</div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <small>Declining</small>
+                                        <small>Cutting Edge</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Overall Impact -->
+                            <div class="col-md-6">
+                                <div class="rating-group">
+                                    <h5>Overall Impact on Score</h5>
+                                    <p class="text-muted">How these overrides affect job ranking</p>
+                                    <div class="rating-display" id="overallImpact">+0% - No Change</div>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="impactBar" style="width: 50%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-muted mt-2">
+                                        <small>Major Decrease</small>
+                                        <small>Major Increase</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="rating-group mt-3">
+                            <h5>Additional Notes</h5>
+                            <textarea class="form-control" id="additionalNotes" rows="4" 
+                                      placeholder="Add any additional insights from interviews or research..."></textarea>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 mt-4">
+                            <button class="btn btn-success" onclick="saveOverrides()">
+                                Save Overrides
+                            </button>
+                            <button class="btn btn-warning" onclick="resetOverrides()">
+                                Reset to Defaults
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearSelection()">
+                                Clear Selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Override History -->
+                <div class="card mt-4" id="historyCard" style="display: none;">
+                    <div class="card-header">
+                        <h4>Override History</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="override-history" id="overrideHistory">
+                            <!-- History will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedJob = null;
+        let originalValues = {};
+
+        // Sample job data for demonstration
+        const sampleJobs = [
+            {
+                id: 'job_001',
+                title: 'Marketing Manager',
+                company: 'Tech Innovators Inc.',
+                location: 'Edmonton, AB',
+                salary: '$75,000 - $85,000 CAD',
+                date: '2025-01-03',
+                status: 'new',
+                description: 'Lead marketing initiatives for innovative tech products...'
+            },
+            {
+                id: 'job_002',
+                title: 'Digital Marketing Specialist',
+                company: 'Creative Solutions Ltd.',
+                location: 'Calgary, AB',
+                salary: '$65,000 - $75,000 CAD',
+                date: '2025-01-02',
+                status: 'reviewed',
+                description: 'Drive digital marketing campaigns and social media strategy...'
+            },
+            {
+                id: 'job_003',
+                title: 'Marketing Communications Manager',
+                company: 'Global Enterprises',
+                location: 'Remote',
+                salary: '$80,000 - $95,000 CAD',
+                date: '2025-01-01',
+                status: 'applied',
+                description: 'Develop and execute comprehensive marketing communications...'
+            }
+        ];
+
+        function searchJobs() {
+            const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filteredJobs = sampleJobs;
+
+            // Apply filters
+            if (searchTerm) {
+                filteredJobs = filteredJobs.filter(job => 
+                    job.title.toLowerCase().includes(searchTerm) ||
+                    job.company.toLowerCase().includes(searchTerm) ||
+                    job.id.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (statusFilter !== 'all') {
+                filteredJobs = filteredJobs.filter(job => job.status === statusFilter);
+            }
+
+            displaySearchResults(filteredJobs);
+        }
+
+        function displaySearchResults(jobs) {
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (jobs.length === 0) {
+                resultsContainer.innerHTML = '<div class="p-3 text-center text-muted">No jobs found matching your criteria</div>';
+                return;
+            }
+
+            const resultsHTML = jobs.map(job => `
+                <div class="job-result" onclick="selectJob('${job.id}')">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${job.title}</h6>
+                            <p class="mb-1 text-muted">${job.company} • ${job.location}</p>
+                            <small class="text-muted">${job.salary} • ${job.date}</small>
+                        </div>
+                        <span class="badge bg-${getStatusColor(job.status)}">${job.status}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            resultsContainer.innerHTML = resultsHTML;
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'new': 'primary',
+                'reviewed': 'info',
+                'applied': 'warning',
+                'interviewed': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function selectJob(jobId) {
+            selectedJob = sampleJobs.find(job => job.id === jobId);
+            
+            // Update UI to show selected job
+            document.querySelectorAll('.job-result').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.job-result').classList.add('selected');
+            
+            displayJobDetails(selectedJob);
+            showOverrideControls();
+            loadOverrideHistory(jobId);
+        }
+
+        function displayJobDetails(job) {
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>${job.title}</h5>
+                        <h6 class="text-muted">${job.company}</h6>
+                        <p><strong>Location:</strong> ${job.location}</p>
+                        <p><strong>Salary:</strong> ${job.salary}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(job.status)}">${job.status}</span></p>
+                        <p><strong>Description:</strong> ${job.description}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Current Ratings</h6>
+                        <div class="mb-2">
+                            <small>Cultural Fit:</small>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <small>Growth Potential:</small>
+                            <div class="progress">
+                                <div class="progress-bar bg-info" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <small>Stress Level:</small>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('jobDetails').innerHTML = detailsHTML;
+            document.getElementById('jobDetailsCard').style.display = 'block';
+        }
+
+        function showOverrideControls() {
+            document.getElementById('overrideCard').style.display = 'block';
+            document.getElementById('historyCard').style.display = 'block';
+            document.getElementById('saveButton').disabled = false;
+            
+            // Reset sliders to default values
+            resetOverrides();
+        }
+
+        function updateRating(type) {
+            const sliders = {
+                'cultural': 'culturalFit',
+                'skill': 'skillGrowth',
+                'stress': 'stressLevel',
+                'company': 'companyPrestige',
+                'industry': 'industryPrestige'
+            };
+
+            const displays = {
+                'cultural': 'culturalDisplay',
+                'skill': 'skillDisplay',
+                'stress': 'stressDisplay',
+                'company': 'companyDisplay',
+                'industry': 'industryDisplay'
+            };
+
+            const slider = document.getElementById(sliders[type]);
+            const display = document.getElementById(displays[type]);
+            const value = parseInt(slider.value);
+
+            // Update display
+            let rating = getRatingText(value, type);
+            display.textContent = `${value}/10 - ${rating}`;
+            display.className = `rating-display rating-${getRatingClass(value)}`;
+
+            // Calculate overall impact
+            calculateOverallImpact();
+        }
+
+        function getRatingText(value, type) {
+            const ratings = {
+                'cultural': ['Terrible', 'Poor', 'Bad', 'Below Average', 'Fair', 'Neutral', 'Good', 'Very Good', 'Great', 'Perfect'],
+                'skill': ['None', 'Minimal', 'Limited', 'Some', 'Fair', 'Moderate', 'Good', 'High', 'Very High', 'Exceptional'],
+                'stress': ['Very Relaxed', 'Relaxed', 'Low', 'Mild', 'Moderate', 'Average', 'High', 'Very High', 'Intense', 'Extreme'],
+                'company': ['Unknown', 'Startup', 'Small', 'Local', 'Regional', 'Average', 'Notable', 'Well-Known', 'Leading', 'Industry Leader'],
+                'industry': ['Declining', 'Stagnant', 'Slow', 'Stable', 'Growing', 'Stable', 'Dynamic', 'Growing', 'Booming', 'Cutting Edge']
+            };
+            return ratings[type][value - 1];
+        }
+
+        function getRatingClass(value) {
+            if (value <= 3) return 'low';
+            if (value <= 7) return 'medium';
+            return 'high';
+        }
+
+        function calculateOverallImpact() {
+            // Temporarily disabled - just show placeholder
+            const impact = 0; // Would calculate based on rating changes
+            const impactDisplay = document.getElementById('overallImpact');
+            const impactBar = document.getElementById('impactBar');
+            
+            impactDisplay.textContent = `${impact > 0 ? '+' : ''}${impact}% - No Change`;
+            impactBar.style.width = '50%';
+        }
+
+        function saveOverrides() {
+            if (!selectedJob) return;
+
+            const overrideData = {
+                jobId: selectedJob.id,
+                culturalFit: document.getElementById('culturalFit').value,
+                skillGrowth: document.getElementById('skillGrowth').value,
+                stressLevel: document.getElementById('stressLevel').value,
+                companyPrestige: document.getElementById('companyPrestige').value,
+                industryPrestige: document.getElementById('industryPrestige').value,
+                notes: document.getElementById('additionalNotes').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // In a real implementation, this would save to the database
+            console.log('Saving overrides:', overrideData);
+            alert('Overrides saved successfully!');
+            
+            // Add to history
+            addToHistory(overrideData);
+        }
+
+        function resetOverrides() {
+            document.getElementById('culturalFit').value = 5;
+            document.getElementById('skillGrowth').value = 5;
+            document.getElementById('stressLevel').value = 5;
+            document.getElementById('companyPrestige').value = 5;
+            document.getElementById('industryPrestige').value = 5;
+            document.getElementById('additionalNotes').value = '';
+
+            // Update displays
+            updateRating('cultural');
+            updateRating('skill');
+            updateRating('stress');
+            updateRating('company');
+            updateRating('industry');
+        }
+
+        function clearSelection() {
+            selectedJob = null;
+            document.getElementById('jobDetailsCard').style.display = 'none';
+            document.getElementById('overrideCard').style.display = 'none';
+            document.getElementById('historyCard').style.display = 'none';
+            document.getElementById('saveButton').disabled = true;
+            
+            document.querySelectorAll('.job-result').forEach(el => el.classList.remove('selected'));
+        }
+
+        function clearSearch() {
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('dateFilter').value = 'week';
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('searchResults').innerHTML = '<div class="p-3 text-center text-muted">Enter search terms to find jobs...</div>';
+        }
+
+        function loadOverrideHistory(jobId) {
+            // In a real implementation, this would load from database
+            const historyHTML = `
+                <div class="mb-2">
+                    <small class="text-muted">2025-01-03 10:30 AM</small>
+                    <p class="mb-1">Updated cultural fit rating to 8/10 after phone interview</p>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">2025-01-02 2:15 PM</small>
+                    <p class="mb-1">Increased company prestige to 7/10 based on research</p>
+                </div>
+            `;
+            document.getElementById('overrideHistory').innerHTML = historyHTML;
+        }
+
+        function addToHistory(data) {
+            const historyContainer = document.getElementById('overrideHistory');
+            const newEntry = `
+                <div class="mb-2">
+                    <small class="text-muted">${new Date().toLocaleString()}</small>
+                    <p class="mb-1">Updated ratings and saved notes</p>
+                </div>
+            `;
+            historyContainer.insertAdjacentHTML('afterbegin', newEntry);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            searchJobs();
+        });
+    </script>
+</body>
+</html>

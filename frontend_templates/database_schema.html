@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Schema - Job Application System</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/unified-theme.css" rel="stylesheet">
+    <style>
+        /* Unified light theme */
+        body {
+            background: #f8f9fa !important;
+        }
+        
+        .schema-container {
+            background: #b8b8b8;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1rem 0;
+            min-height: 600px;
+            color: #1a1a1a;
+        }
+        
+        .table-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            width: 280px;
+            display: inline-block;
+            vertical-align: top;
+            color: #1a1a1a;
+        }
+        
+        .table-box:hover {
+            border-color: #0066cc;
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        
+        .table-header {
+            background: #0066cc;
+            color: white;
+            padding: 0.75rem;
+            margin: -1rem -1rem 1rem -1rem;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .table-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid var(--bs-gray-700);
+            font-size: 0.85rem;
+        }
+        
+        .table-field:last-child {
+            border-bottom: none;
+        }
+        
+        .field-name {
+            font-weight: 500;
+        }
+        
+        .field-type {
+            color: var(--bs-info);
+            font-size: 0.75rem;
+        }
+        
+        .primary-key {
+            color: var(--bs-warning);
+        }
+        
+        .foreign-key {
+            color: var(--bs-success);
+        }
+        
+        .relationship-line {
+            position: absolute;
+            background: var(--bs-success);
+            height: 2px;
+            z-index: 1;
+        }
+        
+        .relationship-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid var(--bs-success);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            z-index: 2;
+        }
+        
+        .schema-section {
+            margin: 2rem 0;
+        }
+        
+        .schema-section h3 {
+            color: #1a1a1a;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .relationship-note {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--bs-success);
+        }
+        
+        .legend {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        
+        .legend-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+        }
+        
+        .core-tables .table-header {
+            background: #0066cc;
+        }
+        
+        .content-tables .table-header {
+            background: #28a745;
+        }
+        
+        .tracking-tables .table-header {
+            background: #ffc107;
+            color: #1a1a1a;
+        }
+        
+        .auto-generated-note {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Shared Navigation -->
+    {% include 'shared_navigation.html' %}
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h1 class="mb-0">
+                            <i class="fas fa-database me-2"></i>
+                            Database Schema Visualization
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="auto-generated-note">
+                            <i class="fas fa-robot me-2"></i>
+                            <strong>Auto-generated:</strong> This schema was automatically generated from the live database on 2025-09-12 13:07:20. 
+                            Run <code>python tools/schema_html_generator.py</code> to update.
+                        </div>
+                        
+                        <div class="schema-container">
+                            <div class="text-center mb-4">
+                                <h2>Job Application System Database Schema</h2>
+                                <p class="text-muted">Interactive visualization of all database tables and relationships</p>
+                            </div>
+                            
+                            <!-- Legend -->
+                            <div class="legend">
+                                <h4>Legend</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: var(--bs-warning);"></div>
+                                            <span>Primary Key</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: var(--bs-success);"></div>
+                                            <span>Foreign Key</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: var(--bs-info);"></div>
+                                            <span>Data Type</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: #0066cc;"></div>
+                                            <span>Core Workflow Tables</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: #28a745;"></div>
+                                            <span>Content & Analysis Tables</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-icon" style="background: #ffc107;"></div>
+                                            <span>Tracking & Monitoring Tables</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Core Workflow Tables -->
+                            <div class="schema-section core-tables">
+                                <h3 class="mb-3">
+                                    <i class="fas fa-cogs me-2"></i>
+                                    Core Workflow Tables
+                                </h3>
+                                
+            <div class="table-box">
+                <div class="table-header">analyzed_jobs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pre_analyzed_job_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">company_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_number</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_low</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_high</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_period</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">compensation_currency</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">equity_stock_options</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">commission_or_performance_incentive</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">est_total_compensation</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">remote_options</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_type</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">in_office_requirements</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_address</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_city</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_province</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_country</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">working_hours_per_week</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_schedule</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">specific_schedule</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">travel_requirements</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_supervisor</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">department</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sub_industry</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_function</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">seniority_level</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">supervision_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">budget_size_category</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_size_category</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_deadline</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_email</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_method</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">special_instructions</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">primary_source_url</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">posted_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_analysis_completed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">primary_industry</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">authenticity_score</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">deduplication_key</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_application_attempt</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">eligibility_flag</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">prestige_factor</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">prestige_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">estimated_stress_level</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stress_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">analysis_date</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">gemini_model_used</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">analysis_tokens_used</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">hiring_manager</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">reporting_to</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title_extracted</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_name_extracted</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">additional_insights</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">application_documents</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">document_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_application_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">document_type</span>
+                    <span class="field-type">VARCHAR(30)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">document_name</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">file_path</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">file_size</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sent_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">canadian_spellings</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">american_spelling</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">canadian_spelling</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">cleaned_job_scrape_sources</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">source_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">cleaned_job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">original_scrape_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">source_priority</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">merge_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">processed_to_jobs</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">processed_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">cleaned_job_scrapes</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">cleaned_job_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_name</span>
+                    <span class="field-type">VARCHAR(300)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_city</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_province</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_country</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_arrangement</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_min</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_max</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_currency</span>
+                    <span class="field-type">VARCHAR(10)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_period</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">requirements</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">benefits</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">experience_level</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">posting_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_deadline</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">external_job_id</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">source_website</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_url</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_expired</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cleaned_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_seen_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">processing_notes</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_street_address</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_email</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">confidence_score</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">duplicates_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">companies</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">name</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">domain</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sub_industry</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">size_range</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">employee_count_min</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">employee_count_max</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">headquarters_location</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">founded_year</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">linkedin_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">glassdoor_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">strategic_mission</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">strategic_values</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">recent_news</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">consistency_validation_logs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">validation_run_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">issue_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">severity</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">affected_record_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">correctable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">correction_applied</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">data_corrections</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">validation_run_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">correction_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">affected_table</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">affected_records</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">correction_sql</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applied_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">success</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">document_sentences</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">sentence_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">document_job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sentence_text</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_score</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sentiment_category</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">confidence_score</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">word_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sentence_order</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">document_template_metadata</div>
+                <div class="table-field">
+                    <span class="field-name">document_type</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">resume_general_section_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">resume_constituent_section_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_par_one</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_par_two</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_par_three</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">template_file_path</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">document_tone_analysis</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">document_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sentences</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_jump_score</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_coherence_score</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">total_tone_travel</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">average_tone_jump</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">error_log</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_id</span>
+                    <span class="field-type">VARCHAR(36)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">session_id</span>
+                    <span class="field-type">VARCHAR(36)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stage_name</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_category</span>
+                    <span class="field-type">VARCHAR(30)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">severity</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_details</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">exception_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stack_trace</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">context_data</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">retry_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">resolved</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">resolution_notes</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">failure_logs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">failure_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">operation_name</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">workflow_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_details</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">recovery_attempts</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">recovery_successful</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">resolved_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_analysis_queue</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">priority</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">queued_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">attempts</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_attempt_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_application_tracking</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">tracking_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_application_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tracking_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tracking_event</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">event_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">event_data</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ip_address</span>
+                    <span class="field-type">INET</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">user_agent</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_applications</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_date</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_method</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_status</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">email_sent_to</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">documents_sent</span>
+                    <span class="field-type">ARRAY</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tracking_data</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">first_response_received_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">response_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">notes</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_jump_score</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_coherence_score</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">total_tone_travel</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_response_received_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_ats_keywords</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_category</span>
+                    <span class="field-type">VARCHAR(30)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">frequency_in_posting</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_benefits</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">benefit_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">benefit_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">benefit_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">benefit_value</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_certifications</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">certification_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_education_requirements</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">degree_level</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">field_of_study</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">institution_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">years_required</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">alternative_experience</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_platforms_found</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">platform_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">platform_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">platform_url</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">first_found_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_red_flags_details</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">flag_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">detected</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">details</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_required_documents</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">document_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_required_skills</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">skill_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_level</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_skills</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">skill_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">importance_rating</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_stress_indicators</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">INTEGER (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">indicator</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">jobs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">company_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_number</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_low</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_high</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_period</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">remote_options</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_supervisor</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">department</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">seniority_level</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_deadline</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_active</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_status</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_application_attempt</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_method</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">analysis_completed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">consolidation_confidence</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">primary_source_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">posted_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">title_matches_role</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">mismatch_explanation</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_authentic</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">authenticity_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sub_industry</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_function</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">in_office_requirements</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_address</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_city</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_province</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">office_country</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">working_hours_per_week</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_schedule</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">specific_schedule</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">travel_requirements</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_mentioned</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">equity_stock_options</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">commission_or_performance_incentive</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">est_total_compensation</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">compensation_currency</span>
+                    <span class="field-type">VARCHAR(10)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_email</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">special_instructions</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">estimated_stress_level</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stress_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">education_requirements</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">overall_red_flag_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_letter_pain_point</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_letter_evidence</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cover_letter_solution_angle</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">eligibility_flag</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">prestige_factor</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">prestige_reasoning</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">supervision_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">budget_size_category</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_size_category</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">keyword_filters</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">link_clicks</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">click_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">tracking_id</span>
+                    <span class="field-type">VARCHAR(100) (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">clicked_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ip_address</span>
+                    <span class="field-type">INET</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">user_agent</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">referrer_url</span>
+                    <span class="field-type">VARCHAR(1000)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">session_id</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">click_source</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">metadata</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">performance_metrics</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stage_name</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">api_call_type</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">response_time_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">success</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">cost_estimate</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">batch_size</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sentences_processed</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">processing_date</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">model_used</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">session_id</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">pre_analyzed_jobs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">cleaned_scrape_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">company_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_name</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_city</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_province</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_country</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_arrangement</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_min</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_max</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_currency</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_period</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">requirements</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">benefits</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_type</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">experience_level</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">posting_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_deadline</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">external_job_id</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">source_website</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_url</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_email</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">confidence_score</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">duplicates_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">deduplication_key</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_active</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">queued_for_analysis</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">processed_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">raw_job_scrapes</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">scrape_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">source_website</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">source_url</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">full_application_url</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scrape_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">raw_data</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraper_used</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraper_run_id</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">user_agent</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ip_address</span>
+                    <span class="field-type">VARCHAR(45)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">success_status</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">response_time_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">data_size_bytes</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">recovery_statistics</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">failure_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">total_failures</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">successful_recoveries</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">failed_recoveries</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">average_recovery_time</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">security_test_table</div>
+                <div class="table-field">
+                    <span class="field-name">id</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">user_candidate_info</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">user_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">first_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">last_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">email</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">phone</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">mailing_address</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">linkedin_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">portfolio_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">calendly_url</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">user_job_preferences</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">user_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">hourly_rate_minimum</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">bonus_expected</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stock_options_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">hours_per_week_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">hours_per_week_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">flexible_hours_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">overtime_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_arrangement</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">travel_percentage_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">preferred_city</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">preferred_province_state</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">preferred_country</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">commute_time_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">relocation_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">health_insurance_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">dental_insurance_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">vision_insurance_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">health_benefits_dollar_value</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">retirement_matching_minimum</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">vacation_days_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">sick_days_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">parental_leave_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">parental_leave_weeks_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">training_budget_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">conference_attendance_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">certification_support_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">mentorship_program_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">career_advancement_timeline</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_size_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_size_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">startup_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">public_company_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry_prestige_importance</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_mission_alignment_importance</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">acceptable_stress</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">experience_level_minimum</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">experience_level_maximum</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">management_responsibility_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">individual_contributor_preferred</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">drug_testing_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">background_check_acceptable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">security_clearance_required</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_active</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">street_address</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">candidate_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">user_preference_packages</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">package_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">user_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">package_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">package_description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_minimum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">salary_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location_priority</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">work_arrangement</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">commute_time_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">travel_percentage_maximum</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_active</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">user_preferred_industries</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">preference_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">user_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">industry_name</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">preference_type</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">priority_level</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">work_experiences</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">user_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">company_name</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_title</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">start_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">end_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_current</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">location</span>
+                    <span class="field-type">VARCHAR(200)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">display_order</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">workflow_checkpoints</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">checkpoint_id</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">workflow_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">stage</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">checkpoint_data</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>
+                                <div class="relationship-note">
+                                    <strong>Relationships:</strong> companies.id → analyzed_jobs.company_id | jobs.id → analyzed_jobs.job_id | job_applications.id → application_documents.job_application_id
+                                </div>
+                            </div>
+
+                            <!-- Content & Analysis Tables -->
+                            <div class="schema-section content-tables">
+                                <h3 class="mb-3">
+                                    <i class="fas fa-file-alt me-2"></i>
+                                    Content & Analysis Tables
+                                </h3>
+                                
+            <div class="table-box">
+                <div class="table-header">sentence_bank_cover_letter</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">content_text</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_strength</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">position_label</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">matches_job_skill</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">variable</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">canadian_spelling_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">canadian_spelling_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">sentence_bank_resume</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">content_text</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">body_section</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_strength</span>
+                    <span class="field-type">DECIMAL</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">matches_job_skill</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">experience_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">keyword_filter_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">truthfulness_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">canadian_spelling_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">canadian_spelling_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tone_analysis_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_status</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_model</span>
+                    <span class="field-type">VARCHAR</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">skill_analysis_error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>
+                                <div class="relationship-note">
+                                    <strong>Relationships:</strong> job_applications.id → sentence_bank_resume.experience_id
+                                </div>
+                            </div>
+
+                            <!-- Tracking & Monitoring Tables -->
+                            <div class="schema-section tracking-tables">
+                                <h3 class="mb-3">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Tracking & Monitoring Tables
+                                </h3>
+                                
+            <div class="table-box">
+                <div class="table-header">application_settings</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">setting_key</span>
+                    <span class="field-type">VARCHAR(100) (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">setting_value</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">setting_type</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">document_jobs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">job_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">file_path</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">filename</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">file_size</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">title</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">author</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">document_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">completed_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">webhook_data</span>
+                    <span class="field-type">JSON</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">has_error</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_code</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_details</span>
+                    <span class="field-type">JSON</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">storage_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">object_storage_path</span>
+                    <span class="field-type">VARCHAR(500)</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_logs</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">log_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_id</span>
+                    <span class="field-type">UUID</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">log_level</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">details</span>
+                    <span class="field-type">JSON</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">link_tracking</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">tracking_id</span>
+                    <span class="field-type">VARCHAR(100) (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">application_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">link_function</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">link_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">original_url</span>
+                    <span class="field-type">VARCHAR(1000)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">redirect_url</span>
+                    <span class="field-type">VARCHAR(1000)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_by</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">is_active</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">description</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>
+                                <div class="relationship-note">
+                                    <strong>Relationships:</strong> jobs.id → link_tracking.job_id | job_applications.id → link_tracking.application_id
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add hover effects and interactions
+        document.querySelectorAll('.table-box').forEach(box => {
+            box.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.zIndex = '10';
+            });
+            
+            box.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.zIndex = '1';
+            });
+        });
+    </script>
+</body>
+</html>

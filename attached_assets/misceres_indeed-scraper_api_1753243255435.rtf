@@ -1,0 +1,506 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red240\green241\blue249;\red20\green21\blue25;\red32\green69\blue173;
+}
+{\*\expandedcolortbl;;\cssrgb\c95294\c95686\c98039;\cssrgb\c10196\c10588\c12941;\cssrgb\c16078\c36078\c73333;
+}
+{\info
+{\author Steve Glen}
+{\*\company Steve Glen}
+{\*\copyright Steve Glen}}\margl1440\margr1440\vieww12600\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Here you can export the\'a0{\field{\*\fldinst{HYPERLINK "https://spec.openapis.org/oas/v3.0.1"}}{\fldrslt \cf4 \strokec4 OpenAPI 3.0.1 specification}}\'a0of the API for running the Actor with a custom input and synchronously returning its output dataset, using the\'a0{\field{\*\fldinst{HYPERLINK "https://docs.apify.com/api/v2#/reference/actors/run-actor-synchronously-and-get-dataset-items/run-actor-synchronously-with-input-and-get-dataset-items"}}{\fldrslt \cf4 \strokec4 Run Actor synchronously with input and get dataset items}}\'a0API endpoint. You can use this definition, for example, to integrate the Actor to OpenAI GPTs.\'a0{\field{\*\fldinst{HYPERLINK "https://blog.apify.com/add-custom-actions-to-your-gpts/"}}{\fldrslt \cf4 \strokec4 Read more}}
+\f1\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\{\
+  "openapi": "3.0.1",\
+  "info": \{\
+    "title": "Indeed Scraper",\
+    "description": "Scrape jobs posted on Indeed. Get detailed information from this job portal about saved and sponsored jobs. Specify the search based on location with the output attributes position, location, and description.",\
+    "version": "v1.0",\
+    "x-build-id": "ufGfURY5SMpYfr6dp"\
+  \},\
+  "servers": [\
+    \{\
+      "url": "https://api.apify.com/v2"\
+    \}\
+  ],\
+  "paths": \{\
+    "/acts/misceres~indeed-scraper/run-sync-get-dataset-items": \{\
+      "post": \{\
+        "operationId": "run-sync-get-dataset-items-misceres-indeed-scraper",\
+        "x-openai-isConsequential": false,\
+        "summary": "Executes an Actor, waits for its completion, and returns Actor's dataset items in response.",\
+        "tags": [\
+          "Run Actor"\
+        ],\
+        "requestBody": \{\
+          "required": true,\
+          "content": \{\
+            "application/json": \{\
+              "schema": \{\
+                "$ref": "#/components/schemas/inputSchema"\
+              \}\
+            \}\
+          \}\
+        \},\
+        "parameters": [\
+          \{\
+            "name": "token",\
+            "in": "query",\
+            "required": true,\
+            "schema": \{\
+              "type": "string"\
+            \},\
+            "description": "Enter your Apify token here"\
+          \}\
+        ],\
+        "responses": \{\
+          "200": \{\
+            "description": "OK"\
+          \}\
+        \}\
+      \}\
+    \},\
+    "/acts/misceres~indeed-scraper/runs": \{\
+      "post": \{\
+        "operationId": "runs-sync-misceres-indeed-scraper",\
+        "x-openai-isConsequential": false,\
+        "summary": "Executes an Actor and returns information about the initiated run in response.",\
+        "tags": [\
+          "Run Actor"\
+        ],\
+        "requestBody": \{\
+          "required": true,\
+          "content": \{\
+            "application/json": \{\
+              "schema": \{\
+                "$ref": "#/components/schemas/inputSchema"\
+              \}\
+            \}\
+          \}\
+        \},\
+        "parameters": [\
+          \{\
+            "name": "token",\
+            "in": "query",\
+            "required": true,\
+            "schema": \{\
+              "type": "string"\
+            \},\
+            "description": "Enter your Apify token here"\
+          \}\
+        ],\
+        "responses": \{\
+          "200": \{\
+            "description": "OK",\
+            "content": \{\
+              "application/json": \{\
+                "schema": \{\
+                  "$ref": "#/components/schemas/runsResponseSchema"\
+                \}\
+              \}\
+            \}\
+          \}\
+        \}\
+      \}\
+    \},\
+    "/acts/misceres~indeed-scraper/run-sync": \{\
+      "post": \{\
+        "operationId": "run-sync-misceres-indeed-scraper",\
+        "x-openai-isConsequential": false,\
+        "summary": "Executes an Actor, waits for completion, and returns the OUTPUT from Key-value store in response.",\
+        "tags": [\
+          "Run Actor"\
+        ],\
+        "requestBody": \{\
+          "required": true,\
+          "content": \{\
+            "application/json": \{\
+              "schema": \{\
+                "$ref": "#/components/schemas/inputSchema"\
+              \}\
+            \}\
+          \}\
+        \},\
+        "parameters": [\
+          \{\
+            "name": "token",\
+            "in": "query",\
+            "required": true,\
+            "schema": \{\
+              "type": "string"\
+            \},\
+            "description": "Enter your Apify token here"\
+          \}\
+        ],\
+        "responses": \{\
+          "200": \{\
+            "description": "OK"\
+          \}\
+        \}\
+      \}\
+    \}\
+  \},\
+  "components": \{\
+    "schemas": \{\
+      "inputSchema": \{\
+        "type": "object",\
+        "properties": \{\
+          "position": \{\
+            "title": "Positions/keywords for search",\
+            "type": "string",\
+            "description": "Any combination of positions or keywords for search. If Start URLs are used, search position is disabled."\
+          \},\
+          "country": \{\
+            "title": "Country for search",\
+            "enum": [\
+              "AQ",\
+              "AR",\
+              "AU",\
+              "AT",\
+              "BH",\
+              "BE",\
+              "BR",\
+              "CA",\
+              "CL",\
+              "CN",\
+              "CO",\
+              "CR",\
+              "CZ",\
+              "DK",\
+              "EC",\
+              "EG",\
+              "FI",\
+              "FR",\
+              "DE",\
+              "GR",\
+              "HK",\
+              "HU",\
+              "IN",\
+              "ID",\
+              "IE",\
+              "IL",\
+              "IT",\
+              "JP",\
+              "KW",\
+              "LU",\
+              "MX",\
+              "MA",\
+              "NL",\
+              "NZ",\
+              "NG",\
+              "NO",\
+              "OM",\
+              "PK",\
+              "PA",\
+              "PE",\
+              "PH",\
+              "PL",\
+              "PT",\
+              "QA",\
+              "RO",\
+              "SA",\
+              "SG",\
+              "ZA",\
+              "KR",\
+              "ES",\
+              "SE",\
+              "CH",\
+              "TW",\
+              "TH",\
+              "TR",\
+              "UA",\
+              "AE",\
+              "GB",\
+              "US",\
+              "UY",\
+              "VE",\
+              "VN"\
+            ],\
+            "type": "string",\
+            "description": "Country for job search",\
+            "default": "US"\
+          \},\
+          "location": \{\
+            "title": "Location for search",\
+            "type": "string",\
+            "description": "Any combination of city, zip code or locality for search"\
+          \},\
+          "maxItems": \{\
+            "title": "Max items",\
+            "minimum": 1,\
+            "type": "integer",\
+            "description": "Limit of detail/product pages to be scraped"\
+          \},\
+          "parseCompanyDetails": \{\
+            "title": "Scrape company details",\
+            "type": "boolean",\
+            "description": "If true, will also navigate to company page of each job posting, to scrape company info not available directly on job posting page",\
+            "default": false\
+          \},\
+          "saveOnlyUniqueItems": \{\
+            "title": "Save Only Unique Items",\
+            "type": "boolean",\
+            "description": "if true, only unique items will be scraped",\
+            "default": true\
+          \},\
+          "followApplyRedirects": \{\
+            "title": "Follow redirects for apply link",\
+            "type": "boolean",\
+            "description": "if true, will follow redirects of Indeed's externalApplyLink and output the final one",\
+            "default": false\
+          \},\
+          "startUrls": \{\
+            "title": "Start URLs",\
+            "type": "array",\
+            "description": "List of URLs that will be scraped or crawled. Can be main website URL, category/search URLs, company jobs URL (in the format of `https://www.indeed.com/cmp/Google/jobs`) or detail/product URLs. Using this disables search.",\
+            "items": \{\
+              "type": "object",\
+              "required": [\
+                "url"\
+              ],\
+              "properties": \{\
+                "url": \{\
+                  "type": "string",\
+                  "title": "URL of a web page",\
+                  "format": "uri"\
+                \}\
+              \}\
+            \}\
+          \},\
+          "maxItemsPerSearch": \{\
+            "title": "Max items per url",\
+            "minimum": 1,\
+            "type": "integer",\
+            "description": "Limit of detail/product pages to be scraped per URL in `startUrls` input field."\
+          \}\
+        \}\
+      \},\
+      "runsResponseSchema": \{\
+        "type": "object",\
+        "properties": \{\
+          "data": \{\
+            "type": "object",\
+            "properties": \{\
+              "id": \{\
+                "type": "string"\
+              \},\
+              "actId": \{\
+                "type": "string"\
+              \},\
+              "userId": \{\
+                "type": "string"\
+              \},\
+              "startedAt": \{\
+                "type": "string",\
+                "format": "date-time",\
+                "example": "2025-01-08T00:00:00.000Z"\
+              \},\
+              "finishedAt": \{\
+                "type": "string",\
+                "format": "date-time",\
+                "example": "2025-01-08T00:00:00.000Z"\
+              \},\
+              "status": \{\
+                "type": "string",\
+                "example": "READY"\
+              \},\
+              "meta": \{\
+                "type": "object",\
+                "properties": \{\
+                  "origin": \{\
+                    "type": "string",\
+                    "example": "API"\
+                  \},\
+                  "userAgent": \{\
+                    "type": "string"\
+                  \}\
+                \}\
+              \},\
+              "stats": \{\
+                "type": "object",\
+                "properties": \{\
+                  "inputBodyLen": \{\
+                    "type": "integer",\
+                    "example": 2000\
+                  \},\
+                  "rebootCount": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "restartCount": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "resurrectCount": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "computeUnits": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \}\
+                \}\
+              \},\
+              "options": \{\
+                "type": "object",\
+                "properties": \{\
+                  "build": \{\
+                    "type": "string",\
+                    "example": "latest"\
+                  \},\
+                  "timeoutSecs": \{\
+                    "type": "integer",\
+                    "example": 300\
+                  \},\
+                  "memoryMbytes": \{\
+                    "type": "integer",\
+                    "example": 1024\
+                  \},\
+                  "diskMbytes": \{\
+                    "type": "integer",\
+                    "example": 2048\
+                  \}\
+                \}\
+              \},\
+              "buildId": \{\
+                "type": "string"\
+              \},\
+              "defaultKeyValueStoreId": \{\
+                "type": "string"\
+              \},\
+              "defaultDatasetId": \{\
+                "type": "string"\
+              \},\
+              "defaultRequestQueueId": \{\
+                "type": "string"\
+              \},\
+              "buildNumber": \{\
+                "type": "string",\
+                "example": "1.0.0"\
+              \},\
+              "containerUrl": \{\
+                "type": "string"\
+              \},\
+              "usage": \{\
+                "type": "object",\
+                "properties": \{\
+                  "ACTOR_COMPUTE_UNITS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATASET_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATASET_WRITES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "KEY_VALUE_STORE_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "KEY_VALUE_STORE_WRITES": \{\
+                    "type": "integer",\
+                    "example": 1\
+                  \},\
+                  "KEY_VALUE_STORE_LISTS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "REQUEST_QUEUE_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "REQUEST_QUEUE_WRITES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATA_TRANSFER_INTERNAL_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATA_TRANSFER_EXTERNAL_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "PROXY_RESIDENTIAL_TRANSFER_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "PROXY_SERPS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \}\
+                \}\
+              \},\
+              "usageTotalUsd": \{\
+                "type": "number",\
+                "example": 0.00005\
+              \},\
+              "usageUsd": \{\
+                "type": "object",\
+                "properties": \{\
+                  "ACTOR_COMPUTE_UNITS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATASET_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATASET_WRITES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "KEY_VALUE_STORE_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "KEY_VALUE_STORE_WRITES": \{\
+                    "type": "number",\
+                    "example": 0.00005\
+                  \},\
+                  "KEY_VALUE_STORE_LISTS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "REQUEST_QUEUE_READS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "REQUEST_QUEUE_WRITES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATA_TRANSFER_INTERNAL_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "DATA_TRANSFER_EXTERNAL_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "PROXY_RESIDENTIAL_TRANSFER_GBYTES": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \},\
+                  "PROXY_SERPS": \{\
+                    "type": "integer",\
+                    "example": 0\
+                  \}\
+                \}\
+              \}\
+            \}\
+          \}\
+        \}\
+      \}\
+    \}\
+  \}\
+\}}

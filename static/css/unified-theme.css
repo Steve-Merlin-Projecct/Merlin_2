@@ -1,0 +1,248 @@
+/* Unified Theme CSS for Job Application System */
+
+/* Root Variables for Lower Contrast */
+:root {
+    --bs-primary: #4a90e2;
+    --bs-secondary: #6c757d;
+    --bs-success: #28a745;
+    --bs-info: #17a2b8;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #2b2b2b;
+    --bs-body-bg: #1a1a1a;
+    --bs-body-color: #e0e0e0;
+    --bs-gray-100: #2a2a2a;
+    --bs-gray-200: #3a3a3a;
+    --bs-gray-300: #4a4a4a;
+    --bs-gray-400: #5a5a5a;
+    --bs-gray-500: #6a6a6a;
+    --bs-gray-600: #7a7a7a;
+    --bs-gray-700: #8a8a8a;
+    --bs-gray-800: #9a9a9a;
+    --bs-gray-900: #ababab;
+    --bs-border-color: #3a3a3a;
+    --bs-link-color: #6ca3dc;
+    --bs-link-hover-color: #8bb5e2;
+}
+
+/* Table Improvements - Reduced Width and Better Readability */
+.table {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--bs-dark);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--bs-gray-200);
+    color: var(--bs-body-color);
+    font-weight: 600;
+    border-bottom: 2px solid var(--bs-border-color);
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    font-size: 0.9rem;
+}
+
+.table tr:hover {
+    background-color: var(--bs-gray-200);
+}
+
+/* Compact Tables for Better Readability */
+.table-compact {
+    max-width: 600px;
+    font-size: 0.85rem;
+}
+
+.table-compact th,
+.table-compact td {
+    padding: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Lower Contrast Stat Cards */
+.stat-card {
+    background: var(--bs-dark);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: var(--bs-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--bs-primary);
+    margin: 0;
+}
+
+.stat-label {
+    color: var(--bs-gray-600);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Navigation Improvements */
+.navbar {
+    background-color: var(--bs-dark) !important;
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    color: var(--bs-primary) !important;
+}
+
+.navbar-nav .nav-link {
+    color: var(--bs-body-color) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    background-color: var(--bs-gray-200);
+    color: var(--bs-primary) !important;
+}
+
+/* Card Improvements */
+.card {
+    background-color: var(--bs-dark);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: var(--bs-gray-200);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Button Improvements */
+.btn {
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary:hover {
+    background-color: #3a7bc8;
+    border-color: #3a7bc8;
+}
+
+.btn-secondary {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: white;
+}
+
+.btn-outline-primary {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+
+/* Form Improvements */
+.form-control {
+    background-color: var(--bs-gray-200);
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    border-radius: 6px;
+    padding: 0.75rem;
+}
+
+.form-control:focus {
+    background-color: var(--bs-gray-200);
+    border-color: var(--bs-primary);
+    color: var(--bs-body-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.form-label {
+    color: var(--bs-body-color);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Container Improvements */
+.container, .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Text Improvements */
+.text-muted {
+    color: var(--bs-gray-600) !important;
+}
+
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+/* Link Improvements */
+a {
+    color: var(--bs-link-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--bs-link-hover-color);
+    text-decoration: underline;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 1rem;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}

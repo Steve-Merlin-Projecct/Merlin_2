@@ -1,0 +1,133 @@
+{
+  "personal": {
+    "first_name": "Steve",
+    "last_name": "Glen", 
+    "address": "",
+    "city": "Edmonton",
+    "province": "Alberta",
+    "postal_code": "",
+    "email": "therealstevenglen@gmail.com",
+    "phone": "780-884-7038",
+    "linkedin": "linkedin.com/in/steve-glen-51683b87/"
+  },
+  "professional_summary": "Results-driven marketing professional with over 14 years of experience in CX, business strategy, multimedia content creation, interpersonal communication, and project management. Adept at transforming digital channels, implementing data-driven solutions, and enhancing brand presence through innovative campaigns. Proficient in multi-channel communications, administrative organization, and team leadership.",
+  "education": [
+    {
+      "institution": "University of Alberta, Alberta School of Business",
+      "location": "Edmonton, AB",
+      "degree": "Bachelor of Commerce",
+      "concentration": "Strategic Management & Organizations; Entrepreneurship, Marketing",
+      "graduation_date": "2018",
+      "coursework": ""
+    },
+    {
+      "institution": "MacEwan University",
+      "location": "Edmonton, AB", 
+      "degree": "Bachelor of Arts Transfer",
+      "concentration": "",
+      "graduation_date": "2007",
+      "coursework": ""
+    }
+  ],
+  "experience": [
+    {
+      "organization": "Odvod Media / Odvod Publishing; Edify Magazine",
+      "location": "Edmonton, AB",
+      "position": "Digital Strategist, Content Contributor, Resource Coordinator, and Business Analyst",
+      "start_date": "February 2020",
+      "end_date": "Present",
+      "bullets": [
+        "Led the transformation of digital channels (website, newsletters, social media) during the rebranding from Avenue to Edify, focusing on engaging internal and external stakeholders",
+        "Implemented and optimized content management strategies, resulting in 6 million article reads, 18 million advertisement views, and 1.7 million newsletter reads",
+        "Developed high-quality images for print using professional photography techniques, adapting to client needs and journalism requirements",
+        "Innovated drone-based content ('Ed from Above') during COVID restrictions, persuading the team with compelling messaging and presentations",
+        "Managed multiple technical roles including Co-Producer, Recording Engineer, Mixing Engineer, Mastering Engineer, and Live Audio Engineer",
+        "Designed and executed a grassroots engagement strategy at local events, successfully raising awareness of the magazine's rebrand through direct interactions with tens of thousands of community members",
+        "Designed and programmed data dashboards for internal use, effectively communicating analytics and key performance indicators to senior management",
+        "Liaison with graphic designers, project managers, web developers, typesetters, clients and suppliers for print and digital marketing collateral"
+      ]
+    }
+  ],
+  "leadership": [
+    {
+      "organization": "League of Extraordinary Albertans",
+      "location": "Edmonton, AB",
+      "position": "Media Lead",
+      "start_date": "2024",
+      "end_date": "Present",
+      "bullets": [
+        "Collaborate with production project managers, photographers, copywriters, and social media teams to align media strategy with organizational goals",
+        "Develop and refine policies on consent, copyright, and content usage",
+        "Oversee graphic design and media selection, ensuring cohesive branding and high-quality visual storytelling"
+      ]
+    },
+    {
+      "organization": "League of Extraordinary Albertans",
+      "location": "Edmonton, AB", 
+      "position": "Conduct Committee Co-Chair",
+      "start_date": "April 2022",
+      "end_date": "September 2024",
+      "bullets": [
+        "Investigate member conduct, mediate disputes, and implement fair resolutions, ensuring compliance with organizational policies",
+        "Collaborate with cross-functional teams to build relationships and promote strategic communication initiatives for reputation management"
+      ]
+    }
+  ],
+  "additional_experience": [
+    {
+      "role": "Director of Photography",
+      "details": "Somerset, D., & Pope, D. (2025). Rock Solid Resilience : An Evidence-Based Guide to Preventing Injury, Optimizing Strength, and Enhancing Performance. Human Kinetics."
+    },
+    {
+      "role": "Event Coordinator",
+      "year": "2019"
+    },
+    {
+      "role": "Retail Sales",
+      "years": "2006 - 2007, 2009, 2018 - 2019"
+    },
+    {
+      "role": "Merchandiser",
+      "years": "2014 - 2017"
+    },
+    {
+      "role": "Bartender and Server",
+      "years": "Various roles from 2007 - 2013"
+    }
+  ],
+  "certifications": [
+    {
+      "provider": "Google",
+      "certifications": [
+        "Cloud Digital Leader",
+        "Data Analytics Specialization", 
+        "Ads Certifications: Display, Search, Video, Analytics Individual Qualification (2022)"
+      ]
+    },
+    {
+      "provider": "Amii Training",
+      "certifications": [
+        "Machine Learning Foundations (2023)"
+      ]
+    },
+    {
+      "provider": "Faculty of Extension, University of Alberta",
+      "certifications": [
+        "Analytic Models for Business Decisions (2019)",
+        "Information Access and Protection of Privacy (2023)"
+      ]
+    }
+  ],
+  "skills": {
+    "digital_marketing": "SEO (Ahrefs, Screaming Frog SEO Spider), content management, social media marketing (Meta), Google Ads, WordPress, CMS (Ad Orbit), email marketing (Mailchimp)",
+    "technical_expertise": "Reaper, Ableton Live, DaVinci Resolve, Adobe: Photoshop, Lightroom, After Effects; Capture One",
+    "business_analytics": "Data analysis (RStudio, Python), dashboard design",
+    "productivity_software": "Microsoft Office Suite, Google Workspace, Slack, Smartsheets"
+  },
+  "title": "Steve Glen - Marketing Manager Resume",
+  "subject": "Steve Glen - Professional Marketing Manager Resume",
+  "keywords": "marketing manager, marketing communications, journalism, public relations, data analysis, strategy, business strategy, strategic communications, steve glen, alberta, edmonton",
+  "comments": "Professional resume for Steve Glen - Marketing Manager positions in Alberta, Canada",
+  "category": "Professional Resume",
+  "version": "3.2"
+}

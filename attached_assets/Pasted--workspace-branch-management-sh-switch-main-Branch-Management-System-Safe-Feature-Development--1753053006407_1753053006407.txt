@@ -1,0 +1,105 @@
+~/workspace$ ./branch_management.sh switch main
+Branch Management System - Safe Feature Development
+Switching to branch: main
+Uncommitted changes detected. Creating checkpoint...
+Creating checkpoint 'auto-checkpoint-before-switch' on branch 'noxml'...
+Uncommitted changes detected. Committing as checkpoint...
+🔍 Checking database automation compliance...
+❌ COMMIT BLOCKED: Database schema has changed but automation tools haven't been run
+
+Required actions:
+  • Update HTML visualization
+  • Generate documentation
+  • Update generated code
+  • Commit changes to version control
+
+To fix this, run:
+  python database_tools/update_schema.py
+  # OR
+  ./update_database_schema.sh
+
+Then commit again.
+The authenticity of host 'github.com (140.82.116.3)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? y
+Please type 'yes', 'no' or the fingerprint: y
+Please type 'yes', 'no' or the fingerprint: yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+✅ Checkpoint 'auto-checkpoint-before-switch' created and pushed to GitHub
+To rollback: git reset --hard auto-checkpoint-before-switch
+A   docs/git/BRANCH_MANAGEMENT_DEMO.md
+A   docs/git/BRANCH_MANAGEMENT_STRATEGY.md
+Switched to branch 'main'
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+Branch exists only locally
+✅ Switched to branch: main
+~/workspace$   ./update_database_schema.sh
+🔄 Updating Database Schema HTML...
+🔄 Updating database schema HTML...
+Fetching database schema...
+Found 33 tables in database
+  - application_documents: 7 columns
+  - application_settings: 6 columns
+  - cleaned_job_scrape_sources: 5 columns
+  - cleaned_job_scrapes: 30 columns
+  - clicks: 2 columns
+  - companies: 19 columns
+  - document_jobs: 17 columns
+  - document_sentences: 9 columns
+  - document_template_metadata: 9 columns
+  - document_tone_analysis: 7 columns
+  - job_analysis: 26 columns
+  - job_application_tracking: 8 columns
+  - job_applications: 16 columns
+  - job_ats_keywords: 5 columns
+  - job_authenticity_red_flags: 4 columns
+  - job_benefits: 5 columns
+  - job_content_analysis: 8 columns
+  - job_content_skills_analysis: 9 columns
+  - job_cover_letter_insights: 5 columns
+  - job_implicit_requirements: 5 columns
+  - job_logs: 6 columns
+  - job_platforms_found: 5 columns
+  - job_red_flags: 5 columns
+  - job_required_skills: 6 columns
+  - job_secondary_industries: 3 columns
+  - job_skills: 7 columns
+  - jobs: 33 columns
+  - link_tracking: 3 columns
+  - raw_job_scrapes: 14 columns
+  - sentence_bank_cover_letter: 8 columns
+  - sentence_bank_resume: 9 columns
+  - user_job_preferences: 49 columns
+  - user_preferred_industries: 6 columns
+Generating HTML template...
+✓ Database schema HTML updated: /home/runner/workspace/frontend_templates/database_schema.html
+✓ Generated at: 2025-07-20 23:04:27
+✅ Schema HTML updated - changes detected
+✅ Database schema update completed successfully!
+~/workspace$ git push
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+~/workspace$ git push main
+fatal: 'main' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+~/workspace$  ./branch_management.sh create feature/update-job-from-llm
+bash: ./branch_management.sh: No such file or directory
+~/workspace$ 

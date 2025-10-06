@@ -1,0 +1,65 @@
+# Link Checker Configuration
+# Configuration for the automated link checking system
+
+# HTTP request settings
+timeout: 10                    # Timeout in seconds for HTTP requests
+max_retries: 2                 # Number of retry attempts for failed requests
+max_workers: 5                 # Number of concurrent workers for checking
+
+# External link checking
+check_external: true           # Whether to check external HTTP/HTTPS links
+
+# URL patterns to exclude from checking
+exclude_patterns:
+  - "*.png"
+  - "*.jpg"
+  - "*.jpeg"
+  - "*.gif"
+  - "*.svg"
+  - "*.pdf"
+  - "*.zip"
+  - "*.tar.gz"
+  - "*.exe"
+  - "*.dmg"
+  - "mailto:*"                 # Email links
+  - "tel:*"                    # Phone links
+  - "#*"                       # Anchor links (checked separately)
+
+# Domains to exclude from external checking
+exclude_domains:
+  - "localhost"
+  - "127.0.0.1"
+  - "0.0.0.0"
+  - "example.com"
+  - "example.org"
+  - "test.com"
+  - "placeholder.com"
+
+# Specific URLs to always skip
+exclude_urls:
+  - "https://your-app.replit.app"  # Placeholder URLs
+  - "https://staging-app.replit.app"
+  - "https://api.example.com"
+
+# Custom headers for external requests
+request_headers:
+  User-Agent: "Documentation Link Checker 1.0"
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+
+# Rate limiting for external requests
+rate_limit:
+  requests_per_second: 2       # Maximum requests per second
+  burst_limit: 10              # Burst allowance
+
+# Retry configuration
+retry_config:
+  backoff_factor: 2            # Exponential backoff multiplier
+  max_backoff: 30              # Maximum backoff time in seconds
+  retry_on_status: [500, 502, 503, 504, 429]  # HTTP status codes to retry
+
+# Reporting settings
+reporting:
+  output_format: "text"        # "text", "json", "html"
+  save_report: true           # Save detailed report to file
+  report_file: "link_check_report.json"
+  verbose: true               # Include detailed output

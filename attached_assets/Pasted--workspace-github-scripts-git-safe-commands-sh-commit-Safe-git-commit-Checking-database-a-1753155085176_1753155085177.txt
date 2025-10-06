@@ -1,0 +1,66 @@
+~/workspace$ ./.github/scripts/git_safe_commands.sh commit
+Safe git commit...
+🔍 Checking database automation compliance...
+🔍 No database-related files in commit - skipping schema check
+✅ Auto-generated files recently updated - allowing commit
+✅ All database automation checks passed
+On branch feature/update-job-from-llm
+Your branch is ahead of 'origin/feature/update-job-from-llm' by 13 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    deleted:    docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    deleted:    docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    docs/project_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    docs/project_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+⚠️ Commit failed, attempting cleanup (attempt 1/3)
+🔍 Checking database automation compliance...
+🔍 No database-related files in commit - skipping schema check
+✅ Auto-generated files recently updated - allowing commit
+✅ All database automation checks passed
+On branch feature/update-job-from-llm
+Your branch is ahead of 'origin/feature/update-job-from-llm' by 13 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    deleted:    docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    deleted:    docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    docs/project_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    docs/project_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+⚠️ Commit failed, attempting cleanup (attempt 2/3)
+🔍 Checking database automation compliance...
+🔍 No database-related files in commit - skipping schema check
+✅ Auto-generated files recently updated - allowing commit
+✅ All database automation checks passed
+On branch feature/update-job-from-llm
+Your branch is ahead of 'origin/feature/update-job-from-llm' by 13 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    deleted:    docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    deleted:    docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    docs/project_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md
+    docs/project_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+⚠️ Commit failed, attempting cleanup (attempt 3/3)
+❌ Commit failed after 3 attempts

@@ -1,0 +1,29 @@
+{
+  "documentation": {
+    "enabled": true,
+    "output_dir": "docs",
+    "formats": [
+      "markdown",
+      "json"
+    ]
+  },
+  "code_generation": {
+    "enabled": true,
+    "output_dir": "generated",
+    "generate_models": true,
+    "generate_schemas": true,
+    "generate_crud": true,
+    "generate_routes": true,
+    "generate_migrations": true
+  },
+  "monitoring": {
+    "check_interval_minutes": 60,
+    "auto_commit": false,
+    "notify_on_changes": true
+  },
+  "git_integration": {
+    "enabled": false,
+    "auto_commit": false,
+    "commit_message_template": "Auto-update: Database schema changes detected on {date}"
+  }
+}

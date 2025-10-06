@@ -1,0 +1,99 @@
+{
+  "success_rate": 41.66666666666667,
+  "passed_tests": 5,
+  "total_tests": 12,
+  "detailed_results": [
+    {
+      "test": "System Health Check",
+      "success": false,
+      "message": "Connection failed: HTTPConnectionPool(host='localhost', port=5000): Read timed out. (read timeout=10)",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:04.097422"
+    },
+    {
+      "test": "Dashboard Authentication",
+      "success": true,
+      "message": "Successfully authenticated",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:06.548881"
+    },
+    {
+      "test": "Database Connectivity",
+      "success": false,
+      "message": "Database query failed: 404",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:06.556190"
+    },
+    {
+      "test": "Security Framework",
+      "success": true,
+      "message": "Protected endpoints properly require authentication",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:06.561403"
+    },
+    {
+      "test": "Link Tracking Creation",
+      "success": false,
+      "message": "Link creation failed: 401",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:06.567149"
+    },
+    {
+      "test": "Document Generation",
+      "success": false,
+      "message": "Document generation failed: 404",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:06.570833"
+    },
+    {
+      "test": "AI Analysis Integration",
+      "success": true,
+      "message": "AI system accessible - Daily usage: 0",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.211663"
+    },
+    {
+      "test": "Email Integration",
+      "success": true,
+      "message": "OAuth status: unknown, Email: unknown",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.272239"
+    },
+    {
+      "test": "User Preferences System",
+      "success": false,
+      "message": "Profile system error: 404",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.277421"
+    },
+    {
+      "test": "Workflow Orchestration",
+      "success": false,
+      "message": "Workflow error: 404",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.282726"
+    },
+    {
+      "test": "Redirect Functionality",
+      "success": false,
+      "message": "No tracking ID available for redirect test",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.282861"
+    },
+    {
+      "test": "Frontend Dashboard",
+      "success": true,
+      "message": "Dashboard login page accessible",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.288796"
+    },
+    {
+      "test": "Dashboard Authentication",
+      "success": true,
+      "message": "Authenticated dashboard accessible",
+      "details": null,
+      "timestamp": "2025-07-28T01:17:13.302463"
+    }
+  ],
+  "system_status": "needs_attention"
+}

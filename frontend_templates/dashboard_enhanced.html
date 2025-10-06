@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Dashboard - Steve Glen</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Enhanced theme with better readability and larger text */
+        body {
+            font-size: 18px;
+            background-color: #a0a0a0 !important;
+            color: #1a1a1a !important;
+        }
+        
+        .enhanced-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+        }
+        
+        .stat-card {
+            background: #b8b8b8;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 100px; /* Fixed 100px spacing between content and number */
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-content {
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0066cc;
+            margin-left: 1rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+        
+        /* Horizontal navigation */
+        .nav-horizontal {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-horizontal a {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-horizontal a:hover {
+            background: rgba(0, 102, 204, 0.1);
+            color: #0066cc;
+            border-color: rgba(0, 102, 204, 0.3);
+        }
+        
+        .nav-horizontal a.active {
+            background: #0066cc;
+            color: white;
+        }
+        
+        /* Gemini model buttons */
+        .model-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .model-btn {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid #0066cc;
+            background: white;
+            color: #0066cc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .model-btn:hover {
+            background: #0066cc;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .model-btn.active {
+            background: #0066cc;
+            color: white;
+        }
+        
+        .model-btn.active {
+            background: var(--bs-info);
+            color: var(--bs-light);
+            border-color: var(--bs-info);
+        }
+        
+        /* Status badges */
+        .status-connected {
+            background: rgba(var(--bs-success-rgb), 0.2);
+            color: var(--bs-success);
+            border: 1px solid rgba(var(--bs-success-rgb), 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-available {
+            background: rgba(var(--bs-primary-rgb), 0.2);
+            color: var(--bs-primary);
+            border: 1px solid rgba(var(--bs-primary-rgb), 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Table improvements */
+        .table-dark {
+            background: rgba(var(--bs-secondary-rgb), 0.1);
+            border: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table-dark th {
+            background: rgba(var(--bs-primary-rgb), 0.2);
+            color: var(--bs-light);
+            font-weight: 600;
+            border-bottom: 2px solid rgba(var(--bs-primary-rgb), 0.3);
+        }
+        
+        .table-dark td {
+            color: rgba(var(--bs-light-rgb), 0.9);
+            border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+        }
+        
+        .table-dark tbody tr:hover {
+            background: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        /* Enhanced text contrast */
+        .text-enhanced {
+            color: rgba(var(--bs-light-rgb), 0.9) !important;
+        }
+        
+        .text-muted-enhanced {
+            color: rgba(var(--bs-light-rgb), 0.7) !important;
+        }
+        
+        /* Loading states */
+        .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: rgba(var(--bs-light-rgb), 0.6);
+        }
+        
+        .loading-spinner {
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid rgba(var(--bs-light-rgb), 0.3);
+            border-top: 2px solid var(--bs-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-horizontal {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .model-selector {
+                flex-wrap: wrap;
+            }
+            
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        {% include 'shared_navigation.html' %}
+
+        <!-- Header -->
+        <div class="enhanced-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="text-enhanced mb-2">
+                        <i class="fas fa-briefcase me-3"></i>Job Application Dashboard
+                    </h1>
+                    <p class="text-muted-enhanced mb-0">
+                        Personal automation system for Steve Glen - Edmonton, Alberta, Canada
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mb-2">
+                        <span class="status-connected">
+                            <i class="fas fa-database me-1"></i>Database: Connected
+                        </span>
+                    </div>
+                    <div>
+                        <span class="status-available">
+                            <i class="fas fa-robot me-1"></i>AI: Available
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gemini Model Selection -->
+        <div class="enhanced-card">
+            <h4 class="text-enhanced mb-3">
+                <i class="fas fa-brain me-2"></i>Gemini AI Model Selection
+            </h4>
+            <div class="model-selector">
+                <button class="model-btn" data-model="gemini-2.5-flash">
+                    <i class="fas fa-bolt me-1"></i>2.5 Flash
+                </button>
+                <button class="model-btn" data-model="gemini-2.5-flash-8b">
+                    <i class="fas fa-feather-alt me-1"></i>2.5 Flash-lite
+                </button>
+                <button class="model-btn active" data-model="gemini-2.0-flash-exp">
+                    <i class="fas fa-star me-1"></i>2.0 Flash (Default)
+                </button>
+                <button class="model-btn" data-model="gemini-2.0-flash-8b">
+                    <i class="fas fa-leaf me-1"></i>2.0 Flash-lite
+                </button>
+            </div>
+            <div class="mt-2">
+                <small class="text-muted-enhanced">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Current model: <span id="current-model">gemini-2.0-flash-exp</span>
+                    • Next batch will use selected model
+                </small>
+            </div>
+            
+            <!-- Usage Data Display -->
+            <div class="mt-3 pt-3" style="border-top: 1px solid rgba(0, 0, 0, 0.1);">
+                <h6 class="text-enhanced mb-2">
+                    <i class="fas fa-chart-line me-2"></i>Usage Statistics
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-enhanced">Daily Requests</span>
+                            <span class="badge bg-primary" id="daily-requests">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-enhanced">Monthly Cost</span>
+                            <span class="badge bg-success" id="monthly-cost">FREE</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-enhanced">Total Analyzed</span>
+                            <span class="badge bg-info" id="total-analyzed">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-enhanced">Last Updated</span>
+                            <span class="badge bg-secondary" id="last-updated">Never</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats with Enhanced Context -->
+        <div class="enhanced-card">
+            <h4 class="text-enhanced mb-3">
+                <i class="fas fa-chart-bar me-2"></i>Quick Stats Overview
+            </h4>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div class="stat-label">Job Scrapes (24h)</div>
+                            <div class="stat-description">Jobs discovered from Indeed, LinkedIn, and other sources in the last 24 hours</div>
+                        </div>
+                        <div class="stat-number" id="scrapes-24h">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div class="stat-label">Job Scrapes (Week)</div>
+                            <div class="stat-description">Total jobs scraped in the last 7 days across all job boards</div>
+                        </div>
+                        <div class="stat-number" id="scrapes-week">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div class="stat-label">Applications (24h)</div>
+                            <div class="stat-description">Job applications submitted in the last 24 hours with generated documents</div>
+                        </div>
+                        <div class="stat-number" id="applications-24h">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div class="stat-label">Applications (Week)</div>
+                            <div class="stat-description">Total applications submitted in the last 7 days including cover letters and resumes</div>
+                        </div>
+                        <div class="stat-number" id="applications-week">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="enhanced-card">
+            <h4 class="text-enhanced mb-3">
+                <i class="fas fa-history me-2"></i>Recent Applications
+            </h4>
+            <div class="table-responsive">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Applied</th>
+                            <th>Status</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applications-table">
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <div class="loading-state">
+                                    <div class="loading-spinner"></div>
+                                    Loading recent applications...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="enhanced-card">
+            <h4 class="text-enhanced mb-3">
+                <i class="fas fa-heartbeat me-2"></i>System Health
+            </h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">Database Connection</span>
+                        <span class="status-connected" id="db-status">Connected</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">AI Integration</span>
+                        <span class="status-available" id="ai-status">Available</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">Job Scraping</span>
+                        <span class="status-available" id="scraping-status">Ready</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">Document Generation</span>
+                        <span class="status-available" id="doc-status">Ready</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">Email Integration</span>
+                        <span class="status-available" id="email-status">Ready</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-enhanced">Security</span>
+                        <span class="status-connected" id="security-status">Protected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="text-center mt-4">
+            <a href="/dashboard/logout" class="btn btn-outline-secondary">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enhanced security functions
+        function sanitizeText(text) {
+            if (typeof text !== 'string') return '';
+            return text.replace(/[<>\"'&]/g, function(match) {
+                const map = {
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;',
+                    '&': '&amp;'
+                };
+                return map[match];
+            });
+        }
+
+        function validateInput(input) {
+            if (!input || typeof input !== 'string') return false;
+            return input.length > 0 && input.length < 1000;
+        }
+
+        function secureApiRequest(url, options = {}) {
+            const defaultOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            };
+            
+            return fetch(url, { ...defaultOptions, ...options })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                });
+        }
+
+        // Gemini model selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const modelButtons = document.querySelectorAll('.model-btn');
+            const currentModelSpan = document.getElementById('current-model');
+            
+            modelButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const model = this.getAttribute('data-model');
+                    
+                    // Update UI
+                    modelButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentModelSpan.textContent = model;
+                    
+                    // Save to backend
+                    secureApiRequest('/api/ai/set-model', {
+                        method: 'POST',
+                        body: JSON.stringify({ model: model })
+                    }).then(response => {
+                        if (response.success) {
+                            console.log('Model updated successfully');
+                        }
+                    }).catch(error => {
+                        console.error('Failed to update model:', error);
+                    });
+                });
+            });
+            
+            // Load dashboard data
+            loadDashboardData();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(loadDashboardData, 30000);
+        });
+
+        function loadDashboardData() {
+            // Load quick stats
+            secureApiRequest('/api/dashboard/stats')
+                .then(data => {
+                    const elements = {
+                        'scrapes-24h': data.scrapes_24h || 0,
+                        'scrapes-week': data.scrapes_week || 0,
+                        'applications-24h': data.applications_24h || 0,
+                        'applications-week': data.applications_week || 0
+                    };
+                    
+                    Object.entries(elements).forEach(([id, value]) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.textContent = value;
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Failed to load stats:', error);
+                });
+
+            // Load usage data
+            secureApiRequest('/api/ai/usage-stats')
+                .then(data => {
+                    const usageElements = {
+                        'daily-requests': data.daily_requests || 0,
+                        'monthly-cost': data.monthly_cost === 0 ? 'FREE' : `$${data.monthly_cost.toFixed(2)}`,
+                        'total-analyzed': data.total_analyzed || 0,
+                        'last-updated': data.last_updated || 'Never'
+                    };
+                    
+                    Object.entries(usageElements).forEach(([id, value]) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.textContent = value;
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Failed to load usage data:', error);
+                });
+
+            // Load recent applications
+            secureApiRequest('/api/dashboard/recent-applications')
+                .then(data => {
+                    const tableBody = document.getElementById('applications-table');
+                    if (!tableBody) return;
+                    
+                    // Clear existing content
+                    tableBody.innerHTML = '';
+                    
+                    if (data.applications && data.applications.length > 0) {
+                        data.applications.forEach(app => {
+                            const row = document.createElement('tr');
+                            
+                            // Create cells with sanitized content
+                            const cells = [
+                                sanitizeText(app.position || 'N/A'),
+                                sanitizeText(app.company || 'N/A'),
+                                sanitizeText(app.location || 'N/A'),
+                                sanitizeText(app.applied_date || 'N/A'),
+                                sanitizeText(app.status || 'N/A'),
+                                app.documents ? `<a href="${sanitizeText(app.documents)}" target="_blank" rel="noopener noreferrer">View</a>` : 'N/A'
+                            ];
+                            
+                            cells.forEach(cellContent => {
+                                const cell = document.createElement('td');
+                                cell.innerHTML = cellContent;
+                                row.appendChild(cell);
+                            });
+                            
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        const row = document.createElement('tr');
+                        const cell = document.createElement('td');
+                        cell.colSpan = 6;
+                        cell.className = 'text-center text-muted-enhanced';
+                        cell.textContent = 'No recent applications found';
+                        row.appendChild(cell);
+                        tableBody.appendChild(row);
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to load applications:', error);
+                    const tableBody = document.getElementById('applications-table');
+                    if (tableBody) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="text-center text-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Failed to load applications
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

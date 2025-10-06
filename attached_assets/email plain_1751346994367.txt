@@ -1,0 +1,42 @@
+Return-Path: <1234.s.t.e.v.e.glen@gmail.com>
+Received: from imt-engine-scheduling-engine-85d64499d7-46c44.farm.integromat.com (ec2-44-209-150-16.compute-1.amazonaws.com. [44.209.150.16])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443201a7csm717831485a.64.2025.06.30.21.48.34
+        for <therealstevenglen@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 21:48:34 -0700 (PDT)
+From: Steve Glen <1234.s.t.e.v.e.glen@gmail.com>
+To: therealstevenglen@gmail.com
+Subject: Testing Make integration
+Message-ID: <0fd0feb1-8a23-81e1-b108-8856c03340b6@gmail.com>
+Date: Tue, 01 Jul 2025 04:48:34 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="--_NmP-e094b96dd6f47fde-Part_1"
+
+----_NmP-e094b96dd6f47fde-Part_1
+Content-Type: multipart/alternative; boundary="--_NmP-e094b96dd6f47fde-Part_2"
+
+----_NmP-e094b96dd6f47fde-Part_2
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi, I'm testing Make integration with Gmail. Did you receive a word documen=
+t?
+Thanks, Steve
+----_NmP-e094b96dd6f47fde-Part_2
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi, I'm testing <b>Make</b> integration with Gmail. Did you receive a word =
+document?
+
+
+Thanks,
+Steve
+----_NmP-e094b96dd6f47fde-Part_2--
+----_NmP-e094b96dd6f47fde-Part_1
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document; name=20250701_044833_Document_Title_899c6f3b.docx
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=20250701_044833_Document_Title_899c6f3b.docx
+
+
+----_NmP-e094b96dd6f47fde-Part_1--

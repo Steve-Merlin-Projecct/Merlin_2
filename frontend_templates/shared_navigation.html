@@ -1,0 +1,87 @@
+<!-- Shared Styles -->
+<style>
+/* Enhanced Card Styling */
+.enhanced-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+}
+
+/* Navigation Styling */
+.nav-horizontal {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.nav-horizontal a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    text-decoration: none;
+    color: #495057;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-horizontal a:hover {
+    background: #e9ecef;
+    color: #343a40;
+    border-color: #ced4da;
+    text-decoration: none;
+}
+
+.nav-horizontal a.active {
+    background: var(--bs-primary, #0d6efd);
+    color: white;
+    border-color: var(--bs-primary, #0d6efd);
+}
+
+/* Status Indicators */
+.status-connected {
+    color: #198754;
+    font-weight: 600;
+}
+
+.status-available {
+    color: #0dcaf0;
+    font-weight: 600;
+}
+
+.status-processing {
+    color: #fd7e14;
+    font-weight: 600;
+}
+</style>
+
+<!-- Horizontal Navigation -->
+<nav class="nav-horizontal">
+    <a href="/dashboard" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+    </a>
+    <a href="/workflow" class="{% if request.endpoint == 'workflow_visualization' %}active{% endif %}">
+        <i class="fas fa-project-diagram me-2"></i>Workflow
+    </a>
+    <a href="/database-schema" class="{% if request.endpoint == 'database_schema' %}active{% endif %}">
+        <i class="fas fa-database me-2"></i>Database Schema
+    </a>
+    <a href="/tone-analysis" class="{% if request.endpoint == 'tone_analysis' %}active{% endif %}">
+        <i class="fas fa-chart-line me-2"></i>Tone Analysis
+    </a>
+    <a href="/preferences" class="{% if request.endpoint == 'preferences' %}active{% endif %}">
+        <i class="fas fa-cog me-2"></i>Preferences
+    </a>
+    <a href="/job-override" class="{% if request.endpoint == 'job_override' %}active{% endif %}">
+        <i class="fas fa-edit me-2"></i>Job Override
+    </a>
+</nav>

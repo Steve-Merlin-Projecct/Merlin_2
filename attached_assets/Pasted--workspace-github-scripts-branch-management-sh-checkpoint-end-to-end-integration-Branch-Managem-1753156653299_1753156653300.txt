@@ -1,0 +1,59 @@
+~/workspace$ ./.github/scripts/branch_management.sh checkpoint end-to-end-integration
+Branch Management System - Safe Feature Development
+Creating checkpoint 'end-to-end-integration' on branch 'feature/update-job-from-llm'...
+🔍 Checking if database schema needs update...
+Schema changes detected!
+Previous hash: ...
+Current hash:  4ebd2aba7e4afb69...
+Schema changes detected
+📊 Database schema changes detected - updating documentation...
+🔄 Updating Database Schema HTML...
+🔄 Updating database schema HTML...
+Fetching database schema...
+Found 31 tables in database
+  - application_documents: 7 columns
+  - application_settings: 6 columns
+  - cleaned_job_scrape_sources: 8 columns
+  - cleaned_job_scrapes: 30 columns
+  - clicks: 2 columns
+  - companies: 19 columns
+  - document_jobs: 17 columns
+  - document_sentences: 9 columns
+  - document_template_metadata: 9 columns
+  - document_tone_analysis: 7 columns
+  - job_analysis_queue: 9 columns
+  - job_application_tracking: 8 columns
+  - job_applications: 16 columns
+  - job_ats_keywords: 5 columns
+  - job_benefits: 5 columns
+  - job_certifications: 5 columns
+  - job_education_requirements: 9 columns
+  - job_logs: 6 columns
+  - job_platforms_found: 5 columns
+  - job_red_flags_details: 6 columns
+  - job_required_documents: 5 columns
+  - job_required_skills: 6 columns
+  - job_skills: 8 columns
+  - job_stress_indicators: 5 columns
+  - jobs: 54 columns
+  - link_tracking: 3 columns
+  - raw_job_scrapes: 14 columns
+  - sentence_bank_cover_letter: 8 columns
+  - sentence_bank_resume: 9 columns
+  - user_job_preferences: 49 columns
+  - user_preferred_industries: 6 columns
+Generating HTML template...
+✓ Database schema HTML updated: /home/runner/workspace/frontend_templates/database_schema.html
+✓ Generated at: 2025-07-22 03:55:31
+✅ Schema HTML updated - changes detected
+✅ Database schema update completed successfully!
+✅ Database schema documentation updated
+Uncommitted changes detected. Committing as checkpoint...
+🔍 Checking database automation compliance...
+✅ Database schema recently updated - allowing commit
+✅ Auto-generated files recently updated - allowing commit
+✅ All database automation checks passed
+[feature/update-job-from-llm 1b99bb3] Checkpoint: end-to-end-integration - Auto-save before major changes
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+✅ Checkpoint 'end-to-end-integration' created
+To rollback: git reset --hard end-to-end-integration

@@ -1,0 +1,220 @@
+{
+  "job_id": "79e6a945-553a-4fdd-b31b-4d41b159ae3b",
+  "primary_industry": "Marketing & Communications",
+  "secondary_industries": [
+    "Technology",
+    "Digital Marketing",
+    "Content Creation"
+  ],
+  "seniority_level": "mid-level",
+  "authenticity_score": 0.92,
+  "skills_analysis": [
+    {
+      "skill_name": "Marketing Communications",
+      "importance_rating": 10,
+      "reasoning": "Core responsibility explicitly mentioned as primary function of the role"
+    },
+    {
+      "skill_name": "Content Creation",
+      "importance_rating": 9,
+      "reasoning": "Essential for creating marketing materials across multiple channels and platforms"
+    },
+    {
+      "skill_name": "Social Media Marketing",
+      "importance_rating": 8,
+      "reasoning": "Required for managing social media accounts and online community engagement"
+    },
+    {
+      "skill_name": "Adobe Creative Suite",
+      "importance_rating": 8,
+      "reasoning": "Specifically mentioned as required qualification for design and content creation"
+    },
+    {
+      "skill_name": "Project Management",
+      "importance_rating": 7,
+      "reasoning": "Needed for coordinating campaigns from concept to completion and managing multiple projects"
+    },
+    {
+      "skill_name": "Marketing Automation",
+      "importance_rating": 7,
+      "reasoning": "Experience with tools like HubSpot and Mailchimp mentioned as requirement"
+    },
+    {
+      "skill_name": "SEO Knowledge",
+      "importance_rating": 6,
+      "reasoning": "Listed as required knowledge for content marketing best practices"
+    },
+    {
+      "skill_name": "Analytics",
+      "importance_rating": 6,
+      "reasoning": "Monitoring and analyzing marketing performance metrics is key responsibility"
+    },
+    {
+      "skill_name": "Event Planning",
+      "importance_rating": 5,
+      "reasoning": "Supporting trade shows and corporate events mentioned as responsibility"
+    },
+    {
+      "skill_name": "Public Relations",
+      "importance_rating": 5,
+      "reasoning": "Assisting with PR activities and media outreach listed as responsibility"
+    }
+  ],
+  "structured_data": {
+    "compensation": {
+      "salary_range": {
+        "min": 45000,
+        "max": 55000,
+        "currency": "CAD"
+      },
+      "bonus_structure": null,
+      "benefits": [
+        "Health insurance",
+        "Dental insurance", 
+        "Vision insurance",
+        "Professional development budget",
+        "Flexible work arrangements"
+      ]
+    },
+    "work_arrangement": {
+      "type": "hybrid",
+      "location": "Edmonton, AB",
+      "remote_flexibility": true,
+      "travel_requirements": null
+    },
+    "experience_requirements": {
+      "years_required": "2-3",
+      "education_level": "Bachelor's degree",
+      "preferred_fields": [
+        "Marketing",
+        "Communications", 
+        "Journalism"
+      ]
+    },
+    "ats_optimization": {
+      "keywords": [
+        {
+          "keyword": "Marketing Communications",
+          "importance_level": "high",
+          "category": "core_skill"
+        },
+        {
+          "keyword": "Content Creation",
+          "importance_level": "high",
+          "category": "core_skill"
+        },
+        {
+          "keyword": "Social Media Marketing",
+          "importance_level": "high",
+          "category": "technical_skill"
+        },
+        {
+          "keyword": "Adobe Creative Suite",
+          "importance_level": "high",
+          "category": "technical_skill"
+        },
+        {
+          "keyword": "HubSpot",
+          "importance_level": "medium",
+          "category": "tool_proficiency"
+        },
+        {
+          "keyword": "Mailchimp",
+          "importance_level": "medium",
+          "category": "tool_proficiency"
+        },
+        {
+          "keyword": "Hootsuite",
+          "importance_level": "medium",
+          "category": "tool_proficiency"
+        },
+        {
+          "keyword": "Project Management",
+          "importance_level": "medium",
+          "category": "soft_skill"
+        },
+        {
+          "keyword": "SEO",
+          "importance_level": "medium",
+          "category": "technical_skill"
+        },
+        {
+          "keyword": "Google Analytics",
+          "importance_level": "medium",
+          "category": "tool_proficiency"
+        },
+        {
+          "keyword": "Marketing Automation",
+          "importance_level": "medium",
+          "category": "technical_skill"
+        },
+        {
+          "keyword": "Bachelor's Degree",
+          "importance_level": "low",
+          "category": "education"
+        },
+        {
+          "keyword": "2-3 years experience",
+          "importance_level": "low",
+          "category": "experience"
+        },
+        {
+          "keyword": "B2B",
+          "importance_level": "low",
+          "category": "industry_knowledge"
+        },
+        {
+          "keyword": "Bilingual",
+          "importance_level": "low",
+          "category": "language_skill"
+        }
+      ]
+    }
+  },
+  "implicit_requirements": [
+    {
+      "requirement": "Cross-functional collaboration skills",
+      "reasoning": "Role requires working with sales, product, and design teams"
+    },
+    {
+      "requirement": "Brand management awareness",
+      "reasoning": "Responsibility for maintaining brand consistency across communications"
+    },
+    {
+      "requirement": "Multi-channel marketing understanding",
+      "reasoning": "Need to execute strategies across websites, social media, email, and print"
+    },
+    {
+      "requirement": "Fast-paced environment adaptability",
+      "reasoning": "Explicitly mentioned as requirement for working environment"
+    }
+  ],
+  "cover_letter_insights": {
+    "employer_pain_points": [
+      "Need for consistent brand messaging across channels",
+      "Managing multiple marketing projects simultaneously",
+      "Creating engaging content for diverse platforms",
+      "Measuring and optimizing marketing performance"
+    ],
+    "company_goals": [
+      "Growing team and expanding marketing reach",
+      "Building strong online community presence",
+      "Executing integrated marketing campaigns",
+      "Professional development of team members"
+    ],
+    "positioning_angles": [
+      "Proven multi-channel marketing experience",
+      "Strong creative and analytical skill combination",
+      "Experience in startup/growth environments",
+      "Technical proficiency with marketing tools"
+    ]
+  },
+  "red_flags": [],
+  "analysis_metadata": {
+    "model_used": "gemini-2.0-flash-001",
+    "analysis_date": "2025-07-24T03:50:00Z",
+    "tokens_used": 1247,
+    "confidence_level": 0.92,
+    "security_token_validated": true
+  }
+}

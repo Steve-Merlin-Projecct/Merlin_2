@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Login - Steve Glen</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background: var(--bs-dark);
+            border-radius: 10px;
+            border: 1px solid var(--bs-gray-700);
+        }
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--bs-primary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-form {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container-fluid">
+        <div class="login-container">
+            <div class="brand-logo">
+                <i class="fas fa-briefcase me-2"></i>
+                Job Application Dashboard
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="fas fa-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                
+
+                
+                <button type="submit" class="btn btn-primary w-100" id="loginButton">
+                    <span id="loginText">Access Dashboard</span>
+                    <span id="loginSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                </button>
+            </form>
+            
+            <div id="loginError" class="alert alert-danger mt-3" style="display: none;"></div>
+            
+            <div class="mt-4 text-center">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    Secure authentication required
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Password toggle functionality
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        });
+
+        // Login form handler with server-side authentication
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const loginButton = document.getElementById('loginButton');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const errorDiv = document.getElementById('loginError');
+            
+            // Show loading state
+            loginButton.disabled = true;
+            loginText.textContent = 'Authenticating...';
+            loginSpinner.style.display = 'inline-block';
+            errorDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch('/dashboard/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Redirect to dashboard (it will now show the actual dashboard)
+                    window.location.reload();
+                } else {
+                    showError(result.message || 'Authentication failed');
+                }
+                
+            } catch (error) {
+                console.error('Authentication error:', error);
+                showError('Network error. Please try again.');
+            } finally {
+                // Reset button state
+                loginButton.disabled = false;
+                loginText.textContent = 'Access Dashboard';
+                loginSpinner.style.display = 'none';
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Focus on password field when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('password').focus();
+        });
+    </script>
+</body>
+</html>

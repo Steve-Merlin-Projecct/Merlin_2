@@ -1,0 +1,19 @@
+#!/bin/bash
+# Safe git wrapper - always prevents lock file issues
+
+# Remove locks before operation
+rm -f .git/index.lock .git/config.lock 2>/dev/null
+
+# Wait for any git processes
+while pgrep -f "git" >/dev/null 2>&1; do
+    sleep 0.1
+done
+
+# Execute git command
+git "$@"
+exit_code=$?
+
+# Clean up locks after operation
+rm -f .git/index.lock .git/config.lock 2>/dev/null
+
+exit $exit_code

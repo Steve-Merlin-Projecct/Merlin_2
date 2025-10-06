@@ -1,0 +1,253 @@
+{
+  "resume_data": {
+    "personal": {
+      "first_name": "Steve",
+      "last_name": "Glen",
+      "address": "",
+      "city": "Edmonton",
+      "province": "Alberta",
+      "postal_code": "",
+      "email": "therealstevenglen@gmail.com",
+      "phone": "780-884-7038",
+      "linkedin": "linkedin.com/in/steve-glen-51683b87/"
+    },
+    "professional_summary": "Results-driven marketing professional with over 14 years of experience in CX, business strategy, multimedia content creation, interpersonal communication, and project management. Adept at transforming digital channels, implementing data-driven solutions, and enhancing brand presence through innovative campaigns. Proficient in multi-channel communications, administrative organization, and team leadership.",
+    "education": [
+      {
+        "institution": "University of Alberta, Alberta School of Business",
+        "location": "Edmonton, AB",
+        "degree": "Bachelor of Commerce",
+        "concentration": "Strategic Management & Organizations; Entrepreneurship, Marketing",
+        "graduation_date": "2018",
+        "relevant_coursework": "",
+        "honors": "",
+        "study_abroad": ""
+      },
+      {
+        "institution": "MacEwan University",
+        "location": "Edmonton, AB",
+        "degree": "Bachelor of Arts Transfer",
+        "concentration": "",
+        "graduation_date": "2007",
+        "relevant_coursework": "",
+        "honors": "",
+        "study_abroad": ""
+      }
+    ],
+    "experience": [
+      {
+        "company": "Odvod Media / Odvod Publishing; Edify Magazine",
+        "location": "Edmonton, AB",
+        "position": "Digital Strategist, Content Contributor, Resource Coordinator, and Business Analyst",
+        "start_date": "February 2020",
+        "end_date": "Present",
+        "description": "",
+        "bullets": [
+          "Led the transformation of digital channels (website, newsletters, social media) during the rebranding from Avenue to Edify, focusing on engaging internal and external stakeholders",
+          "Implemented and optimized content management strategies, resulting in 6 million article reads, 18 million advertisement views, and 1.7 million newsletter reads",
+          "Developed high-quality images for print using professional photography techniques, adapting to client needs and journalism requirements",
+          "Innovated drone-based content ('Ed from Above') during COVID restrictions, persuading the team with compelling messaging and presentations",
+          "Managed multiple technical roles including Co-Producer, Recording Engineer, Mixing Engineer, Mastering Engineer, and Live Audio Engineer",
+          "Designed and executed a grassroots engagement strategy at local events, successfully raising awareness of the magazine's rebrand through direct interactions with tens of thousands of community members",
+          "Designed and programmed data dashboards for internal use, effectively communicating analytics and key performance indicators to senior management",
+          "Liaison with graphic designers, project managers, web developers, typesetters, clients and suppliers for print and digital marketing collateral"
+        ]
+      }
+    ],
+    "leadership": [
+      {
+        "organization": "League of Extraordinary Albertans",
+        "location": "Edmonton, AB",
+        "position": "Media Lead",
+        "start_date": "2024",
+        "end_date": "Present",
+        "description": "",
+        "bullets": [
+          "Collaborate with production project managers, photographers, copywriters, and social media teams to align media strategy with organizational goals",
+          "Develop and refine policies on consent, copyright, and content usage",
+          "Oversee graphic design and media selection, ensuring cohesive branding and high-quality visual storytelling"
+        ]
+      },
+      {
+        "organization": "League of Extraordinary Albertans",
+        "location": "Edmonton, AB",
+        "position": "Conduct Committee Co-Chair",
+        "start_date": "April 2022",
+        "end_date": "September 2024",
+        "description": "",
+        "bullets": [
+          "Investigate member conduct, mediate disputes, and implement fair resolutions, ensuring compliance with organizational policies",
+          "Collaborate with cross-functional teams to build relationships and promote strategic communication initiatives for reputation management"
+        ]
+      }
+    ],
+    "additional_experience": [
+      {
+        "role": "Director of Photography",
+        "details": "Somerset, D., & Pope, D. (2025). Rock Solid Resilience : An Evidence-Based Guide to Preventing Injury, Optimizing Strength, and Enhancing Performance. Human Kinetics.",
+        "year": "",
+        "years": ""
+      },
+      {
+        "role": "Event Coordinator",
+        "details": "",
+        "year": "2019",
+        "years": ""
+      },
+      {
+        "role": "Retail Sales",
+        "details": "",
+        "year": "",
+        "years": "2006 - 2007, 2009, 2018 - 2019"
+      },
+      {
+        "role": "Merchandiser",
+        "details": "",
+        "year": "",
+        "years": "2014 - 2017"
+      },
+      {
+        "role": "Bartender and Server",
+        "details": "",
+        "year": "",
+        "years": "Various roles from 2007 - 2013"
+      }
+    ],
+    "certifications": [
+      {
+        "provider": "Google",
+        "certifications": [
+          "Cloud Digital Leader",
+          "Data Analytics Specialization",
+          "Ads Certifications: Display, Search, Video, Analytics Individual Qualification (2022)"
+        ]
+      },
+      {
+        "provider": "Amii Training",
+        "certifications": [
+          "Machine Learning Foundations (2023)"
+        ]
+      },
+      {
+        "provider": "Faculty of Extension, University of Alberta",
+        "certifications": [
+          "Analytic Models for Business Decisions (2019)",
+          "Information Access and Protection of Privacy (2023)"
+        ]
+      }
+    ],
+    "skills": {
+      "digital_marketing": "SEO (Ahrefs, Screaming Frog SEO Spider), content management, social media marketing (Meta), Google Ads, WordPress, CMS (Ad Orbit), email marketing (Mailchimp)",
+      "technical_expertise": "Reaper, Ableton Live, DaVinci Resolve, Adobe: Photoshop, Lightroom, After Effects; Capture One",
+      "business_analytics": "Data analysis (RStudio, Python), dashboard design",
+      "productivity_software": "Microsoft Office Suite, Google Workspace, Slack, Smartsheets",
+      "technical": "Digital Marketing, CMS, SEO, Social Media, Data Analysis",
+      "language": "English (Native), French (Conversational)",
+      "interests": "Photography, Audio Production, Data Visualization, Digital Marketing Innovation"
+    },
+    "metadata": {
+      "title": "Steve Glen - Marketing Manager Resume",
+      "subject": "Steve Glen - Professional Marketing Manager Resume",
+      "keywords": "marketing manager, marketing communications, journalism, public relations, data analysis, strategy, business strategy, strategic communications, steve glen, alberta, edmonton",
+      "comments": "Professional resume for Steve Glen - Marketing Manager positions in Alberta, Canada",
+      "category": "Professional Resume",
+      "version": "3.2"
+    }
+  },
+  "cover_letter_data": {
+    "personal": {
+      "first_name": "Steve",
+      "last_name": "Glen",
+      "email": "therealstevenglen@gmail.com",
+      "phone": "780-884-7038",
+      "city": "Edmonton",
+      "province": "Alberta",
+      "postal_code": "",
+      "address": ""
+    },
+    "company": {
+      "name": "",
+      "address": "",
+      "city": "",
+      "province": "",
+      "postal_code": ""
+    },
+    "recipient": {
+      "name": "Hiring Manager",
+      "title": "",
+      "department": ""
+    },
+    "position": "Marketing Manager",
+    "date": "",
+    "opening_paragraph": "I am writing to express my strong interest in the {position} position at {company_name}. With over 14 years of experience in marketing communications, content creation, and business strategy, I am confident in my ability to contribute effectively to your team's success.",
+    "body_paragraphs": [
+      "In my current role as Digital Strategist at Odvod Media, I have successfully managed comprehensive marketing campaigns that have generated over 6 million article reads and 18 million ad views. My expertise spans digital marketing strategy, content management, SEO optimization, and social media marketing across multiple platforms. I have extensive experience with tools including Google Analytics, Adobe Creative Suite, WordPress, and various marketing automation platforms.",
+      "My technical expertise complements my marketing skills, with proficiency in data analysis using RStudio and Python, multimedia content creation using DaVinci Resolve and Adobe After Effects, and business analytics dashboard design. I hold Google certifications in Cloud Digital Leader, Data Analytics, and Google Ads, along with specialized training in machine learning foundations and business analytics from the University of Alberta.",
+      "Throughout my career, I have demonstrated strong leadership capabilities, currently serving as Media Lead for the League of Extraordinary Albertans, where I collaborate with cross-functional teams to develop media strategies and oversee content creation. My experience in project management, combined with my analytical mindset and creative problem-solving abilities, positions me well to drive marketing initiatives that deliver measurable results."
+    ],
+    "closing_paragraph": "I am excited about the opportunity to bring my proven track record of successful marketing campaigns and analytical expertise to {company_name}. I would welcome the opportunity to discuss how my skills and experience can contribute to your marketing objectives. Thank you for considering my application.",
+    "signature": "Sincerely,",
+    "metadata": {
+      "title": "Steve Glen - Marketing Manager Cover Letter",
+      "subject": "Cover Letter - Marketing Manager Application",
+      "keywords": "Cover Letter, Marketing Manager, Digital Marketing, Content Strategy, Business Analytics, Google Certifications",
+      "comments": "Professional cover letter for Steve Glen - Marketing Manager positions in Alberta, Canada",
+      "category": "Professional Cover Letter",
+      "version": "3.2"
+    }
+  },
+  "template_variable_mappings": {
+    "resume_variables": {
+      "first_name": "personal.first_name",
+      "last_name": "personal.last_name",
+      "email": "personal.email",
+      "phone": "personal.phone",
+      "city": "personal.city",
+      "province": "personal.province",
+      "linkedin": "personal.linkedin",
+      "professional_summary": "professional_summary",
+      "education_institution_1": "education[0].institution",
+      "education_location_1": "education[0].location",
+      "education_degree_1": "education[0].degree",
+      "education_concentration_1": "education[0].concentration",
+      "education_graduation_1": "education[0].graduation_date",
+      "technical_skills": "skills.technical_expertise",
+      "digital_marketing_skills": "skills.digital_marketing",
+      "business_analytics_skills": "skills.business_analytics",
+      "productivity_software_skills": "skills.productivity_software",
+      "interests": "skills.interests",
+      "languages": "skills.language"
+    },
+    "cover_letter_variables": {
+      "first_name": "personal.first_name",
+      "last_name": "personal.last_name",
+      "email": "personal.email",
+      "phone": "personal.phone",
+      "city": "personal.city",
+      "province": "personal.province",
+      "company_name": "company.name",
+      "recipient_name": "recipient.name",
+      "position": "position",
+      "date": "date",
+      "opening_paragraph": "opening_paragraph",
+      "body_paragraph_1": "body_paragraphs[0]",
+      "body_paragraph_2": "body_paragraphs[1]",
+      "body_paragraph_3": "body_paragraphs[2]",
+      "closing_paragraph": "closing_paragraph",
+      "signature": "signature"
+    }
+  },
+  "generation_notes": {
+    "extracted_from": "Legacy modular system (modules/resume_generator.py, modules/cover_letter_generator.py, modules/base_generator.py)",
+    "extraction_date": "2025-07-11",
+    "purpose": "Comprehensive backup of Steve Glen's default content for template-based document generation",
+    "usage": "This file serves as backup data and test data for the new template-based DocumentGenerator system",
+    "legacy_system_features": {
+      "database_tracking": "Complete job tracking with UUID-based job IDs",
+      "metadata_creation": "Professional document metadata with Canadian localization",
+      "storage_integration": "Replit Object Storage with local fallback",
+      "error_handling": "Comprehensive error tracking and database logging",
+      "content_merging": "Deep merge of user data with default templates"
+    }
+  }
+}

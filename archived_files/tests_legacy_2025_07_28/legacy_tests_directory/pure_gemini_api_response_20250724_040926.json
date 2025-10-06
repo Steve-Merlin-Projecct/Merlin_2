@@ -1,0 +1,135 @@
+{
+  "primary_industry": "Marketing",
+  "secondary_industries": [
+    "Technology",
+    "Communications"
+  ],
+  "seniority_level": "mid",
+  "authenticity_score": 0.85,
+  "skills_analysis": [
+    {
+      "skill_name": "Marketing Communications",
+      "importance_rating": 10,
+      "reasoning": "The job title and key responsibilities heavily emphasize marketing communications expertise."
+    },
+    {
+      "skill_name": "Content Creation",
+      "importance_rating": 9,
+      "reasoning": "Creating compelling content is a core responsibility across various platforms."
+    },
+    {
+      "skill_name": "Social Media Marketing",
+      "importance_rating": 8,
+      "reasoning": "Managing social media accounts and engaging online communities are key tasks."
+    },
+    {
+      "skill_name": "Project Management",
+      "importance_rating": 8,
+      "reasoning": "Coordinating campaigns and managing multiple projects require strong project management skills."
+    },
+    {
+      "skill_name": "Written Communication",
+      "importance_rating": 10,
+      "reasoning": "Excellent written communication skills are explicitly stated as a requirement."
+    },
+    {
+      "skill_name": "Marketing Tools Proficiency",
+      "importance_rating": 7,
+      "reasoning": "Experience with specific marketing tools like HubSpot and Mailchimp is required."
+    },
+    {
+      "skill_name": "Adobe Creative Suite",
+      "importance_rating": 6,
+      "reasoning": "Experience with Adobe Creative Suite is required, indicating a need for visual content creation skills."
+    },
+    {
+      "skill_name": "SEO",
+      "importance_rating": 6,
+      "reasoning": "Knowledge of SEO principles is required for optimizing content."
+    },
+    {
+      "skill_name": "Event Planning",
+      "importance_rating": 5,
+      "reasoning": "Supporting event planning is a responsibility, though not the primary focus."
+    }
+  ],
+  "structured_data": {
+    "compensation": {
+      "salary_range": {
+        "min": 45000,
+        "max": 55000,
+        "currency": "CAD"
+      },
+      "benefits": [
+        "health",
+        "dental",
+        "vision",
+        "professional development",
+        "training"
+      ]
+    },
+    "work_arrangement": {
+      "type": "hybrid",
+      "location": "Edmonton, AB",
+      "remote_flexibility": true
+    },
+    "experience_requirements": {
+      "years_required": "2-3",
+      "education_level": "Bachelor's Degree",
+      "preferred_fields": [
+        "Marketing",
+        "Communications",
+        "Journalism"
+      ]
+    },
+    "ats_optimization": {
+      "keywords": [
+        {
+          "keyword": "Marketing Communications",
+          "importance_level": "high",
+          "category": "Marketing"
+        },
+        {
+          "keyword": "Content Creation",
+          "importance_level": "high",
+          "category": "Marketing"
+        },
+        {
+          "keyword": "Social Media Marketing",
+          "importance_level": "high",
+          "category": "Marketing"
+        },
+        {
+          "keyword": "Project Management",
+          "importance_level": "medium",
+          "category": "Skills"
+        },
+        {
+          "keyword": "HubSpot",
+          "importance_level": "medium",
+          "category": "Tools"
+        },
+        {
+          "keyword": "Mailchimp",
+          "importance_level": "medium",
+          "category": "Tools"
+        },
+        {
+          "keyword": "Adobe Creative Suite",
+          "importance_level": "medium",
+          "category": "Tools"
+        },
+        {
+          "keyword": "SEO",
+          "importance_level": "medium",
+          "category": "Marketing"
+        },
+        {
+          "keyword": "B2B Technology",
+          "importance_level": "low",
+          "category": "Industry"
+        }
+      ]
+    }
+  }
+}

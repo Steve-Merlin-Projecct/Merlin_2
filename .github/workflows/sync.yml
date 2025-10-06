@@ -1,0 +1,17 @@
+name: Auto-sync with Replit
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Sync with Replit
+      run: |
+        echo "Auto-sync configured for Merlin repository"
+        echo "Last sync: $(date)"

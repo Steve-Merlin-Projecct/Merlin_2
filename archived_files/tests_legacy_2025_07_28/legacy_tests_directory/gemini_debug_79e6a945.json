@@ -1,0 +1,51 @@
+{
+  "results": [],
+  "usage_stats": {
+    "daily_requests": 0,
+    "monthly_requests": 0,
+    "daily_tokens": 0,
+    "monthly_tokens": 0,
+    "daily_request_limit": 1500,
+    "monthly_request_limit": 45000,
+    "daily_token_limit": 3000000,
+    "monthly_token_limit": 50000000,
+    "last_reset": "2025-07-24T03:49:10.839875",
+    "model_switches": 0,
+    "primary_model": "gemini-2.0-flash-001",
+    "available_models": {
+      "gemini-2.0-flash-001": {
+        "name": "Gemini 2.0 Flash",
+        "tier": "free",
+        "input_cost_per_1k": 0.0,
+        "output_cost_per_1k": 0.0
+      },
+      "gemini-2.0-flash-lite-001": {
+        "name": "Gemini 2.0 Flash Lite",
+        "tier": "free",
+        "input_cost_per_1k": 0.0,
+        "output_cost_per_1k": 0.0
+      },
+      "gemini-2.5-flash": {
+        "name": "Gemini 2.5 Flash",
+        "tier": "paid",
+        "input_cost_per_1k": 0.3,
+        "output_cost_per_1k": 2.5
+      },
+      "gemini-1.5-flash": {
+        "name": "Gemini 1.5 Flash",
+        "tier": "free",
+        "input_cost_per_1k": 0.0,
+        "output_cost_per_1k": 0.0
+      },
+      "gemini-1.5-pro": {
+        "name": "Gemini 1.5 Pro",
+        "tier": "free",
+        "input_cost_per_1k": 0.0,
+        "output_cost_per_1k": 0.0
+      }
+    }
+  },
+  "success": false,
+  "error": "Failed to get response from Gemini API",
+  "model_used": "gemini-2.0-flash-001"
+}

@@ -1,0 +1,35 @@
+{
+  "document_type": "resume",
+  "conversion_date": "2025-07-08T06:48:23.041377",
+  "conversion_stats": {
+    "total_paragraphs": 23,
+    "paragraphs_modified": 6,
+    "patterns_matched": {
+      "full_name": 1,
+      "email": 1,
+      "technical_skills": 1,
+      "languages": 1,
+      "laboratory_skills": 1,
+      "interests": 1
+    },
+    "variables_created": [
+      {
+        "original": "Thesis [Note: Optional]",
+        "variable": "<<field_1>>",
+        "type": "generic"
+      }
+    ],
+    "unmatched_content": [
+      "Thesis [Note: Optional]"
+    ]
+  },
+  "template_version": "1.0",
+  "variable_format": "double_angle_brackets",
+  "notes": [
+    "Template created by automated conversion process",
+    "Variables use <<variable_name>> format",
+    "Original formatting and structure preserved",
+    "Pattern recognition used for common fields",
+    "Generic fields created for unmatched content"
+  ]
+}

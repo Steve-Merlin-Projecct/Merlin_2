@@ -1,0 +1,31 @@
+Create a front-end page that displays the formula logic, along with calculations of these tone factors from the most recent document created. Also import the full text of the document, so that the process can be viewed in context.
+
+This front end page, along with the visualizations for workflow process and database, should be dynamically constructed so that it reflects the current code.
+
+Then, temporarily disable Tone Strength inter-tone strength and tone jump calculations. Ask me to ren-enable after we are sure the scraping, then converting into an application package is completed. then test.
+----
+
+Build another front end page for the user to input user job preferences. On this page there will be fields for the user to type in their preferred salary range and location. Allow for up to 8 tabs that can accommodate up to 8 scenarios. For boolean inputs, use a checkbox. For values from a short list, use a dropdown menu (for example: on-location, remote, hybrid).
+
+These scenarios will contribute to the overall picture of what the user will tolerate for job offers. Your job will be to create an algorithm that turns these preferences into a formula. This will indicate how the user views trade-offs when making a decision. For each input field, where appropriate, let the user select [linear, exponential, polynomial] for building the trend line. Or, where appropriate, a constant/absolute setting for either all scenarios, or just this scenario.
+
+The purpose would be to indicate, for example, in a trade off between commute time and pay amount, how much the commute time matters to the user. If the commute time doesn't matter, as long as the pay matches the desire amount, I could select the constant setting for the commute time.
+
+For calculating a commute time, you don't need driving instructions. But you will likely needs some sort of map API that can convert addresses into lat and long coordinates. From those coordinates, calculate a straight line, then multiply a realistic driving adjustment, like 1.5. And input the the number in kilometers per one way trip.
+
+At this point, you might as well show estimated monthly driving kilometers and the estimated monthly driving time (use commute speed = 40 km/h). Remember to factor in the in-office requirements of the job (in-office, hybrid, remote).
+
+There should be a way to "solo" a certain factor. For example, I would prefer not to accept payment in USD, so I want to apply a 1.5 increased asking price over my preferred CAD salary. This will apply to the entire formula, regardless of other factors. In this "solo"ed setting, no other factor matters, I just want to apply a condition that being paid in USD will effect the user preference formula by the same multiplier no matter what.
+
+
+Build a visualization for the formula that can be viewed on this page. Make sure the user can see the visualizer at the same time they are inputting factors in the scenarios, so that they can see the effect their preferences have on the formula. Update in real time.
+
+Then disable, temporarily disable all of the computations, and insert some defualt values for now. Ask me to ren-enable after we are sure the scraping, then converting into an application package is completed. then test.
+
+----
+
+Create another front end page. This page is for manually inputting or changing certain aspects of the job, once the user has had an interview or performed some in-depth research. These factors are a cultural fit rating, the amount of skill growth available. The perceived stress level of the job. And to change the company and industry prestige ratings.
+
+The user must be able to look up the job. How do we do this?
+
+Temporarily disable the calculations, and ask me to ren-enable after we are sure the scraping, then converting into an application package is completed. then test.

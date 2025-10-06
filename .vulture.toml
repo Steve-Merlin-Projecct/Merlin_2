@@ -1,0 +1,3 @@
+[tool.vulture]
+min_confidence = 80
+exclude = ["archived_files", ".cache", "__pycache__", "storage"]
