@@ -1,0 +1,64 @@
+# Replit Pattern Search Results
+Generated: October 7, 2025
+
+## Patterns Found:
+- replit (lowercase): 117 occurrences
+- Replit (capitalized): 89 occurrences
+- REPLIT (uppercase): 12 occurrences
+- replit.md: 8 references
+- replit.app: 2 URLs
+- cdn.replit.com: 1 CDN reference
+- replit.db: 0 occurrences
+- REPL_ prefix: 0 environment variables
+
+## Patterns NOT Found:
+- repl.it
+- Repl.it
+- repl-it
+- repl_it
+- replt (typo)
+- repllit (typo)
+- replut (typo)
+
+## Import Patterns:
+- "from replit": 35 (all in archived/trees)
+- "import replit": 0
+- "replit.object_storage": 35 (all archived)
+
+## File Name Patterns:
+- *replit*.md: 6 files
+- *replit*.py: 0 files
+- .replit*: 3 hidden files
+- protected_replit_content.md: 3 references
+
+## Context Distribution:
+- In comments: ~45%
+- In string literals: ~30%
+- In archived files: ~20%
+- In active code: ~5%
+
+## Directory Distribution:
+/workspace root:
+- /tools: 1 file
+- /database_tools: 2 files
+- /docs: 3 files
+- /tasks: 3 files
+- /modules: 1 file
+- /archived_files: 35+ files
+- /.trees: 100+ files (git worktrees)
+
+## String Literal Patterns:
+"replit.app": 2 occurrences
+"replit.md": 8 occurrences
+"protected_replit_content.md": 3 occurrences
+"cdn.replit.com": 1 occurrence
+"Replit Object Storage": 5 occurrences
+"Replit Agent": 3 occurrences
+
+## Method/Function Names:
+update_replit_md(): 1 method
+No other Replit-specific function names found
+
+## Command Line Patterns:
+No grep/find/script references to replit commands
+No replit CLI usage found

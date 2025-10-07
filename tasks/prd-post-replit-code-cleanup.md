@@ -34,7 +34,82 @@ The project has been migrated from Replit to a local Docker/devcontainer environ
 - All tests pass after cleanup
 - Storage abstraction layer is the only mention of migration context
 
+## Scope Boundaries
+
+### In Scope
+- Remove all Replit imports and API calls from active code
+- Update documentation to Docker-first approach
+- Archive historical Replit migration documents
+- Clean environment variables with REPL_ prefix
+- Remove Replit-specific configuration files
+- Refactor code patterns that worked around Replit limitations
+- Update hardcoded Replit URLs to Docker/localhost equivalents
+- Clean up Replit-specific error handling and fallback logic
+
+### Out of Scope
+- **Changelog history** - Keep Replit mentions for historical accuracy
+- **Third-party library documentation** - Not under our control
+- **Git commit history rewriting** - Preserve historical record
+- **Deep performance optimization** - Only remove constraints, don't rebuild
+- **Archived files** - Already in `/archived_files/`, leave as-is
+- **Test fixtures** - May reference Replit for testing migration logic
+
+### Grey Areas (Decision Matrix)
+
+| Scenario | Action | Rationale |
+|----------|--------|-----------|
+| Code works but was "Replit-shaped" | Keep + add TODO comment | Don't fix what isn't broken |
+| Works but has obvious Docker improvement | Refactor | Optimize for new environment |
+| Works but confusing/misleading | Refactor | Code clarity priority |
+| Doesn't work or redundant | Remove | Dead code cleanup |
+| Comments mentioning "from Replit" as context | Update to "legacy migration" | Maintain context without confusion |
+| Variable names like `old_replit_path` | Keep if functional | Self-documenting legacy code |
+
+### Edge Case Handling
+
+1. **Security Issues Found**: Fix immediately, document in security changelog
+2. **Missing Test Coverage**: Add tests before removal if critical path
+3. **Broken Dependencies**: Create adapter/shim temporarily, mark for removal
+4. **Ambiguous References**: Default to archive, document decision
+5. **Performance Regressions**: Keep old code, add feature flag for new
+
 ## Evaluation Methodology
+
+### Phase 0: Edge Case Discovery (Pre-Analysis)
+
+**Objective:** Surface all edge cases and ambiguous patterns before main discovery.
+
+#### Activities
+
+1. **Pattern Variation Search:**
+   - Search for case variations: `repl.it`, `Repl.it`, `repl-it`, `repl_it`
+   - Check for partial references: `REPL`, `repl`, without full "replit"
+   - Look for typos: `replt`, `repllit`, `replut`
+
+2. **Context Analysis:**
+   - Identify Replit references in comments vs. code
+   - Find references in string literals vs. actual imports
+   - Locate references in test data vs. production code
+
+3. **Dependency Chain Mapping:**
+   - Find indirect Replit dependencies (modules that import Replit modules)
+   - Identify configuration cascades (configs that reference other configs)
+   - Map environment variable usage chains
+
+4. **File Type Inventory:**
+   - List all file types containing "replit" (`.py`, `.md`, `.json`, `.yaml`, `.txt`, etc.)
+   - Identify binary files or compressed archives with Replit content
+   - Find hidden files (`.replit`, `.env.replit`, etc.)
+
+5. **Historical Context Gathering:**
+   - Review git history for Replit-related commits
+   - Identify when Replit was introduced vs. when migration started
+   - Find any rollback commits or reverted changes
+
+#### Deliverables
+- `/tasks/post-migration-refactoring/phase0-edge-cases.md`
+- `/tasks/post-migration-refactoring/phase0-patterns.txt`
+- `/tasks/post-migration-refactoring/phase0-file-inventory.txt`
 
 ### Phase 1: Discovery & Classification (Analysis)
 

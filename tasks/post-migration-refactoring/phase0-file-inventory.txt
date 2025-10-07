@@ -1,0 +1,107 @@
+# File Inventory with Replit References
+Generated: October 7, 2025
+
+## ACTIVE FILES (Need Attention)
+
+Python Files (4):
+1. /workspace/tools/secure_protected_content.py
+   - Lines with "replit": 3
+   - Type: String literal (file path)
+   - Risk: Medium
+
+2. /workspace/database_tools/schema_automation.py
+   - Lines with "replit": 8
+   - Type: Method name, strings, comments
+   - Risk: Medium
+
+3. /workspace/database_tools/schema_html_generator.py
+   - Lines with "replit": 1
+   - Type: CDN URL in HTML template
+   - Risk: Low
+
+4. /workspace/docs/automation/scripts/generate_api_docs.py
+   - Lines with "replit": 2
+   - Type: URL strings in examples
+   - Risk: Low
+
+Markdown Files (6):
+1. /workspace/tasks/tasks-prd-remove-replit-code.md
+2. /workspace/tasks/prd-remove-replit-code.md
+3. /workspace/tasks/prd-post-replit-code-cleanup.md
+4. /workspace/docs/archived/replit-md_changelog.md
+5. /workspace/docs/archived/replit_2.14__1754540640362.md
+6. /workspace/CLAUDE.md (mentions Replit migration context)
+
+JSON Files (4):
+1. /workspace/.claude/worktree-config.json
+2. /workspace/.config/.semgrep/semgrep_rules.json
+3. /workspace/.local/state/replit/agent/filesystem/filesystem_state.json
+4. Multiple in .trees/ directories (git worktrees)
+
+Hidden Files (3):
+1. /workspace/docs/changelogs/.replit_md_hash
+2. /workspace/.local/state/replit/agent/repl_state.bin
+3. /workspace/.local/state/replit/agent/.repl_state.bin.pNhbyPTcVaPpCSzMSBP1-~
+
+## ARCHIVED FILES (Already Handled)
+
+Directory: /workspace/archived_files/
+- scripts/services/: 7 files with Replit imports
+- tests_legacy_2025_07_28/: Multiple test files
+- All have "from replit" imports
+- Status: Already archived, no action needed
+
+## GIT WORKTREES (Ignore)
+
+Directories: /workspace/.trees/
+- task-guiding-docs/
+- replit-storage-replacement/
+- claude-config/
+- agent-orchestration/
+
+Each contains full project copies
+Status: Git worktrees, not duplicates
+
+## STATISTICS
+
+Total Files with "replit": ~150
+- Active code: 4 files
+- Documentation: 6 files
+- Archived: 35+ files
+- Worktrees: 100+ files
+- Hidden/State: 5 files
+
+Files by Extension:
+- .py: 39 (4 active, 35 archived)
+- .md: 9 (3 tasks, 6 docs)
+- .json: 4
+- .yaml: 1
+- .bin: 2
+- Hidden: 3
+
+## ACTION SUMMARY
+
+DELETE (5 files):
+- .local/state/replit/ (entire directory)
+- docs/changelogs/.replit_md_hash
+
+UPDATE (4 files):
+- tools/secure_protected_content.py
+- database_tools/schema_automation.py
+- database_tools/schema_html_generator.py
+- docs/automation/scripts/generate_api_docs.py
+
+ARCHIVE (6 files):
+- tasks/tasks-prd-remove-replit-code.md
+- tasks/prd-remove-replit-code.md
+- docs/archived/replit-md_changelog.md
+- docs/archived/replit_2.14__1754540640362.md
+
+KEEP AS-IS:
+- CLAUDE.md (historical context in comments)
+- Changelog entries mentioning Replit
+- All files in archived_files/
+- All files in .trees/ (git worktrees)
+
+INVESTIGATE FURTHER:
+- modules/storage/storage_backend.py (comment only)
