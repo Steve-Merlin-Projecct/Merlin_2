@@ -12,7 +12,7 @@ import json
 from datetime import datetime
 from flask import Blueprint, request, jsonify, send_file, Response
 from modules.content.document_generation.document_generator import DocumentGenerator
-from modules.storage import ReplitStorageCompatibilityClient as Client
+from modules.storage import get_storage_backend
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -23,10 +23,10 @@ document_bp = Blueprint("document", __name__)
 # Initialize document generator
 doc_generator = DocumentGenerator()
 
-# Initialize storage client for downloads
+# Initialize storage backend for downloads
 try:
-    storage_client = Client()
-    logger.info("Document routes connected to storage backend")
+    storage_client = get_storage_backend()
+    logger.info(f"Document routes connected to storage backend: {storage_client.backend_name}")
 except Exception as e:
     logger.error(f"Failed to initialize storage client: {str(e)}")
     storage_client = None
@@ -226,10 +226,10 @@ def download_file(filename):
         if not filename or ".." in filename or "/" in filename or "\\" in filename:
             return jsonify({"success": False, "error": "Invalid filename"}), 400
 
-        # Try downloading from object storage first
+        # Try downloading from storage backend
         if storage_client:
             try:
-                # Note: Using get method as download may not be available
+                # Retrieve file content from storage backend
                 file_data = storage_client.get(filename)
 
                 # Determine content type based on file extension
@@ -249,12 +249,15 @@ def download_file(filename):
                     },
                 )
 
-                logger.info(f"File downloaded successfully from object storage: {filename}")
+                logger.info(f"File downloaded successfully from storage: {filename}")
                 return response
 
+            except FileNotFoundError:
+                logger.warning(f"File not found in storage backend: {filename}")
+                # Fall back to local storage directory
             except Exception as storage_error:
-                logger.warning(f"Object storage download failed: {storage_error}")
-                # Fall back to local storage
+                logger.warning(f"Storage backend download failed: {storage_error}")
+                # Fall back to local storage directory
 
         # Fallback to local storage
         local_path = os.path.join("storage", filename)

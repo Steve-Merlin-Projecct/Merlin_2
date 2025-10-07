@@ -12,6 +12,7 @@ Version: 2.16.5
 Date: July 27, 2025
 """
 
+import os
 import uuid
 import hashlib
 import logging
@@ -38,7 +39,8 @@ class LinkTracker:
 
     def __init__(self):
         """Initialize the link tracker with database connection."""
-        self.base_redirect_url = "https://automated-job-application-system.replit.app/track"
+        # TODO: Update base_redirect_url to production domain when deployed
+        self.base_redirect_url = os.getenv("BASE_REDIRECT_URL", "http://localhost:5000/track")
         self._setup_logging()
 
     def _setup_logging(self):

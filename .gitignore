@@ -55,6 +55,7 @@ logs/
 
 # Storage and cache
 storage/
+!modules/storage/
 .cache/
 .local/
 

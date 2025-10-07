@@ -1,60 +1,10 @@
 # Automated Job Application System
-Version 4.0.1 - Claude Code Edition
-October 2025
+Version 4.1 (Update the version number during development: the x. for major changes, and .xx for minor changes)
+October 6, 2025
+Post migration from Replit - Replit dependencies removed, storage abstraction layer implemented.
+This project is written in Python 3.11
 
-**Status**: ✅ Fully migrated from Replit to Claude Code environment
-**Python Version**: 3.11+
-**AI Assistant**: Claude (Sonnet 4.5)
-
-## Quick Start for Claude Code
-
-### First Time Setup
-1. **Environment Setup**
-   ```bash
-   # Copy environment template and configure
-   cp .env.example .env
-   # Edit .env with your credentials
-
-   # Install dependencies
-   pip install -r requirements.txt
-   ```
-
-2. **Database Initialization**
-   ```bash
-   # Ensure PostgreSQL is running
-   # Create database: local_Merlin_3
-   # Run migrations if needed
-   ```
-
-3. **Verify Installation**
-   ```bash
-   # Run tests
-   pytest -v tests/
-
-   # Start development server
-   python -m flask --app app_modular run --debug
-   ```
-
-### Common Claude Code Commands
-Use these slash commands for quick access:
-- `/db-update` - Update database schema documentation
-- `/test` - Run test suite
-- `/lint` - Run code quality checks (Black, Flake8, Vulture)
-- `/serve` - Start Flask development server
-
-### Project Structure
-```
-/workspace/.trees/claude-config/
-├── modules/              # Core application modules
-├── database_tools/       # Database schema automation
-├── .claude/             # Claude Code configuration
-│   ├── settings.local.json
-│   ├── commands/        # Custom slash commands
-│   └── memories/        # Project memory files
-├── storage/             # Local file storage (gitignored)
-├── docs/               # Documentation
-└── tests/              # Test suite
-```
+The previous name of this file was "replit.md" it now has a new job of being "claude.md". Most of the same material will apply, although some of it should be improved with content that is better suited to coding with Claude. Sonnet 4.5 was released today.
 
 ## Environment Variables
 
@@ -70,6 +20,8 @@ Key environment variables:
 - `DATABASE_NAME`: Database name (default: `local_Merlin_3`)
 - `DATABASE_URL`: Full PostgreSQL connection string (optional override)
 - `WEBHOOK_API_KEY`: API authentication key
+- `STORAGE_BACKEND`: Storage backend type (default: `local`)
+- `LOCAL_STORAGE_PATH`: Path for local filesystem storage (default: `./storage/generated_documents`)
 
 **Connection Priority:**
 1. Explicit `DATABASE_URL` (highest priority - bypasses auto-detection)
@@ -158,12 +110,6 @@ Prohibited Actions:
 - Never manually edit files in `database_tools/generated/`.
 - Never skip running automation after schema changes.
 
-Enforcement:
-- Claude Code PreToolUse hooks automatically block manual edits to protected files
-- Hook script: `database_tools/claude_schema_protection.py`
-- Configuration: `.claude/settings.local.json`
-- See: [Claude Code Schema Protection](docs/development/CLAUDE_CODE_SCHEMA_PROTECTION.md)
-
 **Documentation:**
 - Add detailed inline documentation on all new or changed code. Add comprehensive docstrings and comments directly in your code that explain relationships between functions and expected behaviors.
 - When new understanding of the project is gained, document the changes in replit.md.
@@ -189,14 +135,15 @@ The application employs a modular Flask microservice architecture with a strong 
 - **Blueprint Pattern:** Flask blueprints organize routes, separating webhook logic from the main application.
 - **Security-First:** All components implement comprehensive security controls including authentication, input validation, rate limiting, and audit logging.
 - **Template-Based Document Generation:** Utilizes a `BaseGenerator Class` and specialized generators to create personalized documents from `.docx` templates, preserving original formatting and structure.
-- **File Storage:** Documents are stored in local filesystem with abstraction layer supporting future cloud providers (S3, GCS).
-- **Automated Database Schema Management:** Uses a suite of tools (`database_tools/`) to generate SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes directly from the live PostgreSQL schema, ensuring documentation and code consistency. Claude Code PreToolUse hooks prevent manual schema changes.
+- **Storage Abstraction Layer:** Documents are stored using a pluggable storage backend system supporting local filesystem (default) with future support for cloud providers (AWS S3, Google Cloud Storage).
+- **Automated Database Schema Management:** Uses a suite of tools (`database_tools/`) to generate SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes directly from the live PostgreSQL schema, ensuring documentation and code consistency. Pre-commit hooks prevent manual schema changes.
 - **Resilience System:** Includes a comprehensive failure recovery mechanism with intelligent retry logic, circuit breaker patterns, workflow checkpoints, and automatic data correction.
 
 **Key Components & Features:**
 
 - **Main Application (`app_modular.py`):** Flask application initialization and configuration, proxy middleware setup, health check endpoint, blueprint registration.
-- **Document Generation (`modules/content/document_generation/`):** Template-based generation from `.docx` files, preserving formatting, professional metadata, and local filesystem storage with cloud-ready abstraction.
+- **Document Generation (`modules/document_generation/`):** Template-based generation from `.docx` files, preserving formatting, professional metadata, and storage backend integration.
+- **Storage Layer (`modules/storage/`):** Abstraction layer for file storage with local filesystem implementation and future cloud provider support.
 - **Gmail Integration (`modules/email_integration/`):** Official Gmail OAuth 2.0, robust email sending with attachments, enhanced error handling, and RFC-compliant validation.
 - **AI Job Description Analysis (`modules/ai_job_description_analysis/`):** Google Gemini integration for job analysis, secure REST API, LLM injection protection, usage tracking, and batch processing.
 - **Job Scraping (`modules/scraping/`):** Core scraping logic, context-aware scraping, data processing pipeline for cleaning and deduplication, and cost-effective usage tracking.
@@ -214,7 +161,6 @@ The application employs a modular Flask microservice architecture with a strong 
 - **Apify:** Third-party service for job scraping (specifically misceres/indeed-scraper).
 - **Google Gemini AI:** AI model for job analysis and content generation.
 - **PostgreSQL:** Primary database for job tracking and application history.
-- **Storage Backend:** Local filesystem by default, with abstraction layer for future cloud integration (AWS S3, Google Cloud Storage).
 
 
 # Changelog
