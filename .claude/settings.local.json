@@ -21,7 +21,11 @@
       "Bash(gh pr:*)",
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Read(//workspace/tasks/**)",
+      "Bash(chmod:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)"
     ],
     "deny": [],
     "ask": []
