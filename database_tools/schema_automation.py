@@ -188,63 +188,6 @@ class SchemaAutomation:
         with open(prev_schema_file, "w") as f:
             json.dump(schema_data, f, indent=2, default=str)
     
-    def update_replit_md(self):
-        """Update replit.md with schema automation information"""
-        replit_md_path = "replit.md"
-        
-        if os.path.exists(replit_md_path):
-            with open(replit_md_path, 'r') as f:
-                content = f.read()
-            
-            # Add automation section if not present
-            automation_section = f"""
-## Database Schema Automation
-
-**Last Schema Update**: {datetime.now().strftime('%B %d, %Y at %H:%M:%S')}
-
-### Automation Features
-- **Documentation Generation**: Auto-updates `docs/database_schema.md` on schema changes
-- **Code Generation**: Auto-generates SQLAlchemy models, Pydantic schemas, CRUD operations, and API routes
-- **Migration Scripts**: Auto-creates migration scripts for schema changes
-- **Change Detection**: Monitors database schema changes via hash comparison
-
-### Files Managed by Automation
-- `docs/database_schema.md` - Comprehensive database documentation
-- `docs/database_schema.json` - JSON schema for APIs
-- `generated/models.py` - SQLAlchemy models
-- `generated/schemas.py` - Pydantic validation schemas  
-- `generated/crud.py` - CRUD operations
-- `generated/routes.py` - Flask API routes
-- `generated/migration_*.py` - Database migration scripts
-
-### Running Automation
-```bash
-# Check for changes and update documentation/code
-python tools/schema_automation.py --check
-
-# Force update all documentation and code
-python tools/schema_automation.py --force
-
-# Monitor for changes continuously  
-python tools/schema_automation.py --monitor
-```
-"""
-            
-            # Insert automation section before the final line
-            if "Database Schema Automation" not in content:
-                lines = content.split('\n')
-                insert_index = -1
-                for i, line in enumerate(lines):
-                    if line.strip().startswith('*This documentation is automatically generated'):
-                        insert_index = i
-                        break
-                
-                if insert_index > 0:
-                    lines.insert(insert_index, automation_section)
-                    with open(replit_md_path, 'w') as f:
-                        f.write('\n'.join(lines))
-                    print("✓ Updated replit.md with automation information")
-    
     def git_commit_changes(self):
         """Commit changes to git if enabled"""
         if not self.config["git_integration"]["enabled"] or not self.config["git_integration"]["auto_commit"]:
@@ -286,10 +229,7 @@ python tools/schema_automation.py --monitor
             
             # Generate code
             self.generate_code()
-            
-            # Update replit.md
-            self.update_replit_md()
-            
+
             # Save current schema hash
             current_hash = self.get_schema_hash()
             self.save_current_hash(current_hash)
