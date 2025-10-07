@@ -22,6 +22,8 @@ from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
 
 # Set up logging
+__version__ = "4.0.1"
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -157,8 +159,8 @@ def health_check():
     """Health check endpoint to verify service is running"""
     return jsonify({
         'status': 'healthy',
-        'service': 'Document Generation Service',
-        'version': '2.0.0'
+        'service': 'Merlin Job Application System',
+        'version': __version__
     })
 
 # Apply security headers to all responses

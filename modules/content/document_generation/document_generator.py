@@ -18,7 +18,7 @@ except ImportError as e:
             raise ImportError("python-docx not available - document generation disabled")
 
 
-from replit.object_storage import Client
+from modules.storage import ReplitStorageCompatibilityClient as Client
 from .template_engine import TemplateEngine
 
 
@@ -52,12 +52,12 @@ class DocumentGenerator:
         self.storage_dir = os.path.join(os.getcwd(), "storage")
         self.template_engine = TemplateEngine()
 
-        # Initialize Replit Object Storage client (using default bucket)
+        # Initialize storage client (local filesystem by default)
         try:
             self.storage_client = Client()
-            logging.info("Connected to Replit Object Storage (default bucket)")
+            logging.info("Connected to storage backend (local filesystem)")
         except Exception as e:
-            logging.error(f"Failed to initialize object storage: {str(e)}")
+            logging.error(f"Failed to initialize storage: {str(e)}")
             self.storage_client = None
 
         # Initialize CSV content mapper for dynamic content mapping
