@@ -112,7 +112,14 @@ Prohibited Actions:
 
 **Documentation:**
 - Add detailed inline documentation on all new or changed code. Add comprehensive docstrings and comments directly in your code that explain relationships between functions and expected behaviors.
-- When new understanding of the project is gained, document the changes in replit.md.
+- When new understanding of the project is gained, document the changes in CLAUDE.md.
+
+**Agent Usage Documentation:**
+- Document all significant agent usage decisions and patterns in `docs/agent-usage-guide.md`.
+- When choosing to use (or not use) a specialized agent, add the reasoning as a teachable moment in the guide.
+- Include context, decision rationale, metrics (tool calls, tokens), and lessons learned.
+- Update best practices section when new usage patterns emerge.
+- Focus on documenting border cases where the choice between direct tools vs. agents is not obvious.
 
 **Research Preferences:**
 - Always check for the latest versions of dependencies before suggesting updates.
