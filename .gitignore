@@ -103,3 +103,4 @@ database_tools/__pycache__/
 # Generated files (commit these)
 # database_tools/generated/
 # database_tools/docs/
+.trees/
