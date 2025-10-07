@@ -7,11 +7,9 @@ Ready for: Archive after review
 
 # Automated Job Application System
 Version 4.1 (Update the version number during development: the x. for major changes, and .xx for minor changes)
-October 6, 2025
-Post migration from Replit - Replit dependencies removed, storage abstraction layer implemented.
+October 2025
+Modern Docker-based development environment with comprehensive automation.
 This project is written in Python 3.11
-
-The previous name of this file was "replit.md" it now has a new job of being "claude.md". Most of the same material will apply, although some of it should be improved with content that is better suited to coding with Claude. Sonnet 4.5 was released today.
 
 ## Environment Variables
 
