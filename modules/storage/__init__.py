@@ -59,6 +59,13 @@ from .storage_factory import (
     validate_storage_configuration,
 )
 
+# Try to import Google Drive backend (may not be available)
+try:
+    from .google_drive_storage import GoogleDriveStorageBackend
+    _GOOGLE_DRIVE_AVAILABLE = True
+except ImportError:
+    _GOOGLE_DRIVE_AVAILABLE = False
+
 # Define public API
 __all__ = [
     # Abstract base class
@@ -70,6 +77,10 @@ __all__ = [
     "reset_storage_instance",
     "validate_storage_configuration",
 ]
+
+# Add Google Drive to exports if available
+if _GOOGLE_DRIVE_AVAILABLE:
+    __all__.append("GoogleDriveStorageBackend")
 
 # Module metadata
 __version__ = "1.0.0"

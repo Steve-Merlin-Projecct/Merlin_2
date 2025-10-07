@@ -33,6 +33,13 @@ from typing import Optional
 from .storage_backend import StorageBackend
 from .local_storage import LocalStorageBackend
 
+# Import Google Drive backend (may not be available if dependencies not installed)
+try:
+    from .google_drive_storage import GoogleDriveStorageBackend
+    GOOGLE_DRIVE_AVAILABLE = True
+except ImportError:
+    GOOGLE_DRIVE_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 # Singleton instance for storage backend
@@ -50,11 +57,21 @@ def get_storage_backend(force_new: bool = False) -> StorageBackend:
     Environment Variables:
         STORAGE_BACKEND: Type of storage backend to use
             - 'local' (default): Local filesystem storage
-            - 's3': AWS S3 (future implementation)
-            - 'gcs': Google Cloud Storage (future implementation)
+            - 'google_drive': Google Drive API storage
 
         LOCAL_STORAGE_PATH: Base path for local storage
             - Default: './storage/generated_documents'
+
+        APP_VERSION: Application version for Google Drive folder organization
+            - Required for google_drive backend
+            - Format: X.Y (e.g., 4.1)
+
+        GOOGLE_DRIVE_CREDENTIALS_PATH: Path to OAuth credentials
+            - Required for google_drive backend
+            - Default: './storage/google_drive_credentials.json'
+
+        GOOGLE_DRIVE_TOKEN_PATH: Path to store OAuth token
+            - Default: './storage/google_drive_token.json'
 
     Args:
         force_new (bool): If True, create a new instance even if one exists.
@@ -99,25 +116,28 @@ def get_storage_backend(force_new: bool = False) -> StorageBackend:
 
             _storage_instance = LocalStorageBackend(base_path=base_path)
 
-        elif backend_type == "s3":
-            # Future implementation: AWS S3 storage
-            logger.error("S3 storage backend not yet implemented")
-            raise ValueError(
-                "S3 storage backend is not yet implemented. Use 'local' for now."
-            )
+        elif backend_type == "google_drive":
+            # Google Drive API storage
+            if not GOOGLE_DRIVE_AVAILABLE:
+                logger.error("Google Drive storage requires additional dependencies")
+                raise RuntimeError(
+                    "Google Drive storage backend requires Google API libraries. "
+                    "Install with: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib"
+                )
 
-        elif backend_type == "gcs":
-            # Future implementation: Google Cloud Storage
-            logger.error("GCS storage backend not yet implemented")
-            raise ValueError(
-                "GCS storage backend is not yet implemented. Use 'local' for now."
+            credentials_path = os.getenv("GOOGLE_DRIVE_CREDENTIALS_PATH")
+            token_path = os.getenv("GOOGLE_DRIVE_TOKEN_PATH")
+
+            _storage_instance = GoogleDriveStorageBackend(
+                credentials_path=credentials_path,
+                token_path=token_path
             )
 
         else:
             logger.error(f"Unknown storage backend type: {backend_type}")
             raise ValueError(
                 f"Unsupported storage backend: {backend_type}. "
-                f"Supported backends: local, s3 (future), gcs (future)"
+                f"Supported backends: local, google_drive"
             )
 
         logger.info(f"Storage backend initialized successfully: {backend_type}")
@@ -185,8 +205,23 @@ def validate_storage_configuration() -> dict:
             elif not os.access(base_path, os.W_OK):
                 errors.append(f"LOCAL_STORAGE_PATH is not writable: {base_path}")
 
-    elif backend_type in ["s3", "gcs"]:
-        errors.append(f"{backend_type.upper()} storage backend not yet implemented")
+    elif backend_type == "google_drive":
+        if not GOOGLE_DRIVE_AVAILABLE:
+            errors.append("Google Drive backend requires: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib")
+
+        app_version = os.getenv("APP_VERSION")
+        credentials_path = os.getenv("GOOGLE_DRIVE_CREDENTIALS_PATH", "./storage/google_drive_credentials.json")
+        token_path = os.getenv("GOOGLE_DRIVE_TOKEN_PATH", "./storage/google_drive_token.json")
+
+        config["app_version"] = app_version or "NOT SET"
+        config["credentials_path"] = credentials_path
+        config["token_path"] = token_path
+
+        if not app_version:
+            errors.append("APP_VERSION environment variable required for Google Drive backend")
+
+        if not os.path.exists(credentials_path):
+            errors.append(f"Google Drive credentials not found at: {credentials_path}")
 
     else:
         errors.append(f"Unknown storage backend type: {backend_type}")

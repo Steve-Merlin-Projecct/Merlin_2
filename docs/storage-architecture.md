@@ -6,7 +6,7 @@
 
 ## Overview
 
-The Merlin Job Application System uses a modular storage abstraction layer that provides a consistent interface for file storage operations across different backend technologies. This design allows the application to seamlessly switch between local filesystem storage, AWS S3, Google Cloud Storage, or any other storage provider without changing application code.
+The Merlin Job Application System uses a modular storage abstraction layer that provides a consistent interface for file storage operations across different backend technologies. This design allows the application to seamlessly switch between local filesystem storage and Google Drive without changing application code.
 
 ## Architecture Design
 
@@ -16,7 +16,7 @@ The Merlin Job Application System uses a modular storage abstraction layer that 
 2. **Flexibility:** Easy runtime selection of storage provider via environment configuration
 3. **Extensibility:** New storage backends can be added without modifying existing code
 4. **Simplicity:** Minimal configuration required for basic local storage
-5. **Future-Ready:** Designed to support cloud providers (AWS S3, Google Cloud Storage)
+5. **Cloud Storage:** Supports Google Drive for cloud-based document storage
 
 ### Module Structure
 
@@ -32,8 +32,8 @@ modules/storage/
 
 ```
 StorageBackend (ABC)
-└── LocalStorageBackend
-    └── Future: S3StorageBackend, GCSStorageBackend
+├── LocalStorageBackend
+└── GoogleDriveStorageBackend
 ```
 
 ## Storage Backend Interface
@@ -219,26 +219,17 @@ from modules.document_routes import document_bp
    print(result)
    ```
 
-### Future: AWS S3 Storage
+### Google Drive Storage
 
-**Planned Implementation:**
+**Implementation:**
 ```bash
-STORAGE_BACKEND=s3
-S3_BUCKET_NAME=my-bucket
-S3_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
+STORAGE_BACKEND=google_drive
+APP_VERSION=4.1
+GOOGLE_DRIVE_CREDENTIALS_PATH=./storage/google_drive_credentials.json
+GOOGLE_DRIVE_TOKEN_PATH=./storage/google_drive_token.json
 ```
 
-### Future: Google Cloud Storage
-
-**Planned Implementation:**
-```bash
-STORAGE_BACKEND=gcs
-GCS_BUCKET_NAME=my-bucket
-GCS_PROJECT_ID=my-project
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-```
+**Setup Guide:** See `docs/GOOGLE_DRIVE_SETUP.md` for complete setup instructions.
 
 ## Migration from Replit Object Storage
 
@@ -320,24 +311,19 @@ INFO: File deleted successfully: test.docx
 
 ### Planned Features
 
-1. **Cloud Storage Backends**
-   - AWS S3 implementation
-   - Google Cloud Storage implementation
-   - Azure Blob Storage implementation
-
-2. **Advanced Features**
+1. **Advanced Features**
    - File versioning and history
    - Automatic backup and replication
    - CDN integration for downloads
    - Signed URLs for temporary access
 
-3. **Performance Optimizations**
+2. **Performance Optimizations**
    - Caching layer for frequently accessed files
    - Lazy loading for large files
    - Streaming uploads/downloads
    - Connection pooling
 
-4. **Migration Tools**
+3. **Migration Tools**
    - Data migration utilities between backends
    - Bulk transfer scripts
    - Storage usage analytics
