@@ -34,6 +34,8 @@
         "python.linting.flake8Enabled": true,
         "python.formatting.provider": "black",
         "python.formatting.blackPath": "/usr/local/bin/black",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
           "source.organizeImports": "explicit"
@@ -50,13 +52,20 @@
   },
 
   // Forward PostgreSQL port for database access
-  "forwardPorts": [5432],
+  "forwardPorts": [5000, 5432],
+  "portsAttributes": {
+    "5000": {
+      "label": "Flask App",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    }
+  },
 
   // Post-create command to install dependencies
-  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
-
-  // Use 'forwardPorts' to make a list of ports inside the container available locally
-  "appPort": [5000],
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && echo '✅ Dev container ready! Run make help for available commands.'",
 
   // Run as non-root user for security
   "remoteUser": "vscode",

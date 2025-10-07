@@ -12,7 +12,7 @@ import json
 from datetime import datetime
 from flask import Blueprint, request, jsonify, send_file, Response
 from modules.content.document_generation.document_generator import DocumentGenerator
-from replit.object_storage import Client
+from modules.storage import ReplitStorageCompatibilityClient as Client
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -23,10 +23,10 @@ document_bp = Blueprint("document", __name__)
 # Initialize document generator
 doc_generator = DocumentGenerator()
 
-# Initialize object storage client for downloads
+# Initialize storage client for downloads
 try:
     storage_client = Client()
-    logger.info("Document routes connected to Replit Object Storage")
+    logger.info("Document routes connected to storage backend")
 except Exception as e:
     logger.error(f"Failed to initialize storage client: {str(e)}")
     storage_client = None
