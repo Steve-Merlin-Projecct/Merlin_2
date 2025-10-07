@@ -37,8 +37,8 @@ class APIDocumentationGenerator:
                 }
             },
             "servers": [
-                {"url": "https://your-app.replit.app/api/v1", "description": "Production"},
-                {"url": "https://staging-app.replit.app/api/v1", "description": "Staging"}
+                {"url": "http://localhost:5000/api/v1", "description": "Development"},
+                {"url": "https://your-domain.com/api/v1", "description": "Production"}
             ],
             "paths": {},
             "components": {
