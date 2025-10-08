@@ -71,6 +71,7 @@ ssh-keygen*
 *.pub
 credentials*.json
 token*.json
+cookies.txt
 
 # Replit specific (deprecated - migrated from Replit)
 .replit
