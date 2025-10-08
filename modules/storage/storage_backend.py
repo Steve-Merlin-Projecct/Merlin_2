@@ -8,9 +8,11 @@ filesystem, AWS S3, Google Cloud Storage, etc.).
 
 Design Principles:
 - Platform-agnostic: Works with any storage provider
-- Simple interface: Matches existing Replit Object Storage usage patterns
+- Simple interface: Designed for compatibility with object storage patterns
 - Error handling: Consistent exception patterns across implementations
 - Type safety: Full type hints for better IDE support
+
+Legacy Note: Interface originally designed to ease migration from Replit Object Storage.
 
 Usage Example:
     from modules.storage import get_storage_backend

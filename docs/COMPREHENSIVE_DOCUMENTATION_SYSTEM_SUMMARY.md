@@ -58,7 +58,6 @@ docs/
 #### 2. **Process Documentation** (8 Categories)
 - **Deployment Processes**: Production/staging deployment procedures
 - **Incident Response**: Emergency response and recovery procedures
-- **Onboarding**: Developer and team member integration
 - **Release Management**: Version control and release procedures
 
 #### 3. **Architecture Decision Records** (5 ADRs)
