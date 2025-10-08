@@ -22,7 +22,7 @@ from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
 
 # Set up logging
-__version__ = "4.1.0"
+__version__ = "4.2.0"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
