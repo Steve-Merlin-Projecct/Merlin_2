@@ -10,8 +10,8 @@ import sys
 import os
 import logging
 
-# Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Add project root to path (go up two levels from tests/integration/)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 # Configure logging
 logging.basicConfig(
