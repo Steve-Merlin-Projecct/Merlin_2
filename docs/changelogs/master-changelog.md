@@ -3,6 +3,20 @@ input changes
 Use this formating:
 ```
 Historical Changelog:
+- October 08, 2025. **v4.1.0 - FILE ORGANIZATION CLEANUP**: Comprehensive reorganization of project file structure
+  * Split BRANCH_STATUS.md into branch-specific status and reusable workflow documentation
+  * Moved 3 migration summary files from root to docs/archived/migrations/
+  * Relocated test_db_connection.py from root to tests/integration/
+  * Archived 4 Replit-specific git workflow docs to docs/archived/replit-git-workflow/
+  * Created FILE_ORGANIZATION_STANDARDS.md with comprehensive placement guidelines
+  * Created archive README files explaining historical context and migration details
+  * Updated database-connection-guide.md test path reference
+  * Removed duplicate claude.md file (kept CLAUDE.md)
+  * Removed sensitive cookies.txt and added to .gitignore
+  * Root directory now contains only essential project files (0 loose .md files)
+  * Created branch-status/ subdirectory structure for feature branch tracking
+  * All file moves preserve git history using git mv
+  * Updated all references to moved files
 - October 07, 2025. **v4.1.0 - POST-MIGRATION CLEANUP**: Completed systematic removal of Replit references
   * Removed all Replit runtime artifacts (.local/state/replit/, .replit_md_hash)
   * Replaced cdn.replit.com with standard Bootstrap CDN in schema HTML generator

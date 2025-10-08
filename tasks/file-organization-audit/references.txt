@@ -1,0 +1,63 @@
+# File Reference Search Results
+**Generated:** October 8, 2025
+**Purpose:** Document all references to files being moved
+
+## BRANCH_STATUS.md References
+
+**Found in task documentation only** (no active code references):
+- tasks/file-organization-audit/tasklist_1.md (9 occurrences)
+- tasks/file-organization-audit/prd.md (7 occurrences)
+- tasks/file-organization-audit/research.md (2 occurrences)
+
+**Action Required:** None - only self-referential in planning docs
+
+## test_db_connection.py References
+
+**Documentation references:**
+- docs/database-connection-guide.md:61 - Command: `python test_db_connection.py`
+- docs/database-connection-guide.md:248 - Description: Created test script
+- docs/changelogs/master-changelog.md:169 - Changelog entry
+- .trees/task-guiding-docs/docs/database-connection-guide.md:61 (worktree copy)
+
+**Task documentation:**
+- tasks/file-organization-audit/tasklist_1.md (7 occurrences)
+- tasks/file-organization-audit/prd.md (6 occurrences)
+- tasks/file-organization-audit/research.md (1 occurrence)
+
+**Action Required:**
+- Update docs/database-connection-guide.md command from `python test_db_connection.py` to `python tests/integration/test_db_connection.py`
+- No code imports found
+
+## Migration Summary References
+
+**MIGRATION_COMPLETE.md:**
+- Self-reference in MIGRATION_COMPLETE.md:10
+- Referenced in VERIFICATION_SUMMARY.md:52 - "See MIGRATION_COMPLETE.md for detailed information"
+- .trees/task-guiding-docs/MIGRATION_COMPLETE.md:10 (worktree copy)
+
+**VERIFICATION_SUMMARY.md:**
+- Referenced in MIGRATION_COMPLETE.md link
+
+**GOOGLE_DRIVE_IMPLEMENTATION_SUMMARY.md:**
+- No external references found (only in task docs)
+
+**Action Required:**
+- Update cross-reference in archived files after moving
+- Update any broken links in docs
+
+## claude.md References
+
+**Search for lowercase claude.md:**
+No references found to lowercase "claude.md" - appears to be standalone file
+
+**Action Required:**
+- Verify if duplicate or symlink of CLAUDE.md
+- Remove if redundant
+
+## Summary
+
+**Critical Updates Needed:**
+1. docs/database-connection-guide.md - Update test file path (line 61)
+2. Cross-references between MIGRATION_COMPLETE.md and VERIFICATION_SUMMARY.md - Update after archival
+
+**No Code Dependencies:** Zero Python imports or script references to files being moved
