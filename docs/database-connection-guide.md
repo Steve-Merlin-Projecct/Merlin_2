@@ -100,7 +100,7 @@ environment:
 Run the connection test script:
 
 ```bash
-python test_db_connection.py
+python tests/integration/test_db_connection.py
 ```
 
 This will:

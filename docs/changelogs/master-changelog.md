@@ -3,6 +3,36 @@ input changes
 Use this formating:
 ```
 Historical Changelog:
+- October 08, 2025. **v4.1.0 - FILE ORGANIZATION CLEANUP**: Comprehensive reorganization of project file structure
+  * Split BRANCH_STATUS.md into branch-specific status and reusable workflow documentation
+  * Moved 3 migration summary files from root to docs/archived/migrations/
+  * Relocated test_db_connection.py from root to tests/integration/
+  * Archived 4 Replit-specific git workflow docs to docs/archived/replit-git-workflow/
+  * Created FILE_ORGANIZATION_STANDARDS.md with comprehensive placement guidelines
+  * Created archive README files explaining historical context and migration details
+  * Updated database-connection-guide.md test path reference
+  * Removed duplicate claude.md file (kept CLAUDE.md)
+  * Removed sensitive cookies.txt and added to .gitignore
+  * Root directory now contains only essential project files (0 loose .md files)
+  * Created branch-status/ subdirectory structure for feature branch tracking
+  * All file moves preserve git history using git mv
+  * Updated all references to moved files
+- October 07, 2025. **v4.1.0 - POST-MIGRATION CLEANUP**: Completed systematic removal of Replit references
+  * Removed all Replit runtime artifacts (.local/state/replit/, .replit_md_hash)
+  * Replaced cdn.replit.com with standard Bootstrap CDN in schema HTML generator
+  * Updated API documentation example URLs from replit.app to localhost/production domains
+  * Removed obsolete update_replit_md() method from schema automation (59 lines)
+  * Archived unused secure_protected_content.py tool to archived_files/replit-tools/
+  * Updated CLAUDE.md to remove migration context, emphasize Docker-first approach
+  * Archived historical task PRDs to docs/archived/replit-migration/tasks/
+  * Updated storage backend comment with historical migration note
+  * Validated zero Replit imports in active codebase
+  * Comprehensive Phase 0/1 discovery and risk assessment completed
+  * Created detailed action plan and validation reports
+  * All Python files compile successfully, syntax validated
+  * Version bumped from 4.0.2 to 4.1.0 (minor version for significant refactoring)
+  * 4 incremental commits with clear rollback points
+  * Scope boundaries defined: kept historical docs, security rules, git references
 - October 06, 2025. **INFRASTRUCTURE**: Removed Replit dependencies and implemented storage abstraction layer
   * Created modular storage backend system (modules/storage/) with abstract base class
   * Implemented LocalStorageBackend for filesystem-based document storage
