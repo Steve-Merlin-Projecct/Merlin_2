@@ -1,6 +1,6 @@
 #!/bin/bash
 # Add Claude task context to existing worktrees
-# This script retrofits existing worktrees with .claude-task-context.md and init.sh
+# This script retrofits existing worktrees with .claude-purpose-context.md and init.sh
 
 set -e
 
@@ -36,17 +36,17 @@ for path in "${WORKTREES[@]}"; do
     name=$(basename "$path")
     echo -e "${BLUE}Processing: ${GREEN}$name${NC}"
 
-    # Check if TASK.md exists
-    if [ ! -f "$path/TASK.md" ]; then
-        echo -e "  ${YELLOW}⚠  No TASK.md found, skipping${NC}"
+    # Check if PURPOSE.md exists
+    if [ ! -f "$path/PURPOSE.md" ]; then
+        echo -e "  ${YELLOW}⚠  No PURPOSE.md found, skipping${NC}"
         SKIP_COUNT=$((SKIP_COUNT + 1))
         echo ""
         continue
     fi
 
-    # Read task description from TASK.md
-    task_title=$(grep "^# Task:" "$path/TASK.md" | head -1 | sed 's/^# Task: //')
-    branch=$(grep "^\*\*Branch:\*\*" "$path/TASK.md" | head -1 | sed 's/^\*\*Branch:\*\* //')
+    # Read task description from PURPOSE.md
+    task_title=$(grep "^# Task:" "$path/PURPOSE.md" | head -1 | sed 's/^# Task: //')
+    branch=$(grep "^\*\*Branch:\*\*" "$path/PURPOSE.md" | head -1 | sed 's/^\*\*Branch:\*\* //')
 
     if [ -z "$task_title" ]; then
         task_title="Task for $name"
@@ -59,8 +59,8 @@ for path in "${WORKTREES[@]}"; do
     task_num=$(echo "$branch" | grep -oP 'task/\K\d+' || echo "00")
 
     # Create Claude task context file
-    if [ ! -f "$path/.claude-task-context.md" ]; then
-        cat > "$path/.claude-task-context.md" << EOF
+    if [ ! -f "$path/.claude-purpose-context.md" ]; then
+        cat > "$path/.claude-purpose-context.md" << EOF
 # Task $task_num: $task_title
 
 **Worktree:** $name
@@ -72,10 +72,10 @@ for path in "${WORKTREES[@]}"; do
 $task_title
 
 ## Scope
-Complete the deliverables for this task. See TASK.md for full details.
+Complete the deliverables for this task. See PURPOSE.md for full details.
 
 ## Primary Files
-- TASK.md (task documentation)
+- PURPOSE.md (task documentation)
 - (Files will be listed here as work progresses)
 
 ## Success Criteria
@@ -88,7 +88,7 @@ Complete the deliverables for this task. See TASK.md for full details.
 ## Important Notes
 - This is worktree $task_num of a parallel development workflow
 - Branch: $branch based on develop/v4.2.0
-- Check TASK.md for conflict warnings with other tasks
+- Check PURPOSE.md for conflict warnings with other tasks
 - Use /workspace/.trees/worktree-manager/worktree-status.sh to see all worktree statuses
 
 ## Workflow Commands
@@ -98,9 +98,9 @@ Complete the deliverables for this task. See TASK.md for full details.
 
 Focus on this specific task and its objectives.
 EOF
-        echo -e "  ${GREEN}✓ Created .claude-task-context.md${NC}"
+        echo -e "  ${GREEN}✓ Created .claude-purpose-context.md${NC}"
     else
-        echo -e "  ${YELLOW}  .claude-task-context.md already exists${NC}"
+        echo -e "  ${YELLOW}  .claude-purpose-context.md already exists${NC}"
     fi
 
     # Create .claude directory if it doesn't exist
@@ -114,12 +114,12 @@ EOF
 # Automatically loads task context and launches Claude
 
 WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
+TASK_CONTEXT="$WORKTREE_ROOT/.claude-purpose-context.md"
 
 # Display task information
 if [ -f "$TASK_CONTEXT" ]; then
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║           Claude Code - Task Context Loaded                   ║"
+    echo "║           Claude Code - Purpose Context Loaded                   ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
     head -15 "$TASK_CONTEXT"
@@ -138,14 +138,14 @@ if [ -f "$TASK_CONTEXT" ]; then
     CONTEXT=$(cat "$TASK_CONTEXT")
     exec claude --append-system-prompt "
 
-# TASK CONTEXT - YOU ARE WORKING IN A WORKTREE
+# PURPOSE CONTEXT - YOU ARE WORKING IN A WORKTREE
 
 $CONTEXT
 
 IMPORTANT:
 - You are in a dedicated worktree for this specific task
 - Focus exclusively on this task's objectives
-- Refer to .claude-task-context.md and TASK.md for details
+- Refer to .claude-purpose-context.md and PURPOSE.md for details
 - This is part of a parallel development workflow with multiple worktrees
 - Do not work on files outside this task's scope
 "

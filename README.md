@@ -202,12 +202,12 @@ default_view=table    # table | detailed | summary
 ### 6. Add Claude Context to Existing Worktrees
 `./add-claude-context.sh`
 
-Retroactively add Claude task context to worktrees that were created without it.
+Retroactively add Claude purpose context to worktrees that were created without it.
 
 **Features:**
-- Generates `.claude-task-context.md` from existing TASK.md
+- Generates `.claude-purpose-context.md` from existing PURPOSE.md
 - Creates `.claude/init.sh` startup script
-- Processes all task worktrees automatically
+- Processes all purpose worktrees automatically
 - Skips worktrees that already have context
 
 **Usage:**
@@ -216,17 +216,17 @@ Retroactively add Claude task context to worktrees that were created without it.
 ```
 
 **What it creates:**
-- `.claude-task-context.md` - Task context for Claude's system prompt
+- `.claude-purpose-context.md` - Task context for Claude's system prompt
 - `.claude/init.sh` - Auto-startup script that launches Claude with context
 
 ## Claude-Aware Worktrees
 
 ### What is a Claude-Aware Worktree?
 
-A Claude-aware worktree automatically provides task context to Claude Code when it starts, eliminating the need to manually explain what you're working on.
+A Claude-aware worktree automatically provides purpose context to Claude Code when it starts, eliminating the need to manually explain what you're working on.
 
 **Key Files:**
-- **`.claude-task-context.md`** - Markdown file containing:
+- **`.claude-purpose-context.md`** - Markdown file containing:
   - Task objective and scope
   - Primary files to work on
   - Success criteria checklist
@@ -236,9 +236,9 @@ A Claude-aware worktree automatically provides task context to Claude Code when 
 - **`.claude/init.sh`** - Startup script that:
   - Displays task information
   - Launches Claude with `--append-system-prompt`
-  - Injects full task context into Claude's system prompt
+  - Injects full purpose context into Claude's system prompt
 
-### Starting Claude with Task Context
+### Starting Claude with Purpose Context
 
 **Method 1: Manual (per worktree)**
 ```bash
@@ -250,7 +250,7 @@ cd /workspace/.trees/<worktree-name>
 ```bash
 /workspace/.trees/launch-all-claude.sh
 ```
-This creates a tmux session with a window for each worktree, each running Claude with task context.
+This creates a tmux session with a window for each worktree, each running Claude with purpose context.
 
 **Method 3: VS Code Terminal Profiles**
 1. Open Terminal menu
@@ -263,7 +263,7 @@ This creates a tmux session with a window for each worktree, each running Claude
 When launched via `.claude/init.sh`, Claude receives this system prompt:
 
 ```markdown
-# TASK CONTEXT - YOU ARE WORKING IN A WORKTREE
+# PURPOSE CONTEXT - YOU ARE WORKING IN A WORKTREE
 
 # Task 01: Claude.md Refinement & Agent Creation
 
@@ -280,7 +280,7 @@ Refine CLAUDE.md instructions, create specialized agents...
 IMPORTANT:
 - You are in a dedicated worktree for this specific task
 - Focus exclusively on this task's objectives
-- Refer to .claude-task-context.md and TASK.md for details
+- Refer to .claude-purpose-context.md and PURPOSE.md for details
 - This is part of a parallel development workflow with multiple worktrees
 - Do not work on files outside this task's scope
 ```
@@ -297,8 +297,8 @@ This ensures Claude knows exactly what it should be working on from the moment i
    ```
    This automatically creates:
    - Git worktrees with branches
-   - TASK.md documentation
-   - `.claude-task-context.md` for Claude
+   - PURPOSE.md documentation
+   - `.claude-purpose-context.md` for Claude
    - `.claude/init.sh` startup scripts
    - VS Code terminal profiles
 
