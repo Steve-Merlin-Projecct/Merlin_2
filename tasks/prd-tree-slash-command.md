@@ -657,18 +657,19 @@ Processing worktrees...
 
 [2/3] api-rate-limiting
   ✓ Switched to develop/v4.2.0-20251009
-  ⚠  Merged with conflicts in:
-      - modules/api/middleware.py
-      - tests/test_rate_limiting.py
-  ⏸  Paused - Please resolve conflicts manually
+  ⚠  Conflicts detected in 2 files
+  🔧 Launching conflict resolution agent...
 
-  To continue:
-    1. Resolve conflicts in the files listed above
-    2. git add <resolved-files>
-    3. git commit
-    4. Run: /tree closedone --resume
-
-  Status: ⚠️  CONFLICTS (manual resolution needed)
+  Agent resolving conflicts:
+    ✓ modules/api/middleware.py (Combined both middleware functions)
+    ✓ tests/test_rate_limiting.py (Merged both test suites)
+  ✓ All conflicts resolved automatically
+  ✓ Tests passed
+  ✓ Changes staged
+  ✓ Removed worktree files
+  ✓ Closed Claude terminal (PID 12346)
+  ✓ Archived completion files
+  Status: ✅ SUCCESS (auto-resolved conflicts)
 
 [3/3] user-dashboard-redesign
   ✓ Switched to develop/v4.2.0-20251009
@@ -682,30 +683,150 @@ Processing worktrees...
 SUMMARY
 
 Worktrees Processed: 3
-  ✅ Success: 2
-  ⚠️  Conflicts: 1
+  ✅ Success: 3
+  🔧 Auto-resolved conflicts: 1
   ❌ Failed: 0
 
-Next Steps:
-  1. Resolve conflicts in api-rate-limiting
-  2. After resolving, run: /tree closedone --resume
-  3. Or skip conflicted worktree: /tree closedone --skip api-rate-limiting
+Conflict Resolution Details:
+  - api-rate-limiting: 2 files auto-resolved by agent
+    Strategy: Combined both changes to preserve all functionality
 
 Archived Files:
   - .trees/.archived/real-time-collaboration/
+  - .trees/.archived/api-rate-limiting/
   - .trees/.archived/user-dashboard-redesign/
+
+All worktrees merged successfully! 🎉
 ═══════════════════════════════════════════════════════════
 ```
 
-**7.6. Conflict Resolution Workflow**
+**7.6. Automated Conflict Resolution Workflow**
 
-When conflicts are detected:
-- Pause batch processing
-- Display conflicted files
-- Provide clear resolution instructions
-- Wait for manual resolution
-- Support `--resume` flag to continue from last position
+When conflicts are detected, use the general-purpose agent to automatically analyze and resolve:
+
+**7.6.1. Conflict Detection**
+- Merge attempt fails with conflict markers
+- Capture list of conflicted files
+- Create backup copies in `.trees/.conflict-backup/<worktree-name>/`
+
+**7.6.2. Agent-Based Resolution**
+- Launch general-purpose agent with conflict analysis task
+- Agent receives:
+  - Conflicted file paths
+  - Backup copies of both versions (base, incoming)
+  - Original feature descriptions from both worktrees
+  - Context from PURPOSE.md files
+
+**Agent Task:**
+```
+Analyze and resolve merge conflicts in the following files from merging worktrees:
+
+Conflicted Files:
+{list of files with conflicts}
+
+Context:
+- Base worktree: {name} - {original purpose description}
+- Incoming worktree: {name} - {original purpose description}
+
+For each conflicted file:
+1. Read the file with conflict markers
+2. Read backup copies: .trees/.conflict-backup/{worktree}/base/{file} and .trees/.conflict-backup/{worktree}/incoming/{file}
+3. Understand what each version is trying to accomplish
+4. Create a merged version that includes BOTH sets of changes appropriately
+5. The correct solution is usually to include both different elements, not choose one over the other
+6. Write the resolved file without conflict markers
+7. Explain the resolution strategy used
+
+After resolving all conflicts:
+- Stage resolved files with git add
+- Report resolution summary
+```
+
+**7.6.3. Resolution Strategies**
+
+The agent should prioritize these strategies:
+
+**Strategy 1: Combine Both Changes (Default)**
+- Both worktrees made different changes to the same area
+- Solution: Include both changes in a way that preserves both functionalities
+- Example: Two different API endpoints added → Keep both endpoints
+
+**Strategy 2: Merge Complementary Logic**
+- Both worktrees modified the same function differently
+- Solution: Merge both modifications into a single enhanced function
+- Example: One added validation, another added error handling → Include both
+
+**Strategy 3: Preserve Both Variants**
+- Changes represent different approaches to similar problems
+- Solution: Keep both as separate functions/methods
+- Example: Two different rate limiting algorithms → Keep both with different names
+
+**Strategy 4: Structural Merge**
+- Changes to imports, configuration, or structure
+- Solution: Combine both sets of imports/config entries
+- Example: Two different imports added → Include both import statements
+
+**7.6.4. Post-Resolution Verification**
+- Agent runs syntax checks on resolved files
+- Agent runs test suite if available
+- Agent reports:
+  - Number of conflicts resolved
+  - Strategy used for each file
+  - Any issues that require human review
+  - Test results
+
+**7.6.5. Fallback to Manual Resolution**
+
+If agent cannot resolve (rare cases):
+- Mark conflict as requiring human intervention
+- Preserve backup files
+- Provide detailed explanation of the issue
+- Support `--resume` flag to continue after manual fix
 - Support `--skip <worktree-name>` to skip specific worktree
+
+**Example Agent Resolution Output:**
+```
+🔧 Resolving conflicts with AI agent...
+
+[1/3] modules/api/middleware.py
+  Strategy: Combine Both Changes
+  - Base added: rate limiting middleware
+  - Incoming added: authentication middleware
+  ✓ Resolution: Merged both middleware functions into pipeline
+  ✓ Syntax check passed
+
+[2/3] tests/test_middleware.py
+  Strategy: Merge Complementary Logic
+  - Base added: rate limit tests
+  - Incoming added: auth tests
+  ✓ Resolution: Combined both test suites
+  ✓ Syntax check passed
+
+[3/3] config/settings.py
+  Strategy: Structural Merge
+  - Base added: RATE_LIMIT_WINDOW config
+  - Incoming added: AUTH_TIMEOUT config
+  ✓ Resolution: Included both configuration entries
+  ✓ Syntax check passed
+
+Running test suite...
+✓ All tests passed (42 tests, 0 failures)
+
+Conflict Resolution Summary:
+  Files resolved: 3/3
+  Strategy breakdown:
+    - Combine Both Changes: 1
+    - Merge Complementary Logic: 1
+    - Structural Merge: 1
+  Test results: ✓ PASSED
+
+Staging resolved files...
+✓ git add modules/api/middleware.py
+✓ git add tests/test_middleware.py
+✓ git add config/settings.py
+
+✅ Conflicts resolved automatically. Ready to commit.
+```
 
 **7.7. Safety Features**
 
@@ -817,10 +938,10 @@ Actions:
 
 ## Non-Goals (Out of Scope)
 
-1. Automated conflict resolution (requires human decision)
-2. CI/CD integration (future enhancement)
-3. Cross-repository worktrees
-4. Remote worktree creation (local only)
+1. CI/CD integration (future enhancement)
+2. Cross-repository worktrees
+3. Remote worktree creation (local only)
+4. Automatic deployment (manual deployment workflow required)
 
 ## Design Considerations
 
@@ -862,8 +983,12 @@ Typical Workflow:
 - Completed worktrees: `/workspace/.trees/.completed/`
   - Synopsis files: `<worktree-name>-synopsis-YYYYMMDD.md`
   - Changelog files: `<worktree-name>-changelog-YYYYMMDD.md`
+- Conflict backups: `/workspace/.trees/.conflict-backup/<worktree-name>/`
+  - Backup copies of conflicted files before agent resolution
+  - Preserved for rollback if needed
 - Archived worktrees: `/workspace/.trees/.archived/`
   - Files moved here after successful merge with `/tree closedone`
+  - Includes conflict resolution logs if applicable
 
 ### Conflict Detection Algorithm
 ```python
