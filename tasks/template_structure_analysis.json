@@ -1,0 +1,417 @@
+{
+  "resume_ats_simple": {
+    "filename": "ATS simple classic resume.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "1.00\"",
+        "right": "1.00\"",
+        "top": "0.44\"",
+        "bottom": "0.44\""
+      }
+    },
+    "content_structure": [],
+    "sections_identified": [],
+    "tables_count": 0
+  },
+  "resume_ats_bold": {
+    "filename": "ATS bold classic resume.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "0.95\"",
+        "right": "1.05\"",
+        "top": "0.63\"",
+        "bottom": "0.50\""
+      }
+    },
+    "content_structure": [
+      {
+        "text": "|  |",
+        "style": "Heading 1",
+        "section": "|  |"
+      },
+      {
+        "text": "|",
+        "style": "Normal",
+        "section": "|  |"
+      },
+      {
+        "text": "|",
+        "style": "Normal",
+        "section": "|  |"
+      }
+    ],
+    "sections_identified": [
+      "|  |"
+    ],
+    "tables_count": 0
+  },
+  "resume_manager": {
+    "filename": "Industry manager resume.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "0.80\"",
+        "right": "0.80\"",
+        "top": "0.70\"",
+        "bottom": "0.60\""
+      }
+    },
+    "content_structure": [
+      {
+        "text": "4567 Main Street, Buffalo, New York 98052 | (716) 555-0100 | m.riley@live.com | www.linkedin.com/in/m.riley",
+        "style": "Contact",
+        "section": null
+      },
+      {
+        "text": "Profile",
+        "style": "Heading 1",
+        "section": "Profile"
+      },
+      {
+        "text": "Friendly and engaging team player and leader able to inspire staff to perform their best. Detail oriented and experienced restaurant manager passionate about food and beverages. A multi-tasker who exc",
+        "style": "Normal",
+        "section": "Profile"
+      },
+      {
+        "text": "Experience",
+        "style": "Heading 1",
+        "section": "Experience"
+      },
+      {
+        "text": "Restaurant Manager | Contoso Bar and Grill | September 20XX \u2013 Present",
+        "style": "Heading 2",
+        "section": "Experience"
+      },
+      {
+        "text": "Recruit, hire, train, and coach over 30 staff members on customer service skills, food & beverage knowledge, sales, and health & safety standards.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Reduced costs by 7% through controls on overtime, operational efficiencies, and reduced waste.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Consistently exceed monthly sales goals by a minimum of 10% by training FOH staff on upselling techniques and by creating a featured food and beverage program.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Restaurant Manager | Fourth Coffee Bistro | June 20XX \u2013 August 20XX",
+        "style": "Heading 2",
+        "section": "Experience"
+      },
+      {
+        "text": "Created a cross-training program ensuring FOH staff members were able to perform confidently and effectively in all positions.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Grew customer based and increased restaurant social media accounts by 19% through interactive promotions, engaging postings, and contests.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Created and implemented staff health and safety standards compliance training program, achieving a score of 99% from the Board of Health.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Successfully redesigned existing inventory system, ordering and food storage practices, resulting in a 6% decrease in food waste and higher net profits.",
+        "style": "List Bullet",
+        "section": "Experience"
+      },
+      {
+        "text": "Education",
+        "style": "Heading 1",
+        "section": "Education"
+      },
+      {
+        "text": "B.S. in Business Administration | June 20XX | Bigtown College, Chicago, Illinois",
+        "style": "Heading 2",
+        "section": "Education"
+      },
+      {
+        "text": "A.A. in Hospitality Management | June 20XX | Bigtown College, Chicago, Illinois",
+        "style": "Heading 2",
+        "section": "Education"
+      },
+      {
+        "text": "Skills & Abilities",
+        "style": "Heading 1",
+        "section": "Skills & Abilities"
+      },
+      {
+        "text": "Activities and Interests",
+        "style": "Heading 1",
+        "section": "Activities and Interests"
+      },
+      {
+        "text": "Theater, environmental conservation, art, hiking, skiing, travel",
+        "style": "Normal",
+        "section": "Activities and Interests"
+      }
+    ],
+    "sections_identified": [
+      "Profile",
+      "Experience",
+      "Education",
+      "Skills & Abilities",
+      "Activities and Interests"
+    ],
+    "tables_count": 2,
+    "table_structure": [
+      {
+        "table_num": 0,
+        "rows": 1,
+        "cols": 1,
+        "sample_content": [
+          [
+            "May Riley"
+          ]
+        ]
+      },
+      {
+        "table_num": 1,
+        "rows": 1,
+        "cols": 2,
+        "sample_content": [
+          [
+            "Accounting & Budgeting\nProficient with POS systems",
+            "Poised under pressure\nExperienced in most restaura"
+          ]
+        ]
+      }
+    ]
+  },
+  "resume_marketing": {
+    "filename": "Social media marketing resume.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "0.20\"",
+        "right": "0.20\"",
+        "top": "0.38\"",
+        "bottom": "0.00\""
+      }
+    },
+    "content_structure": [],
+    "sections_identified": [],
+    "tables_count": 1,
+    "table_structure": [
+      {
+        "table_num": 0,
+        "rows": 10,
+        "cols": 10,
+        "sample_content": [
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ]
+        ]
+      }
+    ]
+  },
+  "resume_modern": {
+    "filename": "Modern multi-page resume.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "1.00\"",
+        "right": "1.00\"",
+        "top": "0.81\"",
+        "bottom": "0.94\""
+      }
+    },
+    "content_structure": [],
+    "sections_identified": [],
+    "tables_count": 13,
+    "table_structure": [
+      {
+        "table_num": 0,
+        "rows": 16,
+        "cols": 4,
+        "sample_content": [
+          [
+            "0",
+            "0",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ]
+        ]
+      },
+      {
+        "table_num": 1,
+        "rows": 4,
+        "cols": 4,
+        "sample_content": [
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ]
+        ]
+      }
+    ]
+  },
+  "cover_letter_ats": {
+    "filename": "ATS finance cover letter.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "1.00\"",
+        "right": "1.00\"",
+        "top": "1.00\"",
+        "bottom": "0.30\""
+      }
+    },
+    "content_structure": [
+      {
+        "text": "Donna Robbins",
+        "style": "Title",
+        "section": "Donna Robbins"
+      },
+      {
+        "text": "Accountant",
+        "style": "Subtitle",
+        "section": "Donna Robbins"
+      },
+      {
+        "text": "313.555.0100   |   donna@example.com    |    www.greatsiteaddress.com",
+        "style": "Contact Info",
+        "section": "Donna Robbins"
+      },
+      {
+        "text": "4 April 20XX\nHiring Manager\nESG Financial Services\n5678 Mountain Drive\nDenver, CO 12345",
+        "style": "Addressee",
+        "section": "Donna Robbins"
+      },
+      {
+        "text": "DEAR LILLI ALLIK,",
+        "style": "Heading 1",
+        "section": "DEAR LILLI ALLIK,"
+      },
+      {
+        "text": "I am writing to express my interest in the accountant position at ESG Financial Services. With a Bachelor of Science in Accounting, a minor in Business Administration, and several years of hands-on ex",
+        "style": "Normal",
+        "section": "DEAR LILLI ALLIK,"
+      },
+      {
+        "text": "Currently, as an Accountant at Trey Research, I support a wide range of clients, from individuals to businesses, delivering accurate and efficient accounting services. My attention to detail, ownershi",
+        "style": "Normal",
+        "section": "DEAR LILLI ALLIK,"
+      },
+      {
+        "text": "I am particularly drawn to ESG Financial Services because of its commitment to supporting women and minority owned businesses. I would be thrilled to bring my analytical skills, organizational abiliti",
+        "style": "Normal",
+        "section": "DEAR LILLI ALLIK,"
+      },
+      {
+        "text": "Thank you for considering my application. I look forward to the opportunity to discuss how my qualifications align with the needs of your organization.",
+        "style": "Normal",
+        "section": "DEAR LILLI ALLIK,"
+      },
+      {
+        "text": "Sincerely,\nDonna Robbins",
+        "style": "Normal",
+        "section": "DEAR LILLI ALLIK,"
+      }
+    ],
+    "sections_identified": [
+      "Donna Robbins",
+      "DEAR LILLI ALLIK,"
+    ],
+    "tables_count": 0
+  },
+  "cover_letter_bold": {
+    "filename": "Simple bold cover letter.docx",
+    "page_setup": {
+      "width": "8.50\"",
+      "height": "11.00\"",
+      "margins": {
+        "left": "0.76\"",
+        "right": "0.76\"",
+        "top": "0.44\"",
+        "bottom": "0.44\""
+      }
+    },
+    "content_structure": [],
+    "sections_identified": [],
+    "tables_count": 1,
+    "table_structure": [
+      {
+        "table_num": 0,
+        "rows": 3,
+        "cols": 6,
+        "sample_content": [
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            ",",
+            ","
+          ]
+        ]
+      }
+    ]
+  }
+}
