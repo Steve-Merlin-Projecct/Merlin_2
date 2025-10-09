@@ -199,6 +199,94 @@ default_view=table    # table | detailed | summary
 - Process detection using `lsof` (requires root or same user)
 - Adaptive refresh slows down when idle (future enhancement)
 
+### 6. Add Claude Context to Existing Worktrees
+`./add-claude-context.sh`
+
+Retroactively add Claude task context to worktrees that were created without it.
+
+**Features:**
+- Generates `.claude-task-context.md` from existing TASK.md
+- Creates `.claude/init.sh` startup script
+- Processes all task worktrees automatically
+- Skips worktrees that already have context
+
+**Usage:**
+```bash
+./add-claude-context.sh
+```
+
+**What it creates:**
+- `.claude-task-context.md` - Task context for Claude's system prompt
+- `.claude/init.sh` - Auto-startup script that launches Claude with context
+
+## Claude-Aware Worktrees
+
+### What is a Claude-Aware Worktree?
+
+A Claude-aware worktree automatically provides task context to Claude Code when it starts, eliminating the need to manually explain what you're working on.
+
+**Key Files:**
+- **`.claude-task-context.md`** - Markdown file containing:
+  - Task objective and scope
+  - Primary files to work on
+  - Success criteria checklist
+  - Conflict warnings
+  - Workflow commands
+
+- **`.claude/init.sh`** - Startup script that:
+  - Displays task information
+  - Launches Claude with `--append-system-prompt`
+  - Injects full task context into Claude's system prompt
+
+### Starting Claude with Task Context
+
+**Method 1: Manual (per worktree)**
+```bash
+cd /workspace/.trees/<worktree-name>
+./.claude/init.sh
+```
+
+**Method 2: All worktrees with tmux**
+```bash
+/workspace/.trees/launch-all-claude.sh
+```
+This creates a tmux session with a window for each worktree, each running Claude with task context.
+
+**Method 3: VS Code Terminal Profiles**
+1. Open Terminal menu
+2. Select "New Terminal"
+3. Choose a task profile (e.g., "Task 1: claude-refinement")
+4. Run `./.claude/init.sh` in the terminal
+
+### What Claude Sees
+
+When launched via `.claude/init.sh`, Claude receives this system prompt:
+
+```markdown
+# TASK CONTEXT - YOU ARE WORKING IN A WORKTREE
+
+# Task 01: Claude.md Refinement & Agent Creation
+
+**Worktree:** claude-refinement
+**Branch:** task/01-claude-refinement
+**Status:** In Progress
+
+## Objective
+Refine CLAUDE.md instructions, create specialized agents...
+
+## Scope
+...
+
+IMPORTANT:
+- You are in a dedicated worktree for this specific task
+- Focus exclusively on this task's objectives
+- Refer to .claude-task-context.md and TASK.md for details
+- This is part of a parallel development workflow with multiple worktrees
+- Do not work on files outside this task's scope
+```
+
+This ensures Claude knows exactly what it should be working on from the moment it starts.
+
 ## Workflow
 
 ### Initial Setup
@@ -207,9 +295,23 @@ default_view=table    # table | detailed | summary
    ```bash
    ./create-worktree-batch.sh my-tasks.txt
    ```
-3. Open all terminals:
+   This automatically creates:
+   - Git worktrees with branches
+   - TASK.md documentation
+   - `.claude-task-context.md` for Claude
+   - `.claude/init.sh` startup scripts
+   - VS Code terminal profiles
+
+3. Open terminals:
    ```bash
+   # Option A: Tmux session with all worktrees
    ./open-terminals.sh
+
+   # Option B: Launch Claude in all worktrees
+   /workspace/.trees/launch-all-claude.sh
+
+   # Option C: Use VS Code terminal profiles
+   # (Terminal → New Terminal → Select profile)
    ```
 
 ### Daily Development
