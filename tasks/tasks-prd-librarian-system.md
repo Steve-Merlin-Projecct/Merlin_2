@@ -1,3 +1,16 @@
+---
+title: 'Task List: Librarian System Implementation'
+created: '2025-10-09'
+updated: '2025-10-09'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- tasks
+- librarian
+- system
+---
+
 # Task List: Librarian System Implementation
 
 **PRD:** tasks/prd-librarian-system.md
