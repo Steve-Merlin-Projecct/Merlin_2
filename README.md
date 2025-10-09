@@ -88,6 +88,117 @@ Pull latest changes from develop/v4.2.0 in all worktrees.
 ./sync-all-worktrees.sh
 ```
 
+### 5. Real-Time Resource Monitor
+`./monitor-resources.sh [OPTIONS]`
+
+Live monitoring of disk usage, CPU, memory, git metrics, and file statistics across all worktrees.
+
+**Features:**
+- Real-time auto-refresh display (2-second default)
+- Multiple view modes: table, detailed, summary
+- Color-coded status indicators (🟢 Normal, 🟡 Warning, 🔴 Critical)
+- Disk usage tracking with caching
+- Git metrics (uncommitted files, commits ahead, diff stats)
+- Process monitoring (CPU & memory per worktree)
+- Configurable alert thresholds
+- Data export (JSON/CSV)
+
+**Views:**
+
+**Table View** - Compact overview of all worktrees
+```
+WORKTREE             DISK    CPU%   MEM(MB)  FILES  CHANGES  STATUS
+─────────────────────────────────────────────────────────────────
+claude-refinement    245MB   12.3%   156MB   342    15       🟢 Normal
+marketing-content    1.2GB   45.7%   892MB   1245   127      🟡 High Disk
+dashboard-redesign   567MB   78.3%   1.2GB   892    45       🔴 High CPU
+```
+
+**Detailed View** - Complete breakdown of single worktree
+```
+Disk Usage
+  Working Tree:  198MB
+  .git Directory: 47MB
+  Total:         245MB
+
+Git Metrics
+  Uncommitted:   15 files
+  Diff Size:     +342 / -89 lines
+  Commits Ahead: ↑7
+  Last Commit:   2 hours ago
+
+Active Processes
+  python (PID 12345): 12.3% CPU, 156MB RAM
+```
+
+**Summary View** - System-wide statistics and top consumers
+```
+System-Wide Summary
+  Total Worktrees:     14
+  Total Disk Usage:    8.4GB
+  Total Files:         7426
+  Status Distribution:
+    ● Normal:   11
+    ● Warning:  2
+    ● Critical: 1
+
+Top 5 Disk Consumers
+  marketing-content     1.2GB ████████████
+  dashboard-redesign    567MB ██████
+```
+
+**Usage:**
+```bash
+# Start monitoring (default: table view, 2s refresh)
+./monitor-resources.sh
+
+# Start with specific view
+./monitor-resources.sh -v summary
+
+# Custom refresh interval
+./monitor-resources.sh -i 5
+
+# Create default configuration file
+./monitor-resources.sh --create-config
+
+# Export current snapshot
+./monitor-resources.sh --export-json metrics.json
+./monitor-resources.sh --export-csv metrics.csv
+```
+
+**Keyboard Controls:**
+- `p` - Pause/resume monitoring
+- `q` - Quit
+- `v` - Switch view mode (table → detailed → summary)
+- `+/-` - Increase/decrease refresh rate
+- `↑/↓` - Navigate worktrees in detailed view
+
+**Configuration:**
+
+Edit `.worktree-monitor.conf` to customize thresholds:
+```ini
+# Refresh interval in seconds
+interval_seconds=2
+
+# Resource thresholds for alerts
+disk_mb=1024          # Warning at 717MB, Critical at 922MB
+cpu_percent=75.0      # Warning at 52.5%, Critical at 67.5%
+memory_mb=1024        # Warning at 717MB, Critical at 922MB
+
+# Display settings
+default_view=table    # table | detailed | summary
+```
+
+**Status Indicators:**
+- 🟢 **Normal**: All metrics < 70% of threshold
+- 🟡 **Warning**: Any metric 70-90% of threshold
+- 🔴 **Critical**: Any metric > 90% of threshold
+
+**Performance:**
+- Disk usage cached for 10 seconds (expensive operation)
+- Process detection using `lsof` (requires root or same user)
+- Adaptive refresh slows down when idle (future enhancement)
+
 ## Workflow
 
 ### Initial Setup
