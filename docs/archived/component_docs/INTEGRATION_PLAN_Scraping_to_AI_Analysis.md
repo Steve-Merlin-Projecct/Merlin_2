@@ -1,3 +1,17 @@
+---
+title: "Integration Plan: Job Scraping \u2192 Jobs Table \u2192 AI Analysis Flow"
+status: completed
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- integration
+- plan
+- scraping
+- analysis
+---
+
 # Integration Plan: Job Scraping → Jobs Table → AI Analysis Flow
 
 **Master Project Version:** 2.10  

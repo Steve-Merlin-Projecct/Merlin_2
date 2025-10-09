@@ -1,3 +1,16 @@
+---
+title: Branch Review Workflow
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- branch
+- review
+---
+
 # Branch Review Workflow
 
 **Purpose:** Standardized workflow for reviewing and archiving merged feature branches

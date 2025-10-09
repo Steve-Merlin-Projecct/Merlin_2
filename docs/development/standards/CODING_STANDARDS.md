@@ -1,3 +1,15 @@
+---
+title: Coding Standards & Best Practices
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: standards
+status: active
+tags:
+- coding
+- standards
+---
+
 # Coding Standards & Best Practices
 
 ## Purpose

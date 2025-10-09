@@ -1,3 +1,16 @@
+---
+title: 'ADR-002: Template-Based Document Generation'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: decision
+status: active
+tags:
+- document
+- generation
+- strategy
+---
+
 # ADR-002: Template-Based Document Generation
 
 ---

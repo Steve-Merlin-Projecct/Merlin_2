@@ -1,3 +1,15 @@
+---
+title: Risk Assessment Matrix
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: task
+status: active
+tags:
+- risk
+- assessment
+---
+
 # Risk Assessment Matrix
 **Generated:** October 7, 2025
 

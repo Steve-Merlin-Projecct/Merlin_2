@@ -1,3 +1,15 @@
+---
+title: 'ADR-001: PostgreSQL as Primary Database'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: decision
+status: active
+tags:
+- database
+- choice
+---
+
 # ADR-001: PostgreSQL as Primary Database
 
 ---

@@ -1,3 +1,16 @@
+---
+title: 'Product Requirements Document: Database Table Consolidation'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- database
+- table
+- consolidation
+---
+
 # Product Requirements Document: Database Table Consolidation
 ## Job Analysis and Analyzed Jobs Table Merger
 

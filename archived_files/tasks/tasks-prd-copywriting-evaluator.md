@@ -1,3 +1,16 @@
+---
+title: 'Tasks: Copywriting Evaluator System Implementation'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- tasks
+- copywriting
+- evaluator
+---
+
 # Tasks: Copywriting Evaluator System Implementation
 
 Based on Product Requirements Document: `prd-copywriting-evaluator.md`

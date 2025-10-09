@@ -1,3 +1,16 @@
+---
+title: AI Analysis Integration - Enhanced Jobs Table Schema
+status: completed
+version: '2.10'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- analysis
+- integration
+---
+
 # AI Analysis Integration - Enhanced Jobs Table Schema
 **Version**: 2.10  
 **Date**: July 22, 2025  

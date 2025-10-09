@@ -1,3 +1,16 @@
+---
+title: Task Execution Guide (Claude Code Optimized)
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- task
+- execution
+---
+
 # Task Execution Guide (Claude Code Optimized)
 **Version:** 1.0
 **Date:** October 6, 2025

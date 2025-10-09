@@ -1,3 +1,14 @@
+---
+title: Workflow Examples
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+---
+
 # Workflow Examples
 
 This directory contains complete worked examples demonstrating the Automated Task Workflow from start to finish.

@@ -1,3 +1,16 @@
+---
+title: Remove Replit-Specific Code and Dependencies
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: prd
+status: archived
+tags:
+- remove
+- replit
+- code
+---
+
 # PRD: Remove Replit-Specific Code and Dependencies
 
 ## Introduction/Overview

@@ -1,3 +1,17 @@
+---
+title: 'Tasks: Remove Replit-Specific Code and Dependencies'
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: prd
+status: archived
+tags:
+- tasks
+- remove
+- replit
+- code
+---
+
 # Tasks: Remove Replit-Specific Code and Dependencies
 
 Based on Product Requirements Document: `prd-remove-replit-code.md`

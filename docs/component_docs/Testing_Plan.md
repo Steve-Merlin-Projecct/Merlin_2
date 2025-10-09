@@ -1,3 +1,16 @@
+---
+title: Comprehensive Testing Plan - Merlin Job Application System
+status: pre
+version: '2.0'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+tags:
+- testing
+- plan
+---
+
 # Comprehensive Testing Plan - Merlin Job Application System
 **Version**: 2.0 (Refactoring Phase)  
 **Date**: July 05, 2025  

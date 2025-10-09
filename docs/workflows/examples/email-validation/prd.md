@@ -1,3 +1,14 @@
+---
+title: Email Validation System
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+---
+
 # PRD: Email Validation System
 
 **Version:** 1.0

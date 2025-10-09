@@ -1,3 +1,17 @@
+---
+title: Database Schema Automation
+status: production
+version: 2.16.5
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+tags:
+- database
+- schema
+- automation
+---
+
 # Database Schema Automation
 
 **Version**: 2.16.5  

@@ -1,3 +1,16 @@
+---
+title: CSV Content Mapping System
+status: production
+version: 2.16.5
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+tags:
+- content
+- mapping
+---
+
 # CSV Content Mapping System
 
 **Version**: 2.16.5  

@@ -1,3 +1,16 @@
+---
+title: Implementation Guide - Merlin System Refactoring
+status: ready
+version: '2.0'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- implementation
+- refactor
+---
+
 # Implementation Guide - Merlin System Refactoring
 **Version**: 2.0  
 **Date**: July 05, 2025  

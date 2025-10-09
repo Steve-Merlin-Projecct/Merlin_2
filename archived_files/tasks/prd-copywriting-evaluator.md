@@ -1,3 +1,15 @@
+---
+title: 'Product Requirements Document: Copywriting Evaluator System'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- copywriting
+- evaluator
+---
+
 # Product Requirements Document: Copywriting Evaluator System
 
 ## Introduction/Overview
