@@ -59,6 +59,8 @@ def sanitize_job_description(text):
     """
     Pre-LLM input sanitizer to detect and log potential injection attempts
     Logs suspicious patterns but doesn't remove them - lets LLM handle appropriately
+
+    NOW INCLUDES: Unpunctuated text stream detection (new LLM injection vector)
     """
     if not text or not isinstance(text, str):
         return text
@@ -85,23 +87,67 @@ def sanitize_job_description(text):
             injection_detected = True
             detected_patterns.append(pattern)
 
-    # Log if injection detected
+    # NEW: Unpunctuated text stream detection
+    from modules.security.unpunctuated_text_detector import integrate_with_sanitizer
+
+    text, unpunct_result = integrate_with_sanitizer(text)
+
+    if unpunct_result.detected:
+        log_potential_injection(
+            text,
+            ["unpunctuated_stream"],
+            severity=unpunct_result.severity,
+            details=unpunct_result.detection_details
+        )
+        injection_detected = True
+
+    # Log if any injection detected
     if injection_detected:
         log_potential_injection(text, detected_patterns)
 
     return text
 
 
-def log_potential_injection(text, patterns):
+def log_potential_injection(text, patterns, severity='medium', details=None):
     """
     Log potential injection attempts for security monitoring
+    NOW ENHANCED: Supports severity levels and database logging
+
+    Args:
+        text: The suspicious text
+        patterns: List of detected pattern names
+        severity: Severity level ('low', 'medium', 'high', 'critical')
+        details: Additional detection details (dict)
     """
     # Get first 200 characters for logging (sanitized)
     text_sample = text[:200] if text else ""
 
     logger.warning(
-        f"Potential LLM injection detected - Patterns: {', '.join(patterns)}")
+        f"Potential LLM injection detected - Patterns: {', '.join(patterns)}, Severity: {severity}")
     logger.warning(f"Text sample (first 200 chars): {text_sample}")
+
+    # Log to security_detections table
+    try:
+        from modules.database.database_manager import DatabaseManager
+        db = DatabaseManager()
+
+        detection_type = patterns[0] if patterns else 'unknown'
+
+        insert_query = """
+            INSERT INTO security_detections
+            (detection_type, severity, pattern_matched, text_sample, metadata, action_taken)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+
+        metadata = details if details else {'patterns': patterns}
+
+        db.execute_query(
+            insert_query,
+            (detection_type, severity, ', '.join(patterns), text_sample, json.dumps(metadata), 'logged')
+        )
+
+    except Exception as e:
+        logger.error(f"Failed to log security detection to database: {e}")
 
     # Additional security logging could be added here
     # e.g., send to security monitoring system
