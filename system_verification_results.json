@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-10-09T06:10:45.449481",
+  "tests": [
+    {
+      "name": "Health Check",
+      "passed": true,
+      "message": "Version 4.2.0",
+      "details": null
+    },
+    {
+      "name": "Root Endpoint",
+      "passed": true,
+      "message": "5 modules registered",
+      "details": null
+    },
+    {
+      "name": "Database Health",
+      "passed": true,
+      "message": "Connected, 6 total jobs",
+      "details": null
+    },
+    {
+      "name": "Direct DB Connection",
+      "passed": true,
+      "message": "46 tables in schema",
+      "details": null
+    },
+    {
+      "name": "Email OAuth",
+      "passed": false,
+      "message": "Status 401",
+      "details": null
+    },
+    {
+      "name": "Workflow API",
+      "passed": false,
+      "message": "Status 401",
+      "details": null
+    },
+    {
+      "name": "API Authentication",
+      "passed": true,
+      "message": "Protected endpoints require auth",
+      "details": null
+    },
+    {
+      "name": "Dashboard Frontend",
+      "passed": true,
+      "message": "Login page accessible",
+      "details": null
+    }
+  ],
+  "summary": {
+    "total_tests": 8,
+    "passed": 6,
+    "failed": 2,
+    "success_rate": 75.0
+  }
+}
