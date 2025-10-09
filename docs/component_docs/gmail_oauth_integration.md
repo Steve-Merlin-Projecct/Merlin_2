@@ -1,3 +1,16 @@
+---
+title: Gmail OAuth Integration Documentation
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+status: active
+tags:
+- gmail
+- oauth
+- integration
+---
+
 # Gmail OAuth Integration Documentation
 
 **Status:** Fully Operational  

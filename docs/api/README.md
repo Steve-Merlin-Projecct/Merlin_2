@@ -1,3 +1,14 @@
+---
+title: API Documentation
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: api
+status: active
+tags:
+- api
+---
+
 # API Documentation
 
 This directory contains comprehensive API documentation for the Automated Job Application System's REST API endpoints.

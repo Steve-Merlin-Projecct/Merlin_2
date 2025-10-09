@@ -1,3 +1,16 @@
+---
+title: Technical Design Document - Merlin Job Application System
+status: ok
+version: '2.1'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- technical
+- design
+---
+
 # Technical Design Document - Merlin Job Application System
 **Version**: 2.1 (Post Refactoring Project Organization, Documentation)
 **Date**: July 12, 2025  

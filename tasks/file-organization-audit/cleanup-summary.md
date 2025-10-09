@@ -1,3 +1,15 @@
+---
+title: File Organization Cleanup Summary
+status: completed
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: task
+tags:
+- cleanup
+- summary
+---
+
 # File Organization Cleanup Summary
 
 **Date:** October 8, 2025

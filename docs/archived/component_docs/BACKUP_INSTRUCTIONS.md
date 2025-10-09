@@ -1,3 +1,15 @@
+---
+title: GitHub Backup Instructions - Pre-Refactoring
+status: enhanced
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- backup
+- instructions
+---
+
 # GitHub Backup Instructions - Pre-Refactoring
 
 ## Current State Summary

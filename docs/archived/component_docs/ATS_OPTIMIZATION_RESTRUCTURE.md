@@ -1,3 +1,15 @@
+---
+title: ATS Optimization JSON Structure Restructure
+status: completed
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- optimization
+- restructure
+---
+
 # ATS Optimization JSON Structure Restructure
 
 **Date**: July 8, 2025  

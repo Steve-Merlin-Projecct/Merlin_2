@@ -1,3 +1,15 @@
+---
+title: Documentation Requirements Guide
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- requirements
+---
+
 # Documentation Requirements Guide
 **Version:** 1.0
 **Date:** October 6, 2025

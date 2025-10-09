@@ -1,3 +1,17 @@
+---
+title: 'Implementation Plan: Automated Job Application System'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- implementation
+- plan
+- automated
+- system
+---
+
 # Implementation Plan: Automated Job Application System
 
 ## Phase 1: Job Scraping & Database Foundation

@@ -1,3 +1,15 @@
+---
+title: 'Integration: [Service Name]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- integration
+- template
+---
+
 # Integration: [Service Name]
 
 ---

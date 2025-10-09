@@ -1,3 +1,17 @@
+---
+title: Quick Reference Checklist for Agents
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- quick
+- reference
+- checklist
+---
+
 # Quick Reference Checklist for Agents
 **Version:** 1.0
 **Date:** October 6, 2025

@@ -1,3 +1,16 @@
+---
+title: Automated Task Workflow System
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- automated
+- task
+---
+
 # Automated Task Workflow System
 **Version:** 1.0
 **Date:** October 6, 2025

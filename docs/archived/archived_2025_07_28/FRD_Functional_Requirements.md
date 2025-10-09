@@ -1,3 +1,15 @@
+---
+title: Functional Requirements Document - Merlin Job Application System
+status: updated
+tags:
+- priority-critical
+version: '2.16'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+---
+
 # Functional Requirements Document - Merlin Job Application System
 **Version**: 2.16  
 **Date**: July 24, 2025  

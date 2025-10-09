@@ -1,3 +1,16 @@
+---
+title: Dynamic Statusline Integration
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: task
+status: active
+tags:
+- dynamic
+- statusline
+- integration
+---
+
 # Dynamic Statusline Integration
 
 ## Overview

@@ -1,3 +1,16 @@
+---
+title: Automated Task Workflow - Implementation Summary
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- implementation
+- summary
+---
+
 # Automated Task Workflow - Implementation Summary
 **Date:** October 6, 2025
 **Version:** 1.0

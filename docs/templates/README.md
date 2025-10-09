@@ -1,3 +1,13 @@
+---
+title: Documentation Templates
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags: []
+---
+
 # Documentation Templates
 
 This directory contains standardized templates for creating consistent documentation across the project.

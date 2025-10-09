@@ -119,6 +119,56 @@ Prohibited Actions:
 - Add detailed inline documentation on all new or changed code. Add comprehensive docstrings and comments directly in your code that explain relationships between functions and expected behaviors.
 - When new understanding of the project is gained, document the changes in CLAUDE.md.
 
+**Documentation Metadata Requirements:**
+ALL new documentation files (.md) MUST include YAML frontmatter metadata at the beginning.
+
+Required Workflow for New Documentation:
+1. Add YAML frontmatter block (delimited by ---) at file start
+2. Include required fields: title, type, status, created
+3. Include recommended fields: version, updated, author, tags
+4. Run validation: `python tools/librarian_validate.py <file>`
+
+Required Metadata Fields:
+- `title`: Human-readable document title
+- `type`: Document classification (standards, guide, prd, task, reference, api, architecture, decision, process, changelog, audit, template)
+- `status`: Lifecycle state (draft, active, stable, deprecated, archived, completed)
+- `created`: Creation date in YYYY-MM-DD format
+
+Recommended Metadata Fields:
+- `version`: Semantic version (e.g., "1.0.0")
+- `updated`: Last update date in YYYY-MM-DD format
+- `author`: Author name or "Claude Sonnet X"
+- `tags`: Array of lowercase, hyphenated keywords (3-6 tags recommended)
+
+Example YAML Frontmatter:
+```yaml
+---
+title: "Feature Implementation Guide"
+type: "guide"
+status: "active"
+version: "1.0.0"
+created: "2025-10-09"
+updated: "2025-10-09"
+author: "Claude Sonnet 4.5"
+tags: ["feature", "implementation", "guide"]
+---
+```
+
+Metadata Tools:
+- `python tools/librarian_metadata.py --scan` - Check metadata coverage
+- `python tools/librarian_metadata.py --generate <file>` - Generate metadata for file
+- `python tools/librarian_validate.py` - Validate all documentation
+- `python tools/librarian_index.py` - Regenerate documentation index
+
+Pre-Commit Validation:
+- Pre-commit hooks will validate metadata completeness
+- Missing required fields will block commits
+- Run `python tools/librarian_validate.py --fix` to auto-fix simple issues
+
+Reference:
+- Full specification: `docs/standards/metadata-standard.md`
+- Documentation index: `docs/indexes/documentation-map.html`
+
 **Agent Usage Documentation:**
 - Document all significant agent usage decisions and patterns in `docs/agent-usage-guide.md`.
 - When choosing to use (or not use) a specialized agent, add the reasoning as a teachable moment in the guide.

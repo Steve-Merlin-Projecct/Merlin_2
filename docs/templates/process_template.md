@@ -1,3 +1,15 @@
+---
+title: 'Process: [Process Name]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- process
+- template
+---
+
 # Process: [Process Name]
 
 ---

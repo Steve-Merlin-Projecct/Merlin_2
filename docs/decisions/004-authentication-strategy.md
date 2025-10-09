@@ -1,3 +1,15 @@
+---
+title: 'ADR-004: OAuth 2.0 for Gmail Integration'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: decision
+status: active
+tags:
+- authentication
+- strategy
+---
+
 # ADR-004: OAuth 2.0 for Gmail Integration
 
 ---

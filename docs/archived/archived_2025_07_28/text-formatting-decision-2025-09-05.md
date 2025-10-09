@@ -1,3 +1,17 @@
+---
+title: Text Formatting Decision Documentation
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- text
+- formatting
+- decision
+- '2025'
+---
+
 # Text Formatting Decision Documentation
 **Date:** September 5, 2025  
 **Context:** Copywriting Evaluator System PRD Development

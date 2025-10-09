@@ -1,3 +1,15 @@
+---
+title: Apify Indeed Scraper Integration Guide
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- apify
+- integration
+---
+
 # Apify Indeed Scraper Integration Guide
 
 ## Overview
