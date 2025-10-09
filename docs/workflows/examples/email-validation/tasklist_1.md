@@ -1,3 +1,15 @@
+---
+title: 'Tasks: Email Validation System'
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- tasklist
+---
+
 # Tasks: Email Validation System
 
 **PRD:** ./prd.md

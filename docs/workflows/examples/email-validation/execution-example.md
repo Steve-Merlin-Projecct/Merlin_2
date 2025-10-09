@@ -1,3 +1,16 @@
+---
+title: 'Task Execution Example: Email Validation System'
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- execution
+- example
+---
+
 # Task Execution Example: Email Validation System
 
 This document shows a real example of how task execution would proceed following the Task Execution Guide.

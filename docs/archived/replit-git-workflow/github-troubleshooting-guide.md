@@ -1,3 +1,15 @@
+---
+title: GitHub Connection Troubleshooting Guide
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- github
+- troubleshooting
+---
+
 # GitHub Connection Troubleshooting Guide
 
 **Date:** July 23, 2025  

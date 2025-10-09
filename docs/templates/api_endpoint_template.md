@@ -1,3 +1,15 @@
+---
+title: 'API Endpoint: [Endpoint Name]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- endpoint
+- template
+---
+
 # API Endpoint: [Endpoint Name]
 
 ---

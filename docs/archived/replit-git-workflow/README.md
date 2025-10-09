@@ -1,3 +1,13 @@
+---
+title: Archived Replit Git Workflow Documentation
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags: []
+---
+
 # Archived Replit Git Workflow Documentation
 
 **Purpose:** Historical documentation of Replit-specific git workarounds

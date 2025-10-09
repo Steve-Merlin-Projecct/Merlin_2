@@ -1,3 +1,17 @@
+---
+title: 'Tasks: Variable Substitution System for Application Packages'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- tasks
+- variable
+- substitution
+- system
+---
+
 # Tasks: Variable Substitution System for Application Packages
 
 Based on Product Requirements Document: `prd-variable-substitution-system.md`

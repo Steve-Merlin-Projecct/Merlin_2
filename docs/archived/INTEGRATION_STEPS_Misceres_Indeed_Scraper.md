@@ -1,3 +1,18 @@
+---
+title: Integration Steps for Misceres Indeed Scraper
+status: completed
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- integration
+- steps
+- misceres
+- indeed
+- scraper
+---
+
 # Integration Steps for Misceres Indeed Scraper
 
 ## Quick Start Guide

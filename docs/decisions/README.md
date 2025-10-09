@@ -1,3 +1,13 @@
+---
+title: Architecture Decision Records (ADRs)
+status: current
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: decision
+tags: []
+---
+
 # Architecture Decision Records (ADRs)
 
 This directory contains Architecture Decision Records (ADRs) that document significant architectural and design decisions made for the Automated Job Application System.

@@ -1,3 +1,15 @@
+---
+title: Claude Config
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- claude
+- config
+---
+
 # PRD: Claude Config
 
 ## Introduction/Overview

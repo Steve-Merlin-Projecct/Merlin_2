@@ -1,3 +1,16 @@
+---
+title: Misceres Indeed Scraper Integration - Complete
+status: completed
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- misceres
+- integration
+- complete
+---
+
 # Misceres Indeed Scraper Integration - Complete
 
 ## Overview

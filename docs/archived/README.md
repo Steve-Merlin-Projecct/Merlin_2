@@ -1,3 +1,13 @@
+---
+title: Archived Test Files - July 28, 2025
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags: []
+---
+
 # Archived Test Files - July 28, 2025
 
 This directory contains test files that are no longer actively used in the project but are preserved for historical reference and potential future needs.

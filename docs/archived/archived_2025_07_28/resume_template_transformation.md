@@ -1,3 +1,17 @@
+---
+title: Resume Template Transformation Project
+status: completed
+version: 2.16.5
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- resume
+- template
+- transformation
+---
+
 # Resume Template Transformation Project
 
 **Project**: Accessible-MCS-Resume-Template CSV Mapping Implementation  

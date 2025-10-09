@@ -1,3 +1,16 @@
+---
+title: 'Feature Specification: [Feature Name]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- feature
+- spec
+- template
+---
+
 # Feature Specification: [Feature Name]
 
 ---

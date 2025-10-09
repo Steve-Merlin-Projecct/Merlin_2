@@ -1,3 +1,15 @@
+---
+title: Changelog
+created: '2025-10-06'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: changelog
+status: active
+tags:
+- master
+- changelog
+---
+
 # Changelog
 input changes
 Use this formating:
