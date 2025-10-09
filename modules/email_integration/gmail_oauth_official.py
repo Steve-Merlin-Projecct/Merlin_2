@@ -315,6 +315,10 @@ class OfficialGmailSender:
     def __init__(self, oauth_manager: OfficialGmailOAuthManager):
         self.oauth_manager = oauth_manager
 
+        # Load user configuration from environment
+        self.user_email = os.getenv("USER_EMAIL_ADDRESS", "your.email@gmail.com")
+        self.display_name = os.getenv("USER_DISPLAY_NAME", "Steve Glen")
+
     def send_job_application_email(
         self, to_email: str, subject: str, body: str, attachments: Optional[List[Dict]] = None
     ) -> Dict:
@@ -330,7 +334,11 @@ class OfficialGmailSender:
             # Create email message using Google's recommended EmailMessage class
             message = EmailMessage()
             message.set_content(body)
+
+            # Set headers with display name
+            message["From"] = f'"{self.display_name}" <{self.user_email}>'
             message["To"] = to_email
+            message["Reply-To"] = f'"{self.display_name}" <{self.user_email}>'
             message["Subject"] = subject
 
             # Add attachments if provided
@@ -422,14 +430,20 @@ Gmail OAuth integration is working correctly using Google's official libraries!
 
 Features verified:
 ✓ OAuth 2.0 authentication with google-auth-oauthlib
-✓ Gmail API service with google-api-python-client  
+✓ Gmail API service with google-api-python-client
 ✓ Professional email sending via Gmail API
 ✓ Official Google Workspace patterns
+✓ Configurable user contact information
+
+Email Configuration:
+• Display Name: {self.display_name}
+• Email Address: {self.user_email}
+• From Header: "{self.display_name}" <{self.user_email}>
 
 Your job application automation is ready to send personalized applications.
 
 ---
-Automated Job Application System v2.1.3
+Automated Job Application System v4.2.0
 Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S MT")}
 Using Official Google Workspace Libraries
         """
