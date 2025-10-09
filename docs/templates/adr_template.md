@@ -1,3 +1,14 @@
+---
+title: 'ADR-XXX: [Title of Decision]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- template
+---
+
 # ADR-XXX: [Title of Decision]
 
 ---

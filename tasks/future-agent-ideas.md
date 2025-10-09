@@ -1,3 +1,16 @@
+---
+title: Future Agent Ideas
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: task
+status: active
+tags:
+- future
+- agent
+- ideas
+---
+
 # Future Agent Ideas
 
 Collection of potential specialized agents to enhance the Claude Code workflow.

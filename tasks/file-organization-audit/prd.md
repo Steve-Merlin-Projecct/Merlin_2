@@ -1,3 +1,13 @@
+---
+title: File Organization Audit & Cleanup
+status: completed
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: task
+tags: []
+---
+
 # PRD: File Organization Audit & Cleanup
 **Status:** ✅ COMPLETED
 **Priority:** Medium

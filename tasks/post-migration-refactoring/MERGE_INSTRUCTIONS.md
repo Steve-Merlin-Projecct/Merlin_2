@@ -1,3 +1,15 @@
+---
+title: Merge Instructions for Post-Migration Refactoring
+created: '2025-10-08'
+updated: '2025-10-08'
+author: Steve-Merlin-Projecct
+type: task
+status: active
+tags:
+- merge
+- instructions
+---
+
 # Merge Instructions for Post-Migration Refactoring
 
 ## Status

@@ -1,3 +1,17 @@
+---
+title: Automatic Checkpoints and Commits Guide
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: guide
+status: active
+tags:
+- workflow
+- automatic
+- checkpoints
+- commits
+---
+
 # Automatic Checkpoints and Commits Guide
 **Version:** 1.0
 **Date:** October 6, 2025

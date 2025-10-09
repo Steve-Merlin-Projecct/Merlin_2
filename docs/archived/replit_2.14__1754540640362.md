@@ -1,3 +1,16 @@
+---
+title: Automated Job Application System
+status: enhanced
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- replit
+- '2.14'
+- '1754540640362'
+---
+
 # Automated Job Application System
 
 **Version 2.14** - *Updated: July 23, 2025*

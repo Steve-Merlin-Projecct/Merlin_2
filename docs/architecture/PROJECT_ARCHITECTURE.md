@@ -1,3 +1,16 @@
+---
+title: Project Architecture Guide
+version: 2.16.5
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: architecture
+status: active
+tags:
+- architecture
+- project
+---
+
 # Project Architecture Guide
 
 **Version**: 2.16.5  

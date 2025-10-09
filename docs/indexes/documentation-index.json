@@ -1,0 +1,3538 @@
+{
+  "generated": "2025-10-09T07:59:04.855713",
+  "version": "1.0.0",
+  "total_files": 203,
+  "statistics": {
+    "by_type": {
+      "reference": 13,
+      "prd": 11,
+      "api": 1,
+      "architecture": 1,
+      "archived": 48,
+      "changelog": 2,
+      "decision": 5,
+      "standards": 3,
+      "template": 7,
+      "guide": 16,
+      "task": 15
+    },
+    "by_status": {
+      "active": 58,
+      "completed": 18,
+      "ready": 2,
+      "archived": 26,
+      "architecture": 1,
+      "updated": 3,
+      "ok": 1,
+      "enhanced": 2,
+      "fixed": 1,
+      "investigation": 1,
+      "pre": 1,
+      "production": 4,
+      "template": 1,
+      "enterprise": 1,
+      "current": 1,
+      "in_progress": 1
+    },
+    "with_metadata": 133,
+    "without_metadata": 70
+  },
+  "categories": {
+    "reference": [
+      "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md",
+      "/workspace/.trees/librarian/docs/component_docs/Testing_Plan.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/csv_content_mapping.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md",
+      "/workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md",
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md",
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/security_implementation.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_implementation_guide.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_overview.md"
+    ],
+    "prd": [
+      "/workspace/.trees/librarian/archived_files/tasks/prd-copywriting-evaluator.md",
+      "/workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/tasks/prd-claude-config.md",
+      "/workspace/.trees/librarian/tasks/prd-google-drive-storage.md",
+      "/workspace/.trees/librarian/tasks/prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md",
+      "/workspace/.trees/librarian/tasks/prd-variable-substitution-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md"
+    ],
+    "api": [
+      "/workspace/.trees/librarian/docs/api/README.md"
+    ],
+    "architecture": [
+      "/workspace/.trees/librarian/docs/architecture/PROJECT_ARCHITECTURE.md"
+    ],
+    "archived": [
+      "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md",
+      "/workspace/.trees/librarian/docs/archived/Implementation_Guide_Refactor_2_0.md",
+      "/workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md",
+      "/workspace/.trees/librarian/docs/archived/README.md",
+      "/workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/AI_ANALYSIS_INTEGRATION.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/CONSOLIDATED_DOCUMENTATION_V2.16.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/FRD_Functional_Requirements.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/IMPLEMENTATION_PLAN_V2.16.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/README.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/STEP_BY_STEP_IMPLEMENTATION_GUIDE.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/TDD_Technical_Design.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/APIFY_INTEGRATION_GUIDE.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/ATS_OPTIMIZATION_RESTRUCTURE.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_INSTRUCTIONS.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_STATUS.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md",
+      "/workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "/workspace/.trees/librarian/docs/archived/migrations/README.md",
+      "/workspace/.trees/librarian/docs/archived/migrations/migration-complete.md",
+      "/workspace/.trees/librarian/docs/archived/migrations/verification-summary.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/README.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-troubleshooting-guide.md",
+      "/workspace/.trees/librarian/docs/archived/replit-md_changelog.md",
+      "/workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md"
+    ],
+    "changelog": [
+      "/workspace/.trees/librarian/docs/changelogs/claude-md_changelog.md",
+      "/workspace/.trees/librarian/docs/changelogs/master-changelog.md"
+    ],
+    "decision": [
+      "/workspace/.trees/librarian/docs/decisions/001-database-choice.md",
+      "/workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md",
+      "/workspace/.trees/librarian/docs/decisions/003-ai-integration-approach.md",
+      "/workspace/.trees/librarian/docs/decisions/004-authentication-strategy.md",
+      "/workspace/.trees/librarian/docs/decisions/README.md"
+    ],
+    "standards": [
+      "/workspace/.trees/librarian/docs/development/standards/AUTOMATED_TOOLING_GUIDE.md",
+      "/workspace/.trees/librarian/docs/development/standards/CODING_STANDARDS.md",
+      "/workspace/.trees/librarian/docs/standards/metadata-standard.md"
+    ],
+    "template": [
+      "/workspace/.trees/librarian/docs/templates/README.md",
+      "/workspace/.trees/librarian/docs/templates/adr_template.md",
+      "/workspace/.trees/librarian/docs/templates/api_endpoint_template.md",
+      "/workspace/.trees/librarian/docs/templates/feature_spec_template.md",
+      "/workspace/.trees/librarian/docs/templates/integration_template.md",
+      "/workspace/.trees/librarian/docs/templates/process_template.md",
+      "/workspace/.trees/librarian/docs/templates/troubleshooting_template.md"
+    ],
+    "guide": [
+      "/workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/workflows/README.md",
+      "/workspace/.trees/librarian/docs/workflows/automated-task-workflow.md",
+      "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md",
+      "/workspace/.trees/librarian/docs/workflows/branch-review-workflow.md",
+      "/workspace/.trees/librarian/docs/workflows/documentation-requirements.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/README.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/prd.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/tasklist_1.md",
+      "/workspace/.trees/librarian/docs/workflows/prd-generation-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md",
+      "/workspace/.trees/librarian/docs/workflows/research-phase-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-execution-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-generation-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md"
+    ],
+    "task": [
+      "/workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md",
+      "/workspace/.trees/librarian/tasks/dynamic-statusline-integration.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/cleanup-summary.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/prd.md",
+      "/workspace/.trees/librarian/tasks/future-agent-ideas.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/MERGE_INSTRUCTIONS.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/action-plan.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/categorized-references.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/cleanup-report.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/dependency-map.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/risk-assessment.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/tasklist_1.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/validation-report.md"
+    ]
+  },
+  "tags": {
+    "librarian": [
+      "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md",
+      "/workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md",
+      "/workspace/.trees/librarian/tasks/prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md"
+    ],
+    "handoff": [
+      "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md"
+    ],
+    "implementation": [
+      "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md",
+      "/workspace/.trees/librarian/docs/archived/Implementation_Guide_Refactor_2_0.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/STEP_BY_STEP_IMPLEMENTATION_GUIDE.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md",
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/security_implementation.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_implementation_guide.md",
+      "/workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md"
+    ],
+    "documentation": [
+      "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md",
+      "/workspace/.trees/librarian/docs/standards/metadata-standard.md"
+    ],
+    "copywriting": [
+      "/workspace/.trees/librarian/archived_files/tasks/prd-copywriting-evaluator.md",
+      "/workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md"
+    ],
+    "evaluator": [
+      "/workspace/.trees/librarian/archived_files/tasks/prd-copywriting-evaluator.md",
+      "/workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md"
+    ],
+    "tasks": [
+      "/workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md",
+      "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md"
+    ],
+    "api": [
+      "/workspace/.trees/librarian/docs/api/README.md"
+    ],
+    "architecture": [
+      "/workspace/.trees/librarian/docs/architecture/PROJECT_ARCHITECTURE.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md"
+    ],
+    "project": [
+      "/workspace/.trees/librarian/docs/architecture/PROJECT_ARCHITECTURE.md"
+    ],
+    "automated": [
+      "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md",
+      "/workspace/.trees/librarian/docs/development/standards/AUTOMATED_TOOLING_GUIDE.md",
+      "/workspace/.trees/librarian/docs/workflows/automated-task-workflow.md"
+    ],
+    "application": [
+      "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "/workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md"
+    ],
+    "system": [
+      "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "/workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md",
+      "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md",
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md",
+      "/workspace/.trees/librarian/tasks/prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/prd-variable-substitution-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md"
+    ],
+    "overview": [
+      "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_overview.md"
+    ],
+    "integration": [
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/AI_ANALYSIS_INTEGRATION.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/APIFY_INTEGRATION_GUIDE.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md",
+      "/workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md",
+      "/workspace/.trees/librarian/docs/decisions/003-ai-integration-approach.md",
+      "/workspace/.trees/librarian/docs/templates/integration_template.md",
+      "/workspace/.trees/librarian/tasks/dynamic-statusline-integration.md"
+    ],
+    "steps": [
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md"
+    ],
+    "misceres": [
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md"
+    ],
+    "indeed": [
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md"
+    ],
+    "scraper": [
+      "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md"
+    ],
+    "refactor": [
+      "/workspace/.trees/librarian/docs/archived/Implementation_Guide_Refactor_2_0.md"
+    ],
+    "merlin": [
+      "/workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md"
+    ],
+    "technical": [
+      "/workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/TDD_Technical_Design.md"
+    ],
+    "design": [
+      "/workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/TDD_Technical_Design.md"
+    ],
+    "v2.0": [
+      "/workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md"
+    ],
+    "analysis": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/AI_ANALYSIS_INTEGRATION.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md"
+    ],
+    "priority-critical": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/CONSOLIDATED_DOCUMENTATION_V2.16.md",
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/FRD_Functional_Requirements.md"
+    ],
+    "database": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md",
+      "/workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md",
+      "/workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md",
+      "/workspace/.trees/librarian/docs/decisions/001-database-choice.md"
+    ],
+    "automation": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md"
+    ],
+    "enforcement": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md"
+    ],
+    "priority-highest": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/IMPLEMENTATION_PLAN_V2.16.md"
+    ],
+    "step": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/STEP_BY_STEP_IMPLEMENTATION_GUIDE.md"
+    ],
+    "mapping": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/csv_content_mapping.md"
+    ],
+    "summary": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md",
+      "/workspace/.trees/librarian/docs/archived/migrations/verification-summary.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md",
+      "/workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/tasks/file-organization-audit/cleanup-summary.md"
+    ],
+    "resume": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md"
+    ],
+    "template": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md",
+      "/workspace/.trees/librarian/docs/templates/adr_template.md",
+      "/workspace/.trees/librarian/docs/templates/api_endpoint_template.md",
+      "/workspace/.trees/librarian/docs/templates/feature_spec_template.md",
+      "/workspace/.trees/librarian/docs/templates/integration_template.md",
+      "/workspace/.trees/librarian/docs/templates/process_template.md",
+      "/workspace/.trees/librarian/docs/templates/troubleshooting_template.md"
+    ],
+    "transformation": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md"
+    ],
+    "text": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md"
+    ],
+    "formatting": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md"
+    ],
+    "decision": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md"
+    ],
+    "2025": [
+      "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md"
+    ],
+    "code": [
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md"
+    ],
+    "review": [
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md",
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md",
+      "/workspace/.trees/librarian/docs/workflows/branch-review-workflow.md"
+    ],
+    "plan": [
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md",
+      "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md",
+      "/workspace/.trees/librarian/docs/component_docs/Testing_Plan.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/action-plan.md"
+    ],
+    "report": [
+      "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/cleanup-report.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/validation-report.md"
+    ],
+    "apify": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/APIFY_INTEGRATION_GUIDE.md"
+    ],
+    "optimization": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/ATS_OPTIMIZATION_RESTRUCTURE.md"
+    ],
+    "restructure": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/ATS_OPTIMIZATION_RESTRUCTURE.md"
+    ],
+    "backup": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_INSTRUCTIONS.md",
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_STATUS.md"
+    ],
+    "instructions": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_INSTRUCTIONS.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/MERGE_INSTRUCTIONS.md"
+    ],
+    "status": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_STATUS.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md",
+      "/workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md"
+    ],
+    "confidence": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md"
+    ],
+    "scoring": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md"
+    ],
+    "data": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md"
+    ],
+    "protection": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md"
+    ],
+    "scraping": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md"
+    ],
+    "complete": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md",
+      "/workspace/.trees/librarian/docs/archived/migrations/migration-complete.md"
+    ],
+    "security": [
+      "/workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md",
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/security_implementation.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_implementation_guide.md",
+      "/workspace/.trees/librarian/docs/component_docs/security/security_overview.md"
+    ],
+    "normalization": [
+      "/workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md"
+    ],
+    "table": [
+      "/workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md"
+    ],
+    "consolidation": [
+      "/workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md",
+      "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md"
+    ],
+    "migration": [
+      "/workspace/.trees/librarian/docs/archived/migrations/migration-complete.md"
+    ],
+    "verification": [
+      "/workspace/.trees/librarian/docs/archived/migrations/verification-summary.md"
+    ],
+    "github": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md",
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-troubleshooting-guide.md"
+    ],
+    "connection": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md"
+    ],
+    "connectivity": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md"
+    ],
+    "solution": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md"
+    ],
+    "sync": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md",
+      "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md"
+    ],
+    "troubleshooting": [
+      "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-troubleshooting-guide.md",
+      "/workspace/.trees/librarian/docs/templates/troubleshooting_template.md"
+    ],
+    "replit": [
+      "/workspace/.trees/librarian/docs/archived/replit-md_changelog.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md",
+      "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md"
+    ],
+    "changelog": [
+      "/workspace/.trees/librarian/docs/archived/replit-md_changelog.md",
+      "/workspace/.trees/librarian/docs/changelogs/claude-md_changelog.md",
+      "/workspace/.trees/librarian/docs/changelogs/master-changelog.md"
+    ],
+    "remove": [
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md",
+      "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md"
+    ],
+    "2.14": [
+      "/workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md"
+    ],
+    "1754540640362": [
+      "/workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md"
+    ],
+    "improvements": [
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md"
+    ],
+    "gemini": [
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md"
+    ],
+    "enhancement": [
+      "/workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md"
+    ],
+    "claude": [
+      "/workspace/.trees/librarian/docs/changelogs/claude-md_changelog.md",
+      "/workspace/.trees/librarian/tasks/prd-claude-config.md"
+    ],
+    "master": [
+      "/workspace/.trees/librarian/docs/changelogs/master-changelog.md"
+    ],
+    "testing": [
+      "/workspace/.trees/librarian/docs/component_docs/Testing_Plan.md"
+    ],
+    "schema": [
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema.md",
+      "/workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md"
+    ],
+    "content": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md",
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/csv_content_mapping.md"
+    ],
+    "selection": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md"
+    ],
+    "algorithm": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md"
+    ],
+    "document": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md",
+      "/workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md"
+    ],
+    "generation": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md",
+      "/workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md",
+      "/workspace/.trees/librarian/docs/workflows/prd-generation-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-generation-guide.md"
+    ],
+    "library": [
+      "/workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md"
+    ],
+    "gmail": [
+      "/workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md"
+    ],
+    "oauth": [
+      "/workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md"
+    ],
+    "link": [
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md"
+    ],
+    "tracking": [
+      "/workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md"
+    ],
+    "choice": [
+      "/workspace/.trees/librarian/docs/decisions/001-database-choice.md"
+    ],
+    "strategy": [
+      "/workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md",
+      "/workspace/.trees/librarian/docs/decisions/004-authentication-strategy.md"
+    ],
+    "approach": [
+      "/workspace/.trees/librarian/docs/decisions/003-ai-integration-approach.md"
+    ],
+    "authentication": [
+      "/workspace/.trees/librarian/docs/decisions/004-authentication-strategy.md"
+    ],
+    "tooling": [
+      "/workspace/.trees/librarian/docs/development/standards/AUTOMATED_TOOLING_GUIDE.md"
+    ],
+    "coding": [
+      "/workspace/.trees/librarian/docs/development/standards/CODING_STANDARDS.md"
+    ],
+    "standards": [
+      "/workspace/.trees/librarian/docs/development/standards/CODING_STANDARDS.md",
+      "/workspace/.trees/librarian/docs/standards/metadata-standard.md"
+    ],
+    "metadata": [
+      "/workspace/.trees/librarian/docs/standards/metadata-standard.md"
+    ],
+    "yaml": [
+      "/workspace/.trees/librarian/docs/standards/metadata-standard.md"
+    ],
+    "endpoint": [
+      "/workspace/.trees/librarian/docs/templates/api_endpoint_template.md"
+    ],
+    "feature": [
+      "/workspace/.trees/librarian/docs/templates/feature_spec_template.md"
+    ],
+    "spec": [
+      "/workspace/.trees/librarian/docs/templates/feature_spec_template.md"
+    ],
+    "process": [
+      "/workspace/.trees/librarian/docs/templates/process_template.md"
+    ],
+    "workflow": [
+      "/workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md",
+      "/workspace/.trees/librarian/docs/workflows/README.md",
+      "/workspace/.trees/librarian/docs/workflows/automated-task-workflow.md",
+      "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md",
+      "/workspace/.trees/librarian/docs/workflows/branch-review-workflow.md",
+      "/workspace/.trees/librarian/docs/workflows/documentation-requirements.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/README.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/prd.md",
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/tasklist_1.md",
+      "/workspace/.trees/librarian/docs/workflows/prd-generation-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md",
+      "/workspace/.trees/librarian/docs/workflows/research-phase-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-execution-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-generation-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md"
+    ],
+    "task": [
+      "/workspace/.trees/librarian/docs/workflows/automated-task-workflow.md",
+      "/workspace/.trees/librarian/docs/workflows/task-execution-guide.md",
+      "/workspace/.trees/librarian/docs/workflows/task-generation-guide.md"
+    ],
+    "automatic": [
+      "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md"
+    ],
+    "checkpoints": [
+      "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md"
+    ],
+    "commits": [
+      "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md"
+    ],
+    "branch": [
+      "/workspace/.trees/librarian/docs/workflows/branch-review-workflow.md"
+    ],
+    "requirements": [
+      "/workspace/.trees/librarian/docs/workflows/documentation-requirements.md"
+    ],
+    "execution": [
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md",
+      "/workspace/.trees/librarian/docs/workflows/task-execution-guide.md"
+    ],
+    "example": [
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md"
+    ],
+    "tasklist": [
+      "/workspace/.trees/librarian/docs/workflows/examples/email-validation/tasklist_1.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/tasklist_1.md"
+    ],
+    "quick": [
+      "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md"
+    ],
+    "reference": [
+      "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md"
+    ],
+    "checklist": [
+      "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md"
+    ],
+    "research": [
+      "/workspace/.trees/librarian/docs/workflows/research-phase-guide.md"
+    ],
+    "phase": [
+      "/workspace/.trees/librarian/docs/workflows/research-phase-guide.md"
+    ],
+    "todowrite": [
+      "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md"
+    ],
+    "markdown": [
+      "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md"
+    ],
+    "dynamic": [
+      "/workspace/.trees/librarian/tasks/dynamic-statusline-integration.md"
+    ],
+    "statusline": [
+      "/workspace/.trees/librarian/tasks/dynamic-statusline-integration.md"
+    ],
+    "cleanup": [
+      "/workspace/.trees/librarian/tasks/file-organization-audit/cleanup-summary.md",
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/cleanup-report.md",
+      "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md"
+    ],
+    "discovery": [
+      "/workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md"
+    ],
+    "future": [
+      "/workspace/.trees/librarian/tasks/future-agent-ideas.md"
+    ],
+    "agent": [
+      "/workspace/.trees/librarian/tasks/future-agent-ideas.md"
+    ],
+    "ideas": [
+      "/workspace/.trees/librarian/tasks/future-agent-ideas.md"
+    ],
+    "merge": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/MERGE_INSTRUCTIONS.md"
+    ],
+    "action": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/action-plan.md"
+    ],
+    "categorized": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/categorized-references.md"
+    ],
+    "references": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/categorized-references.md"
+    ],
+    "dependency": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/dependency-map.md"
+    ],
+    "phase0": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md"
+    ],
+    "edge": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md"
+    ],
+    "cases": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md"
+    ],
+    "risk": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/risk-assessment.md"
+    ],
+    "assessment": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/risk-assessment.md"
+    ],
+    "validation": [
+      "/workspace/.trees/librarian/tasks/post-migration-refactoring/validation-report.md"
+    ],
+    "config": [
+      "/workspace/.trees/librarian/tasks/prd-claude-config.md"
+    ],
+    "google": [
+      "/workspace/.trees/librarian/tasks/prd-google-drive-storage.md"
+    ],
+    "drive": [
+      "/workspace/.trees/librarian/tasks/prd-google-drive-storage.md"
+    ],
+    "storage": [
+      "/workspace/.trees/librarian/tasks/prd-google-drive-storage.md"
+    ],
+    "post": [
+      "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md"
+    ],
+    "variable": [
+      "/workspace/.trees/librarian/tasks/prd-variable-substitution-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md"
+    ],
+    "substitution": [
+      "/workspace/.trees/librarian/tasks/prd-variable-substitution-system.md",
+      "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md"
+    ]
+  },
+  "files": [
+    {
+      "path": "/workspace/.trees/librarian/.claude/WORKTREE_QUICK_REFERENCE.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/agents/code-reviewer.md",
+      "metadata": {
+        "name": "code-reviewer",
+        "description": "Elite code review expert for Flask/Python job application system. Enforces CLAUDE.md standards, runs automated tools (Black, Flake8, Vulture), reviews security/performance, and documents findings. Use PROACTIVELY after code changes.",
+        "model": "sonnet",
+        "color": "blue"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/agents/debugger.md",
+      "metadata": {
+        "name": "debugger",
+        "description": "Analyzes bugs through systematic evidence gathering - use for complex debugging",
+        "model": "opus",
+        "color": "cyan"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/agents/workflow-admin.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/db-check.md",
+      "metadata": {
+        "description": "Check database schema status"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/db-update.md",
+      "metadata": {
+        "description": "Update database schema documentation"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/format.md",
+      "metadata": {
+        "description": "Format code with Black"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/lint.md",
+      "metadata": {
+        "description": "Run code quality checks"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/serve.md",
+      "metadata": {
+        "description": "Start the Flask development server"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/task.md",
+      "metadata": {
+        "description": "Start the 3-phase task workflow (PRD \u2192 Tasks \u2192 Execution)"
+      },
+      "has_metadata": true,
+      "references": [
+        "/workspace/.trees/task-guiding-docs/docs/workflows/research-phase-guide.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/prd-generation-guide.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/task-generation-guide.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/task-execution-guide.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/todowrite-markdown-sync.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/quick-reference-checklist.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/documentation-requirements.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/automated-task-workflow.md",
+        "/workspace/.trees/task-guiding-docs/docs/workflows/examples/email-validation/"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/test.md",
+      "metadata": {
+        "description": "Run the test suite"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/version-bump.md",
+      "metadata": {
+        "description": "Bump project version (patch/minor/major)",
+        "parameters": [
+          {
+            "name": "type",
+            "description": "Version bump type (patch, minor, or major)",
+            "required": true
+          }
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/commands/version.md",
+      "metadata": {
+        "description": "Show or manage project version"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/memories/architecture.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/memories/common-patterns.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/memories/database-schema.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.claude/worktree-template.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.devcontainer/CLAUDE_CODE_NOTES.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/.devcontainer/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/BRANCH_STATUS.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/LIBRARIAN_HANDOFF.md",
+      "metadata": {
+        "title": "Librarian System - Implementation Handoff",
+        "type": "reference",
+        "status": "active",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "author": "Claude Sonnet 4.5",
+        "tags": [
+          "librarian",
+          "handoff",
+          "implementation",
+          "documentation"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "url"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/README_archive_organization.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/scripts/oauth_setup/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/scripts/services/REPLIT_MIGRATION_README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/tasks/prd-copywriting-evaluator.md",
+      "metadata": {
+        "title": "Product Requirements Document: Copywriting Evaluator System",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "copywriting",
+          "evaluator"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md",
+      "metadata": {
+        "title": "Tasks: Copywriting Evaluator System Implementation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "tasks",
+          "copywriting",
+          "evaluator"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/tests_legacy_2025_07_28/legacy_tests_directory/ai_analysis_detailed_results.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/archived_files/tests_legacy_2025_07_28/legacy_tests_directory/ai_analysis_test_results.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/attached_assets/Cohere_summary_1753765847309.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/attached_assets/building sentences_1751526150641.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/attached_assets/job_analysis_prompt_1751689824313.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/attached_assets/projectoverview_1751526150641.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/claude.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/database_tools/AUTOMATION_REMINDER.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/database_tools/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/database_tools/SCHEMA_PROTECTION_QUICKSTART.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/database_tools/docs/copywriting_evaluator_schema_plan.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/database_tools/docs/database_schema.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/COMPREHENSIVE_DOCUMENTATION_SYSTEM_SUMMARY.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/DOCUMENTATION_ORGANIZATION_SUMMARY.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/FILE_ORGANIZATION_STANDARDS.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/GOOGLE_DRIVE_SETUP.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/MIGRATION_SUMMARY.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/agent-creation-guidelines.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/agent-usage-guide.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/api/README.md",
+      "metadata": {
+        "title": "API Documentation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "api",
+        "status": "active",
+        "tags": [
+          "api"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/architecture/PROJECT_ARCHITECTURE.md",
+      "metadata": {
+        "title": "Project Architecture Guide",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "architecture",
+        "status": "active",
+        "tags": [
+          "architecture",
+          "project"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md",
+      "metadata": {
+        "title": "Automated Job Application System - Complete Project Overview",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "automated",
+          "application",
+          "system",
+          "overview"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/CURRENT_MERGE_STATUS.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md",
+      "metadata": {
+        "title": "Integration Steps for Misceres Indeed Scraper",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "integration",
+          "steps",
+          "misceres",
+          "indeed",
+          "scraper"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/Implementation_Guide_Refactor_2_0.md",
+      "metadata": {
+        "title": "Implementation Guide - Merlin System Refactoring",
+        "status": "ready",
+        "version": "2.0",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "implementation",
+          "refactor"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md",
+      "metadata": {
+        "title": "Merlin PRD - Automated Job Application System",
+        "version": "2.0",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "merlin",
+          "application",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/README.md",
+      "metadata": {
+        "title": "Archived Test Files - July 28, 2025",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md",
+      "metadata": {
+        "title": "Technical Design Document - Merlin Job Application System",
+        "status": "architecture",
+        "version": "2.0",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "technical",
+          "design",
+          "v2.0"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/AI_ANALYSIS_INTEGRATION.md",
+      "metadata": {
+        "title": "AI Analysis Integration - Enhanced Jobs Table Schema",
+        "status": "completed",
+        "version": "2.10",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "analysis",
+          "integration"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/CONSOLIDATED_DOCUMENTATION_V2.16.md",
+      "metadata": {
+        "title": "Consolidated Documentation Summary - Automated Job Application System V2.16",
+        "tags": [
+          "priority-critical"
+        ],
+        "version": "2.16",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md",
+      "metadata": {
+        "title": "Database Automation Enforcement",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "database",
+          "automation",
+          "enforcement"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/FRD_Functional_Requirements.md",
+      "metadata": {
+        "title": "Functional Requirements Document - Merlin Job Application System",
+        "status": "updated",
+        "tags": [
+          "priority-critical"
+        ],
+        "version": "2.16",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/IMPLEMENTATION_PLAN_V2.16.md",
+      "metadata": {
+        "title": "Implementation Plan - Automated Job Application System V2.16",
+        "tags": [
+          "priority-highest"
+        ],
+        "version": "2.16",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived"
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/MODULE_DOCUMENTATION.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/README.md",
+      "metadata": {
+        "title": "Documentation Archive - July 28, 2025",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/STEP_BY_STEP_IMPLEMENTATION_GUIDE.md",
+      "metadata": {
+        "title": "Step-by-Step Implementation Guide - Automated Job Application System V2.16",
+        "version": "2.16.3",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "step",
+          "implementation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/TDD_Technical_Design.md",
+      "metadata": {
+        "title": "Technical Design Document - Merlin Job Application System",
+        "status": "ok",
+        "version": "2.1",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "technical",
+          "design"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md",
+      "metadata": {
+        "title": "CSV Content Mapping Implementation Summary",
+        "status": "completed",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "mapping",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "../component_docs/document_generation/csv_content_mapping.md",
+        "../component_docs/document_generation/document_generation_architecture.md",
+        "../component_docs/document_generation/template_library_system.md",
+        "resume_template_transformation.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md",
+      "metadata": {
+        "title": "Resume Template Transformation Project",
+        "status": "completed",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "resume",
+          "template",
+          "transformation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md",
+      "metadata": {
+        "title": "Text Formatting Decision Documentation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "text",
+          "formatting",
+          "decision",
+          "2025"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md",
+      "metadata": {
+        "title": "Code Review and Organization Analysis",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "code",
+          "review",
+          "analysis"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md",
+      "metadata": {
+        "title": "Code Review Implementation Summary - July 30, 2025",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "code",
+          "review",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md",
+      "metadata": {
+        "title": "Comprehensive Code Review and Organization Plan",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "code",
+          "review",
+          "plan"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md",
+      "metadata": {
+        "title": "Code Review and Organization Report",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "code",
+          "review",
+          "report"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/APIFY_INTEGRATION_GUIDE.md",
+      "metadata": {
+        "title": "Apify Indeed Scraper Integration Guide",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "apify",
+          "integration"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/ATS_OPTIMIZATION_RESTRUCTURE.md",
+      "metadata": {
+        "title": "ATS Optimization JSON Structure Restructure",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "optimization",
+          "restructure"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_INSTRUCTIONS.md",
+      "metadata": {
+        "title": "GitHub Backup Instructions - Pre-Refactoring",
+        "status": "enhanced",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "backup",
+          "instructions"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/BACKUP_STATUS.md",
+      "metadata": {
+        "title": "Backup Status Report - Pre-Refactoring",
+        "status": "ready",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "backup",
+          "status"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md",
+      "metadata": {
+        "title": "Confidence Scoring System Documentation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "confidence",
+          "scoring",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md",
+      "metadata": {
+        "title": "Data Protection Implementation Summary",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "data",
+          "protection",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md",
+      "metadata": {
+        "title": "Integration Plan: Job Scraping \u2192 Jobs Table \u2192 AI Analysis Flow",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "integration",
+          "plan",
+          "scraping",
+          "analysis"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md",
+      "metadata": {
+        "title": "Misceres Indeed Scraper Integration - Complete",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "misceres",
+          "integration",
+          "complete"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md",
+      "metadata": {
+        "title": "Security Implementation & AI Integration Summary",
+        "status": "fixed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "security",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md",
+      "metadata": {
+        "title": "Database Normalization Summary",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "database",
+          "normalization",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "database_schema.md",
+        "../../../replit.md",
+        "../../../archived_files/"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md",
+      "metadata": {
+        "title": "Product Requirements Document: Database Table Consolidation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "database",
+          "table",
+          "consolidation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md",
+      "metadata": {
+        "title": "Task List: Database Table Consolidation",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "database",
+          "tasks",
+          "table",
+          "consolidation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md",
+      "metadata": {
+        "title": "Implementation Plan: Automated Job Application System",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "implementation",
+          "plan",
+          "automated",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/migrations/README.md",
+      "metadata": {
+        "title": "Archived Migrations Documentation",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/migrations/migration-complete.md",
+      "metadata": {
+        "title": "\u2705 Replit Migration Complete",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "migration",
+          "complete"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/migrations/verification-summary.md",
+      "metadata": {
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "title": "Verification Summary",
+        "tags": [
+          "verification",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-git-workflow/README.md",
+      "metadata": {
+        "title": "Archived Replit Git Workflow Documentation",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md",
+      "metadata": {
+        "title": "GitHub Connection Status Report",
+        "status": "investigation",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "github",
+          "connection",
+          "status"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md",
+      "metadata": {
+        "title": "GitHub Connectivity Permanent Solution",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "github",
+          "connectivity",
+          "solution"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md",
+      "metadata": {
+        "title": "GitHub Sync Status Report",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "github",
+          "sync",
+          "status"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-git-workflow/github-troubleshooting-guide.md",
+      "metadata": {
+        "title": "GitHub Connection Troubleshooting Guide",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "tags": [
+          "github",
+          "troubleshooting"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-md_changelog.md",
+      "metadata": {
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "status": "archived",
+        "title": "Replit Md Changelog",
+        "tags": [
+          "replit",
+          "changelog"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md",
+      "metadata": {
+        "title": "Remove Replit-Specific Code and Dependencies",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "archived",
+        "tags": [
+          "remove",
+          "replit",
+          "code"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md",
+      "metadata": {
+        "title": "Tasks: Remove Replit-Specific Code and Dependencies",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "archived",
+        "tags": [
+          "tasks",
+          "remove",
+          "replit",
+          "code"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md",
+      "metadata": {
+        "title": "Automated Job Application System",
+        "status": "enhanced",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "replit",
+          "2.14",
+          "1754540640362"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "docs/component_docs/database/database_schema.md",
+        "archived_files/docs/database_normalization_summary.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md",
+      "metadata": {
+        "title": "Automated Job Application System - Complete Project Overview",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "automated",
+          "application",
+          "system",
+          "overview"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md",
+      "metadata": {
+        "title": "System Improvements Implementation Summary - V2.16",
+        "status": "updated",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "system",
+          "improvements",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md",
+      "metadata": {
+        "title": "Scraper API and Gemini API Implementation Plan",
+        "status": "completed",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "scraper",
+          "gemini",
+          "implementation",
+          "plan"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md",
+      "metadata": {
+        "title": "Security Enhancement Summary - V2.16",
+        "status": "updated",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "archived",
+        "tags": [
+          "security",
+          "enhancement",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/auto_restore_protection_system.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/automation/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/changelogs/claude-md_changelog.md",
+      "metadata": {
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "changelog",
+        "status": "active",
+        "title": "Claude Md Changelog",
+        "tags": [
+          "claude",
+          "changelog"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/changelogs/master-changelog.md",
+      "metadata": {
+        "title": "Changelog",
+        "created": "2025-10-06",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "changelog",
+        "status": "active",
+        "tags": [
+          "master",
+          "changelog"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/Testing_Plan.md",
+      "metadata": {
+        "title": "Comprehensive Testing Plan - Merlin Job Application System",
+        "status": "pre",
+        "version": "2.0",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "testing",
+          "plan"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/database/database_schema.md",
+      "metadata": {
+        "title": "Database Schema Documentation",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "status": "active",
+        "tags": [
+          "database",
+          "schema"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "../../../archived_files/docs/database_normalization_summary.md",
+        "../../../archived_files/docs/database_normalization_summary.md",
+        "../../../replit.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md",
+      "metadata": {
+        "title": "Database Schema Automation",
+        "status": "production",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "database",
+          "schema",
+          "automation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md",
+      "metadata": {
+        "title": "Content Selection Algorithm for Document Generation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "status": "active",
+        "tags": [
+          "content",
+          "selection",
+          "algorithm"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/document_generation/csv_content_mapping.md",
+      "metadata": {
+        "title": "CSV Content Mapping System",
+        "status": "production",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "content",
+          "mapping"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "document_generation_architecture.md",
+        "template_engine.md",
+        "../content_management/content_manager.md",
+        "../user_management/user_profiles.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md",
+      "metadata": {
+        "title": "Document Generation Architecture",
+        "status": "template",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "document",
+          "generation",
+          "architecture"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "csv_content_mapping.md",
+        "template_engine.md",
+        "../user_management/user_profiles.md",
+        "../content_management/content_manager.md",
+        "../workflow/email_application_system.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md",
+      "metadata": {
+        "title": "Template Library System",
+        "status": "production",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "template",
+          "library",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "csv_content_mapping.md",
+        "document_generation_architecture.md",
+        "../../project_docs/resume_template_transformation.md",
+        "../content_management/content_manager.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md",
+      "metadata": {
+        "title": "Gmail OAuth Integration Documentation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "status": "active",
+        "tags": [
+          "gmail",
+          "oauth",
+          "integration"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md",
+      "metadata": {
+        "title": "Comprehensive Link Tracking System",
+        "status": "production",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "link",
+          "tracking",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "../../../export/external_domain_integration_guide.md",
+        "../../../export/api_endpoint_reference.md",
+        "../../../export/database_schema_reference.md",
+        "../application_workflow/application_orchestrator.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/link_tracking/security_implementation.md",
+      "metadata": {
+        "title": "Link Tracking Security Implementation",
+        "status": "enterprise",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "tags": [
+          "security",
+          "implementation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/security/security_implementation_guide.md",
+      "metadata": {
+        "title": "Security Implementation Guide",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "status": "active",
+        "tags": [
+          "security",
+          "implementation"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/component_docs/security/security_overview.md",
+      "metadata": {
+        "title": "Security Overview",
+        "version": "2.16.5",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "reference",
+        "status": "active",
+        "tags": [
+          "security",
+          "overview"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/database-connection-guide.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/decisions/001-database-choice.md",
+      "metadata": {
+        "title": "ADR-001: PostgreSQL as Primary Database",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "decision",
+        "status": "active",
+        "tags": [
+          "database",
+          "choice"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "005-storage-strategy.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md",
+      "metadata": {
+        "title": "ADR-002: Template-Based Document Generation",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "decision",
+        "status": "active",
+        "tags": [
+          "document",
+          "generation",
+          "strategy"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "005-storage-strategy.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/decisions/003-ai-integration-approach.md",
+      "metadata": {
+        "title": "ADR-003: Google Gemini for AI Analysis",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "decision",
+        "status": "active",
+        "tags": [
+          "integration",
+          "approach"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "001-database-choice.md",
+        "004-authentication-strategy.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/decisions/004-authentication-strategy.md",
+      "metadata": {
+        "title": "ADR-004: OAuth 2.0 for Gmail Integration",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "decision",
+        "status": "active",
+        "tags": [
+          "authentication",
+          "strategy"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "001-database-choice.md",
+        "003-ai-integration-approach.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/decisions/README.md",
+      "metadata": {
+        "title": "Architecture Decision Records (ADRs)",
+        "status": "current",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "decision",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": [
+        "001-database-choice.md",
+        "002-document-generation-strategy.md",
+        "003-ai-integration-approach.md",
+        "004-authentication-strategy.md",
+        "005-storage-strategy.md",
+        "../templates/adr_template.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/deployment/DEPLOYMENT_GUIDE.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/API_DOCUMENTATION.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/CLAUDE_CODE_SCHEMA_PROTECTION.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/DEVELOPMENT_GUIDE.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_DECISION_GUIDE.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_HISTORY.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_SUMMARY.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/code_quality/code_review_comprehensive.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/standards/AUTOMATED_TOOLING_GUIDE.md",
+      "metadata": {
+        "title": "Automated Tooling Configuration Guide",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "standards",
+        "status": "active",
+        "tags": [
+          "automated",
+          "tooling"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/development/standards/CODING_STANDARDS.md",
+      "metadata": {
+        "title": "Coding Standards & Best Practices",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "standards",
+        "status": "active",
+        "tags": [
+          "coding",
+          "standards"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/future-tasks/Feature_Development.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/git_workflow/MANUAL_MERGE_RESOLUTION.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/git_workflow/SMART_SCHEMA_ENFORCEMENT.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/git_workflow/branch-status/feature-task-guiding-documentation.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/indexes/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/indexes/master_index.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/integrations/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/integrations/google-drive-implementation.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/maintenance/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/monitoring_setup.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/processes/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/processes/deployment/production_deployment.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/project_overview/README.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/project_overview/SYSTEM_REQUIREMENTS.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/security_assessments/security_assessment_report.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/standards/metadata-standard.md",
+      "metadata": {
+        "title": "Documentation Metadata Standard",
+        "type": "standards",
+        "status": "active",
+        "version": "1.0.0",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "author": "Claude Sonnet 4.5",
+        "tags": [
+          "metadata",
+          "standards",
+          "documentation",
+          "yaml"
+        ],
+        "related": [
+          "docs/FILE_ORGANIZATION_STANDARDS.md",
+          "docs/workflows/librarian-usage-guide.md"
+        ],
+        "audience": "developers",
+        "maintenance": "active"
+      },
+      "has_metadata": true,
+      "references": [
+        "../FILE_ORGANIZATION_STANDARDS.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/storage-architecture.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/README.md",
+      "metadata": {
+        "title": "Documentation Templates",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/adr_template.md",
+      "metadata": {
+        "title": "ADR-XXX: [Title of Decision]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/api_endpoint_template.md",
+      "metadata": {
+        "title": "API Endpoint: [Endpoint Name]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "endpoint",
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./related-endpoint.md",
+        "./another-endpoint.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/feature_spec_template.md",
+      "metadata": {
+        "title": "Feature Specification: [Feature Name]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "feature",
+          "spec",
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/integration_template.md",
+      "metadata": {
+        "title": "Integration: [Service Name]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "integration",
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/process_template.md",
+      "metadata": {
+        "title": "Process: [Process Name]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "process",
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/templates/troubleshooting_template.md",
+      "metadata": {
+        "title": "Troubleshooting: [Problem Area]",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "template",
+        "status": "active",
+        "tags": [
+          "troubleshooting",
+          "template"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md",
+      "metadata": {
+        "title": "Automated Task Workflow - Implementation Summary",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "implementation",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./automated-task-workflow.md",
+        "./quick-reference-checklist.md",
+        "./research-phase-guide.md",
+        "./automatic-checkpoints-commits.md",
+        "./examples/",
+        "../../scripts/"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/README.md",
+      "metadata": {
+        "title": "Automated Task Workflow Documentation",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./automated-task-workflow.md",
+        "./prd-generation-guide.md",
+        "./task-generation-guide.md",
+        "./task-execution-guide.md",
+        "./prd-generation-guide.md",
+        "./task-generation-guide.md",
+        "./task-execution-guide.md",
+        "../../CLAUDE.md",
+        "../component_docs/database/database_schema_automation.md",
+        "../git_workflow/GIT_KNOWLEDGE.md",
+        "../development/standards/CODING_STANDARDS.md",
+        "./README.md",
+        "./automated-task-workflow.md",
+        "./prd-generation-guide.md",
+        "./task-generation-guide.md",
+        "./task-execution-guide.md",
+        "./documentation-requirements.md",
+        "./todowrite-markdown-sync.md",
+        "./quick-reference-checklist.md",
+        "./examples/"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/automated-task-workflow.md",
+      "metadata": {
+        "title": "Automated Task Workflow System",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "automated",
+          "task"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md",
+      "metadata": {
+        "title": "Automatic Checkpoints and Commits Guide",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "automatic",
+          "checkpoints",
+          "commits"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/branch-review-workflow.md",
+      "metadata": {
+        "title": "Branch Review Workflow",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "branch",
+          "review"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/documentation-requirements.md",
+      "metadata": {
+        "title": "Documentation Requirements Guide",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "requirements"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "link",
+        "link",
+        "link",
+        "./task-execution-guide.md",
+        "./task-execution-guide.md",
+        "./task-generation-guide.md",
+        "../../CLAUDE.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/examples/README.md",
+      "metadata": {
+        "title": "Workflow Examples",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "../automated-task-workflow.md",
+        "../prd-generation-guide.md",
+        "../task-generation-guide.md",
+        "../task-execution-guide.md",
+        "../todowrite-markdown-sync.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md",
+      "metadata": {
+        "title": "Task Execution Example: Email Validation System",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "execution",
+          "example"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/examples/email-validation/prd.md",
+      "metadata": {
+        "title": "Email Validation System",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/examples/email-validation/tasklist_1.md",
+      "metadata": {
+        "title": "Tasks: Email Validation System",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "tasklist"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/prd-generation-guide.md",
+      "metadata": {
+        "title": "PRD Generation Guide (Claude Code Optimized)",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "generation"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./automated-task-workflow.md#1-intent-detection-task-vs-question",
+        "./automated-task-workflow.md",
+        "./task-generation-guide.md",
+        "./task-execution-guide.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md",
+      "metadata": {
+        "title": "Quick Reference Checklist for Agents",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "quick",
+          "reference",
+          "checklist"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./automatic-checkpoints-commits.md",
+        "./automated-task-workflow.md",
+        "./prd-generation-guide.md",
+        "./task-generation-guide.md",
+        "./task-execution-guide.md",
+        "./documentation-requirements.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/research-phase-guide.md",
+      "metadata": {
+        "title": "Research Phase Guide",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "research",
+          "phase"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/task-execution-guide.md",
+      "metadata": {
+        "title": "Task Execution Guide (Claude Code Optimized)",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "task",
+          "execution"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./documentation-requirements.md",
+        "./automatic-checkpoints-commits.md",
+        "./automated-task-workflow.md",
+        "./prd-generation-guide.md",
+        "./task-generation-guide.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/task-generation-guide.md",
+      "metadata": {
+        "title": "Task Generation Guide (Claude Code Optimized)",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "task",
+          "generation"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "./automated-task-workflow.md",
+        "./prd-generation-guide.md",
+        "./task-execution-guide.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md",
+      "metadata": {
+        "title": "TodoWrite-Markdown Synchronization Guide",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "guide",
+        "status": "active",
+        "tags": [
+          "workflow",
+          "todowrite",
+          "markdown",
+          "sync"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/api_endpoint_reference.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/database_schema_reference.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/external_domain_integration_guide.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/link_tracking_security_assessment.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/security_assessment_report.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/security_implementation_summary.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/export/security_remediation_plan.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md",
+      "metadata": {
+        "title": "Librarian System Implementation Status",
+        "type": "task",
+        "status": "in_progress",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "feature_branch": "task/10-librarian",
+        "related": [
+          "tasks/prd-librarian-system.md",
+          "tasks/tasks-prd-librarian-system.md"
+        ],
+        "tags": [
+          "librarian",
+          "implementation",
+          "status"
+        ],
+        "author": "Steve-Merlin-Projecct"
+      },
+      "has_metadata": true,
+      "references": [
+        "url",
+        "prd-librarian-system.md",
+        "tasks-prd-librarian-system.md",
+        "file-organization-audit/librarian-discovery-analysis.md",
+        "../docs/standards/metadata-standard.md",
+        "../docs/FILE_ORGANIZATION_STANDARDS.md"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/dynamic-statusline-integration.md",
+      "metadata": {
+        "title": "Dynamic Statusline Integration",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "dynamic",
+          "statusline",
+          "integration"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/file-organization-audit/cleanup-summary.md",
+      "metadata": {
+        "title": "File Organization Cleanup Summary",
+        "status": "completed",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "tags": [
+          "cleanup",
+          "summary"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md",
+      "metadata": {
+        "title": "Librarian System - Discovery & Planning Analysis",
+        "status": "completed",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "tags": [
+          "librarian",
+          "discovery",
+          "analysis"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/file-organization-audit/prd.md",
+      "metadata": {
+        "title": "File Organization Audit & Cleanup",
+        "status": "completed",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "tags": []
+      },
+      "has_metadata": true,
+      "references": [
+        ".*"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/future-agent-ideas.md",
+      "metadata": {
+        "title": "Future Agent Ideas",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "future",
+          "agent",
+          "ideas"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/MERGE_INSTRUCTIONS.md",
+      "metadata": {
+        "title": "Merge Instructions for Post-Migration Refactoring",
+        "created": "2025-10-08",
+        "updated": "2025-10-08",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "merge",
+          "instructions"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/action-plan.md",
+      "metadata": {
+        "title": "Post-Migration Refactoring Action Plan",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "action",
+          "plan"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/categorized-references.md",
+      "metadata": {
+        "title": "Categorized Replit References",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "categorized",
+          "references"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/cleanup-report.md",
+      "metadata": {
+        "title": "Post-Migration Refactoring Cleanup Report",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "cleanup",
+          "report"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/dependency-map.md",
+      "metadata": {
+        "title": "Replit Dependency Map",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "dependency"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md",
+      "metadata": {
+        "title": "Phase 0: Edge Case Discovery Report",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "phase0",
+          "edge",
+          "cases"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/risk-assessment.md",
+      "metadata": {
+        "title": "Risk Assessment Matrix",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "risk",
+          "assessment"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/tasklist_1.md",
+      "metadata": {
+        "title": "Post-Migration Refactoring Task List",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "tasklist"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/post-migration-refactoring/validation-report.md",
+      "metadata": {
+        "title": "Post-Migration Cleanup Validation Report",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "task",
+        "status": "active",
+        "tags": [
+          "validation",
+          "report"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/prd-claude-config.md",
+      "metadata": {
+        "title": "Claude Config",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "claude",
+          "config"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/prd-google-drive-storage.md",
+      "metadata": {
+        "title": "Google Drive API Storage Backend Integration",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "google",
+          "drive",
+          "storage"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/prd-librarian-system.md",
+      "metadata": {
+        "title": "Librarian System - Automated File Organization & Documentation Management",
+        "status": "completed",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "tags": [
+          "librarian",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": [
+        "path"
+      ]
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md",
+      "metadata": {
+        "title": "Post-Replit Migration Code Cleanup",
+        "status": "completed",
+        "created": "2025-10-07",
+        "updated": "2025-10-07",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "tags": [
+          "post",
+          "replit",
+          "code",
+          "cleanup"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/prd-variable-substitution-system.md",
+      "metadata": {
+        "title": "Product Requirements Document: Variable Substitution System for Application Packages",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "variable",
+          "substitution",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md",
+      "metadata": {
+        "title": "Task List: Librarian System Implementation",
+        "created": "2025-10-09",
+        "updated": "2025-10-09",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "tasks",
+          "librarian",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md",
+      "metadata": {
+        "title": "Tasks: Variable Substitution System for Application Packages",
+        "created": "2025-10-06",
+        "updated": "2025-10-06",
+        "author": "Steve-Merlin-Projecct",
+        "type": "prd",
+        "status": "active",
+        "tags": [
+          "tasks",
+          "variable",
+          "substitution",
+          "system"
+        ]
+      },
+      "has_metadata": true,
+      "references": []
+    },
+    {
+      "path": "/workspace/.trees/librarian/tools/protected_claude_content.md",
+      "metadata": {},
+      "has_metadata": false
+    },
+    {
+      "path": "/workspace/.trees/librarian/worktree_tools/README.md",
+      "metadata": {},
+      "has_metadata": false
+    }
+  ]
+}

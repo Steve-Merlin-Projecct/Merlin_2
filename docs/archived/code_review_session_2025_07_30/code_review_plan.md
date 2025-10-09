@@ -1,3 +1,16 @@
+---
+title: Comprehensive Code Review and Organization Plan
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- code
+- review
+- plan
+---
+
 # Comprehensive Code Review and Organization Plan
 
 ## Phase 1: Immediate Issues to Address

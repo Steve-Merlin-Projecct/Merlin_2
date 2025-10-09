@@ -1,3 +1,15 @@
+---
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: changelog
+status: active
+title: Claude Md Changelog
+tags:
+- claude
+- changelog
+---
+
 This changelog captures every change made to CLAUDE.md
 ==========================================
 MONITORING INITIALIZED: 2025-10-06 21:49:21 UTC

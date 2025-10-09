@@ -1,3 +1,16 @@
+---
+title: Confidence Scoring System Documentation
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+status: archived
+tags:
+- confidence
+- scoring
+- system
+---
+
 # Confidence Scoring System Documentation
 
 ## Overview

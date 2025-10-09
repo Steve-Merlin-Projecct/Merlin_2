@@ -1,3 +1,15 @@
+---
+title: 'ADR-003: Google Gemini for AI Analysis'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: decision
+status: active
+tags:
+- integration
+- approach
+---
+
 # ADR-003: Google Gemini for AI Analysis
 
 ---

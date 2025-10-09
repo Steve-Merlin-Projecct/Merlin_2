@@ -1,3 +1,17 @@
+---
+title: Document Generation Architecture
+status: template
+version: 2.16.5
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+tags:
+- document
+- generation
+- architecture
+---
+
 # Document Generation Architecture
 
 **Version**: 2.16.5  

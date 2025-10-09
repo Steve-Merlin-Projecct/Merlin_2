@@ -1,3 +1,17 @@
+---
+title: 'Task List: Database Table Consolidation'
+status: completed
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: archived
+tags:
+- database
+- tasks
+- table
+- consolidation
+---
+
 # Task List: Database Table Consolidation
 ## Job Analysis and Analyzed Jobs Table Merger
 

@@ -1,3 +1,16 @@
+---
+title: Google Drive API Storage Backend Integration
+created: '2025-10-07'
+updated: '2025-10-07'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- google
+- drive
+- storage
+---
+
 # PRD: Google Drive API Storage Backend Integration
 
 **Version:** 1.0

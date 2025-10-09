@@ -1,3 +1,16 @@
+---
+title: Content Selection Algorithm for Document Generation
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: reference
+status: active
+tags:
+- content
+- selection
+- algorithm
+---
+
 # Content Selection Algorithm for Document Generation
 
 **Version:** 2.16.7  

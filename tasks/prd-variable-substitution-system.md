@@ -1,3 +1,17 @@
+---
+title: 'Product Requirements Document: Variable Substitution System for Application
+  Packages'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: prd
+status: active
+tags:
+- variable
+- substitution
+- system
+---
+
 # Product Requirements Document: Variable Substitution System for Application Packages
 
 ## Executive Summary

@@ -1,3 +1,15 @@
+---
+title: 'Troubleshooting: [Problem Area]'
+created: '2025-10-06'
+updated: '2025-10-06'
+author: Steve-Merlin-Projecct
+type: template
+status: active
+tags:
+- troubleshooting
+- template
+---
+
 # Troubleshooting: [Problem Area]
 
 ---
