@@ -1,0 +1,18 @@
+{
+  "template_name": "Tech/Creative Modern Resume",
+  "template_file": "tech_creative_resume.docx",
+  "template_type": "resume",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Modern tech resume with teal/amber color scheme",
+  "target_industries": [
+    "Software Development",
+    "UX/UI Design",
+    "Digital Creative"
+  ],
+  "ats_compatibility_score": 75,
+  "design_style": "Creative Modern",
+  "layout_type": "Single Column",
+  "color_scheme": "Teal (#00B294) and Amber (#FFB900)",
+  "font_primary": "Calibri 10-11pt"
+}

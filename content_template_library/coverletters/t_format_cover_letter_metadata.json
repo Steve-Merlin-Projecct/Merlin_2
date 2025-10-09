@@ -1,0 +1,15 @@
+{
+  "template_name": "T-Format Skills-Match Cover Letter",
+  "template_file": "t_format_cover_letter.docx",
+  "template_type": "coverletter",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Direct skills matching table format",
+  "target_industries": [
+    "Any industry with specific requirements"
+  ],
+  "ats_compatibility_score": 85,
+  "design_style": "Analytical",
+  "length": "300-350 words",
+  "tone": "Analytical, Confident"
+}

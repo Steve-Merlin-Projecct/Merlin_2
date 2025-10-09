@@ -1,0 +1,10 @@
+Original_Text,Is_Variable,Is_Static,Is_discarded,Variable_name,Variable_intention,Variable_category,Static_Text,Content_source
+FirstName LastName,TRUE,FALSE,FALSE,user_first_name user_last_name,Full name,User Profile,,user_profile
+Contact info,TRUE,FALSE,FALSE,user_email user_phone user_linkedin,Contact details,User Profile,,user_profile
+Current date,TRUE,FALSE,FALSE,current_date,Letter date,Metadata,,system_generated
+Company Name,TRUE,FALSE,FALSE,company_name,Target company (job variable),Job Data,,job_data
+Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Recipient name,Job Data,,job_data
+Opening paragraph,TRUE,FALSE,FALSE,cover_letter_opening,Introduction paragraph,Content,,sentence_bank_cover_letter
+Skills alignment paragraph,TRUE,FALSE,FALSE,cover_letter_skills_alignment,Skills match paragraph,Content,,sentence_bank_cover_letter
+Achievement paragraph,TRUE,FALSE,FALSE,cover_letter_achievement,Achievement example,Content,,sentence_bank_cover_letter
+Closing paragraph,TRUE,FALSE,FALSE,cover_letter_closing,Call to action,Content,,sentence_bank_cover_letter
