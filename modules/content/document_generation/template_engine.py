@@ -34,16 +34,35 @@ class TemplateEngine:
     4. Generating final documents with professional metadata
     """
 
-    def __init__(self):
-        """Initialize the template engine with configuration"""
+    def __init__(self, enable_url_tracking=True):
+        """
+        Initialize the template engine with configuration
+
+        Args:
+            enable_url_tracking (bool): Enable automatic URL tracking for candidate URLs (default: True)
+        """
         self.setup_logging()
         self.template_cache = {}  # Cache loaded templates for performance
         self.variable_pattern = re.compile(r"<<([^>]+)>>")  # Pattern for <<variable_name>>
         self.job_variable_pattern = re.compile(r"\{(job_title|company_name)\}")  # Pattern for {job_title} and {company_name}
-        
+
         # Enhanced formatting patterns
         self.italics_pattern = re.compile(r'\*([^*]+)\*')  # Pattern for *italics*
         self.publication_pattern = re.compile(r'\b(?:[A-Z][a-z]*(?:\s[A-Z][a-z]*)*\s(?:Journal|Magazine|Review|Times|Post|Herald|Tribune|Gazette|Chronicle|News|Weekly|Monthly|Quarterly|Report|Bulletin|Digest|Today|Business|Financial|Economic|Scientific|Academic|Medical|Legal|Technical|International|National|Global|Daily|Press|Media|Communications?|Technology|Science|Nature|Cell|PLOS|BMJ|NEJM|JAMA|IEEE|ACM|Harvard|Stanford|MIT|Oxford|Cambridge))\b')  # Pattern for publications
+
+        # URL tracking configuration
+        self.enable_url_tracking = enable_url_tracking
+        self.tracked_url_cache = {}  # Cache for tracked URLs to prevent duplicate tracking entries
+
+        # Define which variables should be converted to tracked URLs
+        self.TRACKABLE_URL_VARIABLES = ['calendly_url', 'linkedin_url', 'portfolio_url']
+
+        # Mapping from variable name to link function name for tracking system
+        self.URL_VARIABLE_TO_FUNCTION = {
+            'calendly_url': 'Calendly',
+            'linkedin_url': 'LinkedIn',
+            'portfolio_url': 'Portfolio'
+        }
 
     def setup_logging(self):
         """Configure logging for template processing"""
@@ -79,7 +98,7 @@ class TemplateEngine:
             self.logger.error(f"Error loading template {template_path}: {str(e)}")
             raise
 
-    def generate_document(self, template_path, data, output_path=None):
+    def generate_document(self, template_path, data, output_path=None, job_id=None, application_id=None):
         """
         Generate a document from a template using provided data
 
@@ -87,6 +106,8 @@ class TemplateEngine:
             template_path (str): Path to the template file
             data (dict): Data dictionary containing variable values
             output_path (str): Optional path to save the generated document
+            job_id (str, optional): Job UUID for URL tracking context
+            application_id (str, optional): Application UUID for URL tracking context
 
         Returns:
             dict: Information about the generated document
@@ -119,8 +140,8 @@ class TemplateEngine:
                     substitution_stats["variables_found"].update(all_variables)
 
                     # Replace variables with actual data
-                    new_text = self.substitute_variables(original_text, data, substitution_stats)
-                    
+                    new_text = self.substitute_variables(original_text, data, substitution_stats, job_id, application_id)
+
                     # Apply enhanced text formatting
                     formatted_text = self.apply_enhanced_formatting(paragraph, new_text)
 
@@ -132,7 +153,7 @@ class TemplateEngine:
 
             # Process tables if they exist
             for table in doc.tables:
-                self.process_table_variables(table, data, substitution_stats)
+                self.process_table_variables(table, data, substitution_stats, job_id, application_id)
 
             # Set document properties
             self.set_document_properties(doc, data)
@@ -164,15 +185,18 @@ class TemplateEngine:
             self.logger.error(f"Error generating document: {str(e)}")
             raise
 
-    def substitute_variables(self, text, data, stats):
+    def substitute_variables(self, text, data, stats, job_id=None, application_id=None):
         """
         Replace variable placeholders in text with actual data values
         Handles both <<template_variables>> and {job_variables} systems
+        Converts URL variables to tracked redirect URLs when enabled
 
         Args:
             text (str): Text containing variable placeholders
             data (dict): Data dictionary with variable values
             stats (dict): Statistics tracking dictionary
+            job_id (str, optional): Job UUID for URL tracking context
+            application_id (str, optional): Application UUID for URL tracking context
 
         Returns:
             str: Text with variables replaced
@@ -186,8 +210,23 @@ class TemplateEngine:
             value = self.get_nested_value(data, variable_name)
 
             if value is not None:
-                stats["variables_substituted"].add(variable_name)
-                return str(value)
+                # Check if this is a trackable URL variable
+                if self.enable_url_tracking and variable_name in self.TRACKABLE_URL_VARIABLES:
+                    # Convert to tracked URL
+                    link_function = self.URL_VARIABLE_TO_FUNCTION[variable_name]
+                    tracked_url = self._get_tracked_url(
+                        original_url=str(value),
+                        link_function=link_function,
+                        job_id=job_id,
+                        application_id=application_id
+                    )
+                    stats["variables_substituted"].add(variable_name)
+                    self.logger.info(f"Converted {variable_name} to tracked URL: {tracked_url}")
+                    return tracked_url
+                else:
+                    # Normal variable substitution
+                    stats["variables_substituted"].add(variable_name)
+                    return str(value)
             else:
                 stats["variables_missing"].add(variable_name)
                 self.logger.warning(f"Template variable '{variable_name}' not found in data")
@@ -215,11 +254,86 @@ class TemplateEngine:
 
         # Apply template variable substitution first (<<variable>>)
         text = self.variable_pattern.sub(replace_template_variable, text)
-        
+
         # Apply job variable substitution second ({job_title}, {company_name})
         text = self.job_variable_pattern.sub(replace_job_variable, text)
 
         return text
+
+    def _get_tracked_url(self, original_url, link_function, job_id=None, application_id=None):
+        """
+        Generate tracked redirect URL using LinkTracker system
+
+        This method converts a candidate's original URL (Calendly, LinkedIn, Portfolio)
+        into a tracked redirect URL that records click events and analytics.
+
+        Args:
+            original_url (str): The actual destination URL (e.g., calendly.com/steve-glen/30min)
+            link_function (str): Category of link ('Calendly', 'LinkedIn', 'Portfolio')
+            job_id (str, optional): Job UUID for association tracking
+            application_id (str, optional): Application UUID for association tracking
+
+        Returns:
+            str: Tracked redirect URL (e.g., https://domain.com/track/lt_abc123) or original URL if tracking fails
+
+        Example:
+            >>> engine = TemplateEngine()
+            >>> tracked = engine._get_tracked_url(
+            ...     original_url="https://calendly.com/steve-glen/30min",
+            ...     link_function="Calendly",
+            ...     job_id="550e8400-e29b-41d4-a716-446655440000"
+            ... )
+            >>> print(tracked)
+            'https://domain.com/track/lt_calendly_abc123def456'
+        """
+        # Check cache first to prevent duplicate tracking entries
+        cache_key = f"{job_id}:{application_id}:{link_function}:{original_url}"
+        if cache_key in self.tracked_url_cache:
+            cached_url = self.tracked_url_cache[cache_key]
+            self.logger.debug(f"Using cached tracked URL for {link_function}: {cached_url}")
+            return cached_url
+
+        try:
+            # Lazy import to handle cases where LinkTracker module might not be available
+            from modules.link_tracking.link_tracker import LinkTracker
+
+            # Initialize tracker
+            tracker = LinkTracker()
+
+            # Create tracked link with job/application context
+            result = tracker.create_tracked_link(
+                original_url=original_url,
+                link_function=link_function,
+                job_id=job_id,
+                application_id=application_id,
+                link_type='profile',  # All candidate URLs are profile type
+                description=f'{link_function} link for job application'
+            )
+
+            # Extract redirect URL from result
+            redirect_url = result['redirect_url']
+            tracking_id = result['tracking_id']
+
+            # Cache the result
+            self.tracked_url_cache[cache_key] = redirect_url
+
+            self.logger.info(
+                f"Generated tracked {link_function} URL: {tracking_id} "
+                f"(job_id={job_id}, app_id={application_id})"
+            )
+
+            return redirect_url
+
+        except ImportError as e:
+            self.logger.error(f"LinkTracker module not available: {e}. Using original URL.")
+            return original_url  # Graceful fallback
+
+        except Exception as e:
+            self.logger.error(
+                f"Failed to create tracked URL for {link_function}: {e}. "
+                f"Using original URL as fallback."
+            )
+            return original_url  # Graceful fallback - document generation continues
 
     def get_nested_value(self, data, key):
         """
@@ -393,7 +507,7 @@ class TemplateEngine:
             # Fallback: add text without special formatting
             paragraph.add_run(text)
 
-    def process_table_variables(self, table, data, stats):
+    def process_table_variables(self, table, data, stats, job_id=None, application_id=None):
         """
         Process variables within document tables
 
@@ -401,6 +515,8 @@ class TemplateEngine:
             table: python-docx table object
             data (dict): Data dictionary
             stats (dict): Statistics tracking dictionary
+            job_id (str, optional): Job UUID for URL tracking context
+            application_id (str, optional): Application UUID for URL tracking context
         """
         for row in table.rows:
             for cell in row.cells:
@@ -408,12 +524,12 @@ class TemplateEngine:
                     original_text = paragraph.text
                     template_variables = self.variable_pattern.findall(original_text)
                     job_variables = self.job_variable_pattern.findall(original_text)
-                    
+
                     all_variables = template_variables + [f"job_variable_{var}" for var in job_variables]
 
                     if all_variables:
                         stats["variables_found"].update(all_variables)
-                        new_text = self.substitute_variables(original_text, data, stats)
+                        new_text = self.substitute_variables(original_text, data, stats, job_id, application_id)
 
                         if new_text != original_text:
                             # Apply enhanced formatting to table cells too

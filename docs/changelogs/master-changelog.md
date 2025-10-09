@@ -29,6 +29,20 @@ Historical Changelog:
   * System operational status improved from 75% to 95%
   * All 12 parent tasks completed in tasks/tasks-prd-comprehensive-system-testing.md
   * Task files: tasks/prd-comprehensive-system-testing.md, tasks/tasks-prd-comprehensive-system-testing.md
+- October 09, 2025. **v4.2.0 - CALENDLY INTEGRATION PHASE 1 & 2 COMPLETE**: Implemented automatic URL tracking for Calendly, LinkedIn, and Portfolio URLs
+  * Enhanced TemplateEngine with automatic URL tracking capabilities
+  * Added URL_VARIABLE_TO_FUNCTION mapping for Calendly, LinkedIn, and Portfolio link types
+  * Implemented _get_tracked_url() method with LinkTracker integration and caching
+  * Updated substitute_variables() to detect and convert URL variables to tracked redirect URLs
+  * Added job_id and application_id parameters throughout document generation pipeline
+  * Updated DocumentGenerator.generate_document() and generate_document_with_csv_mapping()
+  * Updated /resume and /cover-letter API endpoints to accept optional job_id/application_id
+  * Created CandidateProfileManager module for centralized candidate data retrieval
+  * Implemented graceful fallback to original URLs if LinkTracker unavailable
+  * Added comprehensive inline documentation and docstrings
+  * Created PRD and task files: prd-complete-calendly-integration.md, tasks-complete-calendly-integration.md
+  * System now automatically converts {{calendly_url}} to tracked redirect URLs during document generation
+  * Next phases: Unit tests, integration tests, documentation, and final validation
 - October 08, 2025. **v4.1.0 - FILE ORGANIZATION CLEANUP**: Comprehensive reorganization of project file structure
   * Split BRANCH_STATUS.md into branch-specific status and reusable workflow documentation
   * Moved 3 migration summary files from root to docs/archived/migrations/
