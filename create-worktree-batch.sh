@@ -119,6 +119,103 @@ $description
 (Add notes here)
 EOF
         echo -e "  ${GREEN}✓ Created TASK.md${NC}"
+
+        # Create Claude task context file
+        cat > "$WORKTREE_PATH/.claude-task-context.md" << EOF
+# Task $TASK_NUM: $description
+
+**Worktree:** $worktree_name
+**Branch:** $BRANCH_NAME
+**Status:** In Progress
+**Created:** $(date +"%Y-%m-%d")
+
+## Objective
+$description
+
+## Scope
+Complete the following deliverables for this task. See TASK.md for more details.
+
+## Primary Files
+- TASK.md (task documentation)
+- (Files will be listed here as work progresses)
+
+## Success Criteria
+- [ ] Planning phase complete
+- [ ] Implementation complete
+- [ ] Testing complete
+- [ ] Documentation updated
+- [ ] Ready for merge
+
+## Important Notes
+- This is worktree $TASK_NUM of a parallel development workflow
+- Branch: $BRANCH_NAME based on $BASE_BRANCH
+- Check TASK.md for conflict warnings with other tasks
+- Use /workspace/.trees/worktree-manager/worktree-status.sh to see all worktree statuses
+
+## Workflow Commands
+- Check status: ./worktree-status.sh
+- Sync with develop: ./sync-all-worktrees.sh
+- Monitor resources: ./monitor-resources.sh
+
+Focus on this specific task and its objectives.
+EOF
+        echo -e "  ${GREEN}✓ Created .claude-task-context.md${NC}"
+
+        # Create .claude directory if it doesn't exist
+        mkdir -p "$WORKTREE_PATH/.claude"
+
+        # Create Claude startup script
+        cat > "$WORKTREE_PATH/.claude/init.sh" << 'EOFSCRIPT'
+#!/bin/bash
+# Claude Code Auto-Startup Script
+# Automatically loads task context and launches Claude
+
+WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
+
+# Display task information
+if [ -f "$TASK_CONTEXT" ]; then
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║           Claude Code - Task Context Loaded                   ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+    head -15 "$TASK_CONTEXT"
+    echo ""
+    echo "────────────────────────────────────────────────────────────────"
+    echo "Starting Claude Code with task context..."
+    echo "────────────────────────────────────────────────────────────────"
+    echo ""
+fi
+
+# Change to worktree root
+cd "$WORKTREE_ROOT"
+
+# Launch Claude with task context
+if [ -f "$TASK_CONTEXT" ]; then
+    CONTEXT=$(cat "$TASK_CONTEXT")
+    exec claude --append-system-prompt "
+
+# TASK CONTEXT - YOU ARE WORKING IN A WORKTREE
+
+$CONTEXT
+
+IMPORTANT:
+- You are in a dedicated worktree for this specific task
+- Focus exclusively on this task's objectives
+- Refer to .claude-task-context.md and TASK.md for details
+- This is part of a parallel development workflow with multiple worktrees
+- Do not work on files outside this task's scope
+"
+else
+    echo "Warning: Task context file not found at $TASK_CONTEXT"
+    echo "Launching Claude without task context..."
+    exec claude
+fi
+EOFSCRIPT
+
+        chmod +x "$WORKTREE_PATH/.claude/init.sh"
+        echo -e "  ${GREEN}✓ Created .claude/init.sh${NC}"
+
     else
         echo -e "  ${RED}✗ Failed${NC}"
         FAIL_COUNT=$((FAIL_COUNT + 1))
@@ -141,7 +238,116 @@ echo -e "${BLUE}Current worktrees:${NC}"
 git -C "$PROJECT_ROOT" worktree list | grep -E "task/|develop/" | head -20
 
 echo ""
+echo -e "${BLUE}Generating VS Code terminal profiles...${NC}"
+
+# Generate VS Code settings for terminal profiles
+VSCODE_DIR="$PROJECT_ROOT/.vscode"
+mkdir -p "$VSCODE_DIR"
+
+# Create terminal profiles in settings.json
+SETTINGS_FILE="$VSCODE_DIR/settings.json"
+
+# Read existing settings or create empty object
+if [ -f "$SETTINGS_FILE" ]; then
+    echo -e "${YELLOW}  Backing up existing settings.json${NC}"
+    cp "$SETTINGS_FILE" "${SETTINGS_FILE}.backup"
+fi
+
+# Generate terminal profile configuration
+cat > "$VSCODE_DIR/terminal-profiles.json" << 'EOFPROFILES'
+{
+  "terminal.integrated.profiles.linux": {
+EOFPROFILES
+
+# Add profile for each worktree
+TASK_NUM=0
+TERMINAL_COLORS=("Blue" "Green" "Yellow" "Cyan" "Magenta" "Red")
+
+while IFS=':' read -r worktree_name description || [ -n "$worktree_name" ]; do
+    # Skip comments and empty lines
+    [[ "$worktree_name" =~ ^#.*$ ]] && continue
+    [[ -z "$worktree_name" ]] && continue
+
+    TASK_NUM=$((TASK_NUM + 1))
+    WORKTREE_PATH="$PROJECT_ROOT/.trees/$worktree_name"
+
+    # Skip if worktree doesn't exist
+    [ ! -d "$WORKTREE_PATH" ] && continue
+
+    # Get terminal color (cycle through colors)
+    COLOR_INDEX=$(( (TASK_NUM - 1) % ${#TERMINAL_COLORS[@]} ))
+    COLOR="${TERMINAL_COLORS[$COLOR_INDEX]}"
+
+    # Add comma if not first entry
+    [ $TASK_NUM -gt 1 ] && echo "," >> "$VSCODE_DIR/terminal-profiles.json"
+
+    # Create profile entry
+    cat >> "$VSCODE_DIR/terminal-profiles.json" << EOF
+    "Task $TASK_NUM: $worktree_name": {
+      "path": "/bin/bash",
+      "args": ["-c", "cd /workspace/.trees/$worktree_name && exec bash"],
+      "color": "terminal.ansi$COLOR",
+      "icon": "tree"
+    }
+EOF
+done < "$TASKS_FILE"
+
+# Close the profiles object
+cat >> "$VSCODE_DIR/terminal-profiles.json" << 'EOFPROFILES'
+  }
+}
+EOFPROFILES
+
+echo -e "${GREEN}  ✓ Created terminal-profiles.json${NC}"
+
+# Create helper script to launch all Claude sessions
+cat > "$PROJECT_ROOT/.trees/launch-all-claude.sh" << 'EOFLAUNCH'
+#!/bin/bash
+# Launch Claude Code in all worktrees
+
+PROJECT_ROOT="/workspace"
+TREES_DIR="$PROJECT_ROOT/.trees"
+
+echo "🚀 Launching Claude Code in all worktrees..."
+echo ""
+
+# Get all task worktrees
+WORKTREES=($(find "$TREES_DIR" -maxdepth 1 -type d -name "*" -not -name ".*" | sort))
+
+for path in "${WORKTREES[@]}"; do
+    if [ -f "$path/.claude/init.sh" ]; then
+        name=$(basename "$path")
+        echo "Starting Claude in: $name"
+
+        # Launch in new tmux window if tmux is available
+        if command -v tmux &> /dev/null; then
+            tmux new-window -n "$name" -c "$path" "$path/.claude/init.sh" 2>/dev/null || true
+        else
+            echo "  Run manually: cd $path && ./.claude/init.sh"
+        fi
+    fi
+done
+
+echo ""
+echo "✓ All Claude sessions started"
+echo ""
+echo "To switch between tmux windows:"
+echo "  Ctrl+b then window number (0-9)"
+echo "  Ctrl+b then 'w' to list all windows"
+EOFLAUNCH
+
+chmod +x "$PROJECT_ROOT/.trees/launch-all-claude.sh"
+echo -e "${GREEN}  ✓ Created launch-all-claude.sh${NC}"
+
+echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "1. Open terminals for each worktree"
-echo "2. Start development"
-echo "3. Use ./open-terminals.sh to open all at once"
+echo "1. Open VS Code terminal profiles (Terminal → New Terminal → Select profile)"
+echo "2. Or use: ./.trees/launch-all-claude.sh (launches Claude in all worktrees with tmux)"
+echo "3. In each worktree terminal, run: ./.claude/init.sh"
+echo ""
+echo -e "${CYAN}To start Claude with task context:${NC}"
+echo "  cd /workspace/.trees/<worktree-name>"
+echo "  ./.claude/init.sh"
+echo ""
+echo -e "${CYAN}Terminal profiles created in:${NC}"
+echo "  $VSCODE_DIR/terminal-profiles.json"
