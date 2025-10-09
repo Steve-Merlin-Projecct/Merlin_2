@@ -66,6 +66,9 @@ except ImportError:
     DocumentGenerator = MockDocumentGenerator
 
 from modules.database.database_manager import DatabaseManager
+from modules.email_integration.signature_generator import get_signature_generator
+from modules.email_integration.email_content_builder import get_email_content_builder
+from modules.email_integration.email_validator import get_email_validator
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +91,19 @@ class EmailApplicationSender:
         self.document_generator = DocumentGenerator()
         self.db_url = os.environ.get("DATABASE_URL")
 
-        # Email configuration
-        self.fallback_email = "therealstevenglen@gmail.com"
+        # Email signature generator
+        self.signature_generator = get_signature_generator()
+
+        # Email content builder
+        self.content_builder = get_email_content_builder()
+
+        # Email validator
+        self.email_validator = get_email_validator()
+
+        # Email configuration from environment
+        self.user_email = os.getenv("USER_EMAIL_ADDRESS", "your.email@gmail.com")
+        self.display_name = os.getenv("USER_DISPLAY_NAME", "Steve Glen")
+        self.fallback_email = self.user_email  # Send to self if no job email found
         self.waiting_period_days = 6
 
         # Steve Glen's application content
@@ -107,9 +121,12 @@ class EmailApplicationSender:
 
     def _get_professional_email_template(self) -> str:
         """Get professional email template for direct job applications"""
-        return """Dear Hiring Manager,
+        # Get signature from generator (plain text version)
+        signature = self.signature_generator.generate_plain_text_signature()
 
-I am writing to express my strong interest in the {job_title} position at {company_name}. With over 14 years of experience in marketing communications and strategic business development, I am excited about the opportunity to contribute to your team's success.
+        return f"""Dear Hiring Manager,
+
+I am writing to express my strong interest in the {{job_title}} position at {{company_name}}. With over 14 years of experience in marketing communications and strategic business development, I am excited about the opportunity to contribute to your team's success.
 
 Key highlights of my background include:
 
@@ -119,39 +136,37 @@ Key highlights of my background include:
 • Bachelor of Business Administration from the University of Alberta
 • Expertise in marketing automation, strategic communications, and stakeholder engagement
 
-I am particularly drawn to this opportunity because of {company_name}'s reputation for innovation and excellence. My experience in developing comprehensive marketing strategies and driving measurable business results aligns well with the requirements outlined in your job posting.
+I am particularly drawn to this opportunity because of {{company_name}}'s reputation for innovation and excellence. My experience in developing comprehensive marketing strategies and driving measurable business results aligns well with the requirements outlined in your job posting.
 
 I have attached my resume and cover letter for your review. I would welcome the opportunity to discuss how my background and enthusiasm can contribute to your team's objectives.
 
 Thank you for your time and consideration. I look forward to hearing from you.
 
-Best regards,
-Steve Glen
-(780) 555-0123
-1234.S.t.e.v.e.Glen@gmail.com
-Edmonton, Alberta, Canada"""
+{signature}"""
 
     def _get_fallback_email_template(self) -> str:
-        """Get email template for fallback sending to therealstevenglen@gmail.com"""
-        return """Subject: Job Application Opportunity - {job_title} at {company_name}
+        """Get email template for fallback sending to user's own email"""
+        user_first_name = self.display_name.split()[0]  # Get first name
 
-Steve,
+        return f"""Subject: Job Application Opportunity - {{job_title}} at {{company_name}}
+
+{user_first_name},
 
 I've identified a potential job opportunity that matches your preferences and qualifications:
 
-Job Title: {job_title}
-Company: {company_name}
-Location: {job_location}
-Salary Range: {salary_range}
-Posted Date: {posted_date}
+Job Title: {{job_title}}
+Company: {{company_name}}
+Location: {{job_location}}
+Salary Range: {{salary_range}}
+Posted Date: {{posted_date}}
 
-Job Source: {job_source_url}
+Job Source: {{job_source_url}}
 
 The position appears to be a strong match based on:
-• Job title compatibility: {title_compatibility_score}/30 points
-• Overall compatibility score: {overall_compatibility_score}/100 points
-• Industry alignment: {primary_industry}
-• Location preference match: {location_match}
+• Job title compatibility: {{title_compatibility_score}}/30 points
+• Overall compatibility score: {{overall_compatibility_score}}/100 points
+• Industry alignment: {{primary_industry}}
+• Location preference match: {{location_match}}
 
 Application documents have been prepared and are attached:
 - Tailored resume for this position
@@ -159,7 +174,7 @@ Application documents have been prepared and are attached:
 
 Since no direct application email was found in the job posting, you'll need to apply through the original job source or find the appropriate contact information.
 
-Original job posting: {job_source_url}
+Original job posting: {{job_source_url}}
 
 Best regards,
 Automated Job Application System"""
@@ -313,11 +328,11 @@ Automated Job Application System"""
                 "document_type": "resume",
                 "job_title": job_title,
                 "company_name": company_name,
-                "full_name": "Steve Glen",
+                "full_name": self.display_name,
                 "professional_summary": f"Marketing communications professional with 14+ years of experience, seeking {job_title} role",
-                "phone": "(780) 555-0123",
-                "email": "1234.S.t.e.v.e.Glen@gmail.com",
-                "address": "Edmonton, Alberta, Canada",
+                "phone": os.getenv("USER_PHONE", "(780) 555-0123"),
+                "email": self.user_email,
+                "address": os.getenv("USER_LOCATION", "Edmonton, Alberta, Canada"),
                 "target_job_title": job_title,
                 "target_company": company_name,
             }
@@ -333,7 +348,7 @@ Automated Job Application System"""
                 "document_type": "cover_letter",
                 "job_title": job_title,
                 "company_name": company_name,
-                "full_name": "Steve Glen",
+                "full_name": self.display_name,
                 "target_job_title": job_title,
                 "target_company": company_name,
                 "professional_summary": f"Experienced marketing professional applying for {job_title} at {company_name}",
@@ -413,70 +428,71 @@ Automated Job Application System"""
         """
         Send job application email with all required components
 
+        Uses EmailContentBuilder for intelligent content mapping and EmailValidator
+        for pre-send validation.
+
         Args:
-            job_data: Complete job information
+            job_data: Complete job information from analyzed_jobs table
 
         Returns:
             Dictionary with sending results
         """
         try:
-            # Check sending eligibility
+            # Check sending eligibility (timing constraints)
             is_eligible, eligibility_reason = self.check_sending_eligibility(job_data)
             if not is_eligible:
                 return {"success": False, "reason": eligibility_reason, "status": "not_eligible"}
 
-            # Determine recipient email
-            job_description = job_data.get("job_description", "")
-            application_email = job_data.get("application_email")
-
-            recipient_email = self.extract_email_from_job_description(job_description, application_email)
-            if not recipient_email:
-                recipient_email = self.fallback_email
-                logger.info(f"No job email found, using fallback: {recipient_email}")
-
-            # Prepare documents
+            # Prepare application documents (resume + cover letter)
             documents = self.prepare_application_documents(job_data)
 
-            # Prepare attachments
-            attachments = []
-            if documents["resume_path"]:
-                attachments.append(
-                    {
-                        "path": documents["resume_path"],
-                        "filename": documents["resume_filename"]
-                        or f"Steve_Glen_Resume_{job_data.get('job_title', 'Position').replace(' ', '_')}.docx",
-                    }
-                )
+            # Build complete email package using content builder
+            email_package = self.content_builder.build_email_package(job_data, documents)
 
-            if documents["cover_letter_path"]:
-                attachments.append(
-                    {
-                        "path": documents["cover_letter_path"],
-                        "filename": documents["cover_letter_filename"]
-                        or f"Steve_Glen_Cover_Letter_{job_data.get('job_title', 'Position').replace(' ', '_')}.docx",
-                    }
-                )
+            # Validate email before sending
+            validation_result = self.email_validator.validate_email(
+                to_email=email_package["recipient"],
+                subject=email_package["subject"],
+                body=email_package["body"],
+                attachments=email_package["attachments"],
+            )
 
-            # Compose email
-            subject, body = self.compose_email_content(job_data, recipient_email)
+            # Check validation results
+            if not validation_result["can_send"]:
+                logger.error(f"Email validation failed for job {job_data.get('id')}: {validation_result['errors']}")
+                return {
+                    "success": False,
+                    "reason": f"Email validation failed: {', '.join(validation_result['errors'])}",
+                    "status": "validation_failed",
+                    "validation_errors": validation_result["errors"],
+                }
 
-            # Send email
+            # Log validation warnings (non-blocking)
+            if validation_result["warnings"]:
+                logger.warning(f"Email validation warnings for job {job_data.get('id')}: {validation_result['warnings']}")
+
+            # Send email with properly formatted attachments
             email_result = self.email_sender.send_email_with_attachments(
-                recipient=recipient_email, subject=subject, body=body, attachments=attachments
+                recipient=email_package["recipient"],
+                subject=email_package["subject"],
+                body=email_package["body"],
+                attachments=email_package["attachments"],
             )
 
             if email_result.get("success"):
                 # Update job application status in database
-                self._update_application_status(job_data["id"], "sent", email_result)
+                self._update_application_status(job_data["id"], "sent", email_result, email_package)
 
                 return {
                     "success": True,
-                    "recipient": recipient_email,
-                    "subject": subject,
+                    "recipient": email_package["recipient"],
+                    "subject": email_package["subject"],
                     "message_id": email_result.get("message_id"),
                     "sent_at": email_result.get("sent_at"),
-                    "attachments_count": len(attachments),
-                    "is_fallback": recipient_email == self.fallback_email,
+                    "attachments_count": len(email_package["attachments"]),
+                    "is_fallback": email_package["is_fallback"],
+                    "validation_warnings": validation_result.get("warnings", []),
+                    "metadata": email_package["metadata"],
                 }
             else:
                 return {
@@ -486,14 +502,26 @@ Automated Job Application System"""
                 }
 
         except Exception as e:
-            logger.error(f"Job application sending error: {e}")
+            logger.error(f"Job application sending error: {e}", exc_info=True)
             return {"success": False, "reason": f"Application sending error: {str(e)}", "status": "error"}
 
-    def _update_application_status(self, job_id: str, status: str, email_result: Dict):
-        """Update job application status in database"""
+    def _update_application_status(self, job_id: str, status: str, email_result: Dict, email_package: Dict = None):
+        """
+        Update job application status in database with email metadata
+
+        Args:
+            job_id: Job ID
+            status: Application status
+            email_result: Result from email sender
+            email_package: Email package with metadata (optional)
+        """
         try:
             with self.get_db_connection() as conn:
                 cursor = conn.cursor()
+
+                # Extract metadata from email package if available
+                recipient = email_package["recipient"] if email_package else None
+                subject = email_package["subject"] if email_package else None
 
                 # Update or insert application record
                 cursor.execute(
@@ -510,7 +538,7 @@ Automated Job Application System"""
                 )
 
                 conn.commit()
-                logger.info(f"Updated application status for job {job_id}: {status}")
+                logger.info(f"Updated application status for job {job_id}: {status} (recipient: {recipient})")
 
         except Exception as e:
             logger.error(f"Failed to update application status: {e}")

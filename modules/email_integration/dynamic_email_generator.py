@@ -4,6 +4,7 @@ Generates unique, contextual email content based on actual system data and test 
 """
 
 import json
+import os
 import random
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
@@ -15,6 +16,13 @@ class DynamicEmailGenerator:
     """
 
     def __init__(self):
+        # Load user configuration from environment
+        self.user_email = os.getenv("USER_EMAIL_ADDRESS", "your.email@gmail.com")
+        self.display_name = os.getenv("USER_DISPLAY_NAME", "Steve Glen")
+        self.user_phone = os.getenv("USER_PHONE", "(780) 555-0123")
+        self.user_location = os.getenv("USER_LOCATION", "Edmonton, Alberta, Canada")
+        self.user_linkedin = os.getenv("USER_LINKEDIN_URL", "linkedin.com/in/steveglen")
+
         self.test_contexts = [
             "end-to-end workflow validation",
             "document generation system testing",
@@ -294,14 +302,14 @@ I would welcome the opportunity to discuss how my experience and passion for mar
 Thank you for your consideration.
 
 Best regards,
-Steve Glen
-1234.s.t.e.v.e.glen@gmail.com
-(780) 555-0123
-LinkedIn: linkedin.com/in/steveglen
+{self.display_name}
+{self.user_email}
+{self.user_phone}
+LinkedIn: {self.user_linkedin}
 
 ---
 Application submitted: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
-Automated Job Application System v2.15"""
+Automated Job Application System v4.2.0"""
 
         return {"subject": subject, "body": body}
 
