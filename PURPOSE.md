@@ -1,4 +1,4 @@
-# Task: Worktree Management Tools
+# Purpose: Worktree Management Tools
 
 **Worktree:** worktree-manager
 **Branch:** task/00-worktree-manager

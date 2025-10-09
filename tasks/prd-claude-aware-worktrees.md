@@ -2,11 +2,11 @@
 
 ## Introduction/Overview
 
-Enhanced worktree creation system that provides automatic task context to Claude Code instances and auto-launches Claude in integrated terminals. This solves the problem of Claude instances not knowing what task they should be working on when started in a worktree, and automates the workflow of opening terminals and starting Claude for each parallel development task.
+Enhanced worktree creation system that provides automatic purpose context to Claude Code instances and auto-launches Claude in integrated terminals. This solves the problem of Claude instances not knowing what task they should be working on when started in a worktree, and automates the workflow of opening terminals and starting Claude for each parallel development task.
 
 ## Goals
 
-1. **Primary Goal**: Automatically pass task context to Claude instances when they start in a worktree
+1. **Primary Goal**: Automatically pass purpose context to Claude instances when they start in a worktree
 2. **Secondary Goal**: Auto-create VS Code integrated terminals that launch Claude Code on startup
 3. **Tertiary Goal**: Eliminate manual setup steps for parallel development workflow
 
@@ -18,28 +18,28 @@ Enhanced worktree creation system that provides automatic task context to Claude
 
 3. **As a developer**, I want Claude Code to auto-start in each worktree terminal, so that I can immediately begin working on tasks.
 
-4. **As a developer**, I want task descriptions and scope automatically loaded from TASK.md or PRD files, so that Claude has complete context.
+4. **As a developer**, I want task descriptions and scope automatically loaded from PURPOSE.md or PRD files, so that Claude has complete context.
 
 5. **As a developer**, I want a startup script I can customize per worktree, so that different tasks can have different initialization logic.
 
 ## Functional Requirements
 
-### 1. Task Context Passing
+### 1. purpose context Passing
 
-1.1. Create `.claude-task-context.md` file in each worktree root with:
+1.1. Create `.claude-purpose-context.md` file in each worktree root with:
    - Task description and scope
    - Primary files to work on
    - Conflict warnings
    - Status checklist
 
 1.2. Create `.claude/init.sh` startup script that:
-   - Reads task context from `.claude-task-context.md`
+   - Reads purpose context from `.claude-purpose-context.md`
    - Uses `claude --append-system-prompt` to inject context
    - Sets working directory to worktree root
    - Displays welcome message with task information
 
 1.3. Modify `create-worktree-batch.sh` to:
-   - Generate `.claude-task-context.md` from task description
+   - Generate `.claude-purpose-context.md` from task description
    - Create `.claude/init.sh` with proper permissions
    - Copy Claude settings to worktree if needed
 
@@ -54,15 +54,15 @@ Enhanced worktree creation system that provides automatic task context to Claude
 2.2. Create terminal profile that executes on startup:
    - Changes to worktree directory
    - Sources `.claude/init.sh`
-   - Launches Claude Code with task context
+   - Launches Claude Code with purpose context
 
 2.3. Support VS Code "Restore Terminals" feature:
    - Terminals persist across VS Code restarts
    - Auto-reconnect to running Claude sessions
 
-### 3. Task Context File Format
+### 3. purpose context File Format
 
-3.1. `.claude-task-context.md` structure:
+3.1. `.claude-purpose-context.md` structure:
 ```markdown
 # Task: [Description]
 
@@ -98,21 +98,21 @@ Enhanced worktree creation system that provides automatic task context to Claude
 # Claude Code Auto-Startup for [Task Name]
 
 WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
+TASK_CONTEXT="$WORKTREE_ROOT/.claude-purpose-context.md"
 
 # Display task information
 if [ -f "$TASK_CONTEXT" ]; then
     echo "================================"
-    echo "Claude Code - Task Context Loaded"
+    echo "Claude Code - purpose context Loaded"
     echo "================================"
     head -10 "$TASK_CONTEXT"
     echo ""
 fi
 
-# Launch Claude with task context
+# Launch Claude with purpose context
 if [ -f "$TASK_CONTEXT" ]; then
     CONTEXT=$(cat "$TASK_CONTEXT")
-    claude --append-system-prompt "You are working on this specific task: $CONTEXT. Focus on this task and its objectives. Refer to .claude-task-context.md for details."
+    claude --append-system-prompt "You are working on this specific task: $CONTEXT. Focus on this task and its objectives. Refer to .claude-purpose-context.md for details."
 else
     claude
 fi
@@ -122,7 +122,7 @@ fi
 
 5.1. Update `create-worktree-batch.sh` to:
    - Parse task descriptions from input file
-   - Generate `.claude-task-context.md` for each worktree
+   - Generate `.claude-purpose-context.md` for each worktree
    - Create `.claude/init.sh` startup scripts
    - Generate updated `.vscode/terminals.json`
    - Create shell script to open all Claude sessions
@@ -152,8 +152,8 @@ worktree-name:Task Description:primary-file1.py,primary-file2.py:conflict-with-t
     .claude/
       init.sh                    # Auto-startup script
       settings.local.json        # Claude settings (copied from main)
-    .claude-task-context.md      # Task context for Claude
-    TASK.md                      # Human-readable task doc (existing)
+    .claude-purpose-context.md      # purpose context for Claude
+    PURPOSE.md                      # Human-readable task doc (existing)
     ... (rest of worktree files)
 ```
 
@@ -174,7 +174,7 @@ worktree-name:Task Description:primary-file1.py,primary-file2.py:conflict-with-t
 }
 ```
 
-### Task Context Template
+### purpose context Template
 ```markdown
 # Task: Claude.md Refinement & Agent Creation
 
@@ -215,7 +215,7 @@ Refine CLAUDE.md instructions, create specialized agents, and develop slash comm
 ## Technical Considerations
 
 ### Claude CLI Integration
-- Use `--append-system-prompt` to inject task context
+- Use `--append-system-prompt` to inject purpose context
 - Context limited to ~1000 tokens (keep concise)
 - Format context as markdown for readability
 - Option to use `--settings` for per-worktree Claude config
@@ -233,7 +233,7 @@ Refine CLAUDE.md instructions, create specialized agents, and develop slash comm
 - Needs proper error handling if context file missing
 
 ### Context File Synchronization
-- Task context should match TASK.md content
+- purpose context should match PURPOSE.md content
 - Consider symlinking vs copying
 - Update mechanism when task scope changes
 - Git ignore vs commit decision
@@ -249,7 +249,7 @@ Refine CLAUDE.md instructions, create specialized agents, and develop slash comm
 1. **Context Awareness**: 100% of Claude sessions know their task immediately
 2. **Startup Time**: Terminal + Claude launch < 5 seconds per worktree
 3. **User Actions**: Reduce manual setup from 13 steps to 1 (run script)
-4. **Accuracy**: Task context matches intended scope 100% of time
+4. **Accuracy**: purpose context matches intended scope 100% of time
 5. **Adoption**: Developers use automated terminals vs manual 90%+ of time
 
 ## Open Questions
@@ -259,7 +259,7 @@ Refine CLAUDE.md instructions, create specialized agents, and develop slash comm
    - On-demand requires user to know command
    - **Decision**: Wait for user command, provide helper script
 
-2. **Context File Location**: `.claude-task-context.md` in root, or `.claude/task-context.md`?
+2. **Context File Location**: `.claude-purpose-context.md` in root, or `.claude/task-context.md`?
    - Root is more visible
    - .claude/ is more organized
    - **Decision**: Root for visibility, symlink to .claude/ for organization
@@ -275,8 +275,8 @@ Refine CLAUDE.md instructions, create specialized agents, and develop slash comm
    - Cons: May not reflect updated context
    - **Decision**: Use `--continue` flag for optional persistence
 
-5. **Context Update Mechanism**: How to update task context after worktree creation?
-   - Manual edit of .claude-task-context.md
+5. **Context Update Mechanism**: How to update purpose context after worktree creation?
+   - Manual edit of .claude-purpose-context.md
    - Re-run creation script with --update flag
    - Separate update-context.sh script
    - **Decision**: Manual edit + update-context.sh helper
