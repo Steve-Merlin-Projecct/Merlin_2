@@ -1,0 +1,16 @@
+{
+  "template_name": "Career Change/Transition Cover Letter",
+  "template_file": "career_change_cover_letter.docx",
+  "template_type": "coverletter",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Focus on transferable skills and career transition",
+  "target_industries": [
+    "Career changers",
+    "Industry switchers"
+  ],
+  "ats_compatibility_score": 90,
+  "design_style": "Transitional",
+  "length": "350-450 words",
+  "tone": "Warm, Curious, Confident with Alignment Focus"
+}

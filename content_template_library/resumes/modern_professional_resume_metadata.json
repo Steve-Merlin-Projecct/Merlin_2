@@ -1,0 +1,18 @@
+{
+  "template_name": "Modern Professional Resume",
+  "template_file": "modern_professional_resume.docx",
+  "template_type": "resume",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Modern resume with Microsoft blue accents and skills table",
+  "target_industries": [
+    "Technology",
+    "Digital Marketing",
+    "Startups"
+  ],
+  "ats_compatibility_score": 90,
+  "design_style": "Modern",
+  "layout_type": "Single Column with Skills Table",
+  "color_scheme": "Microsoft Blue (#0078D4)",
+  "font_primary": "Calibri 11pt"
+}

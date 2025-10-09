@@ -1,0 +1,18 @@
+{
+  "template_name": "Skills-Based Resume",
+  "template_file": "skills_based_resume.docx",
+  "template_type": "resume",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Skills-prominent resume for career changers and diverse backgrounds",
+  "target_industries": [
+    "Career Change",
+    "Consulting",
+    "Diverse Backgrounds"
+  ],
+  "ats_compatibility_score": 90,
+  "design_style": "Skills-Focused",
+  "layout_type": "Single Column",
+  "color_scheme": "Dark Green (#0E6B41)",
+  "font_primary": "Arial 11pt"
+}

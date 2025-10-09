@@ -1,0 +1,17 @@
+{
+  "template_name": "Email Cover Letter (Brief)",
+  "template_file": "email_cover_letter.docx",
+  "template_type": "coverletter",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Concise email-optimized cover letter",
+  "target_industries": [
+    "Startups",
+    "Digital-first companies",
+    "Quick applications"
+  ],
+  "ats_compatibility_score": 95,
+  "design_style": "Email",
+  "length": "150-250 words",
+  "tone": "Direct, Confident, Friendly"
+}

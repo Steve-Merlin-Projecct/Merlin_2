@@ -1,0 +1,19 @@
+{
+  "template_name": "Executive/Leadership Resume",
+  "template_file": "executive_leadership_resume.docx",
+  "template_type": "resume",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Elegant executive resume with Georgia font and leadership focus",
+  "target_industries": [
+    "Senior Management",
+    "C-Suite",
+    "Director+",
+    "Executive"
+  ],
+  "ats_compatibility_score": 95,
+  "design_style": "Executive",
+  "layout_type": "Single Column",
+  "color_scheme": "Dark Blue (#1F4788)",
+  "font_primary": "Georgia 11pt"
+}

@@ -1,0 +1,17 @@
+{
+  "template_name": "Modern/Conversational Cover Letter",
+  "template_file": "modern_cover_letter.docx",
+  "template_type": "coverletter",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Friendly, modern cover letter for tech and startup companies",
+  "target_industries": [
+    "Tech",
+    "Startups",
+    "Creative Agencies"
+  ],
+  "ats_compatibility_score": 90,
+  "design_style": "Modern",
+  "length": "250-350 words",
+  "tone": "Warm, Curious, Confident"
+}

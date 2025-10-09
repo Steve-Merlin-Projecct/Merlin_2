@@ -1,0 +1,18 @@
+{
+  "template_name": "Professional/Formal Cover Letter",
+  "template_file": "professional_cover_letter.docx",
+  "template_type": "coverletter",
+  "version": "1.0",
+  "created_date": "2025-10-09",
+  "description": "Traditional business letter format for corporate applications",
+  "target_industries": [
+    "Corporate",
+    "Finance",
+    "Legal",
+    "Government"
+  ],
+  "ats_compatibility_score": 100,
+  "design_style": "Professional",
+  "length": "300-400 words",
+  "tone": "Confident, Analytical, Professional"
+}
