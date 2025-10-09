@@ -581,17 +581,206 @@ To merge this work:
 - If run with `--exit` flag: automatically exit terminal after displaying summary
 - Otherwise: wait for user to close terminal manually
 
-### 7. /tree status
+### 7. /tree closedone
+
+**Purpose:** Batch merge and cleanup of all completed worktrees that have received `/tree close`.
+
+**Prerequisites:**
+- One or more worktrees must have been closed with `/tree close`
+- Completed worktrees are identified by presence of `.trees/.completed/<name>-synopsis-*.md` files
+
+**Behavior:**
+
+**7.1. Discovery Phase**
+- Scan `.trees/.completed/` directory for synopsis files
+- Extract worktree names and branches from synopsis metadata
+- Verify worktree still exists in `.trees/` directory
+- Display list of completed worktrees found
+
+**7.2. User Confirmation**
+- Show summary of worktrees to be merged
+- Display target branch for each merge
+- Prompt: "Merge N completed worktrees? (y/n/review)"
+- If "review": show detailed file changes for each worktree
+- If "n": abort operation
+- If "y": proceed to merge phase
+
+**7.3. Merge Phase (for each completed worktree)**
+- Switch to base/develop branch
+- Attempt merge: `git merge <worktree-branch>`
+- Handle merge outcomes:
+  - **Clean merge**: Continue to cleanup
+  - **Conflicts detected**: Pause and display conflict resolution instructions
+  - **Merge error**: Skip worktree, log error, continue with next
+
+**7.4. Cleanup Phase (only if merge succeeded)**
+- Remove worktree files: `git worktree remove .trees/<worktree-name>`
+- Close Claude terminal if still running:
+  - Find process by worktree path
+  - Send graceful shutdown (SIGTERM)
+  - If tmux: close tmux window/pane
+  - If VS Code: send terminal close command
+- Archive completion files:
+  - Move `.trees/.completed/<name>-*` to `.trees/.archived/<name>/`
+  - Preserve synopsis and changelog for historical record
+
+**7.5. Summary Report**
+- Display results for each worktree:
+  - ✅ Successfully merged and cleaned up
+  - ⚠️  Merged with conflicts (manual resolution needed)
+  - ❌ Failed to merge (error details)
+- Show overall statistics
+- List any terminals that couldn't be closed automatically
+
+**Example Output:**
+
+```
+🌳 /tree closedone - Batch Merge & Cleanup
+
+Discovering completed worktrees...
+Found 3 completed worktrees:
+  1. real-time-collaboration (task/01-real-time-collaboration → develop/v4.2.0-20251009)
+  2. api-rate-limiting (task/02-api-rate-limiting → develop/v4.2.0-20251009)
+  3. user-dashboard-redesign (task/03-user-dashboard-redesign → develop/v4.2.0-20251009)
+
+Merge these 3 worktrees? (y/n/review): y
+
+Processing worktrees...
+
+[1/3] real-time-collaboration
+  ✓ Switched to develop/v4.2.0-20251009
+  ✓ Merged task/01-real-time-collaboration (fast-forward)
+  ✓ Removed worktree files
+  ✓ Closed Claude terminal (PID 12345)
+  ✓ Archived completion files
+  Status: ✅ SUCCESS
+
+[2/3] api-rate-limiting
+  ✓ Switched to develop/v4.2.0-20251009
+  ⚠  Merged with conflicts in:
+      - modules/api/middleware.py
+      - tests/test_rate_limiting.py
+  ⏸  Paused - Please resolve conflicts manually
+
+  To continue:
+    1. Resolve conflicts in the files listed above
+    2. git add <resolved-files>
+    3. git commit
+    4. Run: /tree closedone --resume
+
+  Status: ⚠️  CONFLICTS (manual resolution needed)
+
+[3/3] user-dashboard-redesign
+  ✓ Switched to develop/v4.2.0-20251009
+  ✓ Merged task/03-user-dashboard-redesign (merge commit)
+  ✓ Removed worktree files
+  ⚠  Claude terminal not found (already closed)
+  ✓ Archived completion files
+  Status: ✅ SUCCESS
+
+═══════════════════════════════════════════════════════════
+SUMMARY
+
+Worktrees Processed: 3
+  ✅ Success: 2
+  ⚠️  Conflicts: 1
+  ❌ Failed: 0
+
+Next Steps:
+  1. Resolve conflicts in api-rate-limiting
+  2. After resolving, run: /tree closedone --resume
+  3. Or skip conflicted worktree: /tree closedone --skip api-rate-limiting
+
+Archived Files:
+  - .trees/.archived/real-time-collaboration/
+  - .trees/.archived/user-dashboard-redesign/
+═══════════════════════════════════════════════════════════
+```
+
+**7.6. Conflict Resolution Workflow**
+
+When conflicts are detected:
+- Pause batch processing
+- Display conflicted files
+- Provide clear resolution instructions
+- Wait for manual resolution
+- Support `--resume` flag to continue from last position
+- Support `--skip <worktree-name>` to skip specific worktree
+
+**7.7. Safety Features**
+
+- **Confirmation prompt**: Prevents accidental batch merges
+- **Dry-run mode**: `--dry-run` flag to preview without executing
+- **Backup branches**: Create backup branch before merge (optional)
+- **Rollback support**: If merge fails, restore to pre-merge state
+- **Selective processing**: `--only <worktree-name>` to merge specific worktree
+- **Exclude pattern**: `--exclude <pattern>` to skip certain worktrees
+
+**7.8. Advanced Options**
+
+```
+/tree closedone [options]
+
+Options:
+  --dry-run              Preview actions without executing
+  --resume               Resume from last paused position
+  --skip <name>          Skip specific worktree
+  --only <name>          Process only specific worktree
+  --exclude <pattern>    Exclude worktrees matching pattern
+  --backup               Create backup branches before merge
+  --force-close          Force-kill terminals instead of graceful shutdown
+  --no-archive           Don't archive completion files (delete instead)
+```
+
+**7.9. Terminal Cleanup Strategy**
+
+Detect terminal environment and close appropriately:
+
+**Tmux:**
+```bash
+# Find tmux window/pane by working directory
+tmux list-panes -a -F "#{pane_id} #{pane_current_path}" | grep worktree-name
+# Close gracefully
+tmux kill-pane -t <pane-id>
+```
+
+**VS Code Integrated Terminal:**
+```bash
+# Find process by working directory
+ps aux | grep "claude.*worktree-name"
+# Send SIGTERM for graceful shutdown
+kill -TERM <pid>
+# VS Code should auto-close terminal when process ends
+```
+
+**Standalone Terminal:**
+```bash
+# Find Claude process
+pgrep -f "claude.*worktree-name"
+# Send SIGTERM
+kill -TERM <pid>
+# Note: Terminal window remains open (manual close required)
+```
+
+**7.10. Error Handling**
+
+- **Worktree not found**: Skip with warning
+- **Branch already merged**: Skip with informational message
+- **Dirty working directory**: Prompt to stash/commit changes
+- **Terminal close failure**: Log PID and instructions for manual closure
+- **Archive failure**: Warn but don't fail entire operation
+
+### 8. /tree status
 
 **Purpose:** Show status of current worktree environment.
 
 **Behavior:**
-7.1. Detect if in worktree or main workspace
-7.2. Show current branch
-7.3. List all active worktrees
-7.4. Show which worktrees have running processes
-7.5. Display recent build history
-7.6. Show completed worktrees (from /tree close)
+8.1. Detect if in worktree or main workspace
+8.2. Show current branch
+8.3. List all active worktrees
+8.4. Show which worktrees have running processes
+8.5. Display recent build history
+8.6. Show completed worktrees (from /tree close)
 
 **Example Output:**
 ```
@@ -617,23 +806,21 @@ Actions:
 - Monitor resources: cd /workspace/.trees/worktree-manager && ./monitor-resources.sh
 ```
 
-### 7. /tree help
+### 9. /tree help
 
 **Purpose:** Display comprehensive help for all /tree commands.
 
 **Behavior:**
-7.1. Show command summary
-7.2. Provide usage examples
-7.3. Link to full documentation
+9.1. Show command summary
+9.2. Provide usage examples
+9.3. Link to full documentation
 
 ## Non-Goals (Out of Scope)
 
-1. Merging worktrees (handled by existing git workflow)
-2. Automated conflict resolution (requires human decision)
-3. CI/CD integration (future enhancement)
-4. Cross-repository worktrees
-5. Remote worktree creation (local only)
-6. Worktree deletion/cleanup (manual for safety)
+1. Automated conflict resolution (requires human decision)
+2. CI/CD integration (future enhancement)
+3. Cross-repository worktrees
+4. Remote worktree creation (local only)
 
 ## Design Considerations
 
@@ -654,6 +841,7 @@ Build Phase:
 Active Development:
   status                 - Show worktree environment status
   close                  - Complete work, generate synopsis, prepare for terminal closure
+  closedone              - Batch merge and cleanup all completed worktrees
 
 Utilities:
   help                   - Show detailed help
@@ -664,6 +852,7 @@ Typical Workflow:
   3. /tree build                (create all worktrees)
   4. [work in worktrees]
   5. /tree close                (in each worktree when done)
+  6. /tree closedone            (merge all completed worktrees back to develop)
 ```
 
 ### File Locations
@@ -673,6 +862,8 @@ Typical Workflow:
 - Completed worktrees: `/workspace/.trees/.completed/`
   - Synopsis files: `<worktree-name>-synopsis-YYYYMMDD.md`
   - Changelog files: `<worktree-name>-changelog-YYYYMMDD.md`
+- Archived worktrees: `/workspace/.trees/.archived/`
+  - Files moved here after successful merge with `/tree closedone`
 
 ### Conflict Detection Algorithm
 ```python
