@@ -97,6 +97,14 @@ try:
 except ImportError as e:
     logger.warning(f"Could not register Copywriting Evaluator API: {e}")
 
+# Register Analytics API
+try:
+    from modules.analytics.engagement_analytics_api import engagement_analytics_bp
+    app.register_blueprint(engagement_analytics_bp)
+    logger.info("Analytics API registered successfully")
+except ImportError as e:
+    logger.warning(f"Could not register Analytics API: {e}")
+
 # Document Generation API is already registered above via document_bp from modules.document_routes
 logger.info("Document Generation API already registered via document_bp")
 
