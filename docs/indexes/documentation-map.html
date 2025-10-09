@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Index</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #007bff; }
+        .stat-card h3 { margin: 0 0 10px 0; font-size: 14px; color: #666; }
+        .stat-card .value { font-size: 32px; font-weight: bold; color: #007bff; }
+        .search { margin: 20px 0; }
+        .search input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px; }
+        .filters { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; }
+        .filter-btn.active { background: #007bff; color: white; border-color: #007bff; }
+        .file-list { margin: 20px 0; }
+        .file-item { padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #28a745; }
+        .file-item.hidden { display: none; }
+        .file-path { font-weight: bold; color: #333; margin-bottom: 8px; }
+        .file-meta { font-size: 14px; color: #666; }
+        .file-meta span { margin-right: 15px; padding: 4px 8px; background: white; border-radius: 4px; }
+        .tag { display: inline-block; padding: 4px 8px; margin: 2px; background: #e7f3ff; color: #007bff; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Documentation Index</h1>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Files</h3>
+                <div class="value">203</div>
+            </div>
+            <div class="stat-card">
+                <h3>With Metadata</h3>
+                <div class="value">133</div>
+            </div>
+            <div class="stat-card">
+                <h3>Coverage</h3>
+                <div class="value">65%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Generated</h3>
+                <div class="value" style="font-size: 16px;">2025-10-09</div>
+            </div>
+        </div>
+
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Search documentation..." onkeyup="searchFiles()">
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterType('all')">All</button>
+            <button class="filter-btn" onclick="filterType('api')">Api (1)</button>
+            <button class="filter-btn" onclick="filterType('architecture')">Architecture (1)</button>
+            <button class="filter-btn" onclick="filterType('archived')">Archived (48)</button>
+            <button class="filter-btn" onclick="filterType('changelog')">Changelog (2)</button>
+            <button class="filter-btn" onclick="filterType('decision')">Decision (5)</button>
+            <button class="filter-btn" onclick="filterType('guide')">Guide (16)</button>
+            <button class="filter-btn" onclick="filterType('prd')">Prd (11)</button>
+            <button class="filter-btn" onclick="filterType('reference')">Reference (13)</button>
+            <button class="filter-btn" onclick="filterType('standards')">Standards (3)</button>
+            <button class="filter-btn" onclick="filterType('task')">Task (15)</button>
+            <button class="filter-btn" onclick="filterType('template')">Template (7)</button>
+        </div>
+
+        <div class="file-list" id="fileList">
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Worktree_Quick_Reference</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/WORKTREE_QUICK_REFERENCE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Code Reviewer</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/agents/code-reviewer.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Debugger</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/agents/debugger.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Workflow Admin</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/agents/workflow-admin.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Db Check</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/db-check.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Db Update</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/db-update.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Format</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/format.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Lint</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/lint.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Serve</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/serve.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Task</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/task.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Test</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/test.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Version Bump</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/version-bump.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Version</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/commands/version.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Architecture</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/memories/architecture.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Common Patterns</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/memories/common-patterns.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Database Schema</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/memories/database-schema.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Worktree Template</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.claude/worktree-template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Claude_Code_Notes</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.devcontainer/CLAUDE_CODE_NOTES.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/.devcontainer/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Branch_Status</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/BRANCH_STATUS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme_Archive_Organization</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/README_archive_organization.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/scripts/oauth_setup/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Replit_Migration_Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/scripts/services/REPLIT_MIGRATION_README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Ai_Analysis_Detailed_Results</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/tests_legacy_2025_07_28/legacy_tests_directory/ai_analysis_detailed_results.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Ai_Analysis_Test_Results</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/tests_legacy_2025_07_28/legacy_tests_directory/ai_analysis_test_results.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Cohere_Summary_1753765847309</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/attached_assets/Cohere_summary_1753765847309.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Building Sentences_1751526150641</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/attached_assets/building sentences_1751526150641.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Job_Analysis_Prompt_1751689824313</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/attached_assets/job_analysis_prompt_1751689824313.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Projectoverview_1751526150641</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/attached_assets/projectoverview_1751526150641.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Claude</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/claude.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Automation_Reminder</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/database_tools/AUTOMATION_REMINDER.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/database_tools/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Schema_Protection_Quickstart</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/database_tools/SCHEMA_PROTECTION_QUICKSTART.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Copywriting_Evaluator_Schema_Plan</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/database_tools/docs/copywriting_evaluator_schema_plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Database_Schema</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/database_tools/docs/database_schema.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Comprehensive_Documentation_System_Summary</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/COMPREHENSIVE_DOCUMENTATION_SYSTEM_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Documentation_Organization_Summary</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/DOCUMENTATION_ORGANIZATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">File_Organization_Standards</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/FILE_ORGANIZATION_STANDARDS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Google_Drive_Setup</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/GOOGLE_DRIVE_SETUP.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Migration_Summary</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/MIGRATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Agent Creation Guidelines</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/agent-creation-guidelines.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Agent Usage Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/agent-usage-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Current_Merge_Status</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/CURRENT_MERGE_STATUS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Module_Documentation</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/MODULE_DOCUMENTATION.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Auto_Restore_Protection_System</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/auto_restore_protection_system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/automation/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Database Connection Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/database-connection-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Deployment_Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/deployment/DEPLOYMENT_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Api_Documentation</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/API_DOCUMENTATION.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Claude_Code_Schema_Protection</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/CLAUDE_CODE_SCHEMA_PROTECTION.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Development_Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/DEVELOPMENT_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Code_Review_Decision_Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_DECISION_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Code_Review_History</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_HISTORY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Code_Review_Summary</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/code_quality/CODE_REVIEW_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Code_Review_Comprehensive</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/code_quality/code_review_comprehensive.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Feature_Development</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/future-tasks/Feature_Development.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Manual_Merge_Resolution</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/git_workflow/MANUAL_MERGE_RESOLUTION.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Smart_Schema_Enforcement</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/git_workflow/SMART_SCHEMA_ENFORCEMENT.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Feature Task Guiding Documentation</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/git_workflow/branch-status/feature-task-guiding-documentation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/indexes/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Master_Index</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/indexes/master_index.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/integrations/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Google Drive Implementation</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/integrations/google-drive-implementation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/maintenance/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Monitoring_Setup</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/monitoring_setup.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/processes/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Production_Deployment</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/processes/deployment/production_deployment.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/project_overview/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">System_Requirements</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/project_overview/SYSTEM_REQUIREMENTS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Security_Assessment_Report</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/security_assessments/security_assessment_report.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Storage Architecture</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/docs/storage-architecture.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Api_Endpoint_Reference</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/api_endpoint_reference.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Database_Schema_Reference</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/database_schema_reference.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">External_Domain_Integration_Guide</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/external_domain_integration_guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Link_Tracking_Security_Assessment</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/link_tracking_security_assessment.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Security_Assessment_Report</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/security_assessment_report.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Security_Implementation_Summary</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/security_implementation_summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Security_Remediation_Plan</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/export/security_remediation_plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Protected_Claude_Content</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/tools/protected_claude_content.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="unknown" data-status="unknown">
+                <div class="file-path">Readme</div>
+                <div class="file-meta">
+                    <span>📄 unknown</span>
+                    <span>🔖 unknown</span>
+                    <span>📁 /workspace/.trees/librarian/worktree_tools/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="decision" data-status="active">
+                <div class="file-path">ADR-001: PostgreSQL as Primary Database</div>
+                <div class="file-meta">
+                    <span>📄 decision</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">database</span><span class="tag">choice</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/decisions/001-database-choice.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="decision" data-status="active">
+                <div class="file-path">ADR-002: Template-Based Document Generation</div>
+                <div class="file-meta">
+                    <span>📄 decision</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">document</span><span class="tag">generation</span><span class="tag">strategy</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/decisions/002-document-generation-strategy.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="decision" data-status="active">
+                <div class="file-path">ADR-003: Google Gemini for AI Analysis</div>
+                <div class="file-meta">
+                    <span>📄 decision</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">integration</span><span class="tag">approach</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/decisions/003-ai-integration-approach.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="decision" data-status="active">
+                <div class="file-path">ADR-004: OAuth 2.0 for Gmail Integration</div>
+                <div class="file-meta">
+                    <span>📄 decision</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">authentication</span><span class="tag">strategy</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/decisions/004-authentication-strategy.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">ADR-XXX: [Title of Decision]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/adr_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">AI Analysis Integration - Enhanced Jobs Table Schema</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">analysis</span><span class="tag">integration</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/AI_ANALYSIS_INTEGRATION.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="api" data-status="active">
+                <div class="file-path">API Documentation</div>
+                <div class="file-meta">
+                    <span>📄 api</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">api</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/api/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">API Endpoint: [Endpoint Name]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">endpoint</span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/api_endpoint_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">ATS Optimization JSON Structure Restructure</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">optimization</span><span class="tag">restructure</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/ATS_OPTIMIZATION_RESTRUCTURE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Apify Indeed Scraper Integration Guide</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">apify</span><span class="tag">integration</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/APIFY_INTEGRATION_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="decision" data-status="current">
+                <div class="file-path">Architecture Decision Records (ADRs)</div>
+                <div class="file-meta">
+                    <span>📄 decision</span>
+                    <span>🔖 current</span>
+                    <span>📁 /workspace/.trees/librarian/docs/decisions/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Archived Migrations Documentation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/migrations/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Archived Replit Git Workflow Documentation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-git-workflow/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Archived Test Files - July 28, 2025</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="enhanced">
+                <div class="file-path">Automated Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 enhanced</span>
+                    <span><span class="tag">replit</span><span class="tag">2.14</span><span class="tag">1754540640362</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit_2.14__1754540640362.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Automated Job Application System - Complete Project Overview</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">automated</span><span class="tag">application</span><span class="tag">system</span><span class="tag">overview</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/Automated-Job-Application-System-Overview.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Automated Job Application System - Complete Project Overview</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">automated</span><span class="tag">application</span><span class="tag">system</span><span class="tag">overview</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/standalone_docs/Automated-Job-Application-System-Overview_2.1.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Automated Task Workflow - Implementation Summary</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/IMPLEMENTATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Automated Task Workflow Documentation</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Automated Task Workflow System</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">automated</span><span class="tag">task</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/automated-task-workflow.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="standards" data-status="active">
+                <div class="file-path">Automated Tooling Configuration Guide</div>
+                <div class="file-meta">
+                    <span>📄 standards</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">automated</span><span class="tag">tooling</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/standards/AUTOMATED_TOOLING_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Automatic Checkpoints and Commits Guide</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">automatic</span><span class="tag">checkpoints</span><span class="tag">commits</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/automatic-checkpoints-commits.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="ready">
+                <div class="file-path">Backup Status Report - Pre-Refactoring</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 ready</span>
+                    <span><span class="tag">backup</span><span class="tag">status</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/BACKUP_STATUS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Branch Review Workflow</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">branch</span><span class="tag">review</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/branch-review-workflow.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">CSV Content Mapping Implementation Summary</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">mapping</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/csv_mapping_implementation_summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="production">
+                <div class="file-path">CSV Content Mapping System</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 production</span>
+                    <span><span class="tag">content</span><span class="tag">mapping</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/document_generation/csv_content_mapping.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Categorized Replit References</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">categorized</span><span class="tag">references</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/categorized-references.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="changelog" data-status="active">
+                <div class="file-path">Changelog</div>
+                <div class="file-meta">
+                    <span>📄 changelog</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">master</span><span class="tag">changelog</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/changelogs/master-changelog.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Claude Config</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">claude</span><span class="tag">config</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/prd-claude-config.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="changelog" data-status="active">
+                <div class="file-path">Claude Md Changelog</div>
+                <div class="file-meta">
+                    <span>📄 changelog</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">claude</span><span class="tag">changelog</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/changelogs/claude-md_changelog.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Code Review Implementation Summary - July 30, 2025</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">code</span><span class="tag">review</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_implementation_summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Code Review and Organization Analysis</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">code</span><span class="tag">review</span><span class="tag">analysis</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_analysis.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Code Review and Organization Report</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">code</span><span class="tag">review</span><span class="tag">report</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_report.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="standards" data-status="active">
+                <div class="file-path">Coding Standards & Best Practices</div>
+                <div class="file-meta">
+                    <span>📄 standards</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">coding</span><span class="tag">standards</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/development/standards/CODING_STANDARDS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Comprehensive Code Review and Organization Plan</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">code</span><span class="tag">review</span><span class="tag">plan</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/code_review_session_2025_07_30/code_review_plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="production">
+                <div class="file-path">Comprehensive Link Tracking System</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 production</span>
+                    <span><span class="tag">link</span><span class="tag">tracking</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/link_tracking/link_tracking_system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="pre">
+                <div class="file-path">Comprehensive Testing Plan - Merlin Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 pre</span>
+                    <span><span class="tag">testing</span><span class="tag">plan</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/Testing_Plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Confidence Scoring System Documentation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">confidence</span><span class="tag">scoring</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/CONFIDENCE_SCORING_SYSTEM.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Consolidated Documentation Summary - Automated Job Application System V2.16</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">priority-critical</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/CONSOLIDATED_DOCUMENTATION_V2.16.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Content Selection Algorithm for Document Generation</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">content</span><span class="tag">selection</span><span class="tag">algorithm</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/document_generation/content_selection_algorithm.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Data Protection Implementation Summary</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">data</span><span class="tag">protection</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/DATA_PROTECTION_IMPLEMENTATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Database Automation Enforcement</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">database</span><span class="tag">automation</span><span class="tag">enforcement</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/DATABASE_AUTOMATION_ENFORCEMENT.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Database Normalization Summary</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">database</span><span class="tag">normalization</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/database/database_normalization_summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="production">
+                <div class="file-path">Database Schema Automation</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 production</span>
+                    <span><span class="tag">database</span><span class="tag">schema</span><span class="tag">automation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/database/database_schema_automation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Database Schema Documentation</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">database</span><span class="tag">schema</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/database/database_schema.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="template">
+                <div class="file-path">Document Generation Architecture</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 template</span>
+                    <span><span class="tag">document</span><span class="tag">generation</span><span class="tag">architecture</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/document_generation/document_generation_architecture.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Documentation Archive - July 28, 2025</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="standards" data-status="active">
+                <div class="file-path">Documentation Metadata Standard</div>
+                <div class="file-meta">
+                    <span>📄 standards</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">metadata</span><span class="tag">standards</span><span class="tag">documentation</span><span class="tag">yaml</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/standards/metadata-standard.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Documentation Requirements Guide</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">requirements</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/documentation-requirements.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">Documentation Templates</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Dynamic Statusline Integration</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">dynamic</span><span class="tag">statusline</span><span class="tag">integration</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/dynamic-statusline-integration.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Email Validation System</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/examples/email-validation/prd.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">Feature Specification: [Feature Name]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">feature</span><span class="tag">spec</span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/feature_spec_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="completed">
+                <div class="file-path">File Organization Audit & Cleanup</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 completed</span>
+                    <span>📁 /workspace/.trees/librarian/tasks/file-organization-audit/prd.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="completed">
+                <div class="file-path">File Organization Cleanup Summary</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">cleanup</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/file-organization-audit/cleanup-summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="updated">
+                <div class="file-path">Functional Requirements Document - Merlin Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 updated</span>
+                    <span><span class="tag">priority-critical</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/FRD_Functional_Requirements.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Future Agent Ideas</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">future</span><span class="tag">agent</span><span class="tag">ideas</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/future-agent-ideas.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="enhanced">
+                <div class="file-path">GitHub Backup Instructions - Pre-Refactoring</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 enhanced</span>
+                    <span><span class="tag">backup</span><span class="tag">instructions</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/BACKUP_INSTRUCTIONS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="investigation">
+                <div class="file-path">GitHub Connection Status Report</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 investigation</span>
+                    <span><span class="tag">github</span><span class="tag">connection</span><span class="tag">status</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connection-status.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">GitHub Connection Troubleshooting Guide</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">github</span><span class="tag">troubleshooting</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-git-workflow/github-troubleshooting-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">GitHub Connectivity Permanent Solution</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">github</span><span class="tag">connectivity</span><span class="tag">solution</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-git-workflow/github-connectivity-solution.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">GitHub Sync Status Report</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">github</span><span class="tag">sync</span><span class="tag">status</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-git-workflow/github-sync-status.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Gmail OAuth Integration Documentation</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">gmail</span><span class="tag">oauth</span><span class="tag">integration</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/gmail_oauth_integration.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Google Drive API Storage Backend Integration</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">google</span><span class="tag">drive</span><span class="tag">storage</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/prd-google-drive-storage.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="ready">
+                <div class="file-path">Implementation Guide - Merlin System Refactoring</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 ready</span>
+                    <span><span class="tag">implementation</span><span class="tag">refactor</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/Implementation_Guide_Refactor_2_0.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Implementation Plan - Automated Job Application System V2.16</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">priority-highest</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/IMPLEMENTATION_PLAN_V2.16.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Implementation Plan: Automated Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">implementation</span><span class="tag">plan</span><span class="tag">automated</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/implementation-plan-automated-job-system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Integration Plan: Job Scraping → Jobs Table → AI Analysis Flow</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">integration</span><span class="tag">plan</span><span class="tag">scraping</span><span class="tag">analysis</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/INTEGRATION_PLAN_Scraping_to_AI_Analysis.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Integration Steps for Misceres Indeed Scraper</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">integration</span><span class="tag">steps</span><span class="tag">misceres</span><span class="tag">indeed</span><span class="tag">scraper</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/INTEGRATION_STEPS_Misceres_Indeed_Scraper.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">Integration: [Service Name]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">integration</span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/integration_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="completed">
+                <div class="file-path">Librarian System - Automated File Organization & Documentation Management</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">librarian</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/prd-librarian-system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="completed">
+                <div class="file-path">Librarian System - Discovery & Planning Analysis</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">librarian</span><span class="tag">discovery</span><span class="tag">analysis</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/file-organization-audit/librarian-discovery-analysis.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Librarian System - Implementation Handoff</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">librarian</span><span class="tag">handoff</span><span class="tag">implementation</span><span class="tag">documentation</span></span>
+                    <span>📁 /workspace/.trees/librarian/LIBRARIAN_HANDOFF.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="in_progress">
+                <div class="file-path">Librarian System Implementation Status</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 in_progress</span>
+                    <span><span class="tag">librarian</span><span class="tag">implementation</span><span class="tag">status</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/IMPLEMENTATION_STATUS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="enterprise">
+                <div class="file-path">Link Tracking Security Implementation</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 enterprise</span>
+                    <span><span class="tag">security</span><span class="tag">implementation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/link_tracking/security_implementation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Merge Instructions for Post-Migration Refactoring</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">merge</span><span class="tag">instructions</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/MERGE_INSTRUCTIONS.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Merlin PRD - Automated Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">merlin</span><span class="tag">application</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/PRD_Merlin_Job_Application_System.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Misceres Indeed Scraper Integration - Complete</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">misceres</span><span class="tag">integration</span><span class="tag">complete</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/MISCERES_INTEGRATION_COMPLETE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">PRD Generation Guide (Claude Code Optimized)</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">generation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/prd-generation-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Phase 0: Edge Case Discovery Report</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">phase0</span><span class="tag">edge</span><span class="tag">cases</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/phase0-edge-cases.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Post-Migration Cleanup Validation Report</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">validation</span><span class="tag">report</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/validation-report.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Post-Migration Refactoring Action Plan</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">action</span><span class="tag">plan</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/action-plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Post-Migration Refactoring Cleanup Report</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">cleanup</span><span class="tag">report</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/cleanup-report.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Post-Migration Refactoring Task List</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">tasklist</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/tasklist_1.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="completed">
+                <div class="file-path">Post-Replit Migration Code Cleanup</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">post</span><span class="tag">replit</span><span class="tag">code</span><span class="tag">cleanup</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/prd-post-replit-code-cleanup.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">Process: [Process Name]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">process</span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/process_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Product Requirements Document: Copywriting Evaluator System</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">copywriting</span><span class="tag">evaluator</span></span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/tasks/prd-copywriting-evaluator.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Product Requirements Document: Database Table Consolidation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">database</span><span class="tag">table</span><span class="tag">consolidation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/database/prd-database-table-consolidation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Product Requirements Document: Variable Substitution System for Application Packages</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">variable</span><span class="tag">substitution</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/prd-variable-substitution-system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="architecture" data-status="active">
+                <div class="file-path">Project Architecture Guide</div>
+                <div class="file-meta">
+                    <span>📄 architecture</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">architecture</span><span class="tag">project</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/architecture/PROJECT_ARCHITECTURE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Quick Reference Checklist for Agents</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">quick</span><span class="tag">reference</span><span class="tag">checklist</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/quick-reference-checklist.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="archived">
+                <div class="file-path">Remove Replit-Specific Code and Dependencies</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">remove</span><span class="tag">replit</span><span class="tag">code</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-migration/tasks/prd-remove-replit-code.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Replit Dependency Map</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">dependency</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/dependency-map.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Replit Md Changelog</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">replit</span><span class="tag">changelog</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-md_changelog.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Research Phase Guide</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">research</span><span class="tag">phase</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/research-phase-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Resume Template Transformation Project</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">resume</span><span class="tag">template</span><span class="tag">transformation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/resume_template_transformation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="task" data-status="active">
+                <div class="file-path">Risk Assessment Matrix</div>
+                <div class="file-meta">
+                    <span>📄 task</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">risk</span><span class="tag">assessment</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/post-migration-refactoring/risk-assessment.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Scraper API and Gemini API Implementation Plan</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">scraper</span><span class="tag">gemini</span><span class="tag">implementation</span><span class="tag">plan</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/standalone_docs/scraper_gemini_implementation_plan.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="updated">
+                <div class="file-path">Security Enhancement Summary - V2.16</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 updated</span>
+                    <span><span class="tag">security</span><span class="tag">enhancement</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/standalone_docs/security_enhancement_summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="fixed">
+                <div class="file-path">Security Implementation & AI Integration Summary</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 fixed</span>
+                    <span><span class="tag">security</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/component_docs/SECURITY_AND_AI_IMPLEMENTATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Security Implementation Guide</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">security</span><span class="tag">implementation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/security/security_implementation_guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="active">
+                <div class="file-path">Security Overview</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">security</span><span class="tag">overview</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/security/security_overview.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Step-by-Step Implementation Guide - Automated Job Application System V2.16</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">step</span><span class="tag">implementation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/STEP_BY_STEP_IMPLEMENTATION_GUIDE.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="updated">
+                <div class="file-path">System Improvements Implementation Summary - V2.16</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 updated</span>
+                    <span><span class="tag">system</span><span class="tag">improvements</span><span class="tag">implementation</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/standalone_docs/SYSTEM_IMPROVEMENTS_IMPLEMENTATION_SUMMARY.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Task Execution Example: Email Validation System</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">execution</span><span class="tag">example</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/examples/email-validation/execution-example.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Task Execution Guide (Claude Code Optimized)</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">task</span><span class="tag">execution</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/task-execution-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Task Generation Guide (Claude Code Optimized)</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">task</span><span class="tag">generation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/task-generation-guide.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="completed">
+                <div class="file-path">Task List: Database Table Consolidation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 completed</span>
+                    <span><span class="tag">database</span><span class="tag">tasks</span><span class="tag">table</span><span class="tag">consolidation</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/database/tasks-prd-database-table-consolidation.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Task List: Librarian System Implementation</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">tasks</span><span class="tag">librarian</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/tasks-prd-librarian-system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Tasks: Copywriting Evaluator System Implementation</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">tasks</span><span class="tag">copywriting</span><span class="tag">evaluator</span></span>
+                    <span>📁 /workspace/.trees/librarian/archived_files/tasks/tasks-prd-copywriting-evaluator.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Tasks: Email Validation System</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">tasklist</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/examples/email-validation/tasklist_1.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="archived">
+                <div class="file-path">Tasks: Remove Replit-Specific Code and Dependencies</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">tasks</span><span class="tag">remove</span><span class="tag">replit</span><span class="tag">code</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/replit-migration/tasks/tasks-prd-remove-replit-code.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="prd" data-status="active">
+                <div class="file-path">Tasks: Variable Substitution System for Application Packages</div>
+                <div class="file-meta">
+                    <span>📄 prd</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">tasks</span><span class="tag">variable</span><span class="tag">substitution</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/tasks/tasks-prd-variable-substitution-system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="architecture">
+                <div class="file-path">Technical Design Document - Merlin Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 architecture</span>
+                    <span><span class="tag">technical</span><span class="tag">design</span><span class="tag">v2.0</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/TDD_Technical_Design_v2.0.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="ok">
+                <div class="file-path">Technical Design Document - Merlin Job Application System</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 ok</span>
+                    <span><span class="tag">technical</span><span class="tag">design</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/TDD_Technical_Design.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="reference" data-status="production">
+                <div class="file-path">Template Library System</div>
+                <div class="file-meta">
+                    <span>📄 reference</span>
+                    <span>🔖 production</span>
+                    <span><span class="tag">template</span><span class="tag">library</span><span class="tag">system</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/component_docs/document_generation/template_library_system.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Text Formatting Decision Documentation</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">text</span><span class="tag">formatting</span><span class="tag">decision</span><span class="tag">2025</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/archived_2025_07_28/text-formatting-decision-2025-09-05.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">TodoWrite-Markdown Synchronization Guide</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span><span class="tag">todowrite</span><span class="tag">markdown</span><span class="tag">sync</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/todowrite-markdown-sync.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="template" data-status="active">
+                <div class="file-path">Troubleshooting: [Problem Area]</div>
+                <div class="file-meta">
+                    <span>📄 template</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">troubleshooting</span><span class="tag">template</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/templates/troubleshooting_template.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">Verification Summary</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">verification</span><span class="tag">summary</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/migrations/verification-summary.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="guide" data-status="active">
+                <div class="file-path">Workflow Examples</div>
+                <div class="file-meta">
+                    <span>📄 guide</span>
+                    <span>🔖 active</span>
+                    <span><span class="tag">workflow</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/workflows/examples/README.md</span>
+                </div>
+            </div>
+            <div class="file-item" data-type="archived" data-status="archived">
+                <div class="file-path">✅ Replit Migration Complete</div>
+                <div class="file-meta">
+                    <span>📄 archived</span>
+                    <span>🔖 archived</span>
+                    <span><span class="tag">migration</span><span class="tag">complete</span></span>
+                    <span>📁 /workspace/.trees/librarian/docs/archived/migrations/migration-complete.md</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFilter = 'all';
+
+        function searchFiles() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const items = document.querySelectorAll('.file-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matchesSearch = text.includes(filter);
+                const matchesFilter = currentFilter === 'all' || item.dataset.type === currentFilter;
+
+                item.style.display = (matchesSearch && matchesFilter) ? 'block' : 'none';
+            });
+        }
+
+        function filterType(type) {
+            currentFilter = type;
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            searchFiles();
+        }
+    </script>
+</body>
+</html>

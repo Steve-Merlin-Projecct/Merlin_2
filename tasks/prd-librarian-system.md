@@ -1,3 +1,15 @@
+---
+title: Librarian System - Automated File Organization & Documentation Management
+status: completed
+created: '2025-10-09'
+updated: '2025-10-09'
+author: Steve-Merlin-Projecct
+type: prd
+tags:
+- librarian
+- system
+---
+
 # PRD: Librarian System - Automated File Organization & Documentation Management
 
 **Status:** 📋 Active - Ready for Implementation
