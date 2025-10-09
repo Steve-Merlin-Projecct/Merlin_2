@@ -66,7 +66,8 @@ class DocumentGenerator:
         self.csv_mapper = CSVContentMapper()
 
     def generate_document_with_csv_mapping(
-        self, data, document_type="resume", template_name=None, csv_mapping_path=None
+        self, data, document_type="resume", template_name=None, csv_mapping_path=None,
+        job_id=None, application_id=None
     ):
         """
         Generate a Word document using CSV-mapped template system
@@ -80,6 +81,8 @@ class DocumentGenerator:
             document_type (str): Type of document ('resume', 'coverletter', etc.)
             template_name (str): Optional specific template name to use
             csv_mapping_path (str): Path to CSV mapping file
+            job_id (str, optional): Job UUID for URL tracking context
+            application_id (str, optional): Application UUID for URL tracking context
 
         Returns:
             dict: File information including path, filename, size, and generation stats
@@ -100,13 +103,18 @@ class DocumentGenerator:
                 template_data = {**data, **resolved_variables}
 
                 # Generate document using mapped template
-                result = self.template_engine.generate_document(template_path=mapped_template_path, data=template_data)
+                result = self.template_engine.generate_document(
+                    template_path=mapped_template_path,
+                    data=template_data,
+                    job_id=job_id,
+                    application_id=application_id
+                )
 
                 logging.info(f"Generated document using CSV mapping: {len(resolved_variables)} variables resolved")
 
             else:
                 # Fallback to standard generation
-                result = self.generate_document(data, document_type, template_name)
+                result = self.generate_document(data, document_type, template_name, job_id=job_id, application_id=application_id)
 
             return result
 
@@ -115,7 +123,7 @@ class DocumentGenerator:
             # Fallback to standard generation
             return self.generate_document(data, document_type, template_name)
 
-    def generate_document(self, data, document_type="resume", template_name=None):
+    def generate_document(self, data, document_type="resume", template_name=None, job_id=None, application_id=None):
         """
         Generate a Word document using template-based system
 
@@ -126,6 +134,8 @@ class DocumentGenerator:
             data (dict): JSON data containing document information and variables
             document_type (str): Type of document ('resume', 'coverletter', etc.)
             template_name (str): Optional specific template name to use
+            job_id (str, optional): Job UUID for URL tracking context
+            application_id (str, optional): Application UUID for URL tracking context
 
         Returns:
             dict: File information including path, filename, size, and generation stats
@@ -141,7 +151,12 @@ class DocumentGenerator:
             template_data = {**data, **document_metadata}
 
             # Generate document using template engine
-            result = self.template_engine.generate_document(template_path=template_path, data=template_data)
+            result = self.template_engine.generate_document(
+                template_path=template_path,
+                data=template_data,
+                job_id=job_id,
+                application_id=application_id
+            )
 
             # Get the generated document path
             generated_path = result["output_path"]
