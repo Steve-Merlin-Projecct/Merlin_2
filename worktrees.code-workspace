@@ -1,0 +1,84 @@
+{
+  "folders": [
+    {
+      "name": "📦 Main Workspace",
+      "path": "."
+    },
+    {
+      "name": "🌳 analytics",
+      "path": "/workspace/.trees/analytics"
+    }
+,
+    {
+      "name": "🌳 calendly",
+      "path": "/workspace/.trees/calendly"
+    }
+,
+    {
+      "name": "🌳 claude-refinement",
+      "path": "/workspace/.trees/claude-refinement"
+    }
+,
+    {
+      "name": "🌳 dashboard-redesign",
+      "path": "/workspace/.trees/dashboard-redesign"
+    }
+,
+    {
+      "name": "🌳 database-viz",
+      "path": "/workspace/.trees/database-viz"
+    }
+,
+    {
+      "name": "🌳 docx-verification",
+      "path": "/workspace/.trees/docx-verification"
+    }
+,
+    {
+      "name": "🌳 email-refinement",
+      "path": "/workspace/.trees/email-refinement"
+    }
+,
+    {
+      "name": "🌳 gemini-prompts",
+      "path": "/workspace/.trees/gemini-prompts"
+    }
+,
+    {
+      "name": "🌳 github-streamline",
+      "path": "/workspace/.trees/github-streamline"
+    }
+,
+    {
+      "name": "🌳 librarian",
+      "path": "/workspace/.trees/librarian"
+    }
+,
+    {
+      "name": "🌳 marketing-content",
+      "path": "/workspace/.trees/marketing-content"
+    }
+,
+    {
+      "name": "🌳 script-testing",
+      "path": "/workspace/.trees/script-testing"
+    }
+,
+    {
+      "name": "🌳 template-creation",
+      "path": "/workspace/.trees/template-creation"
+    }
+,
+    {
+      "name": "🌳 worktree-manager",
+      "path": "/workspace/.trees/worktree-manager"
+    }
+  ],
+  "settings": {
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true
+    }
+  }
+}

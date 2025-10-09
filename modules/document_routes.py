@@ -64,7 +64,11 @@ def generate_resume():
         if not resume_data:
             return jsonify({"success": False, "error": "Empty payload - no resume data received"}), 400
 
-        logger.info("Resume data received, generating document...")
+        # Extract optional tracking context
+        job_id = resume_data.get("job_id")  # Optional UUID for URL tracking
+        application_id = resume_data.get("application_id")  # Optional UUID for URL tracking
+
+        logger.info(f"Resume data received (job_id={job_id}, app_id={application_id}), generating document...")
 
         # Prepare template data for document generator
         template_data = {
@@ -83,8 +87,13 @@ def generate_resume():
             "generation_date": datetime.now().strftime("%Y-%m-%d"),
         }
 
-        # Generate document using template system
-        result = doc_generator.generate_document(data=template_data, document_type="resume")
+        # Generate document using template system (with optional URL tracking context)
+        result = doc_generator.generate_document(
+            data=template_data,
+            document_type="resume",
+            job_id=job_id,
+            application_id=application_id
+        )
 
         if result.get("success"):
             logger.info(f"Resume generated successfully: {result.get('filename')}")
@@ -155,7 +164,11 @@ def generate_cover_letter():
         if not cover_letter_data:
             return jsonify({"success": False, "error": "Empty payload - no cover letter data received"}), 400
 
-        logger.info("Cover letter data received, generating document...")
+        # Extract optional tracking context
+        job_id = cover_letter_data.get("job_id")  # Optional UUID for URL tracking
+        application_id = cover_letter_data.get("application_id")  # Optional UUID for URL tracking
+
+        logger.info(f"Cover letter data received (job_id={job_id}, app_id={application_id}), generating document...")
 
         # Prepare template data for document generator
         template_data = {
@@ -176,8 +189,13 @@ def generate_cover_letter():
             "generation_date": datetime.now().strftime("%Y-%m-%d"),
         }
 
-        # Generate document using template system
-        result = doc_generator.generate_document(data=template_data, document_type="cover_letter")
+        # Generate document using template system (with optional URL tracking context)
+        result = doc_generator.generate_document(
+            data=template_data,
+            document_type="cover_letter",
+            job_id=job_id,
+            application_id=application_id
+        )
 
         if result.get("success"):
             logger.info(f"Cover letter generated successfully: {result.get('filename')}")
