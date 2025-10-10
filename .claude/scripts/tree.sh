@@ -856,20 +856,29 @@ EOF
         fi
 
         echo ""
+        print_header "Quick Command Reference"
+        echo ""
+        print_info "If slash commands don't work, use these direct commands:"
+        echo ""
+        echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+        echo "  bash /workspace/.claude/scripts/tree.sh list"
+        echo "  bash /workspace/.claude/scripts/tree.sh build"
+        echo "  bash /workspace/.claude/scripts/tree.sh status"
+        echo "  bash /workspace/.claude/scripts/tree.sh close"
+        echo "  bash /workspace/.claude/scripts/tree.sh refresh"
+        echo ""
+
+        echo ""
         print_info "Next Steps:"
         if [ -n "$TMUX" ]; then
             echo "  1. Use Ctrl+b then window number to switch between worktrees"
             echo "  2. Start working on your features"
-            echo "  3. Use direct script calls if slash commands don't work:"
-            echo "     bash /workspace/.claude/scripts/tree.sh [command]"
-            echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
+            echo "  3. When done: bash /workspace/.claude/scripts/tree.sh close"
         else
             echo "  1. Create terminals in VS Code panel (see instructions above)"
             echo "  2. CD into each worktree path"
             echo "  3. Start working on your features"
-            echo "  4. Use direct script calls if slash commands don't work:"
-            echo "     bash /workspace/.claude/scripts/tree.sh [command]"
-            echo "  5. When done: bash /workspace/.claude/scripts/tree.sh close"
+            echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
         fi
     fi
 }
