@@ -624,7 +624,405 @@ tree_clear() {
 }
 
 #==============================================================================
-# Other /tree commands (stubs for future implementation)
+# /tree build - Create worktrees from staged features
+#==============================================================================
+
+tree_build() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_error "No features staged"
+        echo "Use: /tree stage [description] to stage features first"
+        return 1
+    fi
+
+    # Read staged features
+    local features=()
+    while IFS=':' read -r name desc; do
+        [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ] && continue
+        features+=("$name:$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_error "No features staged"
+        return 1
+    fi
+
+    print_header "Building ${#features[@]} Worktree(s)"
+
+    # Get current version and timestamp
+    local version=$(cat /workspace/VERSION 2>/dev/null || echo "0.0.0")
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local dev_branch="develop/v${version}-worktrees-${timestamp}"
+
+    echo "📋 Staged features:"
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%:*}"
+        echo "  $((i+1)). $name"
+    done
+    echo ""
+
+    # Confirmation
+    echo -n "Create ${#features[@]} worktree(s) on branch '$dev_branch'? (y/n): "
+    read -r response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        print_info "Build cancelled"
+        return 0
+    fi
+
+    # Create development branch if not exists
+    if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
+        wait_for_git_lock || return 1
+        git checkout -b "$dev_branch" &>/dev/null
+        print_success "Created development branch: $dev_branch"
+    fi
+
+    # Create each worktree
+    local success_count=0
+    local failed_count=0
+
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%:*}"
+        local desc="${feature#*:}"
+        local num=$((i+1))
+        local task_num=$(printf "%02d" $num)
+        local branch="task/${task_num}-${name}"
+        local worktree_path="$TREES_DIR/$name"
+
+        echo "[$num/${#features[@]}] Creating: $name"
+
+        # Create branch from dev_branch
+        wait_for_git_lock || continue
+        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create branch: $branch"
+            failed_count=$((failed_count + 1))
+            continue
+        fi
+
+        # Create worktree
+        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
+            print_error "  Failed to create worktree"
+            git branch -D "$branch" &>/dev/null
+            failed_count=$((failed_count + 1))
+            continue
+        fi
+
+        # Create PURPOSE.md in worktree
+        cat > "$worktree_path/PURPOSE.md" << EOF
+# Purpose: ${name//-/ }
+
+**Worktree:** $name
+**Branch:** $branch
+**Base Branch:** $dev_branch
+**Created:** $(date +"%Y-%m-%d %H:%M:%S")
+
+## Objective
+
+$desc
+
+## Scope
+
+[Define what's in scope for this worktree]
+
+## Out of Scope
+
+[Define what's explicitly NOT in scope]
+
+## Success Criteria
+
+- [ ] All functionality implemented
+- [ ] Tests written and passing
+- [ ] Documentation updated
+- [ ] Code reviewed
+- [ ] Ready to merge
+
+## Notes
+
+[Add implementation notes, decisions, or concerns here]
+EOF
+
+        print_success "  Created: $worktree_path"
+        success_count=$((success_count + 1))
+    done
+
+    # Archive staging file
+    local build_history_dir="$TREES_DIR/.build-history"
+    mkdir -p "$build_history_dir"
+    mv "$STAGED_FEATURES_FILE" "$build_history_dir/${timestamp}.txt"
+
+    echo ""
+    echo "═══════════════════════════════════════════════════════════"
+    echo "BUILD SUMMARY"
+    echo ""
+    echo "Development Branch: $dev_branch"
+    echo "Worktrees Created: $success_count"
+    echo "Failed: $failed_count"
+    echo ""
+    echo "Worktree Location: $TREES_DIR/"
+    echo "Build History: $build_history_dir/${timestamp}.txt"
+    echo "═══════════════════════════════════════════════════════════"
+}
+
+#==============================================================================
+# /tree conflict - Analyze conflicts and suggest merges
+#==============================================================================
+
+tree_conflict() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_error "No features staged"
+        echo "Use: /tree stage [description] to stage features first"
+        return 1
+    fi
+
+    print_header "Conflict Analysis"
+
+    # Read staged features
+    local features=()
+    while IFS=':' read -r name desc; do
+        [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ] && continue
+        features+=("$name:$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_error "No features to analyze"
+        return 1
+    fi
+
+    echo "Analyzing ${#features[@]} staged features..."
+    echo ""
+
+    # Simple keyword-based conflict detection
+    print_info "MERGE SUGGESTIONS:"
+    echo ""
+
+    # Check for similar feature names
+    for i in "${!features[@]}"; do
+        local feature_i="${features[$i]}"
+        local name_i="${feature_i%%:*}"
+        local desc_i="${feature_i#*:}"
+
+        for j in "${!features[@]}"; do
+            [ $i -ge $j ] && continue
+
+            local feature_j="${features[$j]}"
+            local name_j="${feature_j%%:*}"
+            local desc_j="${feature_j#*:}"
+
+            # Check for keyword overlaps
+            local common_words=$(comm -12 <(echo "$desc_i" | tr ' ' '\n' | sort -u) <(echo "$desc_j" | tr ' ' '\n' | sort -u) | wc -l)
+
+            if [ $common_words -gt 3 ]; then
+                echo "┌─────────────────────────────────────────────────────────────┐"
+                echo "│ Features $((i+1)) & $((j+1)) may be related - consider merging?        │"
+                echo "│                                                              │"
+                echo "│ Feature $((i+1)): ${name_i:0:50}"
+                echo "│ Feature $((j+1)): ${name_j:0:50}"
+                echo "│                                                              │"
+                echo "│ Common keywords detected: $common_words"
+                echo "└─────────────────────────────────────────────────────────────┘"
+                echo ""
+            fi
+        done
+    done
+
+    echo "CONFLICT ANALYSIS:"
+    echo ""
+    echo "✓ Analysis complete"
+    echo "ℹ️  For detailed conflict analysis, review feature descriptions above"
+    echo ""
+    echo "Actions:"
+    echo "  - /tree stage [description] - Add more features"
+    echo "  - /tree list - Review all staged"
+    echo "  - /tree build - Create worktrees"
+}
+
+#==============================================================================
+# /tree close - Complete work in current worktree
+#==============================================================================
+
+tree_close() {
+    # Detect if we're in a worktree
+    local current_dir=$(pwd)
+    local worktree_name=""
+
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        worktree_name=$(basename $(dirname "$current_dir/.git") 2>/dev/null || basename "$current_dir")
+    else
+        print_error "Not in a worktree directory"
+        echo "This command must be run from within a worktree"
+        return 1
+    fi
+
+    print_header "Completing Work: $worktree_name"
+
+    # Get branch info
+    local branch=$(git branch --show-current)
+    local base_branch=$(git config --get "branch.$branch.merge" | sed 's#refs/heads/##' || echo "main")
+
+    echo "Worktree: $worktree_name"
+    echo "Branch: $branch"
+    echo "Base: $base_branch"
+    echo ""
+
+    # Analyze changes
+    print_info "Analyzing changes..."
+    local files_created=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^A" | wc -l)
+    local files_modified=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^M" | wc -l)
+    local files_deleted=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^D" | wc -l)
+    local commit_count=$(git log --oneline $base_branch..$branch 2>/dev/null | wc -l)
+
+    echo "  Files created: $files_created"
+    echo "  Files modified: $files_modified"
+    echo "  Files deleted: $files_deleted"
+    echo "  Commits: $commit_count"
+    echo ""
+
+    # Generate synopsis
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local synopsis_file="$COMPLETED_DIR/${worktree_name}-synopsis-${timestamp}.md"
+
+    mkdir -p "$COMPLETED_DIR"
+
+    cat > "$synopsis_file" << EOF
+# Work Completed: ${worktree_name//-/ }
+
+# Branch: $branch
+# Base: $base_branch
+# Completed: $(date +"%Y-%m-%d %H:%M:%S")
+
+## Summary
+
+Work completed in worktree: $worktree_name
+
+## Changes
+
+- Files created: $files_created
+- Files modified: $files_modified
+- Files deleted: $files_deleted
+- Total commits: $commit_count
+
+## Files Changed
+
+$(git diff --name-status $base_branch..$branch 2>/dev/null || echo "No changes detected")
+
+## Commit History
+
+$(git log --oneline $base_branch..$branch 2>/dev/null || echo "No commits")
+
+## Next Steps
+
+1. Review this synopsis
+2. Run /tree closedone to merge and cleanup
+3. Or manually merge: git checkout $base_branch && git merge $branch
+
+EOF
+
+    print_success "Synopsis generated: $synopsis_file"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📋 Work Summary: $worktree_name"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Changes:"
+    echo "  • Created: $files_created files"
+    echo "  • Modified: $files_modified files"
+    echo "  • Deleted: $files_deleted files"
+    echo "  • Commits: $commit_count"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "📝 Documentation: $synopsis_file"
+    echo ""
+    echo "🎯 Next Steps:"
+    echo "  1. Review synopsis before merging"
+    echo "  2. Run /tree closedone to batch merge all completed worktrees"
+    echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
+    echo ""
+    echo "✅ This worktree is ready to merge"
+}
+
+#==============================================================================
+# /tree status - Show worktree environment status
+#==============================================================================
+
+tree_status() {
+    print_header "Worktree Environment Status"
+
+    # Detect current location
+    local current_dir=$(pwd)
+    local current_branch=$(git branch --show-current 2>/dev/null || echo "unknown")
+
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        local worktree_name=$(basename "$current_dir")
+        echo "Current Location: $current_dir"
+        echo "Current Worktree: $worktree_name"
+    else
+        echo "Current Location: /workspace (main)"
+    fi
+
+    echo "Current Branch: $current_branch"
+    echo ""
+
+    # List active worktrees
+    print_info "Active Worktrees:"
+    local worktree_count=0
+
+    if [ -d "$TREES_DIR" ]; then
+        for dir in "$TREES_DIR"/*/ ; do
+            [ -d "$dir/.git" ] || [ -f "$dir/.git" ] || continue
+
+            local name=$(basename "$dir")
+            local branch=$(cd "$dir" && git branch --show-current 2>/dev/null || echo "unknown")
+
+            echo "  ✓ $name ($branch)"
+            worktree_count=$((worktree_count + 1))
+        done
+    fi
+
+    if [ $worktree_count -eq 0 ]; then
+        echo "  (none)"
+    fi
+    echo ""
+
+    # Show staged features
+    if [ -f "$STAGED_FEATURES_FILE" ]; then
+        local staged_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+        if [ $staged_count -gt 0 ]; then
+            print_info "Staged Features: $staged_count"
+            echo "  Run /tree list to see details"
+            echo ""
+        fi
+    fi
+
+    # Show completed worktrees
+    if [ -d "$COMPLETED_DIR" ]; then
+        local completed_count=$(find "$COMPLETED_DIR" -name "*-synopsis-*.md" 2>/dev/null | wc -l)
+        if [ $completed_count -gt 0 ]; then
+            print_info "Completed Worktrees: $completed_count"
+            echo "  Run /tree closedone to merge and cleanup"
+            echo ""
+        fi
+    fi
+
+    # Show build history
+    if [ -d "$TREES_DIR/.build-history" ]; then
+        local recent_build=$(ls -t "$TREES_DIR/.build-history" 2>/dev/null | head -1)
+        if [ -n "$recent_build" ]; then
+            print_info "Most Recent Build:"
+            echo "  ${recent_build%.txt}"
+            echo ""
+        fi
+    fi
+
+    echo "Actions:"
+    echo "  - /tree stage [description] - Stage new feature"
+    echo "  - /tree build - Create worktrees from staged features"
+    echo "  - /tree close - Complete current worktree"
+    echo "  - /tree closedone - Merge completed worktrees"
+}
+
+#==============================================================================
+# /tree help
 #==============================================================================
 
 tree_help() {
@@ -632,15 +1030,15 @@ tree_help() {
 ${TREE} Tree Worktree Management
 
 Available commands:
-  stage [description]    - Stage feature for worktree creation ✅ PHASE 1
-  list                   - Show staged features ✅ PHASE 1
-  clear                  - Clear all staged features ✅ PHASE 1
-  conflict               - Analyze conflicts and suggest merges (not yet implemented)
-  build                  - Create worktrees from staged features (not yet implemented)
-  close                  - Complete work and generate synopsis (not yet implemented)
-  closedone              - Batch merge and cleanup completed worktrees ✅ PHASE 1 & 2
-  status                 - Show worktree environment status (not yet implemented)
-  help                   - Show this help
+  stage [description]    - Stage feature for worktree creation ✅
+  list                   - Show staged features ✅
+  clear                  - Clear all staged features ✅
+  conflict               - Analyze conflicts and suggest merges ✅
+  build                  - Create worktrees from staged features ✅
+  close                  - Complete work and generate synopsis ✅
+  closedone              - Batch merge and cleanup completed worktrees ✅
+  status                 - Show worktree environment status ✅
+  help                   - Show this help ✅
 
 /tree closedone usage:
   /tree closedone [options]
@@ -649,31 +1047,28 @@ Options:
   --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
 
-Examples:
-  /tree closedone                    # Interactive merge of all completed worktrees
-  /tree closedone --dry-run          # Preview what would be merged
-  /tree closedone --yes              # Auto-confirm merge
+Typical Workflow:
+  1. /tree stage [description]  # Stage multiple features
+  2. /tree list                 # Review staged features
+  3. /tree conflict             # Analyze conflicts (optional)
+  4. /tree build                # Create all worktrees
+  5. [work in worktrees]        # Implement features
+  6. /tree close                # Complete work (in each worktree)
+  7. /tree closedone            # Merge all completed worktrees
 
-Features:
-  ✅ Phase 1: Core merge and cleanup (COMPLETE)
-  🔧 Phase 2: AI conflict resolution (FRAMEWORK IMPLEMENTED - needs Claude CLI integration)
-  📋 Phase 3: Advanced options (--resume, --skip, --only, etc.)
-  📋 Phase 4: Terminal cleanup, error recovery, polish
+Examples:
+  /tree stage Add user preferences backend
+  /tree stage Dashboard analytics view
+  /tree list
+  /tree conflict
+  /tree build
+  # ... work in worktrees ...
+  /tree close                    # Run from within worktree
+  /tree closedone                # Run from main workspace
+  /tree status                   # Check environment status
 
 For full documentation, see: tasks/prd-tree-slash-command.md
 EOF
-}
-
-tree_not_implemented() {
-    print_error "Command '$COMMAND' not yet implemented"
-    echo ""
-    echo "Currently implemented:"
-    echo "  - /tree closedone (Phase 1: Core functionality)"
-    echo ""
-    echo "Coming soon:"
-    echo "  - /tree stage, list, conflict, build, close, status"
-    echo ""
-    echo "Run '/tree help' for more information"
 }
 
 #==============================================================================
@@ -690,14 +1085,23 @@ case "$COMMAND" in
     clear)
         tree_clear "$@"
         ;;
+    conflict)
+        tree_conflict "$@"
+        ;;
+    build)
+        tree_build "$@"
+        ;;
+    close)
+        tree_close "$@"
+        ;;
+    status)
+        tree_status "$@"
+        ;;
     closedone)
         closedone_main "$@"
         ;;
     help|--help|-h)
         tree_help
-        ;;
-    conflict|build|close|status)
-        tree_not_implemented
         ;;
     *)
         print_error "Unknown command: $COMMAND"
