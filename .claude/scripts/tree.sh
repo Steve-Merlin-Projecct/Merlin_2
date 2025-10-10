@@ -1014,6 +1014,101 @@ tree_status() {
 }
 
 #==============================================================================
+# /tree refresh - Session guidance for slash command loading
+#==============================================================================
+
+tree_refresh() {
+    print_header "Slash Command Session Check"
+
+    local current_dir=$(pwd)
+    local workspace_root="/workspace"
+    local in_worktree=false
+
+    # Detect if we're in a worktree
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        in_worktree=true
+        local worktree_name=$(basename "$current_dir")
+    fi
+
+    echo "📍 Current Location:"
+    echo "   $current_dir"
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        echo "🌳 Worktree Detected: $worktree_name"
+        echo ""
+    fi
+
+    # Check if slash command files exist
+    echo "🔍 Checking Slash Command Files:"
+
+    local commands_found=0
+    local commands_missing=0
+
+    for cmd in tree task; do
+        if [ -f ".claude/commands/$cmd.md" ]; then
+            print_success "/$cmd command file exists"
+            commands_found=$((commands_found + 1))
+        else
+            print_error "/$cmd command file MISSING"
+            commands_missing=$((commands_missing + 1))
+        fi
+    done
+
+    echo ""
+
+    if [ $commands_missing -gt 0 ]; then
+        print_error "Missing command files detected!"
+        echo ""
+        echo "This worktree may be on an older commit. Consider:"
+        echo "  1. Merge latest changes from main/develop"
+        echo "  2. Cherry-pick the slash command commits"
+        echo ""
+        return 1
+    fi
+
+    # Provide session reload guidance
+    print_header "Claude Code CLI Session Guidance"
+
+    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
+    echo "   when switching between worktrees mid-session."
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        print_warning "You're in a worktree. If /tree or /task don't work:"
+        echo ""
+        echo "  Quick Fix (Recommended):"
+        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
+        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
+        echo ""
+        echo "  Permanent Fix:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Start new session FROM this worktree directory"
+        echo "    • CLI will rescan .claude/commands/ on session start"
+    else
+        print_success "You're in main workspace - slash commands should work"
+        echo ""
+        echo "  If commands still don't work:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Check .claude/commands/ directory exists"
+    fi
+
+    echo ""
+    print_header "Workaround Commands"
+    echo ""
+    echo "Instead of /tree commands, use:"
+    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+    echo "  bash /workspace/.claude/scripts/tree.sh list"
+    echo "  bash /workspace/.claude/scripts/tree.sh build"
+    echo "  bash /workspace/.claude/scripts/tree.sh close"
+    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
+    echo "  bash /workspace/.claude/scripts/tree.sh status"
+    echo ""
+
+    print_info "All functionality works identically via direct script calls"
+}
+
+#==============================================================================
 # /tree help
 #==============================================================================
 
@@ -1030,6 +1125,7 @@ Available commands:
   close                  - Complete work and generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
+  refresh                - Check slash command availability & session guidance ✅
   help                   - Show this help ✅
 
 /tree closedone usage:
@@ -1088,6 +1184,9 @@ case "$COMMAND" in
         ;;
     status)
         tree_status "$@"
+        ;;
+    refresh)
+        tree_refresh "$@"
         ;;
     closedone)
         closedone_main "$@"
