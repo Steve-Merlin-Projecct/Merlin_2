@@ -830,25 +830,39 @@ EOF
                 done < "$TREES_DIR/.pending-terminals.txt"
 
             else
-                # No tmux - provide VS Code instructions
-                print_info "Creating terminal commands for VS Code..."
+                # No tmux - automatically execute bash commands to create terminals
+                print_info "Automatically creating terminals for VS Code..."
                 echo ""
 
                 local terminal_num=1
                 while IFS= read -r worktree_path; do
                     local wt_name=$(basename "$worktree_path")
-                    print_info "  Terminal $terminal_num: $wt_name"
-                    echo "    cd $worktree_path"
-                    echo ""
+
+                    print_info "  Creating terminal $terminal_num: $wt_name"
+
+                    # Automatically spawn a bash process that opens in the worktree
+                    # This creates a background process that VS Code can detect
+                    gnome-terminal --tab --title="$wt_name" --working-directory="$worktree_path" 2>/dev/null || \
+                    xterm -T "$wt_name" -e "cd $worktree_path && bash" 2>/dev/null || \
+                    osascript -e "tell application \"Terminal\" to do script \"cd $worktree_path\"" 2>/dev/null || \
+                    (
+                        # Fallback: Create a screen session for this worktree
+                        if command -v screen &> /dev/null; then
+                            screen -dmS "$wt_name" bash -c "cd $worktree_path && exec bash"
+                            echo "    Created screen session: $wt_name"
+                        else
+                            # Final fallback: Just show the command
+                            echo "    Run in terminal: cd $worktree_path"
+                        fi
+                    )
+
                     terminal_num=$((terminal_num + 1))
+                    sleep 0.2
                 done < "$TREES_DIR/.pending-terminals.txt"
 
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-                print_info "To create terminals in VS Code:"
-                echo "  1. Press Ctrl+Shift+\` (or Cmd+Shift+\`) to create new terminal"
-                echo "  2. Copy/paste the cd command above"
-                echo "  3. Repeat for each worktree"
-                echo "  4. Use dropdown in terminal panel to switch between them"
+                echo ""
+                print_success "Attempted to create $((terminal_num - 1)) terminals automatically"
+                print_info "If terminals didn't open, check your terminal emulator settings"
             fi
 
             # Clean up pending terminals file
