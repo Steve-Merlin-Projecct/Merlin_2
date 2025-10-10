@@ -691,18 +691,10 @@ tree_build() {
 
         echo "[$num/${#features[@]}] Creating: $name"
 
-        # Create branch from dev_branch
+        # Create worktree with new branch in one command
         wait_for_git_lock || continue
-        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create branch: $branch"
-            failed_count=$((failed_count + 1))
-            continue
-        fi
-
-        # Create worktree
-        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
-            print_error "  Failed to create worktree"
-            git branch -D "$branch" &>/dev/null
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create worktree with branch: $branch"
             failed_count=$((failed_count + 1))
             continue
         fi
