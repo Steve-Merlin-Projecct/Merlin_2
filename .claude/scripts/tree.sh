@@ -753,6 +753,44 @@ EOF
     echo "Worktree Location: $TREES_DIR/"
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
+
+    # Run refresh check for each created worktree to inform about CLI limitation
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Worktree Session Information"
+
+        echo "ℹ️  Running /tree refresh check for each worktree..."
+        echo "   This will help you understand slash command availability."
+        echo ""
+
+        for i in "${!features[@]}"; do
+            local feature="${features[$i]}"
+            local name="${feature%%:*}"
+            local worktree_path="$TREES_DIR/$name"
+
+            # Only run for successfully created worktrees
+            if [ -d "$worktree_path" ]; then
+                echo ""
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                echo "Worktree: $name"
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+                # Change to worktree and run refresh
+                (cd "$worktree_path" && bash /workspace/.claude/scripts/tree.sh refresh)
+            fi
+        done
+
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        print_success "All worktrees created and session information displayed"
+        echo ""
+        print_info "Next Steps:"
+        echo "  1. Navigate to a worktree: cd $TREES_DIR/[worktree-name]"
+        echo "  2. Start working on your feature"
+        echo "  3. Use direct script calls if slash commands don't work:"
+        echo "     bash /workspace/.claude/scripts/tree.sh [command]"
+        echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
+    fi
 }
 
 #==============================================================================
