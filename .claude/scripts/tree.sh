@@ -729,6 +729,10 @@ EOF
 
         print_success "  Created: $worktree_path"
         success_count=$((success_count + 1))
+
+        # Create integrated terminal for this worktree
+        # Store worktree info for terminal creation after all worktrees are built
+        echo "$worktree_path" >> "$TREES_DIR/.pending-terminals.txt"
     done
 
     # Archive staging file
@@ -777,13 +781,56 @@ EOF
         echo ""
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         print_success "All worktrees created and session information displayed"
+
+        # Create integrated terminals for each worktree
+        echo ""
+        print_header "Opening Integrated Terminals"
+
+        if [ -f "$TREES_DIR/.pending-terminals.txt" ]; then
+            if command -v code &> /dev/null; then
+                print_info "Opening VS Code terminals for each worktree..."
+
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+                    print_info "  Opening terminal: $wt_name"
+
+                    # Open folder in new VS Code window with integrated terminal
+                    code "$worktree_path" &
+                    sleep 0.5  # Small delay to prevent overwhelming VS Code
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+                print_success "VS Code windows opened for all worktrees"
+                echo ""
+                print_info "Each worktree has been opened in VS Code"
+                print_info "Integrated terminals will be available in each window"
+
+            elif command -v tmux &> /dev/null; then
+                print_info "Creating tmux windows for each worktree..."
+
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+                    tmux new-window -n "$wt_name" -c "$worktree_path" 2>/dev/null && \
+                        print_success "  Created tmux window: $wt_name" || \
+                        print_warning "  Tmux window creation skipped (not in tmux session)"
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+            else
+                print_warning "No supported terminal multiplexer found (VS Code or tmux)"
+                echo "  Worktrees created but terminals must be opened manually"
+            fi
+
+            # Clean up pending terminals file
+            rm -f "$TREES_DIR/.pending-terminals.txt"
+        fi
+
         echo ""
         print_info "Next Steps:"
-        echo "  1. Navigate to a worktree: cd $TREES_DIR/[worktree-name]"
-        echo "  2. Start working on your feature"
-        echo "  3. Use direct script calls if slash commands don't work:"
+        echo "  1. Switch to a worktree VS Code window"
+        echo "  2. Open integrated terminal (Ctrl+\` or Terminal > New Terminal)"
+        echo "  3. Start working on your feature"
+        echo "  4. Use direct script calls if slash commands don't work:"
         echo "     bash /workspace/.claude/scripts/tree.sh [command]"
-        echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
+        echo "  5. When done: bash /workspace/.claude/scripts/tree.sh close"
     fi
 }
 
