@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs - Dashboard V2</title>
+    <link rel="stylesheet" href="/static/css/dashboard_v2.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="dashboard-bg" x-data="jobsPage()" x-init="init()">
+
+    <div class="container">
+
+        <!-- Navigation -->
+        <nav style="margin-bottom: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); backdrop-filter: blur(10px);">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="/dashboard" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📊 Dashboard
+                </a>
+                <a href="/dashboard/jobs" style="color: var(--color-cyan); text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-sm); background: rgba(0, 217, 255, 0.1);">
+                    💼 Jobs
+                </a>
+                <a href="/dashboard/applications" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📝 Applications
+                </a>
+                <a href="/dashboard/analytics" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📈 Analytics
+                </a>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Job Listings</h1>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Browse and filter discovered jobs</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <select x-model="filter" @change="loadJobs()" class="btn btn-secondary">
+                    <option value="all">All Jobs</option>
+                    <option value="eligible">Eligible</option>
+                    <option value="not_eligible">Not Eligible</option>
+                    <option value="applied">Already Applied</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Jobs Grid -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+            <template x-for="job in jobs" :key="job.id">
+                <div class="glass-card" style="padding: 1.5rem;">
+                    <!-- Job Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 class="gradient-text-cyan" style="font-size: 1.25rem; margin-bottom: 0.5rem;" x-text="job.title"></h3>
+                            <p style="color: var(--color-text-secondary); font-size: 0.875rem;" x-text="job.company"></p>
+                        </div>
+                        <span class="metric-trend"
+                              :class="job.eligible ? 'positive' : 'negative'"
+                              x-text="job.eligible ? '✅ Eligible' : '❌ Not Eligible'"></span>
+                    </div>
+
+                    <!-- Job Details -->
+                    <div style="margin-bottom: 1rem; color: var(--color-text-secondary); font-size: 0.875rem;">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+                            <span>📍 <span x-text="job.location"></span></span>
+                            <span>💰 <span x-text="job.salary"></span></span>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <span>🏢 <span x-text="job.type"></span></span>
+                            <span>⏰ <span x-text="job.posted"></span></span>
+                        </div>
+                    </div>
+
+                    <!-- Job Description Preview -->
+                    <p style="color: var(--color-text-tertiary); font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;" x-text="job.description"></p>
+
+                    <!-- Actions -->
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" style="flex: 1; font-size: 0.875rem;">
+                            View Details
+                        </button>
+                        <button class="btn btn-secondary" style="font-size: 0.875rem;" x-show="job.eligible && !job.applied">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="jobs.length === 0" class="glass-card" style="text-align: center; padding: 4rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
+            <h3 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 0.5rem;">No jobs found</h3>
+            <p style="color: var(--color-text-secondary);">Try adjusting your filters or wait for new jobs to be scraped</p>
+        </div>
+
+    </div>
+
+    <script>
+        function jobsPage() {
+            return {
+                jobs: [],
+                filter: 'all',
+                loading: false,
+
+                async init() {
+                    await this.loadJobs();
+                },
+
+                async loadJobs() {
+                    this.loading = true;
+                    // Mock data for now
+                    this.jobs = [
+                        {
+                            id: '1',
+                            title: 'Senior Full Stack Developer',
+                            company: 'TechCorp Inc',
+                            location: 'Remote',
+                            salary: '$120k - $180k',
+                            type: 'Full-time',
+                            posted: '2 days ago',
+                            description: 'Build scalable web applications using React, Node.js, and PostgreSQL. Lead technical decisions and mentor junior developers.',
+                            eligible: true,
+                            applied: false
+                        },
+                        {
+                            id: '2',
+                            title: 'Python Backend Engineer',
+                            company: 'DataFlow Systems',
+                            location: 'San Francisco, CA',
+                            salary: '$140k - $200k',
+                            type: 'Full-time',
+                            posted: '1 day ago',
+                            description: 'Design and implement high-performance backend services. Work with FastAPI, PostgreSQL, and Redis.',
+                            eligible: true,
+                            applied: false
+                        },
+                        {
+                            id: '3',
+                            title: 'AI/ML Software Engineer',
+                            company: 'Neural Networks Ltd',
+                            location: 'Remote',
+                            salary: '$150k - $220k',
+                            type: 'Full-time',
+                            posted: '3 hours ago',
+                            description: 'Build and deploy machine learning models. Experience with PyTorch, TensorFlow, and production ML systems required.',
+                            eligible: true,
+                            applied: false
+                        },
+                        {
+                            id: '4',
+                            title: 'Junior Frontend Developer',
+                            company: 'StartupXYZ',
+                            location: 'New York, NY',
+                            salary: '$60k - $80k',
+                            type: 'Full-time',
+                            posted: '1 week ago',
+                            description: 'Entry level position for recent graduates. Must know React basics.',
+                            eligible: false,
+                            applied: false
+                        },
+                        {
+                            id: '5',
+                            title: 'DevOps Engineer',
+                            company: 'CloudScale',
+                            location: 'Remote',
+                            salary: '$130k - $190k',
+                            type: 'Full-time',
+                            posted: '5 days ago',
+                            description: 'Manage cloud infrastructure on AWS/GCP. Kubernetes, Terraform, and CI/CD expertise required.',
+                            eligible: true,
+                            applied: false
+                        },
+                        {
+                            id: '6',
+                            title: 'Staff Software Engineer',
+                            company: 'Innovation Hub',
+                            location: 'Seattle, WA',
+                            salary: '$180k - $250k',
+                            type: 'Full-time',
+                            posted: '4 days ago',
+                            description: 'Lead complex technical initiatives. Architect scalable systems and drive engineering excellence.',
+                            eligible: true,
+                            applied: true
+                        }
+                    ];
+
+                    // Apply filter
+                    if (this.filter === 'eligible') {
+                        this.jobs = this.jobs.filter(j => j.eligible && !j.applied);
+                    } else if (this.filter === 'not_eligible') {
+                        this.jobs = this.jobs.filter(j => !j.eligible);
+                    } else if (this.filter === 'applied') {
+                        this.jobs = this.jobs.filter(j => j.applied);
+                    }
+
+                    this.loading = false;
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,588 @@
+/**
+ * Dashboard V2 - Beautiful Modern CSS
+ * Cyberpunk/Modern aesthetic with glass morphism and smooth animations
+ * No framework needed - pure custom CSS for unique design
+ */
+
+/* ============================================================
+   RESET & BASE STYLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ============================================================ */
+
+:root {
+    /* Color Palette - Cyberpunk/Modern Dark */
+    --color-bg-primary: #0a0e27;
+    --color-bg-secondary: #10162f;
+    --color-bg-card: #1a1f3a;
+    --color-bg-elevated: #252b4a;
+
+    /* Accent Colors */
+    --color-cyan: #00d9ff;
+    --color-purple: #b24bf3;
+    --color-pink: #ff2e97;
+    --color-green: #00ff88;
+    --color-orange: #ff9500;
+
+    /* Status Colors */
+    --color-success: #00ff88;
+    --color-warning: #ff9500;
+    --color-danger: #ff2e97;
+    --color-info: #00d9ff;
+
+    /* Text Colors */
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a0a8c0;
+    --color-text-tertiary: #6b7280;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-cyan: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-green: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+
+    /* Shadows & Glows */
+    --glow-cyan: 0 0 20px rgba(0, 217, 255, 0.5);
+    --glow-purple: 0 0 20px rgba(178, 75, 243, 0.5);
+    --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+    --shadow-card: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --shadow-elevated: 0 12px 48px 0 rgba(31, 38, 135, 0.5);
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Fira Code', 'Courier New', monospace;
+}
+
+/* ============================================================
+   BODY & BACKGROUND
+   ============================================================ */
+
+body {
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Animated gradient background */
+.dashboard-bg {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        var(--color-bg-primary);
+    background-size: 200% 200%;
+    animation: gradient-shift 20s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ============================================================
+   GLASS MORPHISM CARD
+   ============================================================ */
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: var(--glow-cyan), var(--shadow-elevated);
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   METRIC CARDS
+   ============================================================ */
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-cyan);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.metric-card:hover {
+    border-color: var(--color-cyan);
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-4px);
+}
+
+.metric-card:hover::before {
+    opacity: 1;
+}
+
+.metric-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+    filter: drop-shadow(0 0 10px currentColor);
+}
+
+.metric-value {
+    font-size: 3rem;
+    font-weight: 700;
+    background: var(--gradient-cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: var(--font-mono);
+    line-height: 1;
+    margin: var(--spacing-sm) 0;
+    animation: count-up 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes count-up {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.metric-label {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: var(--spacing-xs);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+}
+
+.metric-trend.positive {
+    color: var(--color-success);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.metric-trend.negative {
+    color: var(--color-danger);
+    background: rgba(255, 46, 151, 0.1);
+}
+
+.metric-trend.neutral {
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================================
+   PIPELINE VISUALIZATION
+   ============================================================ */
+
+.pipeline-container {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+.pipeline-stages {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.pipeline-stage {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.pipeline-stage::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(0, 217, 255, 0.2),
+        transparent
+    );
+    animation: flow 3s linear infinite;
+}
+
+@keyframes flow {
+    to { left: 100%; }
+}
+
+.pipeline-stage:hover {
+    border-color: var(--color-cyan);
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-2px);
+}
+
+.pipeline-stage.active::after {
+    animation-duration: 2s;
+}
+
+.stage-name {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stage-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+}
+
+/* ============================================================
+   ACTIVITY FEED
+   ============================================================ */
+
+.activity-feed {
+    padding: var(--spacing-lg);
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.activity-item {
+    display: flex;
+    align-items: start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slide-in 0.4s ease forwards;
+    transition: all var(--transition-fast);
+}
+
+.activity-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 217, 255, 0.3);
+}
+
+@keyframes slide-in {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.activity-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-message {
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.activity-time {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+}
+
+/* Custom scrollbar for activity feed */
+.activity-feed::-webkit-scrollbar {
+    width: 6px;
+}
+
+.activity-feed::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.activity-feed::-webkit-scrollbar-thumb {
+    background: rgba(0, 217, 255, 0.3);
+    border-radius: 3px;
+}
+
+.activity-feed::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 217, 255, 0.5);
+}
+
+/* ============================================================
+   GRADIENT TEXT
+   ============================================================ */
+
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+.gradient-text-cyan {
+    background: var(--gradient-cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gradient-text-green {
+    background: var(--gradient-green);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--gradient-cyan);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-cyan);
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--gradient-cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--color-success);
+}
+
+.live-indicator::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--color-success);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--color-success);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pipeline-stages {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .metric-value {
+        font-size: 2.5rem;
+    }
+
+    .container {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* ============================================================
+   LOADING STATES
+   ============================================================ */
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
+.text-info { color: var(--color-info); }
+
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
