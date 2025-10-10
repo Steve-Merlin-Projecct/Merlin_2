@@ -660,14 +660,8 @@ tree_build() {
         echo "  $((i+1)). $name"
     done
     echo ""
-
-    # Confirmation
-    echo -n "Create ${#features[@]} worktree(s) on branch '$dev_branch'? (y/n): "
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        print_info "Build cancelled"
-        return 0
-    fi
+    echo "Development Branch: $dev_branch"
+    echo ""
 
     # Create development branch if not exists
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
