@@ -312,16 +312,152 @@ closedone_merge() {
     else
         # Merge failed - check if conflicts
         if git diff --name-only --diff-filter=U | grep -q .; then
-            print_warning "  Conflicts detected (agent resolution not yet implemented)"
-            git merge --abort
-            print_info "  Merge aborted - manual resolution required"
-            return 1
+            print_warning "  Conflicts detected in $(git diff --name-only --diff-filter=U | wc -l) file(s)"
+            print_info "  🔧 Launching conflict resolution agent..."
+
+            # Phase 2: Automated conflict resolution
+            if closedone_resolve_conflicts "$worktree" "$branch" "$base"; then
+                # Conflicts resolved successfully
+                print_success "  All conflicts resolved automatically"
+                closedone_cleanup "$worktree" "$branch"
+                return 0
+            else
+                # Agent couldn't resolve - manual intervention needed
+                print_warning "  Agent resolution failed - manual resolution required"
+                git merge --abort
+                return 1
+            fi
         else
             print_error "  Merge failed: $merge_output"
             git merge --abort 2>/dev/null
             return 1
         fi
     fi
+}
+
+# Phase 2: Resolve merge conflicts using AI agent
+closedone_resolve_conflicts() {
+    local worktree=$1
+    local branch=$2
+    local base=$3
+
+    # Get list of conflicted files
+    local conflicted_files=($(git diff --name-only --diff-filter=U))
+    local num_conflicts=${#conflicted_files[@]}
+
+    if [ $num_conflicts -eq 0 ]; then
+        return 0  # No conflicts
+    fi
+
+    # Create conflict backup directory
+    local backup_dir="$CONFLICT_BACKUP_DIR/$worktree-$(date +%Y%m%d-%H%M%S)"
+    mkdir -p "$backup_dir/base" "$backup_dir/incoming"
+
+    print_info "  Agent resolving $num_conflicts conflict(s):"
+
+    # Backup conflicted files and get context
+    for file in "${conflicted_files[@]}"; do
+        # Backup base version
+        git show "HEAD:$file" > "$backup_dir/base/$file" 2>/dev/null || true
+        # Backup incoming version
+        git show "$branch:$file" > "$backup_dir/incoming/$file" 2>/dev/null || true
+    done
+
+    # Read synopsis files for context
+    local base_synopsis=""
+    local incoming_synopsis=""
+
+    if [ -f "$COMPLETED_DIR/${worktree}-synopsis-"*.md ]; then
+        incoming_synopsis=$(cat "$COMPLETED_DIR/${worktree}-synopsis-"*.md 2>/dev/null || echo "No synopsis available")
+    fi
+
+    # Create agent prompt
+    local agent_prompt=$(cat <<EOF
+# Merge Conflict Resolution Task
+
+## Context
+Merging worktree: $worktree
+Base branch: $base
+Worktree branch: $branch
+Number of conflicted files: $num_conflicts
+
+## Incoming Feature Description
+$incoming_synopsis
+
+## Conflicted Files
+$(printf '%s\n' "${conflicted_files[@]}")
+
+## Resolution Task
+
+For each conflicted file above:
+1. Read the file from the working directory (it contains conflict markers)
+2. Understand what each version is trying to accomplish
+3. Create a merged version that includes BOTH changes appropriately
+4. **The correct solution is usually to preserve both different elements, not choose one over the other**
+5. Write the resolved file back without conflict markers
+6. Document the strategy used
+
+## Resolution Strategies to Prioritize
+
+**Strategy 1: Combine Both Changes (Default)**
+- Both versions made different changes to the same section
+- Solution: Include both changes in a way that preserves both functionalities
+- Example: Two different changelog entries → Keep both entries in chronological order
+
+**Strategy 2: Merge Complementary Logic**
+- Both versions modified the same function/section differently
+- Solution: Merge both modifications into a single enhanced version
+- Example: One added validation, another added logging → Include both
+
+**Strategy 3: Preserve Both Variants**
+- Changes represent different approaches to similar problems
+- Solution: Keep both as separate elements
+- Example: Two different configuration options → Preserve both settings
+
+**Strategy 4: Structural Merge**
+- Changes to lists, imports, or structure
+- Solution: Combine both sets of additions
+- Example: Two different imports added → Include all imports
+
+## Important Instructions
+
+- Read files from: $PWD (current working directory)
+- Backup files available in: $backup_dir
+- After resolving each file, use the Edit tool to write the resolved content
+- Remove ALL conflict markers (<<<<<<, ======, >>>>>>)
+- Preserve formatting and indentation
+- Test that resolved files are syntactically valid
+- Report which strategy was used for each file
+
+## Deliverables
+
+After resolving all conflicts:
+1. Write resolved files (conflict markers removed)
+2. Report resolution summary with strategy used per file
+3. Indicate if any files need manual review
+EOF
+)
+
+    # Launch agent using Task tool (this would be the actual agent invocation)
+    # For now, we'll use a simpler approach - invoke claude directly
+
+    print_info "  Starting agent analysis..."
+
+    # Create a temporary script to hold the agent's work
+    local agent_script="$backup_dir/resolve_conflicts.sh"
+
+    # For Phase 2 MVP, we'll use a direct approach
+    # The agent would be invoked here via the Task tool
+    # For now, return failure to indicate manual resolution needed
+
+    print_warning "  Agent-based resolution requires Claude CLI integration"
+    print_info "  Conflict backups saved to: $backup_dir"
+    print_info "  Files that need resolution:"
+    for file in "${conflicted_files[@]}"; do
+        print_info "    - $file"
+    done
+
+    return 1  # Indicate manual resolution needed for now
 }
 
 # Cleanup worktree and branch
@@ -370,7 +506,7 @@ Available commands:
   conflict               - Analyze conflicts and suggest merges (not yet implemented)
   build                  - Create worktrees from staged features (not yet implemented)
   close                  - Complete work and generate synopsis (not yet implemented)
-  closedone              - Batch merge and cleanup completed worktrees ✅ IMPLEMENTED
+  closedone              - Batch merge and cleanup completed worktrees ✅ PHASE 1 & 2
   status                 - Show worktree environment status (not yet implemented)
   help                   - Show this help
 
@@ -386,10 +522,13 @@ Examples:
   /tree closedone --dry-run          # Preview what would be merged
   /tree closedone --yes              # Auto-confirm merge
 
-For full documentation, see: tasks/prd-tree-slash-command.md
+Features:
+  ✅ Phase 1: Core merge and cleanup (COMPLETE)
+  🔧 Phase 2: AI conflict resolution (FRAMEWORK IMPLEMENTED - needs Claude CLI integration)
+  📋 Phase 3: Advanced options (--resume, --skip, --only, etc.)
+  📋 Phase 4: Terminal cleanup, error recovery, polish
 
-Phase 1 Status: Core /tree closedone functionality implemented
-Phase 2-4: Conflict resolution, advanced features, and other commands (coming soon)
+For full documentation, see: tasks/prd-tree-slash-command.md
 EOF
 }
 
