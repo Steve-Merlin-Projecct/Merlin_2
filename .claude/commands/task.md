@@ -1,107 +1,257 @@
 ---
-description: Start the 3-phase task workflow (PRD → Tasks → Execution)
+description: Start the 4-phase task workflow (Discovery -> PRD → Tasks → Execution)
 ---
 
-You are about to begin the Automated Task Workflow for implementing a new feature or solving a problem.
+# /task Command - Hybrid Workflow System
 
+## Command Syntax
+
+```
+/task [template] [instructions]
+```
+
+**Usage patterns:**
+- `/task` - Interactive prompt for task description
+- `/task [instructions]` - Direct task with default workflow
+- `/task go [instructions]` - High-velocity workflow (autonomous)
+- `/task slow [instructions]` - Methodical workflow (with user checkpoints)
+- `/task communicate [instructions]` - Human-friendly documentation
+- `/task analyze [instructions]` - Analysis without implementation
+- `/task research [instructions]` - Research and evaluation
+
+---
+
+## Template Selection
+
+### Default Workflow (No Template)
+**When to use:** Standard feature implementation
+
+**Workflow:**
+1. Research phase (automatic)
+2. PRD creation 
+3. Task generation 
+4. Execution
+
+**References:**
+- Discovery: `/.claude/templates/discovery/standard.mdc`
+- PRD: `/.claude/templates/task-phases/create-prd.mdc`
+- Tasks: `/.claude/templates/task-phases/generate-tasks.mdc`
+- Execution: `/.claude/templates/task-phases/process-tasks.mdc`
+
+---
+
+### `go` - Autonomous Workflow (Minimize User Time)
+**When to use:** User wants to minimize interruptions and work on other things
+
+**Philosophy:** User's time is precious. Take whatever time needed for thorough work. Goal is to minimize user involvement, NOT to rush.
+
+**Workflow:**
+1. **Discovery (Thorough & Autonomous):** `/.claude/templates/discovery/standard.mdc`
+   - Deep research and thinking
+   - Avoid asking questions - use best judgment
+   - Only ask if absolutely critical
+
+2. **PRD & Task Generation (Autonomous):** `/.claude/templates/task-phases/create-prd.mdc` + `/.claude/templates/task-phases/generate-tasks.mdc`
+   - Generate parent + sub-tasks immediately (no "Go" checkpoint)
+   - No user review required
+
+3. **Implementation (Continuous):** `/.claude/templates/task-phases/process-tasks.mdc`
+   - Execute all sub-tasks autonomously
+   - No approval between sub-tasks
+   - On errors/blockers find workarounds
+
+**Workflow guide:** `/.claude/workflows/go-autonomous.mdc`
+
+**Communication style:**
+- Minimal status updates
+- Focus on action over explanation
+- Report only when complete or blocked
+
+---
+
+### `slow` - Methodical Workflow
+**When to use:** Complex tasks, user wants involvement in decisions
+
+**Workflow:**
+1. **Discovery (Thorough):** `/.claude/templates/discovery/thorough.mdc`
+   - Comprehensive search and analysis
+   - Detailed clarifying questions
+   - Multiple user review checkpoints:
+     - Initial understanding confirmation
+     - Discovery findings review
+     - Question responses
+     - Discovery summary approval
+
+2. **PRD Creation (Collaborative):** `/.claude/templates/task-phases/create-prd.mdc`
+   - Generate PRD
+   - User reviews entire PRD
+   - Wait for approval
+
+3. **Task Generation (Reviewed):** `/.claude/templates/task-phases/generate-tasks.mdc`
+   - Generate parent tasks → user review
+   - Generate sub-tasks → user review entire task list
+   - Wait for approval to proceed
+
+4. **Implementation (Controlled):** `/.claude/templates/task-phases/process-tasks.mdc`
+   - Execute ONE sub-task at a time
+   - Pause after EACH sub-task for approval
+   - Wait for commit approval after each parent task
+
+**Workflow guide:** `/.claude/workflows/slow-methodical.mdc`
+
+**Communication style:**
+- Detailed explanations
+- Transparent decision-making
+- Educational and collaborative
+- Patient pacing
+
+---
+
+### `communicate` - Human-Friendly Documentation
+**When to use:** Creating reports, summaries, retrospectives for humans
+
+**Purpose:** Generate engaging, narrative-driven documentation with personality
+
+**Template guide:** `/.claude/templates/output-types/communicate.mdc`
+
+**Output:**
+- Story-driven narrative (not dry facts)
+- Emotional authenticity and personality
+- Visual elements (charts, progress bars, timelines)
+- Emojis and conversational tone
+- Before/after comparisons
+- Celebrates wins and acknowledges challenges
+
+**Examples:**
+- Project status reports for stakeholders
+- Sprint retrospectives
+- Development journey documentation
+- Milestone celebrations
+- Non-technical summaries
+
+**No implementation - documentation only**
+
+---
+
+### `analyze` - Deep Analysis Without Implementation
+**When to use:** Understanding, evaluating, recommending (no coding)
+
+**Purpose:** Comprehensive analysis with recommendations
+
+**Template guide:** `/.claude/templates/output-types/analyze.mdc`
+
+**Output:**
+- Current state documentation
+- Findings (strengths, weaknesses, opportunities, risks)
+- Detailed analysis with evidence
+- Comparative analysis
+- Actionable recommendations
+- Implementation roadmap (if extensive)
+
+**Analysis types:**
+- Performance analysis
+- Security review
+- Architecture assessment
+- Code quality evaluation
+
+**No implementation - analysis only**
+
+---
+
+### `research` - Technology Evaluation & Investigation
+**When to use:** Evaluating technologies, comparing options, feasibility studies
+
+**Purpose:** Comprehensive research with evidence-based recommendations
+
+**Template guide:** `/.claude/templates/output-types/research.mdc`
+
+**Output:**
+- Executive summary
+- Options evaluated (comprehensive pros/cons)
+- Side-by-side comparison
+- Real-world usage examples
+- Risk assessment
+- Implementation considerations
+- Clear recommendations with justification
+- Cited sources
+
+**Research types:**
+- Library/framework comparison
+- Best practices investigation
+- Feasibility studies
+- Technology evaluation
+
+**No implementation - research only**
+
+---
+
+## Execution Instructions
+
+### For Default Workflow:
 **Your task:** {{TASK_DESCRIPTION}}
 
----
+Follow the standard 3-phase workflow:
 
-## Phase 0: Research (Automatic)
+**Phase 0: Research**
+1. Determine research depth (Level 1/2/3)
+2. Execute time-boxed research (2/5/15 min max)
+3. Document findings
+4. Present Options A/B/C
 
-Follow the [Research Phase Guide](/workspace/.trees/task-guiding-docs/docs/workflows/research-phase-guide.md).
 
-**Steps:**
-1. Determine research depth (Level 1/2/3 based on task complexity)
-2. Execute time-boxed research (2/5/15 minutes max)
-3. Document findings in `/tasks/[feature-name]/research.md` (or `/tasks/research-[timestamp].md` if name unclear)
-4. Present **Options A/B/C** based on findings
-5. Wait for user to select approach
-6. Use research + chosen approach to inform clarifying questions
+**Phase 1: Create PRD**
+1. Ask clarifying questions if needed
+2. Generate PRD following template
+3. Save to `/tasks/[feature-name]/prd.md`
 
-**Remember:**
-- Research is automatic, not optional
-- Time-boxed: stop when limit reached or sufficient info gathered
-- Always present options as A/B/C for easy selection
-- Research informs better clarifying questions
 
----
+**Phase 2: Generate Tasks**
+1. Create parent tasks (4-7 tasks)
+2. Generate sub-tasks (3-8 per parent)
+3. Include Documentation parent task (REQUIRED)
+4. Save to `/tasks/[feature-name]/tasklist_1.md`
 
-## Phase 1: Create PRD (After Research)
 
-Follow the [PRD Generation Guide](/workspace/.trees/task-guiding-docs/docs/workflows/prd-generation-guide.md).
-
-**Steps:**
-1. Acknowledge this as a task request
-2. Create directory: `/tasks/[feature-name]/`
-3. Ask clarifying questions (use lettered/numbered lists for easy response)
-4. Wait for user responses
-5. Generate comprehensive PRD following the template
-6. Save to `/tasks/[feature-name]/prd.md`
-7. Ask: "Would you like me to proceed with Phase 2: Task Generation?"
-8. Wait for approval
-
-**Remember:**
-- Ask questions about: problem, goals, user stories, acceptance criteria, scope, data requirements, technical constraints
-- Provide multiple-choice options where possible
-- Use the PRD template structure from the guide
+**Phase 3: Execute**
+- One sub-task at a time
+- TodoWrite + markdown sync
+- Test, document, commit after each parent task
 
 ---
 
-## Phase 2: Generate Tasks (After PRD Approval)
+### For Template-Based Workflows:
 
-Follow the [Task Generation Guide](/workspace/.trees/task-guiding-docs/docs/workflows/task-generation-guide.md).
+**Detected template:** `[TEMPLATE_NAME]`
+**Task instructions:** {{TASK_DESCRIPTION}}
 
-**Steps:**
-1. Analyze PRD functional requirements
-2. Create 4-7 high-level parent tasks
-3. **ALWAYS include Documentation parent task (REQUIRED)**
-4. Break each parent into 3-8 sub-tasks
-5. Identify all relevant files (implementation + tests)
-6. Create TodoWrite entries for all tasks
-7. Save to `/tasks/[feature-name]/tasklist_1.md`
-8. Ask: "Would you like me to proceed with Phase 3: Task Execution?"
-9. Wait for approval
-
-**Remember:**
-- Documentation parent task is REQUIRED
-- Follow common parent task patterns (Setup, Core, Testing, Documentation, etc.)
-- Each sub-task should be 15-60 minutes of work
-
----
-
-## Phase 3: Execute Tasks (After Task List Approval)
-
-Follow the [Task Execution Guide](/workspace/.trees/task-guiding-docs/docs/workflows/task-execution-guide.md).
-
-**For each sub-task:**
-1. Mark as `in_progress` in TodoWrite AND markdown (same response)
-2. Execute the work with comprehensive inline documentation
-3. Mark as `completed` in TodoWrite AND markdown (same response)
-
-**When all sub-tasks in parent are done:**
-1. Run full test suite
-2. Create/update component documentation
-3. Update master changelog
-4. Commit with conventional format
-5. Update version in CLAUDE.md
-6. Mark parent as `completed` in TodoWrite AND markdown
-
-**Remember:**
-- Only ONE task `in_progress` at a time
-- Update TodoWrite and markdown in SAME response (never separately)
-- See [TodoWrite-Markdown Sync Guide](/workspace/.trees/task-guiding-docs/docs/workflows/todowrite-markdown-sync.md)
+**Action:**
+1. Load template guide from `/.claude/templates/output-types/[TEMPLATE_NAME].mdc`
+2. Follow template-specific workflow
+3. Apply template-specific communication style
+4. Produce template-specific output format
 
 ---
 
 ## Quick Reference
 
+**Guides:**
 - [Quick Reference Checklist](/workspace/.trees/task-guiding-docs/docs/workflows/quick-reference-checklist.md)
 - [Documentation Requirements](/workspace/.trees/task-guiding-docs/docs/workflows/documentation-requirements.md)
 - [Complete Workflow Guide](/workspace/.trees/task-guiding-docs/docs/workflows/automated-task-workflow.md)
-- [Example: Email Validation](/workspace/.trees/task-guiding-docs/docs/workflows/examples/email-validation/)
+- [TodoWrite-Markdown Sync](/workspace/.trees/task-guiding-docs/docs/workflows/todowrite-markdown-sync.md)
+
+**Templates:**
+- Discovery (standard): `/.claude/templates/discovery/standard.mdc`
+- Discovery (thorough): `/.claude/templates/discovery/thorough.mdc`
+- PRD Creation: `/.claude/templates/task-phases/create-prd.mdc`
+- Task Generation: `/.claude/templates/task-phases/generate-tasks.mdc`
+- Task Execution: `/.claude/templates/task-phases/process-tasks.mdc`
+- Workflow Go: `/.claude/workflows/go-autonomous.mdc`
+- Workflow Slow: `/.claude/workflows/slow-methodical.mdc`
+- Communicate: `/.claude/templates/output-types/communicate.mdc`
+- Analyze: `/.claude/templates/output-types/analyze.mdc`
+- Research: `/.claude/templates/output-types/research.mdc`
 
 ---
 
-**Now begin Phase 1: Ask clarifying questions about the task.**
+**Now begin the appropriate workflow based on the command syntax used.**
