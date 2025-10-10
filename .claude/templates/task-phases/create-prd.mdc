@@ -41,8 +41,57 @@ The generated PRD should include the following sections:
 5.  **Non-Goals (Out of Scope):** Clearly state what this feature will *not* include to manage scope.
 6.  **Design Considerations (Optional):** Link to mockups, describe UI/UX requirements, or mention relevant components/styles if applicable.
 7.  **Technical Considerations (Optional):** Mention any known technical constraints, dependencies, or suggestions (e.g., "Should integrate with the existing Auth module").
-8.  **Success Metrics:** How will the success of this feature be measured? (e.g., "Increase user engagement by 10%", "Reduce support tickets related to X").
-9.  **Open Questions:** List any remaining questions or areas needing further clarification.
+8.  **Work Estimate:** Provide estimated effort in tokens, not time units.
+9.  **Success Metrics:** How will the success of this feature be measured? (e.g., "Increase user engagement by 10%", "Reduce support tickets related to X").
+10. **Open Questions:** List any remaining questions or areas needing further clarification.
+
+## Work Estimation Guidelines
+
+**Estimate in tokens, not time:**
+- AI agents work with tokens, not hours/days
+- Token estimates provide more accurate resource planning
+- Consider context window usage for implementation
+
+**Estimation Framework:**
+
+**Small Feature (5k-15k tokens):**
+- Simple CRUD operations
+- Single file modifications
+- Basic UI components
+- Minimal dependencies
+
+**Medium Feature (15k-50k tokens):**
+- Multi-file changes
+- Moderate integration complexity
+- Database schema changes
+- API endpoint additions
+
+**Large Feature (50k-100k+ tokens):**
+- Architectural changes
+- Multiple module integration
+- Complex business logic
+- Extensive testing requirements
+
+**Estimation Factors:**
+- Codebase exploration and understanding
+- Implementation complexity
+- Testing and validation
+- Documentation
+- Error handling and edge cases
+
+**Example:**
+```markdown
+## Work Estimate
+
+**Estimated tokens:** 25k-35k
+
+**Breakdown:**
+- Discovery & planning: 5k tokens
+- Core implementation: 15k tokens
+- Testing: 5k tokens
+- Documentation: 3k tokens
+- Buffer for edge cases: 7k tokens
+```
 
 ## Target Audience
 
