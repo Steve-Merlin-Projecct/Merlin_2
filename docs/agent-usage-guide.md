@@ -54,7 +54,44 @@ This guide documents when and how to use specialized agents in Claude Code, incl
 - User requests custom output formatting
 - Need to create new output style templates
 
-### 5. Debugger Agent
+### 5. Git-Orchestrator Agent
+**Capabilities:** Autonomous git operations management (checkpoints, section commits, validation, error recovery)
+**Tools Available:** Bash, Read, Grep, Glob
+**Model:** Haiku (fast, efficient for structured operations)
+
+**Use When:**
+- **After completing 3+ sub-tasks** in a section (checkpoint)
+- **After completing all section tasks** (section commit)
+- **End of work session** (save progress)
+- **Before switching sections** (preserve work)
+
+**Avoid When:**
+- No uncommitted changes exist
+- Just starting work (nothing to commit yet)
+- Making quick file edits without task context
+
+**Integration:**
+- **Invoked by primary agent** with context (section name, summary, files changed)
+- **Autonomous validation:** Tests, schema automation, documentation checks
+- **Structured responses:** JSON format for programmatic handling
+- **Error recovery:** Creates checkpoint fallback when commit fails
+
+**Invocation Patterns:**
+```
+checkpoint_check:Section Name
+commit_section:Full Section Name
+```
+
+**Response Handling:**
+- **"success":** Continue to next task/section
+- **"failed":** Surface blocking issues to user
+- **"skipped":** No action needed, continue
+
+**See:** [Primary Agent Git Integration Guide](../workflows/primary-agent-git-integration.md)
+
+---
+
+### 6. Debugger Agent
 **Capabilities:** Systematic bug analysis through evidence gathering (investigation only, NO fixes)
 **Tools Available:** All tools (Read, Write, Edit, Grep, Glob, Bash, etc.)
 **Model:** Opus (for deep analytical thinking)
@@ -112,6 +149,10 @@ test_debug_<issue>_<timestamp>.ext
 ### Question to Ask: "Is this a complex bug requiring systematic investigation?"
 - **YES** → Consider debugger agent for evidence-based analysis
 - **NO** → Fix directly or use general-purpose agent
+
+### Question to Ask: "Have I completed 3+ tasks or a full section?"
+- **YES** → Use git-orchestrator for checkpoint/section commit
+- **NO** → Continue working on tasks
 
 ## Performance Patterns
 
