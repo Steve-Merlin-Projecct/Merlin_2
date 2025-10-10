@@ -4,6 +4,15 @@ from datetime import datetime
 from functools import wraps
 from flask import Flask, jsonify, render_template, request, session, redirect
 from werkzeug.middleware.proxy_fix import ProxyFix
+
+# Import centralized observability system
+from modules.observability import (
+    configure_logging,
+    get_logger,
+    ObservabilityMiddleware,
+    MetricsCollector
+)
+
 # Webhook handlers moved to archived_files/ - no longer using Make.com integration
 # from modules.webhook_handler import webhook_bp
 from modules.database.database_api import database_bp
@@ -25,11 +34,24 @@ from modules.workflow.email_application_api import email_application_api
 from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
 
-# Set up logging
+# Application version
 __version__ = "4.3.1"
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure centralized logging
+# Development: human-readable format with colors
+# Production: JSON format for log aggregation
+log_level = os.environ.get('LOG_LEVEL', 'INFO')
+log_format = os.environ.get('LOG_FORMAT', 'human')  # 'human' or 'json'
+log_file = os.environ.get('LOG_FILE')  # Optional log file path
+
+configure_logging(
+    level=log_level,
+    format_type=log_format,
+    log_file=log_file,
+    enable_console=True
+)
+
+logger = get_logger(__name__)
 
 # Create Flask app
 app = Flask(__name__, template_folder='frontend_templates')
@@ -55,6 +77,20 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 
 # Configure proxy middleware for deployment
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+# Initialize metrics collector
+metrics_collector = MetricsCollector(retention_hours=24)
+
+# Add observability middleware for automatic request tracing and metrics
+ObservabilityMiddleware(
+    app,
+    metrics_collector=metrics_collector,
+    log_request_body=False,  # Set to True only in development if needed
+    log_response_body=False,
+    exclude_paths=['/health', '/metrics', '/favicon.ico']
+)
+
+logger.info(f"Observability system initialized - Log Level: {log_level}, Format: {log_format}")
 
 # Register blueprints
 # Webhook blueprint registration disabled - no longer using Make.com
@@ -180,11 +216,46 @@ def index():
 
 @app.route('/health')
 def health_check():
-    """Health check endpoint to verify service is running"""
+    """Enhanced health check endpoint with system diagnostics"""
+    from modules.observability.debug_tools import HealthChecker
+
+    health_checker = HealthChecker()
+
+    # Register basic health checks
+    def check_app():
+        return True, "Application is running"
+
+    def check_database():
+        try:
+            from modules.database.database_config import DatabaseConfig
+            db_config = DatabaseConfig()
+            # Basic connectivity check
+            return True, f"Database configured: {db_config.is_docker and 'Docker' or 'Local'}"
+        except Exception as e:
+            return False, f"Database configuration error: {str(e)}"
+
+    health_checker.register_check('application', check_app)
+    health_checker.register_check('database', check_database)
+
+    results = health_checker.run_checks()
+
+    # Add version and uptime info
+    results['service'] = 'Merlin Job Application System'
+    results['version'] = __version__
+
+    status_code = 200 if results['overall_status'] == 'healthy' else 503
+    return jsonify(results), status_code
+
+@app.route('/metrics')
+def metrics_endpoint():
+    """Metrics endpoint for monitoring and observability"""
+    # Export all metrics
+    metrics_data = metrics_collector.export_metrics()
+
     return jsonify({
-        'status': 'healthy',
         'service': 'Merlin Job Application System',
-        'version': __version__
+        'version': __version__,
+        'metrics': metrics_data
     })
 
 # Apply security headers to all responses
