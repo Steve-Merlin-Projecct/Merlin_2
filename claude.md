@@ -1,5 +1,5 @@
 # Automated Job Application System
-Version 4.2.0
+Version 4.3.0
 Python 3.11 | Flask | PostgreSQL | Docker
 
 ## Project Overview
