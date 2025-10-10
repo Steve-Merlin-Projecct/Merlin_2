@@ -787,29 +787,69 @@ EOF
         print_header "Creating Integrated Terminals"
 
         if [ -f "$TREES_DIR/.pending-terminals.txt" ]; then
-            print_info "Opening terminals in VS Code panel..."
-            echo ""
+            # Check if we're in tmux session
+            if [ -n "$TMUX" ]; then
+                print_info "Creating tmux windows for each worktree..."
+                echo ""
 
-            # Read each worktree and create terminals by echoing commands
-            # that VS Code can execute
-            local terminal_commands=""
-            local terminal_num=1
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
 
-            while IFS= read -r worktree_path; do
-                local wt_name=$(basename "$worktree_path")
+                    # Create new tmux window with worktree name and CD into it
+                    if tmux new-window -n "$wt_name" -c "$worktree_path" 2>/dev/null; then
+                        print_success "  Window $terminal_num: $wt_name"
+                        terminal_num=$((terminal_num + 1))
+                    else
+                        print_warning "  Failed to create window: $wt_name"
+                    fi
+                done < "$TREES_DIR/.pending-terminals.txt"
 
-                # Create a new terminal by spawning bash in background with cd command
-                # This creates a new entry in VS Code's terminal list
-                (cd "$worktree_path" && exec bash -c "echo 'Worktree: $wt_name'; exec bash") &
+                echo ""
+                print_success "Created $((terminal_num - 1)) tmux windows"
+                print_info "Switch between windows: Ctrl+b then number key (0-9)"
+                print_info "List windows: Ctrl+b then w"
 
-                print_success "  Terminal $terminal_num: $wt_name (cd $worktree_path)"
-                terminal_num=$((terminal_num + 1))
-                sleep 0.2  # Small delay to prevent overwhelming
-            done < "$TREES_DIR/.pending-terminals.txt"
+            elif command -v tmux &> /dev/null; then
+                # tmux available but not in a session - provide command to start
+                print_warning "tmux is available but you're not in a tmux session"
+                echo ""
+                print_info "To use tmux for worktree terminals:"
+                echo "  1. Start tmux: tmux new-session -s worktrees"
+                echo "  2. Re-run: bash /workspace/.claude/scripts/tree.sh build"
+                echo "  3. Or manually create windows for each worktree"
+                echo ""
 
-            echo ""
-            print_success "Created $((terminal_num - 1)) integrated terminals"
-            print_info "Terminals are now available in VS Code terminal panel dropdown"
+                # Show manual commands
+                print_info "Worktree paths:"
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+                    echo "  $terminal_num. $wt_name: cd $worktree_path"
+                    terminal_num=$((terminal_num + 1))
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+            else
+                # No tmux - provide VS Code instructions
+                print_info "Creating terminal commands for VS Code..."
+                echo ""
+
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+                    print_info "  Terminal $terminal_num: $wt_name"
+                    echo "    cd $worktree_path"
+                    echo ""
+                    terminal_num=$((terminal_num + 1))
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                print_info "To create terminals in VS Code:"
+                echo "  1. Press Ctrl+Shift+\` (or Cmd+Shift+\`) to create new terminal"
+                echo "  2. Copy/paste the cd command above"
+                echo "  3. Repeat for each worktree"
+                echo "  4. Use dropdown in terminal panel to switch between them"
+            fi
 
             # Clean up pending terminals file
             rm -f "$TREES_DIR/.pending-terminals.txt"
@@ -817,12 +857,20 @@ EOF
 
         echo ""
         print_info "Next Steps:"
-        echo "  1. Check VS Code terminal panel (bottom) - use dropdown to select terminals"
-        echo "  2. Each worktree has its own terminal ready to use"
-        echo "  3. Start working on your features"
-        echo "  4. Use direct script calls if slash commands don't work:"
-        echo "     bash /workspace/.claude/scripts/tree.sh [command]"
-        echo "  5. When done: bash /workspace/.claude/scripts/tree.sh close"
+        if [ -n "$TMUX" ]; then
+            echo "  1. Use Ctrl+b then window number to switch between worktrees"
+            echo "  2. Start working on your features"
+            echo "  3. Use direct script calls if slash commands don't work:"
+            echo "     bash /workspace/.claude/scripts/tree.sh [command]"
+            echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
+        else
+            echo "  1. Create terminals in VS Code panel (see instructions above)"
+            echo "  2. CD into each worktree path"
+            echo "  3. Start working on your features"
+            echo "  4. Use direct script calls if slash commands don't work:"
+            echo "     bash /workspace/.claude/scripts/tree.sh [command]"
+            echo "  5. When done: bash /workspace/.claude/scripts/tree.sh close"
+        fi
     fi
 }
 
