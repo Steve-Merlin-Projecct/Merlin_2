@@ -6,7 +6,7 @@ Merged: October 7, 2025
 Ready for: Archive after review
 
 # Automated Job Application System
-Version 4.1.0 - Post-Migration Cleanup Complete
+Version 4.2.0 - Git Orchestrator Agent Integration
 October 2025
 Modern Docker-based development environment with comprehensive automation.
 This project is written in Python 3.11
@@ -150,6 +150,7 @@ The application employs a modular Flask microservice architecture with a strong 
 - **Storage Abstraction Layer:** Documents are stored using a pluggable storage backend system supporting local filesystem (default) with future support for cloud providers (AWS S3, Google Cloud Storage).
 - **Automated Database Schema Management:** Uses a suite of tools (`database_tools/`) to generate SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes directly from the live PostgreSQL schema, ensuring documentation and code consistency. Pre-commit hooks prevent manual schema changes.
 - **Resilience System:** Includes a comprehensive failure recovery mechanism with intelligent retry logic, circuit breaker patterns, workflow checkpoints, and automatic data correction.
+- **Git Operations Automation:** git-orchestrator agent handles all version control operations (checkpoints, section commits) with automatic validation (tests, schema automation, documentation checks), error recovery, and remote push integration.
 
 **Key Components & Features:**
 

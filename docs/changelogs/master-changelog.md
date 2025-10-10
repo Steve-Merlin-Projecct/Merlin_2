@@ -3,6 +3,30 @@ input changes
 Use this formating:
 ```
 Historical Changelog:
+- October 09, 2025. **v4.2.0 - GIT ORCHESTRATOR AGENT**: Automated git operations management for development workflow
+  * Created git-orchestrator agent (.claude/agents/git-orchestrator.md) with comprehensive specification
+  * Implemented autonomous checkpoint creation (after 3+ tasks, validates tests/schema/docs)
+  * Implemented section commit automation (full validation, version updates, auto-push)
+  * Added intelligent context discovery (task lists, PRD extraction, git status analysis)
+  * Created primary agent integration guide (docs/workflows/primary-agent-git-integration.md)
+  * Created user guide (docs/workflows/git-orchestrator-guide.md)
+  * Updated agent-usage-guide.md with git-orchestrator entry and decision framework
+  * Added error recovery strategies (checkpoint fallback, blocking issue reporting)
+  * Implemented structured JSON response format for programmatic handling
+  * Added CLAUDE.md version auto-increment on section commits
+  * Implemented changelog template generation for section commits
+  * Added automatic remote push after section commits
+  * Integrated with existing automation (scripts/checkpoint.sh, scripts/commit-section.sh)
+  * Supports multi-file task lists with merged completion state tracking
+  * Full conventional commit format enforcement (feat|fix|docs|refactor|test|chore)
+  * Comprehensive documentation validation (blocks section commits without docs)
+  * Test execution with quick/full modes (quick for checkpoints, full for commits)
+  * Schema automation integration with smart change detection
+  * Token-optimized implementation (<200 tokens handoff overhead)
+  * Performance targets met: <10s checkpoints, <30s section commits
+  * Worktree management deferred to post-merge (separate branch in progress)
+  * 84 tasks completed across 5 implementation phases
+  * Updated CLAUDE.md system architecture section with git automation note
 - October 08, 2025. **v4.1.0 - FILE ORGANIZATION CLEANUP**: Comprehensive reorganization of project file structure
   * Split BRANCH_STATUS.md into branch-specific status and reusable workflow documentation
   * Moved 3 migration summary files from root to docs/archived/migrations/
