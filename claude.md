@@ -93,6 +93,29 @@ Prohibited Actions:
 - Never manually edit files in `database_tools/generated/`.
 - Never skip running automation after schema changes.
 
+**Git Operations Policy:**
+Always delegate git operations to the git-orchestrator agent instead of using Bash directly.
+
+Required Workflow:
+1. When user requests git actions ("commit", "push", "merge", "git commit", etc.)
+2. Use Task tool to invoke git-orchestrator agent with appropriate pattern:
+   - `git-orchestrator "user_commit:Description"` - For user-requested commits/pushes
+   - `git-orchestrator "checkpoint_check:Section Name"` - For checkpoints during work
+   - `git-orchestrator "commit_section:Section Name"` - For completed section milestones
+
+Agent Benefits:
+- Automated test suite execution before commits
+- Schema change detection and automation
+- Documentation validation
+- Conventional commit message formatting
+- Automatic remote push with error recovery
+- Structured response generation
+
+Prohibited Actions:
+- Never use Bash tool for: `git add`, `git commit`, `git push`, `git merge`
+- Never manually create commits without validation
+- Never skip test runs before committing
+
 ### Task Tracking with TodoWrite
 
 Use TodoWrite for multi-step tasks to track progress and provide visibility:
