@@ -97,6 +97,16 @@ test_*.docx
 tmp/
 temp/
 
+# User personal content (NEVER commit personal information)
+user_content/source_materials/*
+!user_content/source_materials/README.md
+user_content/target_jobs/*/seed_sentences/*
+user_content/target_jobs/*/generated_variations/*
+user_content/target_jobs/*/reframed_context/*
+# Allow structure files
+!user_content/target_jobs/*/README.md
+!user_content/target_jobs/*/job_config.json
+
 # Database automation files
 database_tools/.schema_hash
 database_tools/enforcement.log
