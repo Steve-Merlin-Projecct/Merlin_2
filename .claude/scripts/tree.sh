@@ -25,6 +25,7 @@ TREES_DIR="$WORKSPACE_ROOT/.trees"
 COMPLETED_DIR="$TREES_DIR/.completed"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
+STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
 
 # Command routing
 COMMAND="${1:-help}"
@@ -493,6 +494,136 @@ closedone_cleanup() {
 }
 
 #==============================================================================
+# Phase 1: Basic Staging (MVP)
+#==============================================================================
+
+# /tree stage [description]
+tree_stage() {
+    local description="$*"
+
+    if [ -z "$description" ]; then
+        print_error "Feature description required"
+        echo "Usage: /tree stage [description]"
+        echo "Example: /tree stage Add real-time collaboration features with WebSocket support"
+        return 1
+    fi
+
+    # Create .trees directory if it doesn't exist
+    mkdir -p "$TREES_DIR"
+
+    # Create staging file if it doesn't exist
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        cat > "$STAGED_FEATURES_FILE" << EOF
+# Staged Features for Worktree Build
+# Created: $(date +%Y-%m-%d)
+#
+# Format: worktree-name:Description of the feature
+# One feature per line
+
+EOF
+    fi
+
+    # Generate worktree name from description (slugified)
+    local worktree_name=$(echo "$description" | \
+        tr '[:upper:]' '[:lower:]' | \
+        sed 's/[^a-z0-9 -]//g' | \
+        sed 's/ \+/-/g' | \
+        cut -c1-50 | \
+        sed 's/-$//')
+
+    # Check if worktree name already exists
+    if grep -q "^${worktree_name}:" "$STAGED_FEATURES_FILE" 2>/dev/null; then
+        print_warning "Feature with similar name already staged: $worktree_name"
+        echo "Use a more specific description or remove the existing feature first"
+        return 1
+    fi
+
+    # Append to staging file
+    echo "${worktree_name}:${description}" >> "$STAGED_FEATURES_FILE"
+
+    # Count features
+    local feature_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+
+    print_success "Feature $feature_count staged: $worktree_name"
+    echo "        Objective: $description"
+    echo ""
+    echo "Options:"
+    echo "  - Stage another feature: /tree stage [description]"
+    echo "  - Review all staged: /tree list"
+    echo "  - Build worktrees: /tree build"
+}
+
+# /tree list
+tree_list() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_warning "No features staged yet"
+        echo "Use: /tree stage [description] to stage your first feature"
+        return 0
+    fi
+
+    # Read staged features
+    local features=()
+    while IFS=':' read -r name desc; do
+        # Skip comments and empty lines
+        if [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ]; then
+            continue
+        fi
+        features+=("$name:$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_warning "No features staged yet"
+        echo "Use: /tree stage [description] to stage your first feature"
+        return 0
+    fi
+
+    print_header "Staged Features (${#features[@]})"
+
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%:*}"
+        local desc="${feature#*:}"
+        local num=$((i + 1))
+
+        echo "$num. $name"
+        echo "   $desc"
+        echo ""
+    done
+
+    echo "Actions:"
+    echo "  - /tree stage [description] - Add another"
+    echo "  - /tree clear - Clear all staged features"
+    echo "  - /tree build - Create all worktrees"
+}
+
+# /tree clear
+tree_clear() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_info "No staged features to clear"
+        return 0
+    fi
+
+    # Count features
+    local feature_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+
+    if [ "$feature_count" -eq 0 ]; then
+        print_info "No staged features to clear"
+        return 0
+    fi
+
+    echo -n "Clear $feature_count staged feature(s)? (y/n): "
+    read -r response
+
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        print_info "Clear cancelled"
+        return 0
+    fi
+
+    rm -f "$STAGED_FEATURES_FILE"
+    print_success "Cleared $feature_count staged feature(s)"
+}
+
+#==============================================================================
 # Other /tree commands (stubs for future implementation)
 #==============================================================================
 
@@ -501,8 +632,9 @@ tree_help() {
 ${TREE} Tree Worktree Management
 
 Available commands:
-  stage [description]    - Stage feature for worktree creation (not yet implemented)
-  list                   - Show staged features (not yet implemented)
+  stage [description]    - Stage feature for worktree creation ✅ PHASE 1
+  list                   - Show staged features ✅ PHASE 1
+  clear                  - Clear all staged features ✅ PHASE 1
   conflict               - Analyze conflicts and suggest merges (not yet implemented)
   build                  - Create worktrees from staged features (not yet implemented)
   close                  - Complete work and generate synopsis (not yet implemented)
@@ -549,13 +681,22 @@ tree_not_implemented() {
 #==============================================================================
 
 case "$COMMAND" in
+    stage)
+        tree_stage "$@"
+        ;;
+    list)
+        tree_list "$@"
+        ;;
+    clear)
+        tree_clear "$@"
+        ;;
     closedone)
         closedone_main "$@"
         ;;
     help|--help|-h)
         tree_help
         ;;
-    stage|list|conflict|build|close|status)
+    conflict|build|close|status)
         tree_not_implemented
         ;;
     *)

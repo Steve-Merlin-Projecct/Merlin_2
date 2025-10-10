@@ -15,6 +15,42 @@ This guide explains how primary development agents should integrate with the `gi
 
 ## When to Invoke git-orchestrator
 
+### Trigger 0: User Explicitly Requests Git Operation
+
+**Decision Logic:**
+```
+When user explicitly requests:
+- "create a commit", "commit these changes", "save my work"
+- "push to remote", "push these changes"
+- "make a checkpoint", "save progress"
+- "commit with message [...]"
+
+→ Invoke git-orchestrator with user_commit pattern
+```
+
+**Example:**
+```markdown
+User: "Please commit these changes with message 'fix dashboard bug'"
+
+Primary Agent:
+1. Recognize explicit git request
+2. Determine user intent (commit + optional push)
+3. Extract commit message from user request
+4. Invoke git-orchestrator with user_commit pattern
+
+Invoking git-orchestrator for user-requested commit...
+```
+
+**Key Differences from Automated Triggers:**
+- User-driven (not task-based)
+- May happen mid-task
+- Uses user's exact commit message if provided
+- Relaxed validation (warns but doesn't block)
+- No version increment
+- No task list validation required
+
+---
+
 ### Trigger 1: After Completing 3+ Sub-Tasks (Checkpoint)
 
 **Decision Logic:**
@@ -98,6 +134,61 @@ When moving to new section:
 ---
 
 ## How to Invoke git-orchestrator
+
+### User-Requested Commit Invocation
+
+**Required Context:**
+1. **Operation type:** `user_commit`
+2. **Commit message:** User's message or generated description
+3. **Summary:** Brief description of changes (if user didn't provide)
+4. **Files changed:** Auto-detect or user-specified files
+5. **Push requested:** true/false
+
+**Invocation Pattern:**
+```
+Invoking git-orchestrator for user-requested commit...
+
+Operation: user_commit:fix dashboard layout bug
+Summary: User requested commit for dashboard layout fixes
+Files changed:
+- modules/dashboard_api.py (modified)
+- static/css/dashboard.css (modified)
+- frontend_templates/dashboard_v2.html (modified)
+Commit message: fix dashboard layout bug
+Push: true
+```
+
+**Template:**
+```
+Invoking git-orchestrator for user-requested commit...
+
+Operation: user_commit:{USER_COMMIT_MESSAGE_OR_DESCRIPTION}
+Summary: {BRIEF_DESCRIPTION_OF_WHAT_CHANGED}
+Files changed:
+- {FILE_PATH_1} ({new|modified|deleted})
+- {FILE_PATH_2} ({new|modified|deleted})
+Commit message: {USER_PROVIDED_MESSAGE_OR_GENERATED}
+Push: {true|false}
+```
+
+**When User Provides Specific Message:**
+```
+User: "commit with message 'feat: add analytics dashboard'"
+
+Operation: user_commit:feat: add analytics dashboard
+Commit message: feat: add analytics dashboard
+```
+
+**When User Just Says "commit":**
+```
+User: "commit these changes"
+
+Operation: user_commit:User-requested commit
+Commit message: WIP: User work in progress
+(git-orchestrator will help generate better message based on files)
+```
+
+---
 
 ### Checkpoint Invocation
 
@@ -458,20 +549,24 @@ All section tasks complete?
 ## Best Practices
 
 ### DO:
-- ✅ Always provide section name in invocations
+- ✅ Always provide section name in invocations (for checkpoints/section commits)
 - ✅ Include comprehensive summary for section commits
 - ✅ List all key files changed
 - ✅ Check response status before proceeding
 - ✅ Surface blocking issues to user immediately
 - ✅ Continue with other work when section commit fails (don't block)
+- ✅ **Use git-orchestrator for ALL user-requested git operations**
+- ✅ **Preserve user's exact commit message when provided**
+- ✅ **Auto-detect if user wants to push ("and push", "push it", etc.)**
 
 ### DON'T:
-- ❌ Run git commands directly (always use git-orchestrator)
+- ❌ **Run git commands directly (ALWAYS use git-orchestrator for ALL git operations)**
 - ❌ Skip checkpoint after 3+ tasks
 - ❌ Continue to next section when commit fails
 - ❌ Ignore "failed" status responses
 - ❌ Provide minimal context (git-orchestrator needs full picture)
-- ❌ Bypass git-orchestrator for "quick" commits
+- ❌ Bypass git-orchestrator for "quick" commits or user requests
+- ❌ **Use Bash tool for commits, even when user asks directly**
 
 ---
 
@@ -537,13 +632,18 @@ All section tasks complete?
 
 | Situation | Action | Invocation |
 |-----------|--------|------------|
+| **User asks to commit** | User Commit | `user_commit:Message` |
+| **User asks to push** | User Commit + Push | `user_commit:Message` (Push: true) |
+| **User says "save progress"** | User Commit | `user_commit:User progress` |
 | 3+ tasks done in section | Checkpoint | `checkpoint_check:Section Name` |
 | All section tasks done | Section Commit | `commit_section:Full Section Name` |
 | End of session | Checkpoint | `checkpoint_check:Current Section` |
 | Switching sections | Checkpoint | `checkpoint_check:Old Section` |
 | Tests fail (checkpoint) | Continue anyway | Agent proceeds with warning |
 | Tests fail (section commit) | Fix tests | Agent creates checkpoint fallback |
+| Tests fail (user commit) | Warn but proceed | Agent warns, user decides |
 | Docs missing (section commit) | Create docs | Agent blocks commit |
+| Docs missing (user commit) | Warn but proceed | Agent warns but doesn't block |
 | No changes | Skip | Agent returns "no_changes" |
 
 ---
