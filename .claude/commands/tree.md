@@ -4,7 +4,7 @@ description: Manage git worktrees with intelligent automation
 
 Execute the tree worktree management command.
 
-Run: `bash /workspace/.trees/worktree-manager/.claude/scripts/tree.sh "$@"`
+Run: `bash /workspace/.claude/scripts/tree.sh "$@"`
 
 This command provides comprehensive worktree management:
 - `/tree stage [description]` - Stage feature for worktree creation
