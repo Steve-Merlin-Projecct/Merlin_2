@@ -16,12 +16,13 @@ from typing import Dict, Pattern, List, Tuple
 # ==============================================================================
 
 # Unicode characters for smart quotes
-LEFT_DOUBLE_QUOTE = '"'    # U+201C
-RIGHT_DOUBLE_QUOTE = '"'   # U+201D
-LEFT_SINGLE_QUOTE = '''    # U+2018
-RIGHT_SINGLE_QUOTE = '''   # U+2019
+LEFT_DOUBLE_QUOTE = '\u201c'    # U+201C - "
+RIGHT_DOUBLE_QUOTE = '\u201d'   # U+201D - "
+LEFT_SINGLE_QUOTE = '\u2018'    # U+2018 - '
+RIGHT_SINGLE_QUOTE = '\u2019'   # U+2019 - '
 
 # Smart quote replacement rules (order matters for correct application)
+# Defined directly to avoid scope issues with module-level constants
 SMART_QUOTE_RULES: List[Tuple[Pattern, str]] = [
     # Opening double quote after whitespace, start of string, or opening punctuation
     (re.compile(r'(^|[\s\(\[\{<])\"'), r'\1' + LEFT_DOUBLE_QUOTE),
@@ -47,8 +48,8 @@ SMART_QUOTE_RULES: List[Tuple[Pattern, str]] = [
 # ==============================================================================
 
 # Unicode characters for dashes
-EM_DASH = '—'  # U+2014 (long dash for breaks in thought)
-EN_DASH = '–'  # U+2013 (medium dash for ranges)
+EM_DASH = '\u2014'  # U+2014 - — (long dash for breaks in thought)
+EN_DASH = '\u2013'  # U+2013 - – (medium dash for ranges)
 
 # Smart dash replacement rules
 SMART_DASH_RULES: List[Tuple[Pattern, str]] = [
@@ -70,7 +71,7 @@ SMART_DASH_RULES: List[Tuple[Pattern, str]] = [
 # ==============================================================================
 
 # Unicode character for ellipsis
-ELLIPSIS = '…'  # U+2026
+ELLIPSIS = '\u2026'  # U+2026 - …
 
 # Ellipsis replacement rule
 SMART_ELLIPSIS_PATTERN = re.compile(r'\.{3}')  # Three periods → …
@@ -89,57 +90,61 @@ TITLES = [
     'Sr', 'Jr', 'Esq', 'PhD', 'MD', 'DDS', 'DMD', 'DO'
 ]
 
-# Non-breaking space rules
-NON_BREAKING_SPACE_RULES: List[Tuple[Pattern, str]] = [
-    # After titles: Dr. Smith → Dr. Smith (with nbsp)
-    *[(re.compile(r'\b' + re.escape(title) + r'\.\s+'),
-       title + '.' + NON_BREAKING_SPACE) for title in TITLES],
+# Non-breaking space replacement rules
+# Build the list dynamically for titles, then add other patterns
+_nbsp_rules: List[Tuple[Pattern, str]] = []
 
-    # Between initials: J. Smith → J. Smith (with nbsp)
-    (re.compile(r'\b([A-Z])\.\s+([A-Z])'), r'\1.' + NON_BREAKING_SPACE + r'\2'),
+# After titles: Dr. Smith → Dr. Smith (with nbsp)
+for title in TITLES:
+    _nbsp_rules.append((re.compile(r'\b' + re.escape(title) + r'\.\s+'),
+                        title + '.' + NON_BREAKING_SPACE))
 
-    # Before units: 10 MB → 10 MB (with nbsp)
-    (re.compile(r'(\d+)\s+(KB|MB|GB|TB|km|cm|mm|kg|g|mg)'),
-     r'\1' + NON_BREAKING_SPACE + r'\2'),
+# Between initials: J. Smith → J. Smith (with nbsp)
+_nbsp_rules.append((re.compile(r'\b([A-Z])\.\s+([A-Z])'), r'\1.' + NON_BREAKING_SPACE + r'\2'))
 
-    # Between number and percent: 50 % → 50% (with nbsp)
-    (re.compile(r'(\d+)\s+%'), r'\1' + NON_BREAKING_SPACE + '%'),
-]
+# Before units: 10 MB → 10 MB (with nbsp)
+_nbsp_rules.append((re.compile(r'(\d+)\s+(KB|MB|GB|TB|km|cm|mm|kg|g|mg)'),
+                    r'\1' + NON_BREAKING_SPACE + r'\2'))
+
+# Between number and percent: 50 % → 50% (with nbsp)
+_nbsp_rules.append((re.compile(r'(\d+)\s+%'), r'\1' + NON_BREAKING_SPACE + '%'))
+
+NON_BREAKING_SPACE_RULES: List[Tuple[Pattern, str]] = _nbsp_rules
 
 # ==============================================================================
 # SPECIAL CHARACTERS
 # ==============================================================================
 
-# Special character replacements
+# Special character replacements (pattern -> replacement)
 SPECIAL_CHARACTERS = {
     # Degree symbols
-    ' degrees': '°',
-    'degrees': '°',
+    r' degrees\b': '°',
+    r'\bdegrees\b': '°',
 
     # Multiplication
     r'\b(\d+)\s*x\s*(\d+)\b': r'\1×\2',  # 10 x 20 → 10×20
 
     # Trademark
-    '(TM)': '™',
-    '(tm)': '™',
+    r'\(TM\)': '™',
+    r'\(tm\)': '™',
 
     # Registered trademark
-    '(R)': '®',
-    '(r)': '®',
+    r'\(R\)': '®',
+    r'\(r\)': '®',
 
     # Copyright
-    '(C)': '©',
-    '(c)': '©',
+    r'\(C\)': '©',
+    r'\(c\)': '©',
 
-    # Fractions (common ones)
-    '1/2': '½',
-    '1/4': '¼',
-    '3/4': '¾',
-    '1/3': '⅓',
-    '2/3': '⅔',
+    # Fractions (common ones) - with word boundaries
+    r'\b1/2\b': '½',
+    r'\b1/4\b': '¼',
+    r'\b3/4\b': '¾',
+    r'\b1/3\b': '⅓',
+    r'\b2/3\b': '⅔',
 }
 
-# Compile special character patterns
+# Special character replacement rules (compile patterns from dictionary)
 SPECIAL_CHARACTER_RULES: List[Tuple[Pattern, str]] = [
     (re.compile(pattern), replacement)
     for pattern, replacement in SPECIAL_CHARACTERS.items()

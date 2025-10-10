@@ -22,6 +22,15 @@ from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+# Authenticity enhancement imports
+try:
+    from .smart_typography import SmartTypography
+    from .metadata_generator import MetadataGenerator
+    AUTHENTICITY_AVAILABLE = True
+except ImportError:
+    logging.warning("Authenticity enhancement modules not available")
+    AUTHENTICITY_AVAILABLE = False
+
 
 class TemplateEngine:
     """
@@ -34,12 +43,13 @@ class TemplateEngine:
     4. Generating final documents with professional metadata
     """
 
-    def __init__(self, enable_url_tracking=True):
+    def __init__(self, enable_url_tracking=True, enable_authenticity=True):
         """
         Initialize the template engine with configuration
 
         Args:
             enable_url_tracking (bool): Enable automatic URL tracking for candidate URLs (default: True)
+            enable_authenticity (bool): Enable authenticity enhancements (smart typography, realistic metadata)
         """
         self.setup_logging()
         self.template_cache = {}  # Cache loaded templates for performance
@@ -63,6 +73,16 @@ class TemplateEngine:
             'linkedin_url': 'LinkedIn',
             'portfolio_url': 'Portfolio'
         }
+
+        # Authenticity enhancement configuration
+        self.enable_authenticity = enable_authenticity and AUTHENTICITY_AVAILABLE
+        if self.enable_authenticity:
+            self.smart_typography = SmartTypography()
+            self.metadata_generator = MetadataGenerator()
+            self.logger.info("Authenticity enhancements enabled")
+        else:
+            self.smart_typography = None
+            self.metadata_generator = None
 
     def setup_logging(self):
         """Configure logging for template processing"""
@@ -141,6 +161,10 @@ class TemplateEngine:
 
                     # Replace variables with actual data
                     new_text = self.substitute_variables(original_text, data, substitution_stats, job_id, application_id)
+
+                    # Apply smart typography if enabled
+                    if self.enable_authenticity and self.smart_typography:
+                        new_text = self.smart_typography.enhance_paragraph_text(new_text)
 
                     # Apply enhanced text formatting
                     formatted_text = self.apply_enhanced_formatting(paragraph, new_text)
@@ -557,32 +581,58 @@ class TemplateEngine:
 
     def set_document_properties(self, doc, data):
         """
-        Set document properties and metadata
+        Set document properties and metadata with authenticity enhancements
 
         Args:
             doc: python-docx Document object
             data (dict): Data dictionary containing document information
         """
-        # Set basic properties
-        doc.core_properties.title = data.get("title", "Generated Document")
-        doc.core_properties.author = data.get(
-            "author", data.get("first_name", "") + " " + data.get("last_name", "")
-        ).strip()
-        doc.core_properties.subject = data.get("subject", "Professional Document")
-        doc.core_properties.keywords = data.get("keywords", "Resume, Professional, Application")
-        doc.core_properties.comments = data.get(
-            "comments", f"Generated on {datetime.now().strftime('%Y-%m-%d')} for professional use"
-        )
-        doc.core_properties.category = data.get("category", "Job Application")
-        doc.core_properties.created = datetime.now()
-        doc.core_properties.modified = datetime.now()
+        # Use MetadataGenerator if authenticity is enabled
+        if self.enable_authenticity and self.metadata_generator:
+            # Prepare metadata parameters
+            author_name = data.get("author") or (
+                data.get("first_name", "") + " " + data.get("last_name", "")
+            ).strip()
+            document_title = data.get("title", "Generated Document")
+            document_type = data.get("document_type", "resume")
 
-        # Set language and location
-        doc.core_properties.language = data.get("language", "en-CA")
+            # Generate realistic metadata
+            metadata = self.metadata_generator.generate_metadata_for_doc_object(
+                doc=doc,
+                document_type=document_type,
+                author_name=author_name,
+                document_title=document_title,
+                subject=data.get("subject", "Professional Document"),
+                keywords=data.get("keywords", "Resume, Professional, Application"),
+            )
 
-        # Set version and revision
-        doc.core_properties.version = data.get("version", "1.0")
-        doc.core_properties.revision = data.get("revision", 1)
+            self.logger.info(
+                f"Applied authentic metadata: created={metadata['core_properties']['created'].strftime('%Y-%m-%d %H:%M')}, "
+                f"editing_time={metadata['app_properties']['total_time']}min, "
+                f"revision={metadata['core_properties']['revision']}"
+            )
+
+        else:
+            # Fallback to original method
+            doc.core_properties.title = data.get("title", "Generated Document")
+            doc.core_properties.author = data.get(
+                "author", data.get("first_name", "") + " " + data.get("last_name", "")
+            ).strip()
+            doc.core_properties.subject = data.get("subject", "Professional Document")
+            doc.core_properties.keywords = data.get("keywords", "Resume, Professional, Application")
+            doc.core_properties.comments = data.get(
+                "comments", f"Generated on {datetime.now().strftime('%Y-%m-%d')} for professional use"
+            )
+            doc.core_properties.category = data.get("category", "Job Application")
+            doc.core_properties.created = datetime.now()
+            doc.core_properties.modified = datetime.now()
+
+            # Set language and location
+            doc.core_properties.language = data.get("language", "en-CA")
+
+            # Set version and revision
+            doc.core_properties.version = data.get("version", "1.0")
+            doc.core_properties.revision = data.get("revision", 1)
 
     def generate_output_path(self, template_path, data):
         """
