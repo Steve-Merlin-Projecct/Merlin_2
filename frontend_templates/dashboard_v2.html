@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Dashboard - Steve Glen</title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/dashboard_v2.css">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-bg" x-data="dashboard()" x-init="init()">
+
+    <div class="container">
+
+        <!-- Navigation -->
+        <nav style="margin-bottom: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); backdrop-filter: blur(10px);">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="/dashboard" style="color: var(--color-cyan); text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-sm); background: rgba(0, 217, 255, 0.1);">
+                    📊 Dashboard
+                </a>
+                <a href="/dashboard/jobs" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    💼 Jobs
+                </a>
+                <a href="/dashboard/applications" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📝 Applications
+                </a>
+                <a href="/dashboard/analytics" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📈 Analytics
+                </a>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Job Application Dashboard</h1>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Welcome back, Steve</p>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div class="live-indicator" x-show="connected">
+                    <span>Live</span>
+                </div>
+                <button class="btn btn-secondary" @click="refresh()">
+                    <span x-show="!loading">Refresh</span>
+                    <span x-show="loading">Loading...</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-grid">
+
+            <!-- Jobs Scraped -->
+            <div class="metric-card">
+                <div class="metric-icon">🔍</div>
+                <div class="metric-value" x-text="metrics.scrapes['24h'] || 0"></div>
+                <div class="metric-label">Jobs Scraped (24h)</div>
+                <div class="metric-trend"
+                     :class="getTrendClass(metrics.scrapes.trend_24h)">
+                    <span x-text="getTrendIcon(metrics.scrapes.trend_24h)"></span>
+                    <span x-text="Math.abs(metrics.scrapes.trend_24h || 0) + '%'"></span>
+                </div>
+            </div>
+
+            <!-- AI Analyzed -->
+            <div class="metric-card">
+                <div class="metric-icon">🤖</div>
+                <div class="metric-value" x-text="metrics.analyzed['24h'] || 0"></div>
+                <div class="metric-label">AI Analyzed (24h)</div>
+                <div class="metric-trend"
+                     :class="getTrendClass(metrics.analyzed.trend_24h)">
+                    <span x-text="getTrendIcon(metrics.analyzed.trend_24h)"></span>
+                    <span x-text="Math.abs(metrics.analyzed.trend_24h || 0) + '%'"></span>
+                </div>
+            </div>
+
+            <!-- Applications Sent -->
+            <div class="metric-card">
+                <div class="metric-icon">📧</div>
+                <div class="metric-value" x-text="metrics.applications['24h'] || 0"></div>
+                <div class="metric-label">Applications Sent (24h)</div>
+                <div class="metric-trend"
+                     :class="getTrendClass(metrics.applications.trend_24h)">
+                    <span x-text="getTrendIcon(metrics.applications.trend_24h)"></span>
+                    <span x-text="Math.abs(metrics.applications.trend_24h || 0) + '%'"></span>
+                </div>
+            </div>
+
+            <!-- Success Rate -->
+            <div class="metric-card">
+                <div class="metric-icon">✨</div>
+                <div class="metric-value" x-text="(metrics.success_rate?.current || 0) + '%'"></div>
+                <div class="metric-label">Success Rate (7d)</div>
+                <div class="metric-trend neutral">
+                    <span x-text="metrics.success_rate?.['7d_sent'] || 0"></span>
+                    <span>/</span>
+                    <span x-text="metrics.success_rate?.['7d_total'] || 0"></span>
+                    <span> sent</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Pipeline Visualization -->
+        <section class="glass-card pipeline-container">
+            <h2 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 1rem;">
+                Processing Pipeline
+            </h2>
+
+            <div class="pipeline-stages">
+                <template x-for="stage in pipeline.stages" :key="stage.id">
+                    <div class="pipeline-stage"
+                         :class="{ 'active': stage.status === 'active' }">
+                        <div class="stage-name" x-text="stage.name"></div>
+                        <div class="stage-count" x-text="stage.count"></div>
+                    </div>
+                </template>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; color: var(--color-text-secondary); font-size: 0.875rem;">
+                <div>
+                    Conversion Rate:
+                    <span class="gradient-text-green" x-text="(pipeline.conversion_rate || 0) + '%'"></span>
+                </div>
+                <div x-show="pipeline.bottleneck">
+                    Bottleneck:
+                    <span class="text-warning" x-text="pipeline.bottleneck"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Applications -->
+        <section class="glass-card activity-feed">
+            <h2 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 1rem;">
+                Recent Applications
+            </h2>
+
+            <div class="activity-list">
+                <template x-for="(app, index) in recentApplications" :key="app.id">
+                    <div class="activity-item"
+                         :style="{ 'animation-delay': (index * 0.05) + 's' }">
+                        <div class="activity-icon">
+                            <span x-text="getStatusIcon(app.status)"></span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-message">
+                                <strong x-text="app.job_title"></strong>
+                                <span style="color: var(--color-text-tertiary);"> at </span>
+                                <span x-text="app.company_name"></span>
+                            </div>
+                            <div class="activity-time">
+                                <span x-text="formatTime(app.created_at)"></span>
+                                <span x-show="app.coherence_score" style="margin-left: 1rem;">
+                                    Coherence: <span class="gradient-text-green" x-text="(app.coherence_score * 100).toFixed(0) + '%'"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <div x-show="recentApplications.length === 0"
+                     style="text-align: center; padding: 2rem; color: var(--color-text-tertiary);">
+                    No recent applications
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-time Activity Feed -->
+        <section class="glass-card" style="margin-top: 2rem; padding: 1.5rem;">
+            <h2 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 1rem;">
+                Live Activity
+            </h2>
+
+            <div style="max-height: 300px; overflow-y: auto;">
+                <template x-for="event in liveEvents.slice().reverse()" :key="event.timestamp">
+                    <div class="activity-item" style="margin-bottom: 0.5rem;">
+                        <div class="activity-icon">
+                            <span x-text="getEventIcon(event.event)"></span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-message" x-text="formatEventMessage(event)"></div>
+                            <div class="activity-time" x-text="formatTime(event.timestamp)"></div>
+                        </div>
+                    </div>
+                </template>
+
+                <div x-show="liveEvents.length === 0"
+                     style="text-align: center; padding: 2rem; color: var(--color-text-tertiary);">
+                    Waiting for events...
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Alpine.js Dashboard Logic -->
+    <script>
+        function dashboard() {
+            return {
+                // State
+                metrics: {
+                    scrapes: { '24h': 0, '7d': 0, trend_24h: 0, trend_7d: 0 },
+                    analyzed: { '24h': 0, '7d': 0, trend_24h: 0 },
+                    applications: { '24h': 0, '7d': 0, trend_24h: 0 },
+                    success_rate: { current: 0, '7d_sent': 0, '7d_total': 0 },
+                    total_jobs: 0
+                },
+                pipeline: {
+                    stages: [],
+                    conversion_rate: 0,
+                    bottleneck: null
+                },
+                recentApplications: [],
+                liveEvents: [],
+                loading: false,
+                connected: false,
+                eventSource: null,
+
+                // Initialize dashboard
+                async init() {
+                    await this.loadDashboardData();
+                    this.connectSSE();
+
+                    // Refresh every 5 minutes
+                    setInterval(() => this.loadDashboardData(), 5 * 60 * 1000);
+                },
+
+                // Load dashboard data
+                async loadDashboardData() {
+                    this.loading = true;
+                    try {
+                        const response = await fetch('/api/v2/dashboard/overview');
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.metrics = data.metrics;
+                            this.pipeline = data.pipeline;
+                            this.recentApplications = data.recent_applications;
+                        } else {
+                            console.error('Failed to load dashboard:', data.error);
+                        }
+                    } catch (error) {
+                        console.error('Error loading dashboard:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                // Connect to Server-Sent Events
+                connectSSE() {
+                    if (this.eventSource) {
+                        this.eventSource.close();
+                    }
+
+                    this.eventSource = new EventSource('/api/stream/dashboard');
+
+                    this.eventSource.addEventListener('connected', (e) => {
+                        this.connected = true;
+                        console.log('SSE connected:', e.data);
+                    });
+
+                    this.eventSource.addEventListener('job_scraped', (e) => {
+                        const data = JSON.parse(e.data);
+                        this.addLiveEvent('job_scraped', data);
+                        this.metrics.scrapes['24h']++;
+                    });
+
+                    this.eventSource.addEventListener('job_analyzed', (e) => {
+                        const data = JSON.parse(e.data);
+                        this.addLiveEvent('job_analyzed', data);
+                        this.metrics.analyzed['24h']++;
+                    });
+
+                    this.eventSource.addEventListener('application_sent', (e) => {
+                        const data = JSON.parse(e.data);
+                        this.addLiveEvent('application_sent', data);
+                        this.metrics.applications['24h']++;
+
+                        // Refresh recent applications
+                        this.loadDashboardData();
+                    });
+
+                    this.eventSource.addEventListener('pipeline_updated', (e) => {
+                        const data = JSON.parse(e.data);
+                        this.addLiveEvent('pipeline_updated', data);
+
+                        // Update pipeline stage count
+                        const stage = this.pipeline.stages.find(s => s.id === data.stage);
+                        if (stage) {
+                            stage.count = data.count;
+                        }
+                    });
+
+                    this.eventSource.addEventListener('error', (e) => {
+                        console.error('SSE error:', e);
+                        this.connected = false;
+
+                        // Reconnect after 5 seconds
+                        setTimeout(() => this.connectSSE(), 5000);
+                    });
+
+                    this.eventSource.addEventListener('heartbeat', (e) => {
+                        // Keep connection alive
+                        console.debug('Heartbeat received');
+                    });
+                },
+
+                // Add live event
+                addLiveEvent(eventType, data) {
+                    this.liveEvents.push({
+                        event: eventType,
+                        data: data,
+                        timestamp: data.timestamp || new Date().toISOString()
+                    });
+
+                    // Keep only last 20 events
+                    if (this.liveEvents.length > 20) {
+                        this.liveEvents = this.liveEvents.slice(-20);
+                    }
+                },
+
+                // Refresh dashboard
+                async refresh() {
+                    await this.loadDashboardData();
+                },
+
+                // Helper: Get trend class
+                getTrendClass(trend) {
+                    if (!trend || trend === 0) return 'neutral';
+                    return trend > 0 ? 'positive' : 'negative';
+                },
+
+                // Helper: Get trend icon
+                getTrendIcon(trend) {
+                    if (!trend || trend === 0) return '→';
+                    return trend > 0 ? '↑' : '↓';
+                },
+
+                // Helper: Get status icon
+                getStatusIcon(status) {
+                    const icons = {
+                        'sent': '✅',
+                        'pending': '⏳',
+                        'draft': '📝',
+                        'failed': '❌'
+                    };
+                    return icons[status] || '📧';
+                },
+
+                // Helper: Get event icon
+                getEventIcon(eventType) {
+                    const icons = {
+                        'job_scraped': '🔍',
+                        'job_analyzed': '🤖',
+                        'application_sent': '📧',
+                        'pipeline_updated': '⚙️',
+                        'metrics_refreshed': '📊'
+                    };
+                    return icons[eventType] || '🔔';
+                },
+
+                // Helper: Format event message
+                formatEventMessage(event) {
+                    const messages = {
+                        'job_scraped': `New job discovered: ${event.data.title || 'Unknown'}`,
+                        'job_analyzed': `Job analyzed: ${event.data.title || 'Unknown'} (Eligible: ${event.data.eligibility ? 'Yes' : 'No'})`,
+                        'application_sent': `Application sent: ${event.data.job_title || 'Unknown'} at ${event.data.company || 'Unknown'}`,
+                        'pipeline_updated': `Pipeline updated: ${event.data.stage} (${event.data.count})`,
+                        'metrics_refreshed': `Metrics refreshed`
+                    };
+                    return messages[event.event] || 'Event occurred';
+                },
+
+                // Helper: Format time
+                formatTime(timestamp) {
+                    if (!timestamp) return '';
+
+                    const date = new Date(timestamp);
+                    const now = new Date();
+                    const diffMs = now - date;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHours = Math.floor(diffMs / 3600000);
+                    const diffDays = Math.floor(diffMs / 86400000);
+
+                    if (diffMins < 1) return 'Just now';
+                    if (diffMins < 60) return `${diffMins}m ago`;
+                    if (diffHours < 24) return `${diffHours}h ago`;
+                    if (diffDays < 7) return `${diffDays}d ago`;
+
+                    return date.toLocaleDateString();
+                },
+
+                // Cleanup on destroy
+                destroy() {
+                    if (this.eventSource) {
+                        this.eventSource.close();
+                    }
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>

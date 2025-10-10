@@ -9,6 +9,10 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from modules.database.database_api import database_bp
 from modules.content.job_system_routes import job_system_bp
 from modules.dashboard_api import dashboard_api, require_dashboard_auth
+# Dashboard V2 - Optimized API endpoints
+from modules.dashboard_api_v2 import dashboard_api_v2
+# Real-time SSE endpoints
+from modules.realtime.sse_dashboard import sse_dashboard
 from modules.ai_job_description_analysis.ai_integration_routes import ai_bp
 from modules.integration.integration_api import integration_bp
 from modules.ai_job_description_analysis.batch_integration_api import batch_ai_bp
@@ -58,6 +62,10 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.register_blueprint(database_bp)
 app.register_blueprint(job_system_bp)
 app.register_blueprint(dashboard_api)
+# Register Dashboard V2 (optimized) and SSE endpoints
+app.register_blueprint(dashboard_api_v2)
+app.register_blueprint(sse_dashboard)
+logger.info("Dashboard V2 and SSE endpoints registered")
 app.register_blueprint(ai_bp)
 app.register_blueprint(integration_bp)
 app.register_blueprint(batch_ai_bp)
@@ -184,12 +192,27 @@ def health_check():
 def add_security_headers(response):
     return apply_security_headers(response)
 
+def require_page_auth(f):
+    """Decorator to require authentication for page routes"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('authenticated'):
+            return redirect('/dashboard')
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/dashboard')
 def dashboard():
-    """Personal job application dashboard for Steve Glen"""
+    """Personal job application dashboard for Steve Glen - V2 Redesign"""
     # Check if user is authenticated via session
     if not session.get('authenticated'):
         return render_template('dashboard_login.html')
+    return render_template('dashboard_v2.html')
+
+@app.route('/dashboard/v1')
+@require_page_auth
+def dashboard_v1():
+    """Legacy dashboard for comparison"""
     return render_template('dashboard_enhanced.html')
 
 @app.route('/dashboard/authenticate', methods=['POST'])
@@ -221,15 +244,6 @@ def dashboard_logout():
     session.pop('authenticated', None)
     session.pop('auth_time', None)
     return jsonify({'success': True, 'message': 'Logged out successfully'})
-
-def require_page_auth(f):
-    """Decorator to require authentication for page routes"""
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not session.get('authenticated'):
-            return redirect('/dashboard')
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.route('/workflow')
 @require_page_auth
@@ -391,4 +405,4 @@ def get_preference_packages(user_id):
 # Blueprints already registered above
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
