@@ -97,6 +97,14 @@ try:
 except ImportError as e:
     logger.warning(f"Could not register Copywriting Evaluator API: {e}")
 
+# Register Sentence Variation API
+try:
+    from modules.content.sentence_variation_api import sentence_variation_bp
+    app.register_blueprint(sentence_variation_bp)
+    logger.info("Sentence Variation API registered successfully")
+except ImportError as e:
+    logger.warning(f"Could not register Sentence Variation API: {e}")
+
 # Document Generation API is already registered above via document_bp from modules.document_routes
 logger.info("Document Generation API already registered via document_bp")
 

@@ -1,0 +1,13 @@
+{
+  "job_title": "Marketing Manager",
+  "industry": "Marketing",
+  "salary_range": {
+    "minimum": 75000,
+    "maximum": 110000
+  },
+  "work_arrangement": "hybrid",
+  "location": "Edmonton, Alberta",
+  "package_name": "local_edmonton",
+  "is_active": true,
+  "created_date": "1760061587.6109927"
+}
