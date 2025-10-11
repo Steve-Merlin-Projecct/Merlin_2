@@ -3,7 +3,7 @@
 Document Generation Routes Blueprint
 
 Provides REST API endpoints for generating resumes and cover letters using the
-template-based document generation system.
+template-based document generation system with rate limiting.
 """
 
 import os
@@ -13,6 +13,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, send_file, Response
 from modules.content.document_generation.document_generator import DocumentGenerator
 from modules.storage import get_storage_backend
+from modules.security.rate_limit_manager import rate_limit_moderate
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ except Exception as e:
 
 
 @document_bp.route("/resume", methods=["POST"])
+@rate_limit_moderate  # Document generation: 20/min;200/hour
 def generate_resume():
     """
     Generate a professional resume document
@@ -123,6 +125,7 @@ def generate_resume():
 
 
 @document_bp.route("/cover-letter", methods=["POST"])
+@rate_limit_moderate  # Document generation: 20/min;200/hour
 def generate_cover_letter():
     """
     Generate a professional cover letter document

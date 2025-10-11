@@ -1,23 +1,18 @@
 """
 AI Integration Routes for Job Analysis
-Provides endpoints for Gemini-based job analysis
+Provides endpoints for Gemini-based job analysis with centralized rate limiting
 """
 
 import logging
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from modules.ai_job_description_analysis.ai_analyzer import JobAnalysisManager
 from modules.database.database_manager import DatabaseManager
 from modules.security.security_patch import SecurityPatch, apply_security_headers
+from modules.security.rate_limit_manager import rate_limit_expensive
 from functools import wraps
-from flask import session
-import time
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
-
-# Rate limiting storage (in-memory for simplicity)
-rate_limit_storage = defaultdict(list)
 
 
 def require_auth(f):
@@ -32,42 +27,13 @@ def require_auth(f):
     return decorated_function
 
 
-def rate_limit(requests_per_minute=30):
-    """Rate limiting decorator"""
-
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            client_ip = request.environ.get("HTTP_X_FORWARDED_FOR", request.environ.get("REMOTE_ADDR", "unknown"))
-            current_time = time.time()
-
-            # Clean old requests
-            rate_limit_storage[client_ip] = [
-                req_time for req_time in rate_limit_storage[client_ip] if current_time - req_time < 60
-            ]
-
-            # Check rate limit
-            if len(rate_limit_storage[client_ip]) >= requests_per_minute:
-                logger.warning(f"Rate limit exceeded for IP: {client_ip}")
-                return jsonify({"status": "error", "message": "Rate limit exceeded. Please try again later."}), 429
-
-            # Add current request
-            rate_limit_storage[client_ip].append(current_time)
-
-            return f(*args, **kwargs)
-
-        return decorated_function
-
-    return decorator
-
-
 # Create blueprint
 ai_bp = Blueprint("ai_integration", __name__, url_prefix="/api/ai")
 
 
 @ai_bp.route("/analyze-jobs", methods=["POST"])
 @require_auth
-@rate_limit(requests_per_minute=10)  # Lower limit for AI operations
+@rate_limit_expensive  # Centralized rate limiting: 10/min;50/hour;200/day
 @SecurityPatch.validate_request_size()
 def analyze_jobs():
     """
@@ -108,7 +74,7 @@ def analyze_jobs():
 
 @ai_bp.route("/usage-stats", methods=["GET"])
 @require_auth
-@rate_limit(requests_per_minute=60)
+@rate_limit_expensive  # Centralized rate limiting
 def get_usage_stats():
     """
     Get AI usage statistics
@@ -128,7 +94,7 @@ def get_usage_stats():
 
 @ai_bp.route("/analysis-results/<job_id>", methods=["GET"])
 @require_auth
-@rate_limit(requests_per_minute=120)
+@rate_limit_expensive  # Centralized rate limiting
 def get_analysis_results(job_id):
     """
     Get analysis results for a specific job
@@ -165,7 +131,7 @@ def get_analysis_results(job_id):
 
 @ai_bp.route("/batch-status", methods=["GET"])
 @require_auth
-@rate_limit(requests_per_minute=60)
+@rate_limit_expensive  # Centralized rate limiting
 def get_batch_status():
     """
     Get status of pending AI analysis jobs
@@ -221,7 +187,7 @@ def get_batch_status():
 
 @ai_bp.route("/reset-usage", methods=["POST"])
 @require_auth
-@rate_limit(requests_per_minute=5)
+@rate_limit_expensive  # Centralized rate limiting
 def reset_daily_usage():
     """
     Reset daily AI usage counter (admin function)

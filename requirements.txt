@@ -9,6 +9,7 @@ bleach>=6.2.0
 email-validator>=2.2.0
 flake8>=7.3.0
 flask>=3.1.1
+flask-limiter>=3.5.0
 flask-sqlalchemy>=3.1.1
 google-api-python-client>=2.176.0
 google-auth-httplib2>=0.2.0

@@ -3,6 +3,7 @@ import logging
 from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify
 from .database_manager import DatabaseManager
+from modules.security.rate_limit_manager import rate_limit_cheap, rate_limit_moderate
 
 # Create Blueprint for database API endpoints
 database_bp = Blueprint("database", __name__, url_prefix="/api/db")
@@ -33,6 +34,7 @@ def validate_api_key():
 
 
 @database_bp.route("/jobs", methods=["GET"])
+@rate_limit_cheap  # Database reads: 200/min
 def get_jobs():
     """
     Get jobs with optional filtering
