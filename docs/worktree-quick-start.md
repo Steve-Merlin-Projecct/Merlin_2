@@ -3,8 +3,8 @@
 ## 1. Stage and Build Worktrees
 
 ```bash
-/tree stage Implement API rate limiting
-/tree stage Add dashboard analytics
+/tree stage [description]
+/tree stage [description]
 /tree build
 ```
 
@@ -14,12 +14,12 @@ For each worktree you want to work on:
 
 1. **Open new terminal**: `Ctrl+Shift+`` (backtick)
 2. **Navigate to worktree**: `cd /workspace/.trees/<worktree-name>`
-3. **Launch Claude with context**: `bash /workspace/.claude/scripts/cltr.sh`
+3. **Launch Claude with context**: `cltr`
 
 **Example:**
 ```bash
 cd /workspace/.trees/implement-api-rate-limiting
-bash /workspace/.claude/scripts/cltr.sh
+cltr
 ```
 
 Claude launches with task context pre-loaded and asks clarifying questions.
@@ -36,12 +36,3 @@ When finished:
 ```bash
 /tree closedone
 ```
-
----
-
-**Optional Alias** (makes it easier):
-```bash
-echo "alias cltr='bash /workspace/.claude/scripts/cltr.sh'" >> ~/.bashrc
-```
-
-Then just type `cltr` instead of the full path.
