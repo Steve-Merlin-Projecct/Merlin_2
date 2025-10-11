@@ -76,6 +76,70 @@ git-orchestrator "commit_section:Section Name"
 
 ---
 
+### Pattern 3: User-Requested Commit
+```
+git-orchestrator "user_commit:Description"
+```
+
+**When Primary Agent Invokes:**
+- User explicitly requests: "create a commit", "commit these changes", "save my work"
+- User asks to push changes to remote
+- User wants ad-hoc checkpoint outside normal workflow
+- User requests specific commit message
+
+**Context Required:**
+- User's description/commit message
+- Summary of what was changed (if user didn't provide)
+- List of files changed
+
+**What Agent Does:**
+1. Check git status for uncommitted changes
+2. Run quick test suite (warn on failures but proceed)
+3. Detect schema changes and run automation if needed
+4. Stage all changes or user-specified files
+5. Create commit with user's message (or help generate one)
+6. Optionally push to remote if user requested
+7. Return structured response
+
+**Validation Strategy:**
+- **Tests:** Warn on failures but proceed (user-driven decision)
+- **Documentation:** Warn if missing but don't block
+- **Task completion:** Not required (user may be mid-task)
+- **Version update:** Skip (user commits don't auto-increment)
+
+**Example Invocations:**
+
+*User says: "commit these changes"*
+```
+Operation: user_commit:User-requested commit
+Summary: User requested to save current work progress
+Files changed:
+- modules/dashboard_api.py (modified)
+- static/css/dashboard.css (modified)
+Commit message: User's work in progress
+Push: false
+```
+
+*User says: "create a commit with message 'fix dashboard layout bug' and push"*
+```
+Operation: user_commit:fix dashboard layout bug
+Summary: User-specified commit for dashboard layout fix
+Files changed: [auto-detect]
+Commit message: fix dashboard layout bug
+Push: true
+```
+
+*User says: "save my progress on the analytics feature"*
+```
+Operation: user_commit:Analytics feature progress
+Summary: User requested checkpoint for analytics feature work
+Files changed: [auto-detect]
+Commit message: WIP: Analytics feature progress
+Push: false
+```
+
+---
+
 ## Context Discovery (Autonomous)
 
 **Primary Agent Provides:** Section name, summary, files changed

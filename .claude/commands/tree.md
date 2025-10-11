@@ -4,7 +4,7 @@ description: Manage git worktrees with intelligent automation
 
 Execute the tree worktree management command.
 
-Run: `bash /workspace/.trees/worktree-manager/.claude/scripts/tree.sh "$@"`
+Run: `bash /workspace/.claude/scripts/tree.sh "$@"`
 
 This command provides comprehensive worktree management:
 - `/tree stage [description]` - Stage feature for worktree creation
@@ -14,6 +14,12 @@ This command provides comprehensive worktree management:
 - `/tree close` - Complete work and generate synopsis
 - `/tree closedone` - Batch merge and cleanup completed worktrees
 - `/tree status` - Show worktree environment status
+- `/tree refresh` - Check slash command availability and get session reload guidance
 - `/tree help` - Show detailed help
+
+**Note:** If `/tree` commands show "Unknown slash command" in worktrees:
+- Run: `bash /workspace/.claude/scripts/tree.sh refresh` for diagnostics
+- Workaround: Use direct script calls (e.g., `bash /workspace/.claude/scripts/tree.sh status`)
+- Permanent fix: Restart Claude Code CLI session from the worktree directory
 
 For full documentation, see: tasks/prd-tree-slash-command.md

@@ -33,9 +33,9 @@
         <header class="dashboard-header">
             <div>
                 <h1 class="dashboard-title">Job Listings</h1>
-                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Browse and filter discovered jobs</p>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;" x-text="`${pagination.total} jobs found`"></p>
             </div>
-            <div style="display: flex; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
                 <select x-model="filter" @change="loadJobs()" class="btn btn-secondary">
                     <option value="all">All Jobs</option>
                     <option value="eligible">Eligible</option>
@@ -45,13 +45,27 @@
             </div>
         </header>
 
+        <!-- Loading Spinner -->
+        <div x-show="loading" class="glass-card" style="text-align: center; padding: 2rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            <p style="color: var(--color-text-secondary);">Loading jobs...</p>
+        </div>
+
+        <!-- Error State -->
+        <div x-show="error" class="glass-card" style="text-align: center; padding: 2rem; border: 1px solid var(--color-red);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">❌</div>
+            <h3 style="color: var(--color-red); margin-bottom: 0.5rem;">Error Loading Jobs</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1rem;" x-text="error"></p>
+            <button @click="loadJobs()" class="btn btn-primary">Retry</button>
+        </div>
+
         <!-- Jobs Grid -->
-        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+        <div x-show="!loading && !error && jobs.length > 0" class="metrics-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
             <template x-for="job in jobs" :key="job.id">
                 <div class="glass-card" style="padding: 1.5rem;">
                     <!-- Job Header -->
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                        <div>
+                        <div style="flex: 1;">
                             <h3 class="gradient-text-cyan" style="font-size: 1.25rem; margin-bottom: 0.5rem;" x-text="job.title"></h3>
                             <p style="color: var(--color-text-secondary); font-size: 0.875rem;" x-text="job.company"></p>
                         </div>
@@ -64,6 +78,8 @@
                     <div style="margin-bottom: 1rem; color: var(--color-text-secondary); font-size: 0.875rem;">
                         <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
                             <span>📍 <span x-text="job.location"></span></span>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
                             <span>💰 <span x-text="job.salary"></span></span>
                         </div>
                         <div style="display: flex; gap: 1rem;">
@@ -77,9 +93,9 @@
 
                     <!-- Actions -->
                     <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-primary" style="flex: 1; font-size: 0.875rem;">
+                        <a :href="job.url" target="_blank" class="btn btn-primary" style="flex: 1; font-size: 0.875rem; text-decoration: none; text-align: center;">
                             View Details
-                        </button>
+                        </a>
                         <button class="btn btn-secondary" style="font-size: 0.875rem;" x-show="job.eligible && !job.applied">
                             Apply Now
                         </button>
@@ -89,10 +105,29 @@
         </div>
 
         <!-- Empty State -->
-        <div x-show="jobs.length === 0" class="glass-card" style="text-align: center; padding: 4rem;">
+        <div x-show="!loading && !error && jobs.length === 0" class="glass-card" style="text-align: center; padding: 4rem;">
             <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
             <h3 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 0.5rem;">No jobs found</h3>
             <p style="color: var(--color-text-secondary);">Try adjusting your filters or wait for new jobs to be scraped</p>
+        </div>
+
+        <!-- Pagination -->
+        <div x-show="!loading && !error && pagination.pages > 1" style="margin-top: 2rem; display: flex; justify-content: center; gap: 0.5rem; align-items: center;">
+            <button @click="pagination.page > 1 && (pagination.page--, loadJobs())"
+                    :disabled="pagination.page === 1"
+                    class="btn btn-secondary"
+                    style="font-size: 0.875rem;">
+                Previous
+            </button>
+            <span style="color: var(--color-text-secondary); padding: 0 1rem;">
+                Page <span x-text="pagination.page"></span> of <span x-text="pagination.pages"></span>
+            </span>
+            <button @click="pagination.page < pagination.pages && (pagination.page++, loadJobs())"
+                    :disabled="pagination.page === pagination.pages"
+                    class="btn btn-secondary"
+                    style="font-size: 0.875rem;">
+                Next
+            </button>
         </div>
 
     </div>
@@ -103,6 +138,13 @@
                 jobs: [],
                 filter: 'all',
                 loading: false,
+                error: null,
+                pagination: {
+                    page: 1,
+                    per_page: 20,
+                    total: 0,
+                    pages: 0
+                },
 
                 async init() {
                     await this.loadJobs();
@@ -110,92 +152,94 @@
 
                 async loadJobs() {
                     this.loading = true;
-                    // Mock data for now
-                    this.jobs = [
-                        {
-                            id: '1',
-                            title: 'Senior Full Stack Developer',
-                            company: 'TechCorp Inc',
-                            location: 'Remote',
-                            salary: '$120k - $180k',
-                            type: 'Full-time',
-                            posted: '2 days ago',
-                            description: 'Build scalable web applications using React, Node.js, and PostgreSQL. Lead technical decisions and mentor junior developers.',
-                            eligible: true,
-                            applied: false
-                        },
-                        {
-                            id: '2',
-                            title: 'Python Backend Engineer',
-                            company: 'DataFlow Systems',
-                            location: 'San Francisco, CA',
-                            salary: '$140k - $200k',
-                            type: 'Full-time',
-                            posted: '1 day ago',
-                            description: 'Design and implement high-performance backend services. Work with FastAPI, PostgreSQL, and Redis.',
-                            eligible: true,
-                            applied: false
-                        },
-                        {
-                            id: '3',
-                            title: 'AI/ML Software Engineer',
-                            company: 'Neural Networks Ltd',
-                            location: 'Remote',
-                            salary: '$150k - $220k',
-                            type: 'Full-time',
-                            posted: '3 hours ago',
-                            description: 'Build and deploy machine learning models. Experience with PyTorch, TensorFlow, and production ML systems required.',
-                            eligible: true,
-                            applied: false
-                        },
-                        {
-                            id: '4',
-                            title: 'Junior Frontend Developer',
-                            company: 'StartupXYZ',
-                            location: 'New York, NY',
-                            salary: '$60k - $80k',
-                            type: 'Full-time',
-                            posted: '1 week ago',
-                            description: 'Entry level position for recent graduates. Must know React basics.',
-                            eligible: false,
-                            applied: false
-                        },
-                        {
-                            id: '5',
-                            title: 'DevOps Engineer',
-                            company: 'CloudScale',
-                            location: 'Remote',
-                            salary: '$130k - $190k',
-                            type: 'Full-time',
-                            posted: '5 days ago',
-                            description: 'Manage cloud infrastructure on AWS/GCP. Kubernetes, Terraform, and CI/CD expertise required.',
-                            eligible: true,
-                            applied: false
-                        },
-                        {
-                            id: '6',
-                            title: 'Staff Software Engineer',
-                            company: 'Innovation Hub',
-                            location: 'Seattle, WA',
-                            salary: '$180k - $250k',
-                            type: 'Full-time',
-                            posted: '4 days ago',
-                            description: 'Lead complex technical initiatives. Architect scalable systems and drive engineering excellence.',
-                            eligible: true,
-                            applied: true
+                    this.error = null;
+
+                    try {
+                        const url = `/api/v2/dashboard/jobs?filter=${this.filter}&page=${this.pagination.page}&per_page=${this.pagination.per_page}`;
+                        const response = await fetch(url);
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                         }
-                    ];
 
-                    // Apply filter
-                    if (this.filter === 'eligible') {
-                        this.jobs = this.jobs.filter(j => j.eligible && !j.applied);
-                    } else if (this.filter === 'not_eligible') {
-                        this.jobs = this.jobs.filter(j => !j.eligible);
-                    } else if (this.filter === 'applied') {
-                        this.jobs = this.jobs.filter(j => j.applied);
+                        const data = await response.json();
+
+                        if (!data.success) {
+                            throw new Error(data.error || 'Failed to load jobs');
+                        }
+
+                        // Transform API data to match UI format
+                        this.jobs = data.jobs.map(job => this.transformJob(job));
+                        this.pagination = data.pagination;
+
+                    } catch (err) {
+                        console.error('Error loading jobs:', err);
+                        this.error = err.message;
+                        this.jobs = [];
+                    } finally {
+                        this.loading = false;
                     }
+                },
 
-                    this.loading = false;
+                transformJob(job) {
+                    return {
+                        id: job.id,
+                        title: job.title,
+                        company: job.company || 'Unknown Company',
+                        location: job.location || 'Remote',
+                        salary: this.formatSalary(job.salary_min, job.salary_max, job.salary_currency),
+                        type: job.job_type || 'Full-time',
+                        posted: this.formatDate(job.posted_date),
+                        description: job.seniority_level ? `${job.seniority_level} level position` : 'No description available',
+                        eligible: job.eligibility,
+                        applied: job.applied_date !== null,
+                        url: job.url || '#',
+                        remote_options: job.remote_options
+                    };
+                },
+
+                formatSalary(min, max, currency) {
+                    currency = currency || 'CAD';
+                    if (!min && !max) return 'Salary not specified';
+                    if (min && max) {
+                        const minStr = this.formatCurrency(min, currency);
+                        const maxStr = this.formatCurrency(max, currency);
+                        return `${minStr} - ${maxStr}`;
+                    }
+                    if (min) return `${this.formatCurrency(min, currency)}+`;
+                    if (max) return `Up to ${this.formatCurrency(max, currency)}`;
+                },
+
+                formatCurrency(amount, currency) {
+                    try {
+                        return new Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: currency,
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(amount);
+                    } catch (e) {
+                        return `$${amount}`;
+                    }
+                },
+
+                formatDate(dateString) {
+                    if (!dateString) return 'Recently';
+
+                    try {
+                        const date = new Date(dateString);
+                        const now = new Date();
+                        const diffTime = Math.abs(now - date);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays === 0) return 'Today';
+                        if (diffDays === 1) return 'Yesterday';
+                        if (diffDays < 7) return `${diffDays} days ago`;
+                        if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+                        return `${Math.floor(diffDays / 30)} months ago`;
+                    } catch (e) {
+                        return 'Recently';
+                    }
                 }
             };
         }
