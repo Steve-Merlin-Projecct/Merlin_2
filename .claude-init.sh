@@ -6,8 +6,8 @@ TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
 # Display banner
 echo "════════════════════════════════════════════════════════"
-echo "🌳 Worktree: api-rate-limiting-and-request-throttling-protect-e"
-echo "📋 Task: api rate limiting and request throttling protect e"
+echo "🌳 Worktree: dashbaord-completion-the-dashboard-needs-to-integr"
+echo "📋 Task: dashbaord completion the dashboard needs to integr"
 echo "════════════════════════════════════════════════════════"
 echo ""
 echo "✅ Slash commands available after Claude loads:"
