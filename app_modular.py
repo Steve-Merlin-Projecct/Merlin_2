@@ -56,6 +56,20 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 # Configure proxy middleware for deployment
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+# Health check endpoint for load balancers and monitoring
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for production monitoring.
+    Used by DigitalOcean load balancer to verify app is running.
+    Returns basic status information without authentication.
+    """
+    return jsonify({
+        "status": "healthy",
+        "version": __version__,
+        "timestamp": datetime.utcnow().isoformat()
+    }), 200
+
 # Register blueprints
 # Webhook blueprint registration disabled - no longer using Make.com
 # app.register_blueprint(webhook_bp)

@@ -31,6 +31,15 @@ except ImportError:
     logging.warning("Authenticity enhancement modules not available")
     AUTHENTICITY_AVAILABLE = False
 
+# Security scanner imports
+try:
+    from .docx_security_scanner import DOCXSecurityScanner
+    from .security_audit_logger import SecurityAuditLogger
+    SECURITY_SCANNER_AVAILABLE = True
+except ImportError:
+    logging.warning("Security scanner modules not available")
+    SECURITY_SCANNER_AVAILABLE = False
+
 
 class TemplateEngine:
     """
@@ -43,13 +52,14 @@ class TemplateEngine:
     4. Generating final documents with professional metadata
     """
 
-    def __init__(self, enable_url_tracking=True, enable_authenticity=True):
+    def __init__(self, enable_url_tracking=True, enable_authenticity=True, enable_security_scan=True):
         """
         Initialize the template engine with configuration
 
         Args:
             enable_url_tracking (bool): Enable automatic URL tracking for candidate URLs (default: True)
             enable_authenticity (bool): Enable authenticity enhancements (smart typography, realistic metadata)
+            enable_security_scan (bool): Enable security scanning of generated documents (default: True)
         """
         self.setup_logging()
         self.template_cache = {}  # Cache loaded templates for performance
@@ -83,6 +93,18 @@ class TemplateEngine:
         else:
             self.smart_typography = None
             self.metadata_generator = None
+
+        # Security scanning configuration
+        self.enable_security_scan = enable_security_scan and SECURITY_SCANNER_AVAILABLE
+        if self.enable_security_scan:
+            self.security_scanner = DOCXSecurityScanner(strict_mode=True)
+            self.security_audit_logger = SecurityAuditLogger()
+            self.logger.info("Security scanning enabled")
+        else:
+            self.security_scanner = None
+            self.security_audit_logger = None
+            if enable_security_scan and not SECURITY_SCANNER_AVAILABLE:
+                self.logger.warning("Security scanning requested but modules not available")
 
     def setup_logging(self):
         """Configure logging for template processing"""
@@ -189,6 +211,24 @@ class TemplateEngine:
             # Save the document
             doc.save(output_path)
 
+            # Perform security scan on generated document
+            security_result = None
+            if self.enable_security_scan:
+                security_result = self._perform_security_scan(output_path, data)
+
+                # If security scan fails, delete the document and raise error
+                if not security_result.get("is_safe", False):
+                    self.logger.error(f"Security scan FAILED for {output_path}")
+                    try:
+                        os.remove(output_path)
+                        self.logger.info(f"Deleted unsafe document: {output_path}")
+                    except Exception as e:
+                        self.logger.error(f"Failed to delete unsafe document: {e}")
+
+                    raise SecurityError(
+                        f"Document failed security validation: {security_result.get('threat_summary', 'Unknown threats detected')}"
+                    )
+
             # Calculate final statistics
             final_stats = self.calculate_final_stats(substitution_stats)
 
@@ -200,6 +240,7 @@ class TemplateEngine:
                 "variables_processed": final_stats,
                 "generation_time": datetime.now().isoformat(),
                 "success": True,
+                "security_scan": security_result
             }
 
             self.logger.info(f"Document generated successfully: {output_path}")
@@ -732,6 +773,95 @@ class TemplateEngine:
 
         except Exception as e:
             return {"valid": False, "error": str(e), "variables_found": [], "variable_count": 0}
+
+    def _perform_security_scan(self, file_path: str, metadata: dict) -> dict:
+        """
+        Perform comprehensive security scan on generated document
+
+        This method scans the generated DOCX file for security threats including:
+        - Remote template references (DOTM injection)
+        - Embedded OLE objects and ActiveX controls
+        - Malformed ZIP structure
+        - External content references
+
+        Args:
+            file_path: Path to generated DOCX file
+            metadata: Document metadata for audit logging
+
+        Returns:
+            dict: Security scan results with threat details
+        """
+        try:
+            if not self.security_scanner or not self.security_audit_logger:
+                self.logger.warning("Security scanner not available, skipping scan")
+                return {"is_safe": True, "scan_skipped": True}
+
+            self.logger.info(f"Performing security scan: {file_path}")
+
+            # Run security scan
+            is_safe, threats = self.security_scanner.scan_file(file_path)
+            scan_report = self.security_scanner.get_scan_report()
+
+            # Log to security audit trail
+            audit_entry = {
+                "file_path": file_path,
+                "is_safe": is_safe,
+                "threat_count": len(threats),
+                "scan_report": scan_report,
+                "metadata": {
+                    "author": metadata.get("author", "unknown"),
+                    "title": metadata.get("title", "unknown"),
+                    "document_type": metadata.get("document_type", "unknown")
+                }
+            }
+
+            self.security_audit_logger.log_scan(audit_entry)
+
+            # Generate threat summary
+            threat_summary = ""
+            if threats:
+                critical_threats = [t for t in threats if t.severity == "critical"]
+                high_threats = [t for t in threats if t.severity == "high"]
+
+                if critical_threats:
+                    threat_summary = f"{len(critical_threats)} critical threat(s): " + \
+                                   ", ".join([t.threat_type for t in critical_threats[:3]])
+                elif high_threats:
+                    threat_summary = f"{len(high_threats)} high severity threat(s): " + \
+                                   ", ".join([t.threat_type for t in high_threats[:3]])
+
+            # Return comprehensive result
+            result = {
+                "is_safe": is_safe,
+                "threat_count": len(threats),
+                "threat_summary": threat_summary,
+                "scan_report": scan_report,
+                "scan_timestamp": datetime.now().isoformat()
+            }
+
+            if is_safe:
+                self.logger.info(f"Security scan PASSED: {file_path}")
+            else:
+                self.logger.error(
+                    f"Security scan FAILED: {file_path} - {threat_summary}"
+                )
+
+            return result
+
+        except Exception as e:
+            self.logger.error(f"Error during security scan: {str(e)}")
+            # In case of scan error, fail safe - treat as unsafe
+            return {
+                "is_safe": False,
+                "threat_count": 1,
+                "threat_summary": f"Security scan error: {str(e)}",
+                "scan_error": str(e)
+            }
+
+
+class SecurityError(Exception):
+    """Exception raised when document fails security validation"""
+    pass
 
 
 def main():
