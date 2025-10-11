@@ -645,7 +645,7 @@ copy_slash_commands_to_worktree() {
     fi
 }
 
-# Generate VS Code tasks and auto-execute them
+# Generate VS Code tasks and update devcontainer.json for auto-terminals
 generate_and_run_vscode_tasks() {
     local pending_file="$TREES_DIR/.pending-terminals.txt"
 
@@ -662,31 +662,24 @@ generate_and_run_vscode_tasks() {
 
     mkdir -p "$WORKSPACE_ROOT/.vscode"
     local tasks_file="$WORKSPACE_ROOT/.vscode/tasks.json"
-    local terminals_config="$WORKSPACE_ROOT/.vscode/terminals.json"
+    local devcontainer_file="$WORKSPACE_ROOT/.devcontainer/devcontainer.json"
 
     # Generate tasks.json with auto-run capability
     echo '{' > "$tasks_file"
     echo '  "version": "2.0.0",' >> "$tasks_file"
     echo '  "tasks": [' >> "$tasks_file"
 
-    # Generate terminals.json for VS Code terminal restoration
-    echo '{' > "$terminals_config"
-    echo '  "terminals": [' >> "$terminals_config"
+    # Build postAttachCommand object for devcontainer.json
+    local post_attach_cmds="{"
+    local first_attach=true
 
     local first=true
     local terminal_num=1
-    local colors=("terminal.ansiBlue" "terminal.ansiGreen" "terminal.ansiYellow" "terminal.ansiCyan" "terminal.ansiMagenta" "terminal.ansiRed")
-    local color_idx=0
 
     while IFS= read -r worktree_path; do
         local wt_name=$(basename "$worktree_path")
-        local color="${colors[$color_idx]}"
-        color_idx=$(( (color_idx + 1) % ${#colors[@]} ))
 
-        [ "$first" = false ] && {
-            echo "," >> "$tasks_file"
-            echo "," >> "$terminals_config"
-        }
+        [ "$first" = false ] && echo "," >> "$tasks_file"
         first=false
 
         # Task definition for manual execution
@@ -709,15 +702,10 @@ generate_and_run_vscode_tasks() {
     }
 TASKEOF
 
-        # Terminal configuration for VS Code restoration
-        cat >> "$terminals_config" << TERMEOF
-    {
-      "name": "🌳 $terminal_num: $wt_name",
-      "cwd": "$worktree_path",
-      "color": "$color",
-      "icon": "tree"
-    }
-TERMEOF
+        # Build postAttachCommand entry (JSON object format)
+        [ "$first_attach" = false ] && post_attach_cmds+=","
+        first_attach=false
+        post_attach_cmds+="\"terminal_${terminal_num}\": \"cd $worktree_path && bash .claude-init.sh\""
 
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
@@ -725,8 +713,110 @@ TERMEOF
     echo '  ]' >> "$tasks_file"
     echo '}' >> "$tasks_file"
 
-    echo '  ]' >> "$terminals_config"
-    echo '}' >> "$terminals_config"
+    post_attach_cmds+="}"
+
+    # Update devcontainer.json with postAttachCommand using Python
+    print_info "Configuring auto-terminal creation in devcontainer.json..."
+
+    if [ -f "$devcontainer_file" ]; then
+        # Create backup
+        cp "$devcontainer_file" "${devcontainer_file}.backup"
+
+        # Write JSON to temp file for Python to read
+        local temp_json="/tmp/post_attach_commands.json"
+        echo "$post_attach_cmds" > "$temp_json"
+
+        # Use Python to update JSON (handle JSONC comments)
+        python3 << 'PYTHON_SCRIPT'
+import json
+import sys
+import re
+
+devcontainer_file = "/workspace/.devcontainer/devcontainer.json"
+temp_json_file = "/tmp/post_attach_commands.json"
+
+try:
+    # Read the postAttachCommand object from temp file
+    with open(temp_json_file, 'r') as f:
+        post_attach_json = json.load(f)
+
+    # Read existing devcontainer config (strip // comments for parsing)
+    with open(devcontainer_file, 'r') as f:
+        content = f.read()
+        # Remove single-line comments (// ...)
+        content_no_comments = re.sub(r'//.*?$', '', content, flags=re.MULTILINE)
+        config = json.loads(content_no_comments)
+
+    # Add or update postAttachCommand
+    config['postAttachCommand'] = post_attach_json
+
+    # Write updated config (preserve formatting but add postAttachCommand)
+    # Find best location to insert - after postCreateCommand if exists
+    with open(devcontainer_file, 'r') as f:
+        lines = f.readlines()
+
+    # Find insertion point (after postCreateCommand line)
+    insert_idx = -1
+    for i, line in enumerate(lines):
+        if '"postCreateCommand"' in line:
+            # Find the end of this property (next comma or closing brace)
+            for j in range(i, len(lines)):
+                if lines[j].strip().endswith(','):
+                    insert_idx = j + 1
+                    break
+            break
+
+    if insert_idx == -1:
+        # Fallback: insert before closing brace
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].strip() == '}':
+                insert_idx = i
+                break
+
+    # Generate postAttachCommand JSON string
+    post_attach_str = json.dumps(post_attach_json, indent=4)
+    # Indent properly (2 spaces)
+    post_attach_lines = ['  "postAttachCommand": ' + post_attach_str.split('\n')[0] + '\n']
+    for line in post_attach_str.split('\n')[1:]:
+        post_attach_lines.append('  ' + line + '\n')
+
+    # Add comma to previous line if needed
+    if insert_idx > 0 and not lines[insert_idx - 1].strip().endswith(','):
+        lines[insert_idx - 1] = lines[insert_idx - 1].rstrip() + ',\n'
+
+    # Insert new lines
+    lines = lines[:insert_idx] + ['\n', '  // Auto-generated: worktree terminal automation\n'] + post_attach_lines + [',\n'] + lines[insert_idx:]
+
+    # Write back
+    with open(devcontainer_file, 'w') as f:
+        f.writelines(lines)
+
+    print("✓ Updated devcontainer.json with postAttachCommand")
+    sys.exit(0)
+except Exception as e:
+    print(f"✗ Failed to update devcontainer.json: {e}", file=sys.stderr)
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
+PYTHON_SCRIPT
+
+        if [ $? -eq 0 ]; then
+            rm -f "$temp_json"
+            print_success "Auto-terminal creation configured!"
+            echo ""
+            print_info "Next step: Reload VS Code window to apply changes"
+            print_success "  Ctrl+Shift+P → 'Developer: Reload Window'"
+            echo ""
+            print_info "After reload, all 17 terminals will auto-create with Claude loaded!"
+        else
+            print_warning "Failed to auto-configure. Manual step required:"
+            print_info "Add this to .devcontainer/devcontainer.json:"
+            echo ""
+            cat "$temp_json"
+            echo ""
+            rm -f "$temp_json"
+        fi
+    fi
 
     # Auto-execute terminal creation script
     # Creates a script that runs all terminal tasks automatically
@@ -1096,14 +1186,19 @@ EOF
         echo ""
         print_header "Next Steps"
         echo ""
-        print_info "Create terminals for all worktrees (REQUIRED - run this next):"
-        print_success "  bash .vscode/create-worktree-terminals.sh"
+        print_info "Open terminals manually for each worktree:"
         echo ""
-        print_info "Then continue development in worktrees:"
-        echo "  1. Answer Claude's clarifying questions"
-        echo "  2. Implement the feature"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
+        print_success "  1. Open new terminal (Ctrl+Shift+\`)"
+        print_success "  2. cd /workspace/.trees/<worktree-name>"
+        print_success "  3. /cltr  (launches Claude with task context)"
+        echo ""
+        print_info "Then continue development:"
+        echo "  • Answer Claude's clarifying questions"
+        echo "  • Implement the feature"
+        echo "  • When done: /tree close"
+        echo "  • Merge all: /tree closedone (from main workspace)"
+        echo ""
+        print_info "📖 See: docs/tree-manual-workflow.md for detailed guide"
     fi
 }
 
@@ -1277,7 +1372,12 @@ EOF
     echo ""
     echo "📝 Documentation: $synopsis_file"
     echo ""
-    echo "🎯 Next Steps:"
+    echo "🎯 Next Steps:
+  1. Open terminal: cd <worktree-path>
+  2. Run: bash .claude-init.sh
+  3. Inside terminal, launch Claude with: /cltr
+
+See full manual workflow guide: docs/tree-manual-workflow.md"
     echo "  1. Review synopsis before merging"
     echo "  2. Run /tree closedone to batch merge all completed worktrees"
     echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
