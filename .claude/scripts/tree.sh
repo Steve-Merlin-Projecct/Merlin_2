@@ -1076,6 +1076,29 @@ EOF
         echo "  3. When done: /tree close (from within worktree)"
         echo "  4. Merge all: /tree closedone (from main workspace)"
     fi
+||||||| Stash base
+=======
+
+    # Create integrated terminals with Claude auto-launch
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Auto-Launching Terminals with Claude"
+
+        generate_and_run_vscode_tasks
+
+        print_success "All worktrees ready! Claude instances launched with task context."
+        echo ""
+        print_info "Each terminal has:"
+        echo "  • Claude Code running with task context loaded"
+        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
+        echo "  • Full task description in .claude-task-context.md"
+        echo ""
+        print_info "Next Steps:"
+        echo "  1. Claude will ask clarifying questions - answer them"
+        echo "  2. Start working on your features"
+        echo "  3. When done: /tree close (from within worktree)"
+        echo "  4. Merge all: /tree closedone (from main workspace)"
+    fi
 >>>>>>> Stashed changes
 }
 
