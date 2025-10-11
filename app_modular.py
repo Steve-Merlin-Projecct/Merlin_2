@@ -24,9 +24,10 @@ from modules.user_management.user_profile_api import user_profile_bp
 from modules.workflow.email_application_api import email_application_api
 from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
+from modules.security.rate_limit_manager import init_rate_limiter, before_request_handler, after_request_handler
 
 # Set up logging
-__version__ = "4.3.1"
+__version__ = "4.3.2"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -56,19 +57,18 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 # Configure proxy middleware for deployment
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-# Health check endpoint for load balancers and monitoring
-@app.route('/health')
-def health_check():
-    """
-    Health check endpoint for production monitoring.
-    Used by DigitalOcean load balancer to verify app is running.
-    Returns basic status information without authentication.
-    """
-    return jsonify({
-        "status": "healthy",
-        "version": __version__,
-        "timestamp": datetime.utcnow().isoformat()
-    }), 200
+# Initialize rate limiting
+limiter = init_rate_limiter(app)
+logger.info("Rate limiting initialized successfully")
+
+# Register rate limiting hooks
+@app.before_request
+def before_request():
+    before_request_handler()
+
+@app.after_request
+def after_request(response):
+    return after_request_handler(response)
 
 # Register blueprints
 # Webhook blueprint registration disabled - no longer using Make.com
@@ -138,8 +138,16 @@ except ImportError as e:
 # Document Generation API is already registered above via document_bp from modules.document_routes
 logger.info("Document Generation API already registered via document_bp")
 
-# The user_profile_bp is already registered above 
+# The user_profile_bp is already registered above
 logger.info("User Profile API already registered via user_profile_bp")
+
+# Register Rate Limiting Analytics API
+try:
+    from modules.security.rate_limit_analytics_api import rate_limit_analytics_bp
+    app.register_blueprint(rate_limit_analytics_bp)
+    logger.info("Rate Limiting Analytics API registered successfully")
+except ImportError as e:
+    logger.warning(f"Could not register Rate Limiting Analytics API: {e}")
 
 # Create storage directory if it doesn't exist
 os.makedirs("storage", exist_ok=True)

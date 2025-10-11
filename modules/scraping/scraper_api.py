@@ -1,6 +1,6 @@
 """
 Scraper API Routes
-Provides REST API endpoints for job scraping operations
+Provides REST API endpoints for job scraping operations with rate limiting
 """
 
 import logging
@@ -16,6 +16,7 @@ from modules.database.database_extensions import extend_database_reader
 
 extend_database_reader()  # Extend database functionality for scraper operations
 from modules.security.security_patch import SecurityPatch
+from modules.security.rate_limit_manager import rate_limit_expensive, rate_limit_moderate
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ scraper_bp = Blueprint("scraper_api_routes", __name__, url_prefix="/api/scraping
 
 @scraper_bp.route("/start-scrape", methods=["POST"])
 @require_auth
+@rate_limit_expensive  # Scraping is expensive: 5/hour;20/day
 @SecurityPatch.validate_request_size()
 def start_scrape():
     """

@@ -6,8 +6,8 @@ TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
 # Display banner
 echo "════════════════════════════════════════════════════════"
-echo "🌳 Worktree: docx-security-verification-system-prevent-maliciou"
-echo "📋 Task: docx security verification system prevent maliciou"
+echo "🌳 Worktree: api-rate-limiting-and-request-throttling-protect-e"
+echo "📋 Task: api rate limiting and request throttling protect e"
 echo "════════════════════════════════════════════════════════"
 echo ""
 echo "✅ Slash commands available after Claude loads:"
