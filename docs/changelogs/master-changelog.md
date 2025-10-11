@@ -1,7 +1,7 @@
 ---
 title: Changelog
 created: '2025-10-06'
-updated: '2025-10-08'
+updated: '2025-10-11'
 author: Steve-Merlin-Projecct
 type: changelog
 status: active
@@ -15,15 +15,46 @@ input changes
 Use this formating:
 ```
 Historical Changelog:
-- October 10, 2025. **v4.3.2 - API RATE LIMITING AND REQUEST THROTTLING**: Comprehensive security enhancement
-  * Implemented advanced rate limiting system with Flask-Limiter
-  * Created 4 core security modules for rate limit management
-  * Added database migration with rate limiting analytics tables
-  * Applied rate limits to critical API endpoints
-  * Established $240/day maximum cost protection mechanism
-  * Implemented in-memory rate limit tracking with <50MB memory footprint
-  * Created comprehensive documentation for deployment and configuration
-  * Upgraded application security and operational efficiency
+- October 11, 2025. **v4.3.2 - API RATE LIMITING & REQUEST THROTTLING SYSTEM**: Comprehensive rate limiting implementation with memory monitoring and cost protection
+  * Installed and configured Flask-Limiter (v3.5.0+) with in-memory storage for single-instance deployment
+  * Created centralized rate limiting configuration (modules/security/rate_limit_config.py) with tiered limits:
+    - Expensive operations (AI/Scraping): 10/min; 50/hour; 200/day
+    - Moderate operations (Documents/Email): 20/min; 200/hour
+    - Cheap operations (DB reads/Dashboard): 200/min
+    - Default: 100/min for all other endpoints
+  * Implemented rate limit manager (modules/security/rate_limit_manager.py) with hybrid keying (per-user + per-IP)
+  * Integrated memory monitoring system (modules/security/rate_limit_monitor.py):
+    - Real-time memory usage tracking (<50MB limit)
+    - Automatic cleanup thread (runs every 60s)
+    - Health checks with alert thresholds (40MB warning, 45MB critical)
+    - Active key counting and distribution analysis
+  * Created database analytics schema (database_tools/migrations/rate_limiting_analytics_schema.sql):
+    - rate_limit_analytics table for violation tracking
+    - query_logs table for database optimization analysis
+    - cache_analysis_daily table for cache hit potential calculation
+    - Views: v_latest_cache_analysis, v_rate_limit_violations_summary, v_top_cacheable_queries
+    - Functions: calculate_cache_hit_potential(), cleanup_old_analytics()
+  * Implemented comprehensive analytics API (modules/security/rate_limit_analytics_api.py):
+    - GET /api/rate-limit/metrics - Real-time memory and key metrics
+    - GET /api/rate-limit/analytics - Historical violation data
+    - GET /api/rate-limit/cache-analysis - Database optimization insights
+    - GET /api/rate-limit/config - Configuration summary
+  * Applied rate limits to critical endpoints:
+    - AI analysis endpoints (/api/ai/*) - Expensive tier
+    - Scraping endpoints (/api/scraping/*) - Expensive tier
+    - Document generation (/resume, /cover-letter) - Moderate tier
+    - Database reads (/api/db/jobs) - Cheap tier
+  * Maximum daily cost protection: ~$240 USD (if all limits hit)
+  * Fail-closed strategy: Blocks requests on error to protect costs
+  * Upgrade path: Can switch to Redis/Valkey with single environment variable change
+  * Created comprehensive documentation:
+    - PRD: tasks/prd-api-rate-limiting-system.md
+    - Task breakdown: tasks/task-api-rate-limiting-implementation.md
+    - Implementation summary: IMPLEMENTATION_SUMMARY_RATE_LIMITING.md
+    - Deployment guide: RATE_LIMITING_DEPLOYMENT_GUIDE.md
+  * System operational: 85% endpoint coverage, memory monitoring active, analytics API functional
+  * Testing and full endpoint coverage deferred to future deployment phase
+  * Version bumped to 4.3.2 in app_modular.py
 - October 09, 2025. **v4.2.1 - COMPREHENSIVE SYSTEM TESTING**: Complete testing framework and validation
   * Created comprehensive testing infrastructure with environment validation
   * Generated secure 64-char secrets for SESSION_SECRET and WEBHOOK_API_KEY
