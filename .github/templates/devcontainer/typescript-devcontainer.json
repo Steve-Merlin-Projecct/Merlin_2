@@ -1,0 +1,66 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode.vscode-js-debug",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "anthropics.claude-code"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "eslint.validate": ["javascript", "typescript", "javascriptreact", "typescriptreact"],
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "files.exclude": {
+          "**/node_modules": true,
+          "**/dist": true,
+          "**/.git": false
+        },
+        "claude-code.workspacePath": "/workspace"
+      }
+    }
+  },
+
+  "forwardPorts": [{{APP_PORT}}],
+  "portsAttributes": {
+    "{{APP_PORT}}": {
+      "label": "{{PROJECT_NAME}} App",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "npm install && echo '✅ {{PROJECT_NAME}} dev container ready!'",
+  "postStartCommand": "echo '🚀 Starting Claude Code CLI...' && nohup claude > /tmp/claude.log 2>&1 &",
+
+  "remoteUser": "node",
+
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig,type=bind,readonly"
+  ],
+
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "PORT": "{{CONTAINER_PORT}}"
+  }
+}

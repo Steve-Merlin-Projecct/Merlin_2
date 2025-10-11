@@ -1,0 +1,70 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.debugpy",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "anthropics.claude-code"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.testing.pytestEnabled": true,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/*.pyc": true,
+          ".pytest_cache": true
+        },
+        "claude-code.workspacePath": "/workspace"
+      }
+    }
+  },
+
+  "forwardPorts": [{{APP_PORT}}],
+  "portsAttributes": {
+    "{{APP_PORT}}": {
+      "label": "{{PROJECT_NAME}} App",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && echo '✅ {{PROJECT_NAME}} dev container ready!'",
+  "postStartCommand": "echo '🚀 Starting Claude Code CLI...' && nohup claude > /tmp/claude.log 2>&1 &",
+
+  "remoteUser": "vscode",
+
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,readonly"
+  ],
+
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1",
+    "FLASK_ENV": "development",
+    "PORT": "{{CONTAINER_PORT}}"
+  }
+}
