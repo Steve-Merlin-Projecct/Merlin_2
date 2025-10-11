@@ -660,14 +660,8 @@ tree_build() {
         echo "  $((i+1)). $name"
     done
     echo ""
-
-    # Confirmation
-    echo -n "Create ${#features[@]} worktree(s) on branch '$dev_branch'? (y/n): "
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        print_info "Build cancelled"
-        return 0
-    fi
+    echo "Development Branch: $dev_branch"
+    echo ""
 
     # Create development branch if not exists
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
@@ -691,18 +685,10 @@ tree_build() {
 
         echo "[$num/${#features[@]}] Creating: $name"
 
-        # Create branch from dev_branch
+        # Create worktree with new branch in one command
         wait_for_git_lock || continue
-        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create branch: $branch"
-            failed_count=$((failed_count + 1))
-            continue
-        fi
-
-        # Create worktree
-        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
-            print_error "  Failed to create worktree"
-            git branch -D "$branch" &>/dev/null
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create worktree with branch: $branch"
             failed_count=$((failed_count + 1))
             continue
         fi
@@ -743,6 +729,10 @@ EOF
 
         print_success "  Created: $worktree_path"
         success_count=$((success_count + 1))
+
+        # Create integrated terminal for this worktree
+        # Store worktree info for terminal creation after all worktrees are built
+        echo "$worktree_path" >> "$TREES_DIR/.pending-terminals.txt"
     done
 
     # Archive staging file
@@ -761,6 +751,150 @@ EOF
     echo "Worktree Location: $TREES_DIR/"
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
+
+    # Run refresh check for each created worktree to inform about CLI limitation
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Worktree Session Information"
+
+        echo "ℹ️  Running /tree refresh check for each worktree..."
+        echo "   This will help you understand slash command availability."
+        echo ""
+
+        for i in "${!features[@]}"; do
+            local feature="${features[$i]}"
+            local name="${feature%%:*}"
+            local worktree_path="$TREES_DIR/$name"
+
+            # Only run for successfully created worktrees
+            if [ -d "$worktree_path" ]; then
+                echo ""
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                echo "Worktree: $name"
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+                # Change to worktree and run refresh
+                (cd "$worktree_path" && bash /workspace/.claude/scripts/tree.sh refresh)
+            fi
+        done
+
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        print_success "All worktrees created and session information displayed"
+
+        # Create integrated terminals for each worktree
+        echo ""
+        print_header "Creating Integrated Terminals"
+
+        if [ -f "$TREES_DIR/.pending-terminals.txt" ]; then
+            # Check if we're in tmux session
+            if [ -n "$TMUX" ]; then
+                print_info "Creating tmux windows for each worktree..."
+                echo ""
+
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+
+                    # Create new tmux window with worktree name and CD into it
+                    if tmux new-window -n "$wt_name" -c "$worktree_path" 2>/dev/null; then
+                        print_success "  Window $terminal_num: $wt_name"
+                        terminal_num=$((terminal_num + 1))
+                    else
+                        print_warning "  Failed to create window: $wt_name"
+                    fi
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+                echo ""
+                print_success "Created $((terminal_num - 1)) tmux windows"
+                print_info "Switch between windows: Ctrl+b then number key (0-9)"
+                print_info "List windows: Ctrl+b then w"
+
+            elif command -v tmux &> /dev/null; then
+                # tmux available but not in a session - provide command to start
+                print_warning "tmux is available but you're not in a tmux session"
+                echo ""
+                print_info "To use tmux for worktree terminals:"
+                echo "  1. Start tmux: tmux new-session -s worktrees"
+                echo "  2. Re-run: bash /workspace/.claude/scripts/tree.sh build"
+                echo "  3. Or manually create windows for each worktree"
+                echo ""
+
+                # Show manual commands
+                print_info "Worktree paths:"
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+                    echo "  $terminal_num. $wt_name: cd $worktree_path"
+                    terminal_num=$((terminal_num + 1))
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+            else
+                # No tmux - automatically execute bash commands to create terminals
+                print_info "Automatically creating terminals for VS Code..."
+                echo ""
+
+                local terminal_num=1
+                while IFS= read -r worktree_path; do
+                    local wt_name=$(basename "$worktree_path")
+
+                    print_info "  Creating terminal $terminal_num: $wt_name"
+
+                    # Automatically spawn a bash process that opens in the worktree
+                    # This creates a background process that VS Code can detect
+                    gnome-terminal --tab --title="$wt_name" --working-directory="$worktree_path" 2>/dev/null || \
+                    xterm -T "$wt_name" -e "cd $worktree_path && bash" 2>/dev/null || \
+                    osascript -e "tell application \"Terminal\" to do script \"cd $worktree_path\"" 2>/dev/null || \
+                    (
+                        # Fallback: Create a screen session for this worktree
+                        if command -v screen &> /dev/null; then
+                            screen -dmS "$wt_name" bash -c "cd $worktree_path && exec bash"
+                            echo "    Created screen session: $wt_name"
+                        else
+                            # Final fallback: Just show the command
+                            echo "    Run in terminal: cd $worktree_path"
+                        fi
+                    )
+
+                    terminal_num=$((terminal_num + 1))
+                    sleep 0.2
+                done < "$TREES_DIR/.pending-terminals.txt"
+
+                echo ""
+                print_success "Attempted to create $((terminal_num - 1)) terminals automatically"
+                print_info "If terminals didn't open, check your terminal emulator settings"
+            fi
+
+            # Clean up pending terminals file
+            rm -f "$TREES_DIR/.pending-terminals.txt"
+        fi
+
+        echo ""
+        print_header "Quick Command Reference"
+        echo ""
+        print_info "If slash commands don't work, use these direct commands:"
+        echo ""
+        echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+        echo "  bash /workspace/.claude/scripts/tree.sh list"
+        echo "  bash /workspace/.claude/scripts/tree.sh build"
+        echo "  bash /workspace/.claude/scripts/tree.sh status"
+        echo "  bash /workspace/.claude/scripts/tree.sh close"
+        echo "  bash /workspace/.claude/scripts/tree.sh refresh"
+        echo ""
+
+        echo ""
+        print_info "Next Steps:"
+        if [ -n "$TMUX" ]; then
+            echo "  1. Use Ctrl+b then window number to switch between worktrees"
+            echo "  2. Start working on your features"
+            echo "  3. When done: bash /workspace/.claude/scripts/tree.sh close"
+        else
+            echo "  1. Create terminals in VS Code panel (see instructions above)"
+            echo "  2. CD into each worktree path"
+            echo "  3. Start working on your features"
+            echo "  4. When done: bash /workspace/.claude/scripts/tree.sh close"
+        fi
+    fi
 }
 
 #==============================================================================
@@ -1022,6 +1156,101 @@ tree_status() {
 }
 
 #==============================================================================
+# /tree refresh - Session guidance for slash command loading
+#==============================================================================
+
+tree_refresh() {
+    print_header "Slash Command Session Check"
+
+    local current_dir=$(pwd)
+    local workspace_root="/workspace"
+    local in_worktree=false
+
+    # Detect if we're in a worktree
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        in_worktree=true
+        local worktree_name=$(basename "$current_dir")
+    fi
+
+    echo "📍 Current Location:"
+    echo "   $current_dir"
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        echo "🌳 Worktree Detected: $worktree_name"
+        echo ""
+    fi
+
+    # Check if slash command files exist
+    echo "🔍 Checking Slash Command Files:"
+
+    local commands_found=0
+    local commands_missing=0
+
+    for cmd in tree task; do
+        if [ -f ".claude/commands/$cmd.md" ]; then
+            print_success "/$cmd command file exists"
+            commands_found=$((commands_found + 1))
+        else
+            print_error "/$cmd command file MISSING"
+            commands_missing=$((commands_missing + 1))
+        fi
+    done
+
+    echo ""
+
+    if [ $commands_missing -gt 0 ]; then
+        print_error "Missing command files detected!"
+        echo ""
+        echo "This worktree may be on an older commit. Consider:"
+        echo "  1. Merge latest changes from main/develop"
+        echo "  2. Cherry-pick the slash command commits"
+        echo ""
+        return 1
+    fi
+
+    # Provide session reload guidance
+    print_header "Claude Code CLI Session Guidance"
+
+    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
+    echo "   when switching between worktrees mid-session."
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        print_warning "You're in a worktree. If /tree or /task don't work:"
+        echo ""
+        echo "  Quick Fix (Recommended):"
+        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
+        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
+        echo ""
+        echo "  Permanent Fix:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Start new session FROM this worktree directory"
+        echo "    • CLI will rescan .claude/commands/ on session start"
+    else
+        print_success "You're in main workspace - slash commands should work"
+        echo ""
+        echo "  If commands still don't work:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Check .claude/commands/ directory exists"
+    fi
+
+    echo ""
+    print_header "Workaround Commands"
+    echo ""
+    echo "Instead of /tree commands, use:"
+    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+    echo "  bash /workspace/.claude/scripts/tree.sh list"
+    echo "  bash /workspace/.claude/scripts/tree.sh build"
+    echo "  bash /workspace/.claude/scripts/tree.sh close"
+    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
+    echo "  bash /workspace/.claude/scripts/tree.sh status"
+    echo ""
+
+    print_info "All functionality works identically via direct script calls"
+}
+
+#==============================================================================
 # /tree help
 #==============================================================================
 
@@ -1038,6 +1267,7 @@ Available commands:
   close                  - Complete work and generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
+  refresh                - Check slash command availability & session guidance ✅
   help                   - Show this help ✅
 
 /tree closedone usage:
@@ -1096,6 +1326,9 @@ case "$COMMAND" in
         ;;
     status)
         tree_status "$@"
+        ;;
+    refresh)
+        tree_refresh "$@"
         ;;
     closedone)
         closedone_main "$@"
