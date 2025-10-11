@@ -502,3 +502,181 @@ def get_dashboard_stats_deprecated():
             "avg_response_time": "N/A",  # Placeholder
         }
     )
+
+
+@dashboard_api_v2.route("/api/v2/dashboard/jobs", methods=["GET"])
+@require_dashboard_auth
+def get_jobs():
+    """
+    Get filtered list of jobs for dashboard Jobs view
+
+    Query Parameters:
+    - filter: 'all' | 'eligible' | 'not_eligible' | 'applied' (default: 'all')
+    - page: integer (default: 1, min: 1)
+    - per_page: integer (default: 20, min: 1, max: 100)
+
+    Returns:
+    {
+        "success": true,
+        "jobs": [
+            {
+                "id": "uuid",
+                "title": "Job Title",
+                "company": "Company Name",
+                "location": "City, Province, Country",
+                "salary_min": 80000,
+                "salary_max": 120000,
+                "salary_currency": "CAD",
+                "status": "not_applied",
+                "eligibility": true,
+                "posted_date": "2025-10-11T00:00:00",
+                "applied_date": null,
+                "url": "https://...",
+                "remote_options": "hybrid"
+            }
+        ],
+        "pagination": {
+            "page": 1,
+            "per_page": 20,
+            "total": 150,
+            "pages": 8
+        },
+        "filter": "all"
+    }
+    """
+    try:
+        # Parse query parameters
+        filter_type = request.args.get("filter", "all")
+        page = max(1, int(request.args.get("page", 1)))
+        per_page = min(100, max(1, int(request.args.get("per_page", 20))))
+
+        # Validate filter parameter
+        valid_filters = ["all", "eligible", "not_eligible", "applied"]
+        if filter_type not in valid_filters:
+            return jsonify({
+                "success": False,
+                "error": f"Invalid filter. Must be one of: {', '.join(valid_filters)}"
+            }), 400
+
+        with db_client.get_session() as db_session:
+            # Build base query with LEFT JOIN to check if job was applied
+            base_query = """
+                SELECT
+                    j.id,
+                    j.job_title,
+                    j.salary_low,
+                    j.salary_high,
+                    j.compensation_currency,
+                    j.salary_period,
+                    CONCAT_WS(', ', j.office_city, j.office_province, j.office_country) as location,
+                    j.remote_options,
+                    j.job_type,
+                    j.seniority_level,
+                    j.eligibility_flag,
+                    j.application_status,
+                    j.posted_date,
+                    j.primary_source_url,
+                    j.created_at,
+                    c.name as company_name,
+                    c.company_url,
+                    ja.id as application_id,
+                    ja.application_date,
+                    ja.application_status as app_status
+                FROM jobs j
+                LEFT JOIN companies c ON j.company_id = c.id
+                LEFT JOIN job_applications ja ON j.id = ja.job_id
+                WHERE 1=1
+            """
+
+            # Add filter conditions
+            filter_conditions = ""
+            if filter_type == "eligible":
+                filter_conditions = " AND j.eligibility_flag = true AND ja.id IS NULL"
+            elif filter_type == "not_eligible":
+                filter_conditions = " AND j.eligibility_flag = false"
+            elif filter_type == "applied":
+                filter_conditions = " AND ja.id IS NOT NULL"
+
+            # Get total count for pagination
+            count_query = text(f"""
+                SELECT COUNT(DISTINCT j.id)
+                FROM jobs j
+                LEFT JOIN job_applications ja ON j.id = ja.job_id
+                WHERE 1=1 {filter_conditions}
+            """)
+
+            total_count = db_session.execute(count_query).scalar()
+
+            # Calculate pagination
+            total_pages = (total_count + per_page - 1) // per_page  # Ceiling division
+            offset = (page - 1) * per_page
+
+            # Get jobs with pagination
+            jobs_query = text(f"""
+                {base_query}
+                {filter_conditions}
+                ORDER BY j.created_at DESC
+                LIMIT :per_page OFFSET :offset
+            """)
+
+            results = db_session.execute(
+                jobs_query,
+                {"per_page": per_page, "offset": offset}
+            ).fetchall()
+
+            # Format response
+            jobs = []
+            for row in results:
+                job = {
+                    "id": str(row.id),
+                    "title": row.job_title,
+                    "company": row.company_name,
+                    "location": row.location if row.location else "Remote",
+                    "salary_min": row.salary_low,
+                    "salary_max": row.salary_high,
+                    "salary_currency": row.compensation_currency,
+                    "salary_period": row.salary_period,
+                    "status": row.app_status if row.application_id else row.application_status,
+                    "eligibility": row.eligibility_flag,
+                    "seniority_level": row.seniority_level,
+                    "remote_options": row.remote_options,
+                    "job_type": row.job_type,
+                    "posted_date": row.posted_date.isoformat() if row.posted_date else None,
+                    "applied_date": row.application_date.isoformat() if row.application_date else None,
+                    "url": row.primary_source_url,
+                    "company_url": row.company_url
+                }
+                jobs.append(job)
+
+            response = {
+                "success": True,
+                "jobs": jobs,
+                "pagination": {
+                    "page": page,
+                    "per_page": per_page,
+                    "total": total_count,
+                    "pages": total_pages
+                },
+                "filter": filter_type,
+                "meta": {
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "query_version": "v2"
+                }
+            }
+
+            return jsonify(response)
+
+    except ValueError as e:
+        logger.error(f"Invalid parameter in jobs endpoint: {e}")
+        return jsonify({
+            "success": False,
+            "error": "Invalid page or per_page parameter. Must be integers."
+        }), 400
+
+    except Exception as e:
+        logger.error(f"Error in jobs endpoint: {e}", exc_info=True)
+        return jsonify({
+            "success": False,
+            "error": "Failed to load jobs",
+            "details": str(e) if request.args.get("debug") else None
+        }), 500
