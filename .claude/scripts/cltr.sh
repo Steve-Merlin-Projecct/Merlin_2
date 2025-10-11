@@ -54,6 +54,9 @@ fi
 # Detect worktree name
 WORKTREE_NAME=$(basename "$WORKTREE_ROOT")
 
+# Set terminal title to "claude <worktree-name>"
+echo -ne "\033]0;claude $WORKTREE_NAME\007"
+
 # Launch Claude
 echo -e "${GREEN}🌳 Claude Tree Context Loader ${NC}"
 echo -e "${BLUE}Worktree:${NC} $WORKTREE_NAME"
