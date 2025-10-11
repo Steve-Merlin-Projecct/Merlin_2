@@ -37,14 +37,14 @@ SELECT
     j.job_description,
     j.salary_low,
     j.salary_high,
-    j.salary_currency,
+    j.compensation_currency as salary_currency,  -- Fixed: was j.salary_currency
     j.salary_period,
-    j.location,
+    CONCAT_WS(', ', j.office_city, j.office_province, j.office_country) as location,  -- Fixed: synthesized from office_city, office_province, office_country
     j.remote_options,
     j.job_type,
-    j.experience_level,
+    j.seniority_level as experience_level,  -- Fixed: was j.experience_level
     j.seniority_level,
-    j.priority_score,
+    NULL::INTEGER as priority_score,  -- Fixed: column doesn't exist, using NULL placeholder
     j.eligibility_flag,
     j.application_deadline,
     j.posted_date,
@@ -111,12 +111,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger on job_applications inserts/updates
+DROP TRIGGER IF EXISTS trigger_invalidate_app_summary_applications ON job_applications;
 CREATE TRIGGER trigger_invalidate_app_summary_applications
 AFTER INSERT OR UPDATE OR DELETE ON job_applications
 FOR EACH STATEMENT
 EXECUTE FUNCTION invalidate_application_summary();
 
 -- Trigger on jobs updates (rare but possible)
+DROP TRIGGER IF EXISTS trigger_invalidate_app_summary_jobs ON jobs;
 CREATE TRIGGER trigger_invalidate_app_summary_jobs
 AFTER UPDATE ON jobs
 FOR EACH STATEMENT

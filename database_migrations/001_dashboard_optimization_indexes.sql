@@ -13,11 +13,12 @@
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_jobs_created_at
 ON jobs(created_at DESC);
 
--- Index 2: Jobs eligibility + priority (for job discovery)
+-- Index 2: Jobs eligibility + status (for job discovery)
 -- Used by: ApplicationOrchestrator, job matching
 -- Impact: Eligible job queries
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_jobs_eligibility_priority
-ON jobs(eligibility_flag, priority_score DESC, application_status)
+-- Note: Removed priority_score as it doesn't exist in actual schema
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_jobs_eligibility_status
+ON jobs(eligibility_flag, application_status, created_at DESC)
 WHERE eligibility_flag = true;
 
 -- Index 3: Job applications created + status (for dashboard applications table)
@@ -33,8 +34,9 @@ ON job_applications(created_at DESC, application_status);
 -- Index 4: Analyzed jobs eligibility (for application workflow)
 -- Used by: Job discovery, application orchestrator
 -- Impact: Finding eligible unapplied jobs
+-- Note: Removed priority_score as it doesn't exist in actual schema
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_analyzed_jobs_eligible
-ON analyzed_jobs(eligibility_flag, priority_score DESC, ai_analysis_completed)
+ON analyzed_jobs(eligibility_flag, ai_analysis_completed, created_at DESC)
 WHERE eligibility_flag = true AND application_status = 'not_applied';
 
 -- Index 5: Pre-analyzed jobs queue (for AI analysis pipeline)
@@ -99,8 +101,8 @@ ORDER BY tablename, indexname;
 -- Check index sizes
 SELECT
     schemaname,
-    tablename,
-    indexname,
+    relname as tablename,
+    indexrelname as indexname,
     pg_size_pretty(pg_relation_size(indexrelid)) as index_size
 FROM pg_stat_user_indexes
 WHERE indexrelname LIKE 'idx_%'
@@ -112,7 +114,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 
 -- To rollback, run:
 -- DROP INDEX CONCURRENTLY IF EXISTS idx_jobs_created_at;
--- DROP INDEX CONCURRENTLY IF EXISTS idx_jobs_eligibility_priority;
+-- DROP INDEX CONCURRENTLY IF EXISTS idx_jobs_eligibility_status;
 -- DROP INDEX CONCURRENTLY IF EXISTS idx_applications_created_status;
 -- DROP INDEX CONCURRENTLY IF EXISTS idx_analyzed_jobs_eligible;
 -- DROP INDEX CONCURRENTLY IF EXISTS idx_pre_analyzed_queued;

@@ -119,10 +119,10 @@ def check_migration_status(db_session):
         FROM pg_indexes
         WHERE indexname IN (
             'idx_jobs_created_at',
-            'idx_jobs_eligibility_priority',
+            'idx_jobs_eligibility_status',
             'idx_applications_created_status',
             'idx_jobs_company_status',
-            'idx_analyzed_jobs_eligibility',
+            'idx_analyzed_jobs_eligible',
             'idx_applications_job_created'
         )
     """)).scalar()
@@ -201,17 +201,21 @@ def main():
             try:
                 # Backfill daily metrics (last 30 days)
                 print("Backfilling daily metrics (last 30 days)...")
-                session.execute(text("SELECT backfill_daily_metrics(30)"))
+                session.execute(text("SELECT backfill_daily_metrics(CURRENT_DATE - INTERVAL '30 days', CURRENT_DATE)"))
                 session.commit()
                 print("✅ Daily metrics backfilled\n")
 
                 # Backfill hourly metrics (last 7 days)
                 print("Backfilling hourly metrics (last 7 days)...")
-                session.execute(text("SELECT backfill_hourly_metrics(168)"))  # 7 days * 24 hours
+                session.execute(text("SELECT backfill_hourly_metrics(NOW() - INTERVAL '7 days', NOW())"))
                 session.commit()
                 print("✅ Hourly metrics backfilled\n")
 
-                # Refresh materialized view
+                # Refresh materialized view (needs unique index first)
+                print("Creating unique index on materialized view...")
+                session.execute(text("CREATE UNIQUE INDEX idx_app_summary_mv_app_id ON application_summary_mv(application_id)"))
+                session.commit()
+
                 print("Refreshing materialized view...")
                 session.execute(text("REFRESH MATERIALIZED VIEW CONCURRENTLY application_summary_mv"))
                 session.commit()
