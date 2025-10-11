@@ -262,13 +262,13 @@ CREATE OR REPLACE FUNCTION backfill_daily_metrics(
 )
 RETURNS void AS $$
 DECLARE
-    current_date DATE;
+    curr_date DATE;  -- Changed from current_date (reserved word)
 BEGIN
-    current_date := start_date;
+    curr_date := start_date;
 
-    WHILE current_date <= end_date LOOP
-        PERFORM compute_daily_metrics(current_date);
-        current_date := current_date + INTERVAL '1 day';
+    WHILE curr_date <= end_date LOOP
+        PERFORM compute_daily_metrics(curr_date);
+        curr_date := curr_date + INTERVAL '1 day';
     END LOOP;
 
     RAISE NOTICE 'Backfilled daily metrics from % to %', start_date, end_date;
