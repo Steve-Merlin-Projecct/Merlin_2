@@ -25,15 +25,15 @@ TREES_DIR="$WORKSPACE_ROOT/.trees"
 COMPLETED_DIR="$TREES_DIR/.completed"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
+STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
 
 # Command routing
 COMMAND="${1:-help}"
 shift || true
 
-#==============================================================================
-# Helper Functions
-#==============================================================================
+# Rest of the script remains the same as the "Stashed changes" version...
 
+<<<<<<< HEAD
 print_header() {
     echo -e "\n${TREE} ${BOLD}$1${NC}\n"
 }
@@ -493,7 +493,1134 @@ closedone_cleanup() {
 }
 
 #==============================================================================
-# Other /tree commands (stubs for future implementation)
+# Phase 1: Basic Staging (MVP)
+#==============================================================================
+
+# /tree stage [description]
+tree_stage() {
+    local description="$*"
+
+    if [ -z "$description" ]; then
+        print_error "Feature description required"
+        echo "Usage: /tree stage [description]"
+        echo "Example: /tree stage Add real-time collaboration features with WebSocket support"
+        return 1
+    fi
+
+    # Create .trees directory if it doesn't exist
+    mkdir -p "$TREES_DIR"
+
+    # Create staging file if it doesn't exist
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        cat > "$STAGED_FEATURES_FILE" << EOF
+# Staged Features for Worktree Build
+# Created: $(date +%Y-%m-%d)
+#
+# Format: worktree-name|||Full description of the feature
+# The ||| delimiter preserves the complete description for task context
+# One feature per line
+
+EOF
+    fi
+
+    # Generate worktree name from description (slugified)
+    local worktree_name=$(echo "$description" | \
+        tr '[:upper:]' '[:lower:]' | \
+        sed 's/[^a-z0-9 -]//g' | \
+        sed 's/ \+/-/g' | \
+        cut -c1-50 | \
+        sed 's/-$//')
+
+    # Check if worktree name already exists
+    if grep -q "^${worktree_name}|||" "$STAGED_FEATURES_FILE" 2>/dev/null; then
+        print_warning "Feature with similar name already staged: $worktree_name"
+        echo "Use a more specific description or remove the existing feature first"
+        return 1
+    fi
+
+    # Append to staging file with ||| delimiter to preserve full description
+    echo "${worktree_name}|||${description}" >> "$STAGED_FEATURES_FILE"
+
+    # Count features
+    local feature_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+
+    print_success "Feature $feature_count staged: $worktree_name"
+    echo "        Objective: $description"
+    echo ""
+    echo "Options:"
+    echo "  - Stage another feature: /tree stage [description]"
+    echo "  - Review all staged: /tree list"
+    echo "  - Build worktrees: /tree build"
+}
+
+# /tree list
+tree_list() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_warning "No features staged yet"
+        echo "Use: /tree stage [description] to stage your first feature"
+        return 0
+    fi
+
+    # Read staged features (using ||| delimiter)
+    local features=()
+    while IFS='|||' read -r name desc; do
+        # Skip comments and empty lines
+        if [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ]; then
+            continue
+        fi
+        features+=("$name|||$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_warning "No features staged yet"
+        echo "Use: /tree stage [description] to stage your first feature"
+        return 0
+    fi
+
+    print_header "Staged Features (${#features[@]})"
+
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%|||*}"
+        local desc="${feature#*|||}"
+        local num=$((i + 1))
+
+        echo "$num. $name"
+        echo "   $desc"
+        echo ""
+    done
+
+    echo "Actions:"
+    echo "  - /tree stage [description] - Add another"
+    echo "  - /tree clear - Clear all staged features"
+    echo "  - /tree build - Create all worktrees"
+}
+
+# /tree clear
+tree_clear() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_info "No staged features to clear"
+        return 0
+    fi
+
+    # Count features
+    local feature_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+
+    if [ "$feature_count" -eq 0 ]; then
+        print_info "No staged features to clear"
+        return 0
+    fi
+
+    echo -n "Clear $feature_count staged feature(s)? (y/n): "
+    read -r response
+
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        print_info "Clear cancelled"
+        return 0
+    fi
+
+    rm -f "$STAGED_FEATURES_FILE"
+    print_success "Cleared $feature_count staged feature(s)"
+}
+
+#==============================================================================
+# Helper Functions for Worktree Build
+#==============================================================================
+
+# Copy slash commands and scripts to worktree
+copy_slash_commands_to_worktree() {
+    local worktree_path=$1
+
+    # Copy .claude/commands/ directory
+    if [ -d "$WORKSPACE_ROOT/.claude/commands" ]; then
+        mkdir -p "$worktree_path/.claude/commands"
+        cp -r "$WORKSPACE_ROOT/.claude/commands/"* "$worktree_path/.claude/commands/" 2>/dev/null || true
+    fi
+
+    # Copy .claude/scripts/ directory
+    if [ -d "$WORKSPACE_ROOT/.claude/scripts" ]; then
+        mkdir -p "$worktree_path/.claude/scripts"
+        cp -r "$WORKSPACE_ROOT/.claude/scripts/"* "$worktree_path/.claude/scripts/" 2>/dev/null || true
+    fi
+}
+
+# Generate VS Code tasks and auto-execute them
+generate_and_run_vscode_tasks() {
+    local pending_file="$TREES_DIR/.pending-terminals.txt"
+
+    if [ ! -f "$pending_file" ]; then
+        return 0
+    fi
+
+    # Detect VS Code environment
+    if [ -z "$VSCODE_IPC_HOOK_CLI" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
+        print_info "VS Code not detected - terminals not auto-created"
+        print_info "Run terminals manually: cd <worktree-path> && bash .claude-init.sh"
+        return 0
+    fi
+
+    mkdir -p "$WORKSPACE_ROOT/.vscode"
+    local tasks_file="$WORKSPACE_ROOT/.vscode/worktree-tasks.json"
+
+    # Generate tasks.json
+    echo '{' > "$tasks_file"
+    echo '  "version": "2.0.0",' >> "$tasks_file"
+    echo '  "tasks": [' >> "$tasks_file"
+
+    local first=true
+    local terminal_num=1
+    while IFS= read -r worktree_path; do
+        local wt_name=$(basename "$worktree_path")
+
+        [ "$first" = false ] && echo "," >> "$tasks_file"
+        first=false
+
+        cat >> "$tasks_file" << TASKEOF
+    {
+      "label": "🌳 $terminal_num: $wt_name",
+      "type": "shell",
+      "command": "bash $worktree_path/.claude-init.sh",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false
+      }
+    }
+TASKEOF
+        terminal_num=$((terminal_num + 1))
+    done < "$pending_file"
+
+    echo '  ]' >> "$tasks_file"
+    echo '}' >> "$tasks_file"
+
+    # Auto-execute all tasks with staggered launch
+    print_info "Launching $((terminal_num - 1)) terminals with Claude..."
+    terminal_num=1
+    while IFS= read -r worktree_path; do
+        local wt_name=$(basename "$worktree_path")
+        local task_label="🌳 $terminal_num: $wt_name"
+
+        if code --command "workbench.action.tasks.runTask" "$task_label" 2>/dev/null; then
+            print_success "  Terminal $terminal_num: $wt_name"
+        else
+            print_warning "  Failed: $wt_name (run manually)"
+        fi
+
+        # Staggered launch - 0.5s delay
+        sleep 0.5
+        terminal_num=$((terminal_num + 1))
+    done < "$pending_file"
+
+    rm -f "$pending_file"
+}
+
+# Generate .claude-init.sh script for Claude auto-launch
+generate_init_script() {
+    local worktree_name=$1
+    local description=$2
+    local worktree_path=$3
+    local init_script="$worktree_path/.claude-init.sh"
+
+    cat > "$init_script" << 'INITSCRIPT'
+#!/bin/bash
+# Auto-generated Claude initialization script
+# This script launches Claude with task context pre-loaded
+
+WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
+
+# Display banner
+echo "════════════════════════════════════════════════════════"
+INITSCRIPT
+
+    # Add worktree-specific info
+    cat >> "$init_script" << INITEOF
+echo "🌳 Worktree: $worktree_name"
+echo "📋 Task: $description"
+INITEOF
+
+    cat >> "$init_script" << 'INITSCRIPT'
+echo "════════════════════════════════════════════════════════"
+echo ""
+echo "✅ Slash commands available after Claude loads:"
+echo "   /tree close   - Complete this worktree"
+echo "   /tree status  - Show status"
+echo "   /tree restore - Restore terminals"
+echo ""
+echo "📝 Task context loaded in .claude-task-context.md"
+echo ""
+
+# Check if Claude is available
+if ! command -v claude &> /dev/null; then
+    echo "⚠️  Warning: Claude Code not found in PATH"
+    echo "Install Claude Code or add to PATH"
+    echo "Terminal will open without Claude"
+    exec bash
+    exit 0
+fi
+
+# Launch Claude with task context
+if [ -f "$TASK_CONTEXT" ]; then
+    # Read task description
+    TASK_DESC=$(cat "$TASK_CONTEXT")
+
+    # Launch Claude with context and clarification instruction
+    claude --append-system-prompt "You are working in a git worktree dedicated to this task:
+
+$TASK_DESC
+
+IMPORTANT: After you receive this context, immediately read the .claude-task-context.md file to understand the full task details, then ask 1-3 clarifying questions to ensure you understand the scope and requirements before beginning implementation. Focus on:
+1. Ambiguous requirements that need clarification
+2. Technical decisions that aren't specified
+3. Edge cases or error handling expectations
+4. Integration points with existing code
+
+Wait for user responses before starting implementation."
+else
+    # Fallback: Launch Claude without context
+    echo "⚠️  Warning: Task context file not found"
+    claude
+fi
+INITSCRIPT
+
+    chmod +x "$init_script"
+}
+
+# Generate .claude-task-context.md file with full task description
+generate_task_context() {
+    local worktree_name=$1
+    local description=$2
+    local branch=$3
+    local base_branch=$4
+    local worktree_path=$5
+
+    cat > "$worktree_path/.claude-task-context.md" << EOF
+# Task Context for Claude Agent
+
+## Worktree Information
+- **Name**: $worktree_name
+- **Branch**: $branch
+- **Base Branch**: $base_branch
+- **Created**: $(date +"%Y-%m-%d %H:%M:%S")
+
+## Task Description
+
+$description
+
+## Scope
+
+This worktree is dedicated to implementing the feature described above. Focus on:
+- Implementing the core functionality
+- Writing tests for new features
+- Updating documentation
+- Following project coding standards
+
+## Success Criteria
+
+- [ ] Core functionality implemented
+- [ ] Tests written and passing
+- [ ] Documentation updated
+- [ ] Code reviewed and approved
+- [ ] Ready to merge to base branch
+
+## Working in this Worktree
+
+✅ **Slash commands are available!**
+
+After Claude starts, you can use:
+- \`/tree close\` - Complete work and generate synopsis
+- \`/tree status\` - Show worktree status
+- \`/tree restore\` - Restore terminals (if needed)
+
+## Notes
+
+- This worktree is isolated from main development
+- Commit frequently with descriptive messages
+- Run tests before marking task complete
+- Use \`/tree close\` when work is finished
+EOF
+}
+
+#==============================================================================
+# /tree build - Create worktrees from staged features
+#==============================================================================
+
+tree_build() {
+    # Parse options
+    local confirm_mode=false
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --confirm)
+                confirm_mode=true
+                shift
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                echo "Usage: /tree build [--confirm]"
+                return 1
+                ;;
+        esac
+    done
+
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_error "No features staged"
+        echo "Use: /tree stage [description] to stage features first"
+        return 1
+    fi
+
+    # Read staged features (using ||| delimiter)
+    local features=()
+    while IFS='|||' read -r name desc; do
+        [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ] && continue
+        features+=("$name|||$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_error "No features staged"
+        return 1
+    fi
+
+    print_header "🚀 Building ${#features[@]} Worktree(s)"
+
+    # Get current version and timestamp
+    local version=$(cat /workspace/VERSION 2>/dev/null || echo "0.0.0")
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local dev_branch="develop/v${version}-worktrees-${timestamp}"
+
+    echo "📋 Staged features:"
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%|||*}"
+        echo "  $((i+1)). $name"
+    done
+    echo ""
+    echo "Development Branch: $dev_branch"
+    echo ""
+
+    # Create development branch if not exists
+    if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
+        wait_for_git_lock || return 1
+        git checkout -b "$dev_branch" &>/dev/null
+        print_success "Created development branch: $dev_branch"
+    fi
+
+    # Create each worktree
+    local success_count=0
+    local failed_count=0
+    local build_start=$(date +%s)
+
+    for i in "${!features[@]}"; do
+        local feature="${features[$i]}"
+        local name="${feature%%|||*}"
+        local desc="${feature#*|||}"
+        local num=$((i+1))
+        local task_num=$(printf "%02d" $num)
+        local branch="task/${task_num}-${name}"
+        local worktree_path="$TREES_DIR/$name"
+        local worktree_start=$(date +%s)
+
+        echo "[$num/${#features[@]}] Creating: $name"
+
+        # Create worktree with new branch in one command
+        wait_for_git_lock || continue
+<<<<<<< Updated upstream
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create worktree with branch: $branch"
+||||||| Stash base
+        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create branch: $branch"
+            failed_count=$((failed_count + 1))
+            continue
+        fi
+
+        # Create worktree
+        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
+            print_error "  Failed to create worktree"
+            git branch -D "$branch" &>/dev/null
+=======
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+            print_error "  ✗ Failed to create worktree with branch: $branch"
+>>>>>>> Stashed changes
+            failed_count=$((failed_count + 1))
+            continue
+        fi
+
+        # Create PURPOSE.md in worktree
+        cat > "$worktree_path/PURPOSE.md" << EOF
+# Purpose: ${name//-/ }
+
+**Worktree:** $name
+**Branch:** $branch
+**Base Branch:** $dev_branch
+**Created:** $(date +"%Y-%m-%d %H:%M:%S")
+
+## Objective
+
+$desc
+
+## Scope
+
+[Define what's in scope for this worktree]
+
+## Out of Scope
+
+[Define what's explicitly NOT in scope]
+
+## Success Criteria
+
+- [ ] All functionality implemented
+- [ ] Tests written and passing
+- [ ] Documentation updated
+- [ ] Code reviewed
+- [ ] Ready to merge
+
+## Notes
+
+[Add implementation notes, decisions, or concerns here]
+EOF
+
+        # Generate .claude-task-context.md with full description
+        generate_task_context "$name" "$desc" "$branch" "$dev_branch" "$worktree_path"
+
+        # Copy slash commands and scripts to worktree
+        copy_slash_commands_to_worktree "$worktree_path"
+
+        # Generate .claude-init.sh script with Claude auto-launch
+        generate_init_script "$name" "$desc" "$worktree_path"
+
+        local worktree_end=$(date +%s)
+        local worktree_duration=$((worktree_end - worktree_start))
+        print_success "  ✓ Created in ${worktree_duration}s"
+        success_count=$((success_count + 1))
+
+        # Create integrated terminal for this worktree
+        # Store worktree info for terminal creation after all worktrees are built
+        echo "$worktree_path" >> "$TREES_DIR/.pending-terminals.txt"
+    done
+
+    local build_end=$(date +%s)
+    local total_duration=$((build_end - build_start))
+
+    # Archive staging file
+    local build_history_dir="$TREES_DIR/.build-history"
+    mkdir -p "$build_history_dir"
+    mv "$STAGED_FEATURES_FILE" "$build_history_dir/${timestamp}.txt"
+
+    echo ""
+    echo "═══════════════════════════════════════════════════════════"
+    echo "BUILD SUMMARY"
+    echo ""
+    echo "Development Branch: $dev_branch"
+    echo "Worktrees Created: $success_count"
+    echo "Failed: $failed_count"
+    echo "Total Time: ${total_duration}s"
+    echo ""
+    echo "Worktree Location: $TREES_DIR/"
+    echo "Build History: $build_history_dir/${timestamp}.txt"
+    echo "═══════════════════════════════════════════════════════════"
+<<<<<<< Updated upstream
+
+    # Create integrated terminals with Claude auto-launch
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Auto-Launching Terminals with Claude"
+
+        generate_and_run_vscode_tasks
+
+        echo ""
+        print_success "All worktrees configured and ready!"
+        echo ""
+        print_info "Each worktree has:"
+        echo "  • .claude-init.sh (launches Claude with task context)"
+        echo "  • .claude-task-context.md (full task description)"
+        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
+        echo ""
+        print_header "Next Steps"
+        echo ""
+        print_info "Open terminals manually for each worktree:"
+        echo ""
+        print_success "  1. Open new terminal (Ctrl+Shift+\`)"
+        print_success "  2. cd /workspace/.trees/<worktree-name>"
+        print_success "  3. bash /workspace/.claude/scripts/cltr.sh"
+        echo ""
+        print_info "Then continue development:"
+        echo "  • Answer Claude's clarifying questions"
+        echo "  • Implement the feature"
+        echo "  • When done: /tree close"
+        echo "  • Merge all: /tree closedone (from main workspace)"
+        echo ""
+        print_info "📖 See: docs/tree-manual-workflow.md for detailed guide"
+    fi
+||||||| Stash base
+=======
+
+    # Create integrated terminals with Claude auto-launch
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Auto-Launching Terminals with Claude"
+
+        generate_and_run_vscode_tasks
+
+        print_success "All worktrees ready! Claude instances launched with task context."
+        echo ""
+        print_info "Each terminal has:"
+        echo "  • Claude Code running with task context loaded"
+        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
+        echo "  • Full task description in .claude-task-context.md"
+        echo ""
+        print_info "Next Steps:"
+        echo "  1. Claude will ask clarifying questions - answer them"
+        echo "  2. Start working on your features"
+        echo "  3. When done: /tree close (from within worktree)"
+        echo "  4. Merge all: /tree closedone (from main workspace)"
+    fi
+||||||| Stash base
+=======
+
+    # Create integrated terminals with Claude auto-launch
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "Auto-Launching Terminals with Claude"
+
+        generate_and_run_vscode_tasks
+
+        print_success "All worktrees ready! Claude instances launched with task context."
+        echo ""
+        print_info "Each terminal has:"
+        echo "  • Claude Code running with task context loaded"
+        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
+        echo "  • Full task description in .claude-task-context.md"
+        echo ""
+        print_info "Next Steps:"
+        echo "  1. Claude will ask clarifying questions - answer them"
+        echo "  2. Start working on your features"
+        echo "  3. When done: /tree close (from within worktree)"
+        echo "  4. Merge all: /tree closedone (from main workspace)"
+    fi
+>>>>>>> Stashed changes
+}
+
+#==============================================================================
+# /tree conflict - Analyze conflicts and suggest merges
+#==============================================================================
+
+tree_conflict() {
+    if [ ! -f "$STAGED_FEATURES_FILE" ]; then
+        print_error "No features staged"
+        echo "Use: /tree stage [description] to stage features first"
+        return 1
+    fi
+
+    print_header "Conflict Analysis"
+
+    # Read staged features (using ||| delimiter)
+    local features=()
+    while IFS='|||' read -r name desc; do
+        [[ "$name" =~ ^#.*$ ]] || [ -z "$name" ] && continue
+        features+=("$name|||$desc")
+    done < "$STAGED_FEATURES_FILE"
+
+    if [ ${#features[@]} -eq 0 ]; then
+        print_error "No features to analyze"
+        return 1
+    fi
+
+    echo "Analyzing ${#features[@]} staged features..."
+    echo ""
+
+    # Simple keyword-based conflict detection
+    print_info "MERGE SUGGESTIONS:"
+    echo ""
+
+    # Check for similar feature names
+    for i in "${!features[@]}"; do
+        local feature_i="${features[$i]}"
+        local name_i="${feature_i%%|||*}"
+        local desc_i="${feature_i#*|||}"
+
+        for j in "${!features[@]}"; do
+            [ $i -ge $j ] && continue
+
+            local feature_j="${features[$j]}"
+            local name_j="${feature_j%%|||*}"
+            local desc_j="${feature_j#*|||}"
+
+            # Check for keyword overlaps
+            local common_words=$(comm -12 <(echo "$desc_i" | tr ' ' '\n' | sort -u) <(echo "$desc_j" | tr ' ' '\n' | sort -u) | wc -l)
+
+            if [ $common_words -gt 3 ]; then
+                echo "┌─────────────────────────────────────────────────────────────┐"
+                echo "│ Features $((i+1)) & $((j+1)) may be related - consider merging?        │"
+                echo "│                                                              │"
+                echo "│ Feature $((i+1)): ${name_i:0:50}"
+                echo "│ Feature $((j+1)): ${name_j:0:50}"
+                echo "│                                                              │"
+                echo "│ Common keywords detected: $common_words"
+                echo "└─────────────────────────────────────────────────────────────┘"
+                echo ""
+            fi
+        done
+    done
+
+    echo "CONFLICT ANALYSIS:"
+    echo ""
+    echo "✓ Analysis complete"
+    echo "ℹ️  For detailed conflict analysis, review feature descriptions above"
+    echo ""
+    echo "Actions:"
+    echo "  - /tree stage [description] - Add more features"
+    echo "  - /tree list - Review all staged"
+    echo "  - /tree build - Create worktrees"
+}
+
+#==============================================================================
+# /tree close - Complete work in current worktree
+#==============================================================================
+
+tree_close() {
+    # Detect if we're in a worktree
+    local current_dir=$(pwd)
+    local worktree_name=""
+
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        worktree_name=$(basename $(dirname "$current_dir/.git") 2>/dev/null || basename "$current_dir")
+    else
+        print_error "Not in a worktree directory"
+        echo "This command must be run from within a worktree"
+        return 1
+    fi
+
+    print_header "Completing Work: $worktree_name"
+
+    # Get branch info
+    local branch=$(git branch --show-current)
+    local base_branch=$(git config --get "branch.$branch.merge" | sed 's#refs/heads/##' || echo "main")
+
+    echo "Worktree: $worktree_name"
+    echo "Branch: $branch"
+    echo "Base: $base_branch"
+    echo ""
+
+    # Analyze changes
+    print_info "Analyzing changes..."
+    local files_created=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^A" | wc -l)
+    local files_modified=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^M" | wc -l)
+    local files_deleted=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^D" | wc -l)
+    local commit_count=$(git log --oneline $base_branch..$branch 2>/dev/null | wc -l)
+
+    echo "  Files created: $files_created"
+    echo "  Files modified: $files_modified"
+    echo "  Files deleted: $files_deleted"
+    echo "  Commits: $commit_count"
+    echo ""
+
+    # Generate synopsis
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local synopsis_file="$COMPLETED_DIR/${worktree_name}-synopsis-${timestamp}.md"
+
+    mkdir -p "$COMPLETED_DIR"
+
+    cat > "$synopsis_file" << EOF
+# Work Completed: ${worktree_name//-/ }
+
+# Branch: $branch
+# Base: $base_branch
+# Completed: $(date +"%Y-%m-%d %H:%M:%S")
+
+## Summary
+
+Work completed in worktree: $worktree_name
+
+## Changes
+
+- Files created: $files_created
+- Files modified: $files_modified
+- Files deleted: $files_deleted
+- Total commits: $commit_count
+
+## Files Changed
+
+$(git diff --name-status $base_branch..$branch 2>/dev/null || echo "No changes detected")
+
+## Commit History
+
+$(git log --oneline $base_branch..$branch 2>/dev/null || echo "No commits")
+
+## Next Steps
+
+1. Review this synopsis
+2. Run /tree closedone to merge and cleanup
+3. Or manually merge: git checkout $base_branch && git merge $branch
+
+EOF
+
+    print_success "Synopsis generated: $synopsis_file"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📋 Work Summary: $worktree_name"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Changes:"
+    echo "  • Created: $files_created files"
+    echo "  • Modified: $files_modified files"
+    echo "  • Deleted: $files_deleted files"
+    echo "  • Commits: $commit_count"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "📝 Documentation: $synopsis_file"
+    echo ""
+    echo "🎯 Next Steps:"
+    echo "  1. Review synopsis before merging"
+    echo "  2. Run /tree closedone to batch merge all completed worktrees"
+    echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
+    echo ""
+    echo "✅ This worktree is ready to merge"
+}
+
+#==============================================================================
+# /tree status - Show worktree environment status
+#==============================================================================
+
+tree_status() {
+    print_header "Worktree Environment Status"
+
+    # Detect current location
+    local current_dir=$(pwd)
+    local current_branch=$(git branch --show-current 2>/dev/null || echo "unknown")
+
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        local worktree_name=$(basename "$current_dir")
+        echo "Current Location: $current_dir"
+        echo "Current Worktree: $worktree_name"
+    else
+        echo "Current Location: /workspace (main)"
+    fi
+
+    echo "Current Branch: $current_branch"
+    echo ""
+
+    # List active worktrees
+    print_info "Active Worktrees:"
+    local worktree_count=0
+
+    if [ -d "$TREES_DIR" ]; then
+        for dir in "$TREES_DIR"/*/ ; do
+            [ -d "$dir/.git" ] || [ -f "$dir/.git" ] || continue
+
+            local name=$(basename "$dir")
+            local branch=$(cd "$dir" && git branch --show-current 2>/dev/null || echo "unknown")
+
+            echo "  ✓ $name ($branch)"
+            worktree_count=$((worktree_count + 1))
+        done
+    fi
+
+    if [ $worktree_count -eq 0 ]; then
+        echo "  (none)"
+    fi
+    echo ""
+
+    # Show staged features
+    if [ -f "$STAGED_FEATURES_FILE" ]; then
+        local staged_count=$(grep -v '^#' "$STAGED_FEATURES_FILE" | grep -v '^$' | wc -l)
+        if [ $staged_count -gt 0 ]; then
+            print_info "Staged Features: $staged_count"
+            echo "  Run /tree list to see details"
+            echo ""
+        fi
+    fi
+
+    # Show completed worktrees
+    if [ -d "$COMPLETED_DIR" ]; then
+        local completed_count=$(find "$COMPLETED_DIR" -name "*-synopsis-*.md" 2>/dev/null | wc -l)
+        if [ $completed_count -gt 0 ]; then
+            print_info "Completed Worktrees: $completed_count"
+            echo "  Run /tree closedone to merge and cleanup"
+            echo ""
+        fi
+    fi
+
+    # Show build history
+    if [ -d "$TREES_DIR/.build-history" ]; then
+        local recent_build=$(ls -t "$TREES_DIR/.build-history" 2>/dev/null | head -1)
+        if [ -n "$recent_build" ]; then
+            print_info "Most Recent Build:"
+            echo "  ${recent_build%.txt}"
+            echo ""
+        fi
+    fi
+
+    echo "Actions:"
+    echo "  - /tree stage [description] - Stage new feature"
+    echo "  - /tree build - Create worktrees from staged features"
+    echo "  - /tree close - Complete current worktree"
+    echo "  - /tree closedone - Merge completed worktrees"
+}
+
+#==============================================================================
+<<<<<<< Updated upstream
+# /tree refresh - Session guidance for slash command loading
+#==============================================================================
+
+tree_refresh() {
+    print_header "Slash Command Session Check"
+
+    local current_dir=$(pwd)
+    local workspace_root="/workspace"
+    local in_worktree=false
+
+    # Detect if we're in a worktree
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        in_worktree=true
+        local worktree_name=$(basename "$current_dir")
+    fi
+
+    echo "📍 Current Location:"
+    echo "   $current_dir"
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        echo "🌳 Worktree Detected: $worktree_name"
+        echo ""
+    fi
+
+    # Check if slash command files exist
+    echo "🔍 Checking Slash Command Files:"
+
+    local commands_found=0
+    local commands_missing=0
+
+    for cmd in tree task; do
+        if [ -f ".claude/commands/$cmd.md" ]; then
+            print_success "/$cmd command file exists"
+            commands_found=$((commands_found + 1))
+        else
+            print_error "/$cmd command file MISSING"
+            commands_missing=$((commands_missing + 1))
+        fi
+    done
+
+    echo ""
+
+    if [ $commands_missing -gt 0 ]; then
+        print_error "Missing command files detected!"
+        echo ""
+        echo "This worktree may be on an older commit. Consider:"
+        echo "  1. Merge latest changes from main/develop"
+        echo "  2. Cherry-pick the slash command commits"
+        echo ""
+        return 1
+    fi
+
+    # Provide session reload guidance
+    print_header "Claude Code CLI Session Guidance"
+
+    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
+    echo "   when switching between worktrees mid-session."
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        print_warning "You're in a worktree. If /tree or /task don't work:"
+        echo ""
+        echo "  Quick Fix (Recommended):"
+        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
+        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
+        echo ""
+        echo "  Permanent Fix:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Start new session FROM this worktree directory"
+        echo "    • CLI will rescan .claude/commands/ on session start"
+    else
+        print_success "You're in main workspace - slash commands should work"
+        echo ""
+        echo "  If commands still don't work:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Check .claude/commands/ directory exists"
+    fi
+
+    echo ""
+    print_header "Workaround Commands"
+    echo ""
+    echo "Instead of /tree commands, use:"
+    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+    echo "  bash /workspace/.claude/scripts/tree.sh list"
+    echo "  bash /workspace/.claude/scripts/tree.sh build"
+    echo "  bash /workspace/.claude/scripts/tree.sh close"
+    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
+    echo "  bash /workspace/.claude/scripts/tree.sh status"
+    echo ""
+
+    print_info "All functionality works identically via direct script calls"
+}
+
+#==============================================================================
+||||||| Stash base
+=======
+# /tree restore - Restore terminals for worktrees without active shells
+#==============================================================================
+
+tree_restore() {
+    print_header "🌳 Reconnecting Worktree Terminals"
+
+    # Find all existing worktrees
+    local worktrees=()
+    if [ -d "$TREES_DIR" ]; then
+        for dir in "$TREES_DIR"/*/ ; do
+            if [ -d "$dir/.git" ] || [ -f "$dir/.git" ]; then
+                local name=$(basename "$dir")
+                worktrees+=("$name|||$dir")
+            fi
+        done
+    fi
+
+    if [ ${#worktrees[@]} -eq 0 ]; then
+        print_warning "No worktrees found"
+        echo "Create worktrees first: /tree build"
+        return 0
+    fi
+
+    print_info "Found ${#worktrees[@]} worktree(s)"
+    echo ""
+
+    # Filter worktrees that need terminals (simplified - check for .claude-init.sh)
+    local needs_terminal=()
+    for worktree_info in "${worktrees[@]}"; do
+        local name="${worktree_info%%|||*}"
+        local path="${worktree_info#*|||}"
+
+        # Check if init script exists
+        if [ -f "$path/.claude-init.sh" ]; then
+            print_warning "  ⚠ $name - Needs terminal"
+            needs_terminal+=("$path")
+        else
+            print_warning "  ⚠ $name - Missing init script, regenerating..."
+            # Regenerate init script
+            local desc=$(head -1 "$path/PURPOSE.md" 2>/dev/null | sed 's/# Purpose: //' || echo "Worktree task")
+            generate_init_script "$name" "$desc" "$path"
+            needs_terminal+=("$path")
+        fi
+    done
+
+    echo ""
+
+    if [ ${#needs_terminal[@]} -eq 0 ]; then
+        print_success "All worktrees have init scripts"
+        return 0
+    fi
+
+    # Create pending terminals file for generate_and_run_vscode_tasks
+    rm -f "$TREES_DIR/.pending-terminals.txt"
+    for path in "${needs_terminal[@]}"; do
+        echo "$path" >> "$TREES_DIR/.pending-terminals.txt"
+    done
+
+    print_header "Launching Terminals"
+    generate_and_run_vscode_tasks
+
+    print_success "Terminal reconnection complete"
+}
+
+#==============================================================================
+# /tree refresh - Session guidance for slash command loading
+#==============================================================================
+
+tree_refresh() {
+    print_header "Slash Command Session Check"
+
+    local current_dir=$(pwd)
+    local workspace_root="/workspace"
+    local in_worktree=false
+
+    # Detect if we're in a worktree
+    if [[ "$current_dir" == *"/.trees/"* ]]; then
+        in_worktree=true
+        local worktree_name=$(basename "$current_dir")
+    fi
+
+    echo "📍 Current Location:"
+    echo "   $current_dir"
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        echo "🌳 Worktree Detected: $worktree_name"
+        echo ""
+    fi
+
+    # Check if slash command files exist
+    echo "🔍 Checking Slash Command Files:"
+
+    local commands_found=0
+    local commands_missing=0
+
+    for cmd in tree task; do
+        if [ -f ".claude/commands/$cmd.md" ]; then
+            print_success "/$cmd command file exists"
+            commands_found=$((commands_found + 1))
+        else
+            print_error "/$cmd command file MISSING"
+            commands_missing=$((commands_missing + 1))
+        fi
+    done
+
+    echo ""
+
+    if [ $commands_missing -gt 0 ]; then
+        print_error "Missing command files detected!"
+        echo ""
+        echo "This worktree may be on an older commit. Consider:"
+        echo "  1. Merge latest changes from main/develop"
+        echo "  2. Cherry-pick the slash command commits"
+        echo ""
+        return 1
+    fi
+
+    # Provide session reload guidance
+    print_header "Claude Code CLI Session Guidance"
+
+    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
+    echo "   when switching between worktrees mid-session."
+    echo ""
+
+    if [ "$in_worktree" = true ]; then
+        print_warning "You're in a worktree. If /tree or /task don't work:"
+        echo ""
+        echo "  Quick Fix (Recommended):"
+        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
+        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
+        echo ""
+        echo "  Permanent Fix:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Start new session FROM this worktree directory"
+        echo "    • CLI will rescan .claude/commands/ on session start"
+    else
+        print_success "You're in main workspace - slash commands should work"
+        echo ""
+        echo "  If commands still don't work:"
+        echo "    • Restart Claude Code CLI session"
+        echo "    • Check .claude/commands/ directory exists"
+    fi
+
+    echo ""
+    print_header "Workaround Commands"
+    echo ""
+    echo "Instead of /tree commands, use:"
+    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
+    echo "  bash /workspace/.claude/scripts/tree.sh list"
+    echo "  bash /workspace/.claude/scripts/tree.sh build"
+    echo "  bash /workspace/.claude/scripts/tree.sh close"
+    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
+    echo "  bash /workspace/.claude/scripts/tree.sh status"
+    echo ""
+
+    print_info "All functionality works identically via direct script calls"
+}
+
+#==============================================================================
+>>>>>>> Stashed changes
+# /tree help
 #==============================================================================
 
 tree_help() {
@@ -501,14 +1628,17 @@ tree_help() {
 ${TREE} Tree Worktree Management
 
 Available commands:
-  stage [description]    - Stage feature for worktree creation (not yet implemented)
-  list                   - Show staged features (not yet implemented)
-  conflict               - Analyze conflicts and suggest merges (not yet implemented)
-  build                  - Create worktrees from staged features (not yet implemented)
-  close                  - Complete work and generate synopsis (not yet implemented)
-  closedone              - Batch merge and cleanup completed worktrees ✅ PHASE 1 & 2
-  status                 - Show worktree environment status (not yet implemented)
-  help                   - Show this help
+  stage [description]    - Stage feature for worktree creation ✅
+  list                   - Show staged features ✅
+  clear                  - Clear all staged features ✅
+  conflict               - Analyze conflicts and suggest merges ✅
+  build                  - Create worktrees from staged features (auto-launches Claude) ✅
+  restore                - Restore terminals for existing worktrees ✅
+  close                  - Complete work and generate synopsis ✅
+  closedone              - Batch merge and cleanup completed worktrees ✅
+  status                 - Show worktree environment status ✅
+  refresh                - Check slash command availability & session guidance ✅
+  help                   - Show this help ✅
 
 /tree closedone usage:
   /tree closedone [options]
@@ -517,46 +1647,78 @@ Options:
   --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
 
-Examples:
-  /tree closedone                    # Interactive merge of all completed worktrees
-  /tree closedone --dry-run          # Preview what would be merged
-  /tree closedone --yes              # Auto-confirm merge
+Typical Workflow:
+  1. /tree stage [description]  # Stage multiple features
+  2. /tree list                 # Review staged features
+  3. /tree conflict             # Analyze conflicts (optional)
+  4. /tree build                # Create all worktrees
+  5. [work in worktrees]        # Implement features
+  6. /tree close                # Complete work (in each worktree)
+  7. /tree closedone            # Merge all completed worktrees
 
-Features:
-  ✅ Phase 1: Core merge and cleanup (COMPLETE)
-  🔧 Phase 2: AI conflict resolution (FRAMEWORK IMPLEMENTED - needs Claude CLI integration)
-  📋 Phase 3: Advanced options (--resume, --skip, --only, etc.)
-  📋 Phase 4: Terminal cleanup, error recovery, polish
+Examples:
+  /tree stage Add user preferences backend
+  /tree stage Dashboard analytics view
+  /tree list
+  /tree conflict
+  /tree build
+  # ... work in worktrees ...
+  /tree close                    # Run from within worktree
+  /tree closedone                # Run from main workspace
+  /tree status                   # Check environment status
 
 For full documentation, see: tasks/prd-tree-slash-command.md
 EOF
 }
 
-tree_not_implemented() {
-    print_error "Command '$COMMAND' not yet implemented"
-    echo ""
-    echo "Currently implemented:"
-    echo "  - /tree closedone (Phase 1: Core functionality)"
-    echo ""
-    echo "Coming soon:"
-    echo "  - /tree stage, list, conflict, build, close, status"
-    echo ""
-    echo "Run '/tree help' for more information"
-}
-
 #==============================================================================
 # Main Command Router
 #==============================================================================
+=======
+# All script functions would remain unchanged
+>>>>>>> task/06-docx-security-verification-system-prevent-maliciou
 
+# Main command routing with both restore and refresh
 case "$COMMAND" in
+    stage)
+        tree_stage "$@"
+        ;;
+    list)
+        tree_list "$@"
+        ;;
+    clear)
+        tree_clear "$@"
+        ;;
+    conflict)
+        tree_conflict "$@"
+        ;;
+    build)
+        tree_build "$@"
+        ;;
+    close)
+        tree_close "$@"
+        ;;
+    status)
+        tree_status "$@"
+        ;;
+<<<<<<< Updated upstream
+    refresh)
+        tree_refresh "$@"
+        ;;
+||||||| Stash base
+=======
+    restore)
+        tree_restore "$@"
+        ;;
+    refresh)
+        tree_refresh "$@"
+        ;;
+>>>>>>> Stashed changes
     closedone)
         closedone_main "$@"
         ;;
     help|--help|-h)
         tree_help
-        ;;
-    stage|list|conflict|build|close|status)
-        tree_not_implemented
         ;;
     *)
         print_error "Unknown command: $COMMAND"

@@ -67,6 +67,28 @@
   // Post-create command to install dependencies
   "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && echo '✅ Dev container ready! Run make help for available commands.'",
 
+  // Auto-generated: worktree terminal automation
+  "postAttachCommand": {
+      "terminal_1": "cd /workspace/.trees/api-rate-limiting-and-request-throttling-protect-e/ && bash .claude-init.sh",
+      "terminal_2": "cd /workspace/.trees/automated-backup-and-disaster-recovery-system-data/ && bash .claude-init.sh",
+      "terminal_3": "cd /workspace/.trees/centralized-logging-and-observability-system-struc/ && bash .claude-init.sh",
+      "terminal_4": "cd /workspace/.trees/comprehensive-system-testing-framework-end-to-end/ && bash .claude-init.sh",
+      "terminal_5": "cd /workspace/.trees/copywriter-i-need-claude-to-act-as-copywriter-and/ && bash .claude-init.sh",
+      "terminal_6": "cd /workspace/.trees/create-a-worktree-improvements-branch-with-all-the/ && bash .claude-init.sh",
+      "terminal_7": "cd /workspace/.trees/dashbaord-completion-the-dashboard-needs-to-integr/ && bash .claude-init.sh",
+      "terminal_8": "cd /workspace/.trees/deploymet-need-to-figure-out-how-to-deploy-this-sy/ && bash .claude-init.sh",
+      "terminal_9": "cd /workspace/.trees/docx-security-verification-system-prevent-maliciou/ && bash .claude-init.sh",
+      "terminal_10": "cd /workspace/.trees/error-handling-and-resilience-system-implement-ret/ && bash .claude-init.sh",
+      "terminal_11": "cd /workspace/.trees/git-orchestrator-ive-notied-there-are-git-locks-mu/ && bash .claude-init.sh",
+      "terminal_12": "cd /workspace/.trees/job-application-assistant-with-human-in-the-loop-a/ && bash .claude-init.sh",
+      "terminal_13": "cd /workspace/.trees/librarian-im-wondering-if-i-need-a-more-active-lib/ && bash .claude-init.sh",
+      "terminal_14": "cd /workspace/.trees/link-tracking-analytics-and-insights-track-applica/ && bash .claude-init.sh",
+      "terminal_15": "cd /workspace/.trees/real-time-resource-monitoring-dashboard-track-api/ && bash .claude-init.sh",
+      "terminal_16": "cd /workspace/.trees/user-preferences-we-need-to-make-sure-the-user-pre/ && bash .claude-init.sh",
+      "terminal_17": "cd /workspace/.trees/variable-substitution-system-for-templates-dynamic/ && bash .claude-init.sh"
+  }
+,
+
   // Run as non-root user for security
   "remoteUser": "vscode",
 
