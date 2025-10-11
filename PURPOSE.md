@@ -1,153 +1,157 @@
-<<<<<<< Updated upstream
-# Purpose: create a worktree improvements branch with all the
-||||||| Stash base
-# Purpose: Worktree Management Tools
-=======
-# Purpose: api rate limiting and request throttling protect e
->>>>>>> Stashed changes
+# Purpose: centralized logging and observability system struc
 
-<<<<<<< Updated upstream
-**Worktree:** create-a-worktree-improvements-branch-with-all-the
-**Branch:** task/01-create-a-worktree-improvements-branch-with-all-the
-**Base Branch:** develop/v4.3.1-worktrees-20251010-050425
-**Created:** 2025-10-10 05:04:27
-
-## Objective
-
-create a worktree improvements branch with all the learnigns from the attemp just made to build the trees
-||||||| Stash base
-**Worktree:** worktree-manager
-**Branch:** task/00-worktree-manager
-**Base:** develop/v4.2.0
-**Created:** 2025-10-09
-=======
-**Worktree:** api-rate-limiting-and-request-throttling-protect-e
-**Branch:** task/13-api-rate-limiting-and-request-throttling-protect-e
+**Worktree:** centralized-logging-and-observability-system-struc
+**Branch:** task/15-centralized-logging-and-observability-system-struc
 **Base Branch:** develop/v4.3.1-worktrees-20251010-045951
-**Created:** 2025-10-10 05:01:01
+**Created:** 2025-10-10 05:01:06
 
 ## Objective
 
-API rate limiting and request throttling. Protect endpoints from abuse, manage Gemini API quotas, and prevent cost overruns.
->>>>>>> Stashed changes
+Centralized logging and observability system. Structured logging, request tracing, performance metrics, and debugging tools across all modules.
 
 ## Scope
 
-<<<<<<< Updated upstream
-### Verified Functionality
-The `/tree` command has been tested and confirmed working:
-- ✅ `/tree stage [description]` - Stages features for worktree creation
-- ✅ `/tree list` - Lists all staged features
-- ✅ `/tree build` - Creates worktrees with confirmation prompt
-- ✅ `/tree status` - Shows comprehensive worktree environment status
-- ✅ Git lock detection with 5-attempt retry mechanism
-- ✅ Atomic worktree creation with proper branch naming (task/##-description)
-- ✅ Build history tracking in `.trees/.build-history/`
-||||||| Stash base
-## Primary Files
-- create-worktree-batch.sh
-- open-terminals.sh
-- worktree-status.sh
-- sync-all-worktrees.sh
-- monitor-resources.sh
-- add-claude-context.sh
-- README.md
-=======
-[Define what's in scope for this worktree]
->>>>>>> Stashed changes
+✅ **Centralized Logging System**
+- Structured logging with JSON and human-readable formats
+- Consistent logger initialization across all modules
+- Configurable log levels and output destinations
 
-<<<<<<< Updated upstream
-### Test Results from 2025-10-10
-**Test Case:** Created worktree "worktree-improvements"
-- Successfully staged feature
-- Build completed with confirmation
-- Worktree created at: `/workspace/.trees/worktree-improvements`
-- Branch created: `task/01-worktree-improvements`
-- Development branch: `develop/v4.3.1-worktrees-20251010-051716`
-||||||| Stash base
-## Conflict Warnings
-- None - this is a standalone tooling worktree
-=======
-## Out of Scope
->>>>>>> Stashed changes
+✅ **Request Tracing and Correlation**
+- Automatic correlation ID generation and propagation
+- Thread-safe request context management
+- Cross-service request tracking
 
-<<<<<<< Updated upstream
-### Known Issues
-1. **Slash Command Recognition:** The `/tree` command exists at `.claude/commands/tree.md` with proper frontmatter, but Claude Code CLI doesn't recognize it. Workaround: Run directly with `bash /workspace/.claude/scripts/tree.sh`
+✅ **Performance Metrics and Monitoring**
+- Automatic request/response metrics collection
+- Custom business metrics support
+- Performance timing decorators and context managers
 
-✅ **Template Engine Integration** (`template_engine.py`)
-- Automatic security scanning on document generation
-- Fail-safe: deletes unsafe documents
-- SecurityError exception for blocked documents
+✅ **Debugging and Diagnostic Tools**
+- Log analysis utilities
+- Health check framework
+- Request trace analysis
+- Performance issue detection
 
-✅ **Comprehensive Testing** (`test_docx_security_scanner.py`)
-- 23 test cases covering all security features
-- Unit tests for scanner and logger
-- Integration tests for complete workflow
-- 100% test pass rate
-
-✅ **Documentation** (`docs/security/docx-security-verification.md`)
-- Complete usage guide
-- Threat protection details
-- Configuration and best practices
-- Compliance and incident response
+✅ **Flask Integration**
+- Observability middleware for automatic tracing
+- Enhanced health and metrics endpoints
+- Production-ready configuration
 
 ## Out of Scope
 
-- Macro execution detection (DOCX cannot contain VBA macros natively)
-- Content-based antivirus scanning
-- Deep OLE stream parsing (basic detection implemented)
-- Template library scanning (templates are generated in-house)
+- External monitoring service integrations (Datadog, New Relic, etc.)
+- Distributed tracing across external services
+- Log shipping/forwarding configuration
+- Custom dashboard UI
 
 ## Success Criteria
 
-- [x] `/tree` functionality verified and working
-- [x] Git lock handling tested
-- [x] Atomic worktree creation confirmed
-- [ ] Slash command recognition fixed
-- [ ] Documentation updated in CLAUDE.md
-- [ ] Workflow examples added
-- [ ] Integration with git-orchestrator tested
-- [ ] Ready to merge
-||||||| Stash base
-## Status
-- [x] Planning
-- [x] Development
-- [x] Testing
-- [ ] Ready for merge
-=======
-[Define what's explicitly NOT in scope]
+- [x] All functionality implemented
+- [x] Core observability modules created
+- [x] Documentation updated (comprehensive guide + quick start)
+- [x] Flask app integration completed
+- [x] Metrics and health endpoints added
+- [x] Ready for testing and merge
 
-## Success Criteria
+## Implementation Summary
 
-- [ ] All functionality implemented
-- [ ] Tests written and passing
-- [ ] Documentation updated
-- [ ] Code reviewed
-- [ ] Ready to merge
->>>>>>> Stashed changes
+### Modules Created
 
-## Notes
-<<<<<<< Updated upstream
+1. **`modules/observability/logging_config.py`**
+   - Centralized logging configuration
+   - StructuredFormatter for JSON logs
+   - HumanReadableFormatter for development
+   - LoggerAdapter for contextual logging
 
-### Security Philosophy
+2. **`modules/observability/context.py`**
+   - RequestContext dataclass for correlation tracking
+   - Thread-safe context management with ContextVar
+   - Context creation and propagation utilities
 
-This implementation follows a **defensive security** approach:
-- **Detection only:** Identifies threats, does not create or modify malicious content
-- **Fail-safe:** Blocks documents when in doubt
-- **Audit trail:** Complete logging for forensic analysis
-- **Best practices:** Follows OWASP guidelines for document security
+3. **`modules/observability/middleware.py`**
+   - ObservabilityMiddleware for Flask
+   - Automatic request/response logging
+   - Correlation ID injection and propagation
+   - Metrics collection integration
 
-### Compliance Support
+4. **`modules/observability/metrics.py`**
+   - MetricsCollector for request and custom metrics
+   - Performance tracking decorators
+   - PerformanceTimer context manager
+   - Metric aggregation and export
 
-### Next Steps
-1. Investigate why Claude Code CLI doesn't load `.claude/commands/tree.md`
-2. Test remaining commands: `/tree conflict`, `/tree close`, `/tree closedone`
-3. Document complete workflow in CLAUDE.md Git Operations Policy section
-4. Create integration tests with git-orchestrator
-||||||| Stash base
-This worktree contains all tools for managing the parallel development workflow across 13+ task worktrees.
-=======
+5. **`modules/observability/debug_tools.py`**
+   - LogAnalyzer for log parsing and analysis
+   - HealthChecker framework
+   - DebugContext for temporary debug logging
+   - Request trace analysis utilities
 
-[Add implementation notes, decisions, or concerns here]
->>>>>>> Stashed changes
+### Integration Points
+
+- **app_modular.py**: Logging configured at startup with environment-based settings
+- **ObservabilityMiddleware**: Added for automatic request tracing
+- **Health endpoint**: Enhanced with health check framework
+- **Metrics endpoint**: New endpoint for observability metrics
+- **requirements.txt**: Added python-json-logger dependency
+
+### Key Features
+
+**Structured Logging**
+- JSON format for production (log aggregation ready)
+- Human-readable format for development (colored output)
+- Automatic context injection (correlation IDs, request data)
+- Exception tracking with full stack traces
+
+**Request Tracing**
+- Unique correlation IDs for every request
+- Automatic propagation across async operations
+- Request/response logging with timing
+- Cross-service tracking capability
+
+**Performance Monitoring**
+- Automatic request metrics (duration, status codes, errors)
+- Custom business metrics support
+- Performance decorators and context managers
+- Metric aggregation and export
+
+**Debugging Tools**
+- Log analysis and filtering
+- Request trace reconstruction
+- Performance issue detection
+- Error pattern analysis
+- Health check framework
+
+### Configuration
+
+Environment variables:
+- `LOG_LEVEL`: DEBUG, INFO, WARNING, ERROR, CRITICAL (default: INFO)
+- `LOG_FORMAT`: 'human' or 'json' (default: human)
+- `LOG_FILE`: Optional log file path
+
+### Documentation
+
+- **docs/observability/OBSERVABILITY_GUIDE.md**: Comprehensive guide
+- **docs/observability/QUICK_START.md**: 5-minute quick start
+
+### Next Steps for Testing
+
+1. Install dependencies: `pip install -r requirements.txt`
+2. Run application: `python app_modular.py`
+3. Test endpoints:
+   - Health: `curl http://localhost:5001/health`
+   - Metrics: `curl http://localhost:5001/metrics`
+4. Make API requests and verify correlation IDs in logs
+5. Test log analysis tools with generated logs
+
+### Migration Path
+
+Existing modules should update logging:
+```python
+# Replace
+import logging
+logger = logging.getLogger(__name__)
+
+# With
+from modules.observability import get_logger
+logger = get_logger(__name__)
+```
