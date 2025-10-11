@@ -26,11 +26,25 @@ This initializes the terminal with:
 - Quick Command Reference
 - Claude pre-configured for the specific task
 
-### Step 3: Use `/cltr` Command
-After the terminal opens, use the `/cltr` command to:
-- Load detailed task context
-- Prompt Claude for clarifying questions
-- Prepare for implementation
+### Step 3: Launch Claude with Context
+
+Use the `cltr` script to launch Claude with task context:
+
+```bash
+bash /workspace/.claude/scripts/cltr.sh
+```
+
+Or create an alias for easier use:
+
+```bash
+alias cltr='bash /workspace/.claude/scripts/cltr.sh'
+```
+
+Then just type:
+
+```bash
+cltr
+```
 
 ### Example Workflow
 
@@ -38,11 +52,11 @@ After the terminal opens, use the `/cltr` command to:
 # Change to your worktree
 cd /workspace/.trees/add-job-analytics-feature
 
-# Open terminal
-bash .claude-init.sh
+# Launch Claude with context
+bash /workspace/.claude/scripts/cltr.sh
 
-# Inside terminal, launch Claude with context
-/cltr
+# Or if you set up the alias:
+cltr
 ```
 
 ## Best Practices

@@ -1190,7 +1190,7 @@ EOF
         echo ""
         print_success "  1. Open new terminal (Ctrl+Shift+\`)"
         print_success "  2. cd /workspace/.trees/<worktree-name>"
-        print_success "  3. /cltr  (launches Claude with task context)"
+        print_success "  3. bash /workspace/.claude/scripts/cltr.sh"
         echo ""
         print_info "Then continue development:"
         echo "  • Answer Claude's clarifying questions"
