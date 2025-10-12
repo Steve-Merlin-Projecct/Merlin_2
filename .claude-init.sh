@@ -1,13 +1,14 @@
 #!/bin/bash
 # Auto-generated Claude initialization script
+# This script launches Claude with task context pre-loaded
 
 WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
 # Display banner
 echo "════════════════════════════════════════════════════════"
-echo "🌳 Worktree: dashbaord-completion-the-dashboard-needs-to-integr"
-echo "📋 Task: dashbaord completion the dashboard needs to integr"
+echo "🌳 Worktree: user-preferences"
+echo "📋 Task: ||user preferences"
 echo "════════════════════════════════════════════════════════"
 echo ""
 echo "✅ Slash commands available after Claude loads:"
@@ -29,8 +30,10 @@ fi
 
 # Launch Claude with task context
 if [ -f "$TASK_CONTEXT" ]; then
+    # Read task description
     TASK_DESC=$(cat "$TASK_CONTEXT")
-    
+
+    # Launch Claude with context and clarification instruction
     claude --append-system-prompt "You are working in a git worktree dedicated to this task:
 
 $TASK_DESC
@@ -43,6 +46,7 @@ IMPORTANT: After you receive this context, immediately read the .claude-task-con
 
 Wait for user responses before starting implementation."
 else
+    # Fallback: Launch Claude without context
     echo "⚠️  Warning: Task context file not found"
     claude
 fi
