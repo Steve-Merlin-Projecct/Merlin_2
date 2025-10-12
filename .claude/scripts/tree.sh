@@ -31,9 +31,6 @@ STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
 COMMAND="${1:-help}"
 shift || true
 
-# Rest of the script remains the same as the "Stashed changes" version...
-
-<<<<<<< HEAD
 print_header() {
     echo -e "\n${TREE} ${BOLD}$1${NC}\n"
 }
@@ -731,6 +728,35 @@ generate_init_script() {
 WORKTREE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
+# Source shell configuration to inherit aliases and environment
+if [ -f ~/.bashrc ]; then
+    source ~/.bashrc
+fi
+
+# Define cltr function to relaunch Claude with task context
+cltr() {
+    if [ -f "$TASK_CONTEXT" ]; then
+        local TASK_DESC=$(cat "$TASK_CONTEXT")
+        claude --append-system-prompt "You are working in a git worktree dedicated to this task:
+
+$TASK_DESC
+
+IMPORTANT: After you receive this context, immediately read the .claude-task-context.md file to understand the full task details, then ask 1-3 clarifying questions to ensure you understand the scope and requirements before beginning implementation. Focus on:
+1. Ambiguous requirements that need clarification
+2. Technical decisions that aren't specified
+3. Edge cases or error handling expectations
+4. Integration points with existing code
+
+Wait for user responses before starting implementation."
+    else
+        echo "⚠️  Warning: Task context file not found at $TASK_CONTEXT"
+        claude
+    fi
+}
+
+# Export function for use in subshells
+export -f cltr
+
 # Display banner
 echo "════════════════════════════════════════════════════════"
 INITSCRIPT
@@ -744,7 +770,8 @@ INITEOF
     cat >> "$init_script" << 'INITSCRIPT'
 echo "════════════════════════════════════════════════════════"
 echo ""
-echo "✅ Slash commands available after Claude loads:"
+echo "✅ Available commands:"
+echo "   cltr          - Relaunch Claude with task context"
 echo "   /tree close   - Complete this worktree"
 echo "   /tree status  - Show status"
 echo "   /tree restore - Restore terminals"
@@ -827,9 +854,12 @@ This worktree is dedicated to implementing the feature described above. Focus on
 
 ## Working in this Worktree
 
-✅ **Slash commands are available!**
+✅ **Available Commands:**
 
-After Claude starts, you can use:
+Shell commands:
+- \`cltr\` - Relaunch Claude with full task context (use anytime!)
+
+Slash commands (within Claude):
 - \`/tree close\` - Complete work and generate synopsis
 - \`/tree status\` - Show worktree status
 - \`/tree restore\` - Restore terminals (if needed)
@@ -837,6 +867,7 @@ After Claude starts, you can use:
 ## Notes
 
 - This worktree is isolated from main development
+- Use \`cltr\` to restart Claude if you need to reload context
 - Commit frequently with descriptive messages
 - Run tests before marking task complete
 - Use \`/tree close\` when work is finished
@@ -925,24 +956,8 @@ tree_build() {
 
         # Create worktree with new branch in one command
         wait_for_git_lock || continue
-<<<<<<< Updated upstream
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create worktree with branch: $branch"
-||||||| Stash base
-        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create branch: $branch"
-            failed_count=$((failed_count + 1))
-            continue
-        fi
-
-        # Create worktree
-        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
-            print_error "  Failed to create worktree"
-            git branch -D "$branch" &>/dev/null
-=======
         if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
             print_error "  ✗ Failed to create worktree with branch: $branch"
->>>>>>> Stashed changes
             failed_count=$((failed_count + 1))
             continue
         fi
@@ -993,6 +1008,7 @@ EOF
         local worktree_end=$(date +%s)
         local worktree_duration=$((worktree_end - worktree_start))
         print_success "  ✓ Created in ${worktree_duration}s"
+        print_info "     Location: $worktree_path"
         success_count=$((success_count + 1))
 
         # Create integrated terminal for this worktree
@@ -1020,41 +1036,6 @@ EOF
     echo "Worktree Location: $TREES_DIR/"
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
-<<<<<<< Updated upstream
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        echo ""
-        print_success "All worktrees configured and ready!"
-        echo ""
-        print_info "Each worktree has:"
-        echo "  • .claude-init.sh (launches Claude with task context)"
-        echo "  • .claude-task-context.md (full task description)"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo ""
-        print_header "Next Steps"
-        echo ""
-        print_info "Open terminals manually for each worktree:"
-        echo ""
-        print_success "  1. Open new terminal (Ctrl+Shift+\`)"
-        print_success "  2. cd /workspace/.trees/<worktree-name>"
-        print_success "  3. bash /workspace/.claude/scripts/cltr.sh"
-        echo ""
-        print_info "Then continue development:"
-        echo "  • Answer Claude's clarifying questions"
-        echo "  • Implement the feature"
-        echo "  • When done: /tree close"
-        echo "  • Merge all: /tree closedone (from main workspace)"
-        echo ""
-        print_info "📖 See: docs/tree-manual-workflow.md for detailed guide"
-    fi
-||||||| Stash base
-=======
 
     # Create integrated terminals with Claude auto-launch
     if [ $success_count -gt 0 ]; then
@@ -1067,39 +1048,22 @@ EOF
         echo ""
         print_info "Each terminal has:"
         echo "  • Claude Code running with task context loaded"
+        echo "  • 'cltr' command to relaunch Claude with context"
         echo "  • Slash commands (/tree close, /tree status, /tree restore)"
         echo "  • Full task description in .claude-task-context.md"
         echo ""
-        print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
-    fi
-||||||| Stash base
-=======
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        print_success "All worktrees ready! Claude instances launched with task context."
-        echo ""
-        print_info "Each terminal has:"
-        echo "  • Claude Code running with task context loaded"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo "  • Full task description in .claude-task-context.md"
+        print_info "Task Context Files (in each worktree):"
+        echo "  • PURPOSE.md - Human-readable project charter"
+        echo "  • .claude-task-context.md - Machine-readable task specification"
+        echo "  • .claude-init.sh - Auto-launch script"
         echo ""
         print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
+        echo "  1. Switch to worktree terminals (Claude will ask clarifying questions)"
+        echo "  2. Review/edit PURPOSE.md and .claude-task-context.md if needed"
+        echo "  3. Answer Claude's questions and start working"
+        echo "  4. When done: /tree close (from within worktree)"
+        echo "  5. Merge all: /tree closedone (from main workspace)"
     fi
->>>>>>> Stashed changes
 }
 
 #==============================================================================
@@ -1361,104 +1325,6 @@ tree_status() {
 }
 
 #==============================================================================
-<<<<<<< Updated upstream
-# /tree refresh - Session guidance for slash command loading
-#==============================================================================
-
-tree_refresh() {
-    print_header "Slash Command Session Check"
-
-    local current_dir=$(pwd)
-    local workspace_root="/workspace"
-    local in_worktree=false
-
-    # Detect if we're in a worktree
-    if [[ "$current_dir" == *"/.trees/"* ]]; then
-        in_worktree=true
-        local worktree_name=$(basename "$current_dir")
-    fi
-
-    echo "📍 Current Location:"
-    echo "   $current_dir"
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        echo "🌳 Worktree Detected: $worktree_name"
-        echo ""
-    fi
-
-    # Check if slash command files exist
-    echo "🔍 Checking Slash Command Files:"
-
-    local commands_found=0
-    local commands_missing=0
-
-    for cmd in tree task; do
-        if [ -f ".claude/commands/$cmd.md" ]; then
-            print_success "/$cmd command file exists"
-            commands_found=$((commands_found + 1))
-        else
-            print_error "/$cmd command file MISSING"
-            commands_missing=$((commands_missing + 1))
-        fi
-    done
-
-    echo ""
-
-    if [ $commands_missing -gt 0 ]; then
-        print_error "Missing command files detected!"
-        echo ""
-        echo "This worktree may be on an older commit. Consider:"
-        echo "  1. Merge latest changes from main/develop"
-        echo "  2. Cherry-pick the slash command commits"
-        echo ""
-        return 1
-    fi
-
-    # Provide session reload guidance
-    print_header "Claude Code CLI Session Guidance"
-
-    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
-    echo "   when switching between worktrees mid-session."
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        print_warning "You're in a worktree. If /tree or /task don't work:"
-        echo ""
-        echo "  Quick Fix (Recommended):"
-        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
-        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
-        echo ""
-        echo "  Permanent Fix:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Start new session FROM this worktree directory"
-        echo "    • CLI will rescan .claude/commands/ on session start"
-    else
-        print_success "You're in main workspace - slash commands should work"
-        echo ""
-        echo "  If commands still don't work:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Check .claude/commands/ directory exists"
-    fi
-
-    echo ""
-    print_header "Workaround Commands"
-    echo ""
-    echo "Instead of /tree commands, use:"
-    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
-    echo "  bash /workspace/.claude/scripts/tree.sh list"
-    echo "  bash /workspace/.claude/scripts/tree.sh build"
-    echo "  bash /workspace/.claude/scripts/tree.sh close"
-    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
-    echo "  bash /workspace/.claude/scripts/tree.sh status"
-    echo ""
-
-    print_info "All functionality works identically via direct script calls"
-}
-
-#==============================================================================
-||||||| Stash base
-=======
 # /tree restore - Restore terminals for worktrees without active shells
 #==============================================================================
 
@@ -1619,7 +1485,6 @@ tree_refresh() {
 }
 
 #==============================================================================
->>>>>>> Stashed changes
 # /tree help
 #==============================================================================
 
@@ -1674,9 +1539,6 @@ EOF
 #==============================================================================
 # Main Command Router
 #==============================================================================
-=======
-# All script functions would remain unchanged
->>>>>>> task/06-docx-security-verification-system-prevent-maliciou
 
 # Main command routing with both restore and refresh
 case "$COMMAND" in
@@ -1701,19 +1563,12 @@ case "$COMMAND" in
     status)
         tree_status "$@"
         ;;
-<<<<<<< Updated upstream
-    refresh)
-        tree_refresh "$@"
-        ;;
-||||||| Stash base
-=======
     restore)
         tree_restore "$@"
         ;;
     refresh)
         tree_refresh "$@"
         ;;
->>>>>>> Stashed changes
     closedone)
         closedone_main "$@"
         ;;
