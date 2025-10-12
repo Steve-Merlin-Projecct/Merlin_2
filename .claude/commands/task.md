@@ -190,32 +190,42 @@ description: Start the 4-phase task workflow (Discovery -> PRD → Tasks → Exe
 ### For Default Workflow:
 **Your task:** {{TASK_DESCRIPTION}}
 
-Follow the standard 3-phase workflow:
+Follow the standard 4-phase workflow with user checkpoints:
 
-**Phase 0: Research**
+**Phase 0: Research (Automatic)**
 1. Determine research depth (Level 1/2/3)
 2. Execute time-boxed research (2/5/15 min max)
-3. Document findings
-4. Present Options A/B/C
+3. Document findings in `/tasks/[feature-name]/research.md`
+4. Present **Options A/B/C** based on findings
+5. **Wait for user to select approach**
+6. Use research + chosen approach to inform clarifying questions
 
+**Phase 1: Create PRD (After Research)**
+1. Acknowledge this as a task request
+2. Create directory: `/tasks/[feature-name]/`
+3. Ask clarifying questions (use lettered/numbered lists for easy response)
+4. **Wait for user responses**
+5. Generate comprehensive PRD following template
+6. Save to `/tasks/[feature-name]/prd.md`
+7. **Ask: "Would you like me to proceed with Phase 2: Task Generation?"**
+8. **Wait for approval**
 
-**Phase 1: Create PRD**
-1. Ask clarifying questions if needed
-2. Generate PRD following template
-3. Save to `/tasks/[feature-name]/prd.md`
-
-
-**Phase 2: Generate Tasks**
+**Phase 2: Generate Tasks (After PRD Approval)**
 1. Create parent tasks (4-7 tasks)
-2. Generate sub-tasks (3-8 per parent)
-3. Include Documentation parent task (REQUIRED)
-4. Save to `/tasks/[feature-name]/tasklist_1.md`
+2. **ALWAYS include Documentation parent task (REQUIRED)**
+3. Generate sub-tasks (3-8 per parent)
+4. Create TodoWrite entries for all tasks
+5. Save to `/tasks/[feature-name]/tasklist_1.md`
+6. **Ask: "Would you like me to proceed with Phase 3: Task Execution?"**
+7. **Wait for approval**
 
-
-**Phase 3: Execute**
+**Phase 3: Execute (After Task List Approval)**
 - One sub-task at a time
-- TodoWrite + markdown sync
-- Test, document, commit after each parent task
+- Mark `in_progress` in TodoWrite AND markdown (same response)
+- Execute with comprehensive inline documentation
+- Mark `completed` in TodoWrite AND markdown (same response)
+- When parent complete: test, document, commit
+- Update version in CLAUDE.md
 
 ---
 
