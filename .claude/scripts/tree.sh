@@ -772,7 +772,7 @@ echo "════════════════════════�
 echo ""
 echo "✅ Available commands:"
 echo "   cltr          - Relaunch Claude with task context"
-echo "   /tree close   - Complete this worktree"
+echo "   /tree close   - Auto-commit changes & complete worktree"
 echo "   /tree status  - Show status"
 echo "   /tree restore - Restore terminals"
 echo ""
@@ -860,7 +860,7 @@ Shell commands:
 - \`cltr\` - Relaunch Claude with full task context (use anytime!)
 
 Slash commands (within Claude):
-- \`/tree close\` - Complete work and generate synopsis
+- \`/tree close\` - Auto-commit all changes and generate completion synopsis
 - \`/tree status\` - Show worktree status
 - \`/tree restore\` - Restore terminals (if needed)
 
@@ -868,9 +868,9 @@ Slash commands (within Claude):
 
 - This worktree is isolated from main development
 - Use \`cltr\` to restart Claude if you need to reload context
-- Commit frequently with descriptive messages
+- Commit frequently with descriptive messages (or let /tree close do it)
 - Run tests before marking task complete
-- Use \`/tree close\` when work is finished
+- \`/tree close\` will auto-commit all changes before generating synopsis
 EOF
 }
 
@@ -1167,6 +1167,48 @@ tree_close() {
     echo "Base: $base_branch"
     echo ""
 
+    # Check for uncommitted changes
+    wait_for_git_lock || return 1
+
+    if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+        print_info "Uncommitted changes detected, committing..."
+        echo ""
+
+        # Show what will be committed
+        echo "Files to commit:"
+        git status --short
+        echo ""
+
+        # Stage all changes
+        git add -A
+
+        # Get task description for commit message
+        local task_desc="Work completed in worktree: $worktree_name"
+        if [ -f ".claude-task-context.md" ]; then
+            task_desc=$(grep "^## Task Description" -A 1 .claude-task-context.md | tail -1 | sed 's/^[[:space:]]*//')
+        fi
+
+        # Create commit with descriptive message
+        local commit_msg="feat: Complete work in worktree $worktree_name
+
+${task_desc}
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+        if git commit -m "$commit_msg" 2>&1; then
+            print_success "All changes committed"
+            echo ""
+        else
+            print_warning "Commit failed or nothing to commit"
+            echo ""
+        fi
+    else
+        print_success "No uncommitted changes"
+        echo ""
+    fi
+
     # Analyze changes
     print_info "Analyzing changes..."
     local files_created=$(git diff --name-status $base_branch..$branch 2>/dev/null | grep "^A" | wc -l)
@@ -1237,11 +1279,11 @@ EOF
     echo "📝 Documentation: $synopsis_file"
     echo ""
     echo "🎯 Next Steps:"
-    echo "  1. Review synopsis before merging"
-    echo "  2. Run /tree closedone to batch merge all completed worktrees"
+    echo "  1. Review synopsis and commit history"
+    echo "  2. Run /tree closedone (from main workspace) to batch merge"
     echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
     echo ""
-    echo "✅ This worktree is ready to merge"
+    echo "✅ All changes committed and worktree ready to merge"
 }
 
 #==============================================================================
@@ -1499,7 +1541,7 @@ Available commands:
   conflict               - Analyze conflicts and suggest merges ✅
   build                  - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
-  close                  - Complete work and generate synopsis ✅
+  close                  - Commit all changes and generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
   refresh                - Check slash command availability & session guidance ✅
@@ -1518,7 +1560,7 @@ Typical Workflow:
   3. /tree conflict             # Analyze conflicts (optional)
   4. /tree build                # Create all worktrees
   5. [work in worktrees]        # Implement features
-  6. /tree close                # Complete work (in each worktree)
+  6. /tree close                # Auto-commit changes + generate synopsis
   7. /tree closedone            # Merge all completed worktrees
 
 Examples:
@@ -1528,8 +1570,8 @@ Examples:
   /tree conflict
   /tree build
   # ... work in worktrees ...
-  /tree close                    # Run from within worktree
-  /tree closedone                # Run from main workspace
+  /tree close                    # Commits all changes and marks complete
+  /tree closedone                # Merges all completed worktrees
   /tree status                   # Check environment status
 
 For full documentation, see: tasks/prd-tree-slash-command.md
