@@ -25,6 +25,7 @@ TREES_DIR="$WORKSPACE_ROOT/.trees"
 COMPLETED_DIR="$TREES_DIR/.completed"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
+FUTURE_WORK_DIR="$TREES_DIR/.future-work"
 STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
 
 # Command routing
@@ -1005,6 +1006,11 @@ EOF
         # Generate .claude-init.sh script with Claude auto-launch
         generate_init_script "$name" "$desc" "$worktree_path"
 
+        # Load related future work if it exists
+        if load_future_work "$name" "$worktree_path"; then
+            print_success "  ✓ Previous work loaded"
+        fi
+
         local worktree_end=$(date +%s)
         local worktree_duration=$((worktree_end - worktree_start))
         print_success "  ✓ Created in ${worktree_duration}s"
@@ -1140,6 +1146,221 @@ tree_conflict() {
 }
 
 #==============================================================================
+# Future Work Management - Capture and Restore
+#==============================================================================
+
+# Find related future work files for a worktree name
+find_related_future_work() {
+    local worktree_name=$1
+    local related_files=()
+
+    if [ ! -d "$FUTURE_WORK_DIR" ]; then
+        return 0
+    fi
+
+    # Look for exact matches first (worktree-name-timestamp.md)
+    while IFS= read -r file; do
+        related_files+=("$file")
+    done < <(find "$FUTURE_WORK_DIR" -name "${worktree_name}-*.md" 2>/dev/null | sort -r)
+
+    # If no exact matches, look for similar names (fuzzy match on first 20 chars)
+    if [ ${#related_files[@]} -eq 0 ]; then
+        local prefix="${worktree_name:0:20}"
+        while IFS= read -r file; do
+            related_files+=("$file")
+        done < <(find "$FUTURE_WORK_DIR" -name "${prefix}*.md" 2>/dev/null | sort -r)
+    fi
+
+    # Return most recent file if found
+    if [ ${#related_files[@]} -gt 0 ]; then
+        echo "${related_files[0]}"
+    fi
+}
+
+# Load future work into new worktree
+load_future_work() {
+    local worktree_name=$1
+    local worktree_path=$2
+
+    local future_work_file=$(find_related_future_work "$worktree_name")
+
+    if [ -n "$future_work_file" ] && [ -f "$future_work_file" ]; then
+        print_info "  📋 Found related future work: $(basename "$future_work_file")"
+
+        # Copy future work file into worktree
+        cp "$future_work_file" "$worktree_path/FUTURE_WORK.md"
+
+        # Append to PURPOSE.md Notes section
+        cat >> "$worktree_path/PURPOSE.md" << EOF
+
+---
+
+## Continuing Previous Work
+
+This worktree continues work from a previous cycle. See \`FUTURE_WORK.md\` for:
+- Incomplete tasks from the previous worktree
+- Technical debt and known issues
+- Ideas for this iteration
+
+**Previous work file:** \`$(basename "$future_work_file")\`
+
+EOF
+
+        return 0
+    fi
+
+    return 1
+}
+
+#==============================================================================
+# Future Work Capture - Extract incomplete tasks and future plans
+#==============================================================================
+
+capture_future_work() {
+    local worktree_name=$1
+    local worktree_path=$2
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local future_work_file="$FUTURE_WORK_DIR/${worktree_name}-${timestamp}.md"
+
+    mkdir -p "$FUTURE_WORK_DIR"
+
+    print_info "Capturing future work and incomplete tasks..."
+
+    # Initialize future work file
+    cat > "$future_work_file" << EOF
+# Future Work: ${worktree_name//-/ }
+
+**Captured:** $(date +"%Y-%m-%d %H:%M:%S")
+**Worktree:** $worktree_name
+**Original Branch:** $(git branch --show-current)
+
+## Overview
+
+This file captures incomplete tasks, future plans, and follow-up work from the worktree before it was merged and pruned.
+
+Use this file when creating a new worktree to continue work in this area.
+
+---
+
+EOF
+
+    local has_content=false
+
+    # 1. Extract TODO/FIXME/HACK comments from code
+    print_info "  Scanning code for TODO/FIXME/HACK comments..."
+    local todo_comments=$(grep -rn --include="*.py" --include="*.sh" --include="*.js" --include="*.ts" \
+        -E "(TODO|FIXME|HACK|XXX|NOTE):" "$worktree_path" 2>/dev/null || true)
+
+    if [ -n "$todo_comments" ]; then
+        cat >> "$future_work_file" << EOF
+## Incomplete Tasks (from code comments)
+
+\`\`\`
+$todo_comments
+\`\`\`
+
+EOF
+        has_content=true
+    fi
+
+    # 2. Extract unchecked items from PURPOSE.md
+    if [ -f "$worktree_path/PURPOSE.md" ]; then
+        print_info "  Extracting unchecked items from PURPOSE.md..."
+        local unchecked=$(grep -E "^- \[ \]" "$worktree_path/PURPOSE.md" || true)
+
+        if [ -n "$unchecked" ]; then
+            cat >> "$future_work_file" << EOF
+## Incomplete Success Criteria (from PURPOSE.md)
+
+$unchecked
+
+EOF
+            has_content=true
+        fi
+
+        # Extract "Out of Scope" section for future reference
+        local out_of_scope=$(sed -n '/^## Out of Scope$/,/^##/p' "$worktree_path/PURPOSE.md" | sed '$d' || true)
+        if [ -n "$out_of_scope" ]; then
+            cat >> "$future_work_file" << EOF
+## Previously Out of Scope
+
+These items were explicitly excluded from the original worktree:
+
+$out_of_scope
+
+EOF
+            has_content=true
+        fi
+
+        # Extract Notes section
+        local notes=$(sed -n '/^## Notes$/,/^##/p' "$worktree_path/PURPOSE.md" | sed '$d' || true)
+        if [ -n "$notes" ]; then
+            cat >> "$future_work_file" << EOF
+## Notes from Original Worktree
+
+$notes
+
+EOF
+            has_content=true
+        fi
+    fi
+
+    # 3. Check for FUTURE_WORK.md or similar files
+    if [ -f "$worktree_path/FUTURE_WORK.md" ]; then
+        print_info "  Found FUTURE_WORK.md..."
+        cat >> "$future_work_file" << EOF
+## Future Work Documentation
+
+$(cat "$worktree_path/FUTURE_WORK.md")
+
+EOF
+        has_content=true
+    fi
+
+    # 4. Look for test files with skip/todo markers
+    local skipped_tests=$(grep -rn --include="*test*.py" --include="*test*.js" \
+        -E "(skip|todo|xfail|@pytest.mark.skip)" "$worktree_path" 2>/dev/null || true)
+
+    if [ -n "$skipped_tests" ]; then
+        cat >> "$future_work_file" << EOF
+## Skipped/Incomplete Tests
+
+\`\`\`
+$skipped_tests
+\`\`\`
+
+EOF
+        has_content=true
+    fi
+
+    # 5. Add section for manual notes
+    cat >> "$future_work_file" << EOF
+---
+
+## Manual Notes (Add Before Closing)
+
+Use this section to document:
+- Known issues or bugs discovered
+- Performance concerns
+- Technical debt incurred
+- Ideas for next iteration
+- Dependencies or blockers
+
+[Add your notes here before running /tree close]
+
+EOF
+
+    if [ "$has_content" = true ]; then
+        print_success "  Future work captured: $future_work_file"
+        echo "$future_work_file"  # Return file path
+    else
+        print_info "  No incomplete work detected (clean completion)"
+        rm -f "$future_work_file"  # Remove empty file
+        echo ""
+    fi
+}
+
+#==============================================================================
 # /tree close - Complete work in current worktree
 #==============================================================================
 
@@ -1222,6 +1443,10 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
     echo "  Commits: $commit_count"
     echo ""
 
+    # Capture future work before closing
+    local future_work_file=$(capture_future_work "$worktree_name" "$current_dir")
+    echo ""
+
     # Generate synopsis
     local timestamp=$(date +%Y%m%d-%H%M%S)
     local synopsis_file="$COMPLETED_DIR/${worktree_name}-synopsis-${timestamp}.md"
@@ -1254,9 +1479,32 @@ $(git diff --name-status $base_branch..$branch 2>/dev/null || echo "No changes d
 
 $(git log --oneline $base_branch..$branch 2>/dev/null || echo "No commits")
 
+## Future Work
+
+EOF
+
+    # Add future work reference if file exists
+    if [ -n "$future_work_file" ] && [ -f "$future_work_file" ]; then
+        cat >> "$synopsis_file" << EOF
+Incomplete tasks and future plans captured in:
+\`$future_work_file\`
+
+To continue this work in a new worktree:
+1. Stage feature with similar name: \`/tree stage [description]\`
+2. The future work file will be automatically loaded
+
+EOF
+    else
+        cat >> "$synopsis_file" << EOF
+No incomplete work detected - clean completion.
+
+EOF
+    fi
+
+    cat >> "$synopsis_file" << EOF
 ## Next Steps
 
-1. Review this synopsis
+1. Review this synopsis and future work (if any)
 2. Run /tree closedone to merge and cleanup
 3. Or manually merge: git checkout $base_branch && git merge $branch
 
@@ -1276,12 +1524,20 @@ EOF
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "📝 Documentation: $synopsis_file"
+    echo "📝 Documentation:"
+    echo "  • Synopsis: $synopsis_file"
+    if [ -n "$future_work_file" ] && [ -f "$future_work_file" ]; then
+        echo "  • Future Work: $future_work_file"
+    fi
     echo ""
     echo "🎯 Next Steps:"
     echo "  1. Review synopsis and commit history"
-    echo "  2. Run /tree closedone (from main workspace) to batch merge"
-    echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
+    if [ -n "$future_work_file" ] && [ -f "$future_work_file" ]; then
+        echo "  2. Review and update future work file if needed"
+        echo "  3. Run /tree closedone (from main workspace) to batch merge"
+    else
+        echo "  2. Run /tree closedone (from main workspace) to batch merge"
+    fi
     echo ""
     echo "✅ All changes committed and worktree ready to merge"
 }
@@ -1541,7 +1797,7 @@ Available commands:
   conflict               - Analyze conflicts and suggest merges ✅
   build                  - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
-  close                  - Commit all changes and generate synopsis ✅
+  close                  - Commit changes, capture future work, generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
   refresh                - Check slash command availability & session guidance ✅
@@ -1558,9 +1814,9 @@ Typical Workflow:
   1. /tree stage [description]  # Stage multiple features
   2. /tree list                 # Review staged features
   3. /tree conflict             # Analyze conflicts (optional)
-  4. /tree build                # Create all worktrees
+  4. /tree build                # Create all worktrees (loads previous work if found)
   5. [work in worktrees]        # Implement features
-  6. /tree close                # Auto-commit changes + generate synopsis
+  6. /tree close                # Commit + capture future work + generate synopsis
   7. /tree closedone            # Merge all completed worktrees
 
 Examples:
@@ -1573,6 +1829,20 @@ Examples:
   /tree close                    # Commits all changes and marks complete
   /tree closedone                # Merges all completed worktrees
   /tree status                   # Check environment status
+
+Future Work Continuity:
+  /tree close automatically captures:
+  - TODO/FIXME/HACK comments from code
+  - Unchecked items from PURPOSE.md
+  - Skipped tests
+  - Manual notes you add to FUTURE_WORK.md
+
+  When you /tree build a worktree with a similar name, it will:
+  - Automatically load the previous future work file
+  - Add it as FUTURE_WORK.md in the new worktree
+  - Reference it in PURPOSE.md
+
+  This ensures work continuity across worktree cycles!
 
 For full documentation, see: tasks/prd-tree-slash-command.md
 EOF
