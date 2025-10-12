@@ -26,14 +26,13 @@ COMPLETED_DIR="$TREES_DIR/.completed"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
 STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
+GIT_OPERATION_LOCK="$WORKSPACE_ROOT/.git/.git-operation.lock"
+GIT_OPERATION_LOG="$WORKSPACE_ROOT/.git/.git-operations.log"
 
 # Command routing
 COMMAND="${1:-help}"
 shift || true
 
-# Rest of the script remains the same as the "Stashed changes" version...
-
-<<<<<<< HEAD
 print_header() {
     echo -e "\n${TREE} ${BOLD}$1${NC}\n"
 }
@@ -54,31 +53,127 @@ print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
 }
 
-# Handle git index.lock issues
+# Handle git index.lock issues with enhanced stale lock detection
 wait_for_git_lock() {
-    local max_attempts=5
+    local max_wait=30  # Increased from 5 for better reliability
     local attempt=1
+    local wait_time=1
+    local lock_file="$WORKSPACE_ROOT/.git/index.lock"
 
-    while [ -f "$WORKSPACE_ROOT/.git/index.lock" ] && [ $attempt -le $max_attempts ]; do
-        print_warning "Git lock detected, waiting... (attempt $attempt/$max_attempts)"
-        sleep 1
+    while [ -f "$lock_file" ] && [ $attempt -le $max_wait ]; do
+        # Check if lock is stale (older than 60 seconds and empty)
+        if is_lock_stale "$lock_file"; then
+            print_warning "Stale git lock detected (>60s old), removing automatically..."
+            rm -f "$lock_file" 2>/dev/null || {
+                print_error "Failed to remove stale lock file. Please run: rm $lock_file"
+                return 1
+            }
+            print_success "Stale lock removed successfully"
+            return 0
+        fi
+
+        print_warning "Git lock detected, waiting ${wait_time}s (attempt $attempt/$max_wait)"
+        sleep $wait_time
+
+        # Exponential backoff: 1s, 2s, 4s, 8s, 16s (max)
+        wait_time=$((wait_time * 2))
+        [ $wait_time -gt 16 ] && wait_time=16
+
         attempt=$((attempt + 1))
     done
 
-    if [ -f "$WORKSPACE_ROOT/.git/index.lock" ]; then
-        print_error "Git lock file persists. Please run: rm $WORKSPACE_ROOT/.git/index.lock"
+    # Final check after all attempts
+    if [ -f "$lock_file" ]; then
+        print_error "Git lock file persists after ${max_wait} attempts. Please run: rm $lock_file"
         return 1
     fi
     return 0
+}
+
+# Check if a git lock file is stale
+is_lock_stale() {
+    local lock_file=$1
+
+    # Get lock file age in seconds
+    local current_time=$(date +%s)
+    local lock_time=$(stat -c %Y "$lock_file" 2>/dev/null || stat -f %m "$lock_file" 2>/dev/null || echo "0")
+    local lock_age=$((current_time - lock_time))
+
+    # Get lock file size
+    local lock_size=$(stat -c %s "$lock_file" 2>/dev/null || stat -f %z "$lock_file" 2>/dev/null || echo "0")
+
+    # Consider lock stale if:
+    # 1. Older than 60 seconds AND
+    # 2. File size is 0 (typical for git index.lock)
+    if [ "$lock_age" -gt 60 ] && [ "$lock_size" -eq 0 ]; then
+        return 0  # Stale
+    fi
+    return 1  # Not stale
+}
+
+# Log git operations for debugging and monitoring
+log_git_operation() {
+    local operation=$1
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Create log directory if needed
+    mkdir -p "$(dirname "$GIT_OPERATION_LOG")"
+
+    echo "[$timestamp] $operation" >> "$GIT_OPERATION_LOG"
+}
+
+# Safe git wrapper with flock-based mutex for concurrent operation protection
+safe_git() {
+    local git_cmd="$@"
+    local operation_desc="${git_cmd%% *}"  # First word of command
+
+    # Check if flock is available
+    if ! command -v flock &> /dev/null; then
+        print_warning "flock not available, falling back to wait_for_git_lock"
+        wait_for_git_lock || return 1
+        git $git_cmd
+        return $?
+    fi
+
+    # Create lock file if it doesn't exist
+    touch "$GIT_OPERATION_LOCK" 2>/dev/null || {
+        print_warning "Cannot create lock file, falling back to direct git"
+        git $git_cmd
+        return $?
+    }
+
+    log_git_operation "Acquiring lock for: git $operation_desc"
+
+    # Acquire exclusive lock with 30 second timeout
+    (
+        if ! flock -x -w 30 200; then
+            print_error "Failed to acquire git operation lock after 30s for: git $operation_desc"
+            log_git_operation "Lock acquisition FAILED (timeout) for: git $operation_desc"
+            return 1
+        fi
+
+        log_git_operation "Lock acquired for: git $operation_desc"
+
+        # Run the git command
+        git $git_cmd
+        local exit_code=$?
+
+        log_git_operation "Lock released for: git $operation_desc (exit: $exit_code)"
+
+        return $exit_code
+    ) 200>"$GIT_OPERATION_LOCK"
+
+    local result=$?
+    return $result
 }
 
 # Stash uncommitted changes
 stash_changes() {
     wait_for_git_lock || return 1
 
-    if ! git diff-index --quiet HEAD --; then
+    if ! safe_git diff-index --quiet HEAD --; then
         print_warning "Uncommitted changes detected, stashing..."
-        git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
+        safe_git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
         print_success "Changes stashed"
         return 0
     fi
@@ -290,7 +385,7 @@ closedone_merge() {
     # Switch to base branch
     wait_for_git_lock || return 1
 
-    if ! git checkout "$base" &>/dev/null; then
+    if ! safe_git checkout "$base" &>/dev/null; then
         print_error "  Failed to checkout $base"
         return 1
     fi
@@ -298,7 +393,7 @@ closedone_merge() {
 
     # Attempt merge
     local merge_output
-    if merge_output=$(git merge "$branch" --no-edit 2>&1); then
+    if merge_output=$(safe_git merge "$branch" --no-edit 2>&1); then
         # Check merge type
         if echo "$merge_output" | grep -q "Fast-forward"; then
             print_success "  Merged (fast-forward)"
@@ -324,12 +419,12 @@ closedone_merge() {
             else
                 # Agent couldn't resolve - manual intervention needed
                 print_warning "  Agent resolution failed - manual resolution required"
-                git merge --abort
+                safe_git merge --abort
                 return 1
             fi
         else
             print_error "  Merge failed: $merge_output"
-            git merge --abort 2>/dev/null
+            safe_git merge --abort 2>/dev/null
             return 1
         fi
     fi
@@ -466,16 +561,16 @@ closedone_cleanup() {
     local branch=$2
 
     # Remove worktree
-    if git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
+    if safe_git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
         print_success "  Removed worktree"
     else
         print_warning "  Failed to remove worktree (may already be removed)"
     fi
 
     # Delete branch (safe delete)
-    if git branch -d "$branch" &>/dev/null; then
+    if safe_git branch -d "$branch" &>/dev/null; then
         print_success "  Deleted branch $branch"
-    elif git branch -D "$branch" &>/dev/null; then
+    elif safe_git branch -D "$branch" &>/dev/null; then
         print_warning "  Force-deleted branch $branch (had unmerged commits)"
     else
         print_warning "  Failed to delete branch $branch"
@@ -708,8 +803,10 @@ TASKEOF
             print_warning "  Failed: $wt_name (run manually)"
         fi
 
-        # Staggered launch - 0.5s delay
-        sleep 0.5
+        # Staggered launch - 2s delay with random jitter (0-500ms)
+        # This prevents concurrent git operations during terminal initialization
+        local jitter=$(( RANDOM % 500 ))
+        sleep 2.$(printf "%03d" $jitter)
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
 
@@ -902,7 +999,7 @@ tree_build() {
     # Create development branch if not exists
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
         wait_for_git_lock || return 1
-        git checkout -b "$dev_branch" &>/dev/null
+        safe_git checkout -b "$dev_branch" &>/dev/null
         print_success "Created development branch: $dev_branch"
     fi
 
@@ -925,24 +1022,8 @@ tree_build() {
 
         # Create worktree with new branch in one command
         wait_for_git_lock || continue
-<<<<<<< Updated upstream
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create worktree with branch: $branch"
-||||||| Stash base
-        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create branch: $branch"
-            failed_count=$((failed_count + 1))
-            continue
-        fi
-
-        # Create worktree
-        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
-            print_error "  Failed to create worktree"
-            git branch -D "$branch" &>/dev/null
-=======
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+        if ! safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
             print_error "  ✗ Failed to create worktree with branch: $branch"
->>>>>>> Stashed changes
             failed_count=$((failed_count + 1))
             continue
         fi
@@ -1020,41 +1101,6 @@ EOF
     echo "Worktree Location: $TREES_DIR/"
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
-<<<<<<< Updated upstream
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        echo ""
-        print_success "All worktrees configured and ready!"
-        echo ""
-        print_info "Each worktree has:"
-        echo "  • .claude-init.sh (launches Claude with task context)"
-        echo "  • .claude-task-context.md (full task description)"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo ""
-        print_header "Next Steps"
-        echo ""
-        print_info "Open terminals manually for each worktree:"
-        echo ""
-        print_success "  1. Open new terminal (Ctrl+Shift+\`)"
-        print_success "  2. cd /workspace/.trees/<worktree-name>"
-        print_success "  3. bash /workspace/.claude/scripts/cltr.sh"
-        echo ""
-        print_info "Then continue development:"
-        echo "  • Answer Claude's clarifying questions"
-        echo "  • Implement the feature"
-        echo "  • When done: /tree close"
-        echo "  • Merge all: /tree closedone (from main workspace)"
-        echo ""
-        print_info "📖 See: docs/tree-manual-workflow.md for detailed guide"
-    fi
-||||||| Stash base
-=======
 
     # Create integrated terminals with Claude auto-launch
     if [ $success_count -gt 0 ]; then
@@ -1076,30 +1122,6 @@ EOF
         echo "  3. When done: /tree close (from within worktree)"
         echo "  4. Merge all: /tree closedone (from main workspace)"
     fi
-||||||| Stash base
-=======
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        print_success "All worktrees ready! Claude instances launched with task context."
-        echo ""
-        print_info "Each terminal has:"
-        echo "  • Claude Code running with task context loaded"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo "  • Full task description in .claude-task-context.md"
-        echo ""
-        print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
-    fi
->>>>>>> Stashed changes
 }
 
 #==============================================================================
@@ -1361,104 +1383,6 @@ tree_status() {
 }
 
 #==============================================================================
-<<<<<<< Updated upstream
-# /tree refresh - Session guidance for slash command loading
-#==============================================================================
-
-tree_refresh() {
-    print_header "Slash Command Session Check"
-
-    local current_dir=$(pwd)
-    local workspace_root="/workspace"
-    local in_worktree=false
-
-    # Detect if we're in a worktree
-    if [[ "$current_dir" == *"/.trees/"* ]]; then
-        in_worktree=true
-        local worktree_name=$(basename "$current_dir")
-    fi
-
-    echo "📍 Current Location:"
-    echo "   $current_dir"
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        echo "🌳 Worktree Detected: $worktree_name"
-        echo ""
-    fi
-
-    # Check if slash command files exist
-    echo "🔍 Checking Slash Command Files:"
-
-    local commands_found=0
-    local commands_missing=0
-
-    for cmd in tree task; do
-        if [ -f ".claude/commands/$cmd.md" ]; then
-            print_success "/$cmd command file exists"
-            commands_found=$((commands_found + 1))
-        else
-            print_error "/$cmd command file MISSING"
-            commands_missing=$((commands_missing + 1))
-        fi
-    done
-
-    echo ""
-
-    if [ $commands_missing -gt 0 ]; then
-        print_error "Missing command files detected!"
-        echo ""
-        echo "This worktree may be on an older commit. Consider:"
-        echo "  1. Merge latest changes from main/develop"
-        echo "  2. Cherry-pick the slash command commits"
-        echo ""
-        return 1
-    fi
-
-    # Provide session reload guidance
-    print_header "Claude Code CLI Session Guidance"
-
-    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
-    echo "   when switching between worktrees mid-session."
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        print_warning "You're in a worktree. If /tree or /task don't work:"
-        echo ""
-        echo "  Quick Fix (Recommended):"
-        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
-        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
-        echo ""
-        echo "  Permanent Fix:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Start new session FROM this worktree directory"
-        echo "    • CLI will rescan .claude/commands/ on session start"
-    else
-        print_success "You're in main workspace - slash commands should work"
-        echo ""
-        echo "  If commands still don't work:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Check .claude/commands/ directory exists"
-    fi
-
-    echo ""
-    print_header "Workaround Commands"
-    echo ""
-    echo "Instead of /tree commands, use:"
-    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
-    echo "  bash /workspace/.claude/scripts/tree.sh list"
-    echo "  bash /workspace/.claude/scripts/tree.sh build"
-    echo "  bash /workspace/.claude/scripts/tree.sh close"
-    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
-    echo "  bash /workspace/.claude/scripts/tree.sh status"
-    echo ""
-
-    print_info "All functionality works identically via direct script calls"
-}
-
-#==============================================================================
-||||||| Stash base
-=======
 # /tree restore - Restore terminals for worktrees without active shells
 #==============================================================================
 
@@ -1619,7 +1543,6 @@ tree_refresh() {
 }
 
 #==============================================================================
->>>>>>> Stashed changes
 # /tree help
 #==============================================================================
 
@@ -1674,9 +1597,6 @@ EOF
 #==============================================================================
 # Main Command Router
 #==============================================================================
-=======
-# All script functions would remain unchanged
->>>>>>> task/06-docx-security-verification-system-prevent-maliciou
 
 # Main command routing with both restore and refresh
 case "$COMMAND" in
@@ -1701,19 +1621,12 @@ case "$COMMAND" in
     status)
         tree_status "$@"
         ;;
-<<<<<<< Updated upstream
-    refresh)
-        tree_refresh "$@"
-        ;;
-||||||| Stash base
-=======
     restore)
         tree_restore "$@"
         ;;
     refresh)
         tree_refresh "$@"
         ;;
->>>>>>> Stashed changes
     closedone)
         closedone_main "$@"
         ;;
