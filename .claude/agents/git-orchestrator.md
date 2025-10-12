@@ -526,11 +526,77 @@ fi
 
 ## Error Handling & Recovery
 
+### Error Logging System
+
+**Log File:** `logs/git-orchestrator-errors.log`
+
+**Log Entry Format:**
+```bash
+TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+LOG_FILE="logs/git-orchestrator-errors.log"
+
+# Ensure log directory exists
+mkdir -p logs
+
+# Append error entry
+cat >> "$LOG_FILE" <<EOF
+================================================================================
+TIMESTAMP: $TIMESTAMP
+OPERATION: $OPERATION_TYPE
+BRANCH: $(git rev-parse --abbrev-ref HEAD)
+ERROR_TYPE: $ERROR_TYPE
+STATUS: $STATUS
+
+ERROR_DETAILS:
+$ERROR_DETAILS
+
+BLOCKING_ISSUES:
+$(printf '%s\n' "${BLOCKING_ISSUES[@]}")
+
+REMEDIATION:
+$(printf '%s\n' "${REMEDIATION[@]}")
+
+FALLBACK_ACTION: $FALLBACK_ACTION
+FALLBACK_COMMIT: $FALLBACK_HASH
+
+GIT_STATUS:
+$(git status --short)
+
+FILES_CHANGED:
+$(git diff --cached --stat 2>/dev/null || echo "No staged changes")
+
+================================================================================
+
+EOF
+```
+
+**When to Log:**
+- Test failures (checkpoint: warning logged, section commit: error logged)
+- Documentation validation failures
+- Schema automation failures
+- Push failures
+- Any operation that returns `status: "failed"`
+- Any operation with warnings
+
+**What NOT to Log:**
+- Successful operations (no errors/warnings)
+- `status: "skipped"` or `status: "no_changes"` (normal conditions)
+- `status: "cancelled"` by user (intentional abort)
+
 ### Test Failures (Checkpoint)
 ```
 Action: Warn but proceed
 Message: "⚠️  Tests failed (2 failures) but checkpoint created"
 Status: "success" with warnings field
+Log Level: WARNING
+```
+
+**Log Entry:**
+```bash
+log_warning "checkpoint" "tests_failed" \
+  "Tests failed: $FAILED_TESTS" \
+  "Checkpoint created with test failures" \
+  "$COMMIT_HASH"
 ```
 
 ### Test Failures (Section Commit)
@@ -540,6 +606,16 @@ Message: "❌ Cannot commit section: tests failing. Checkpoint created instead."
 Status: "failed" with fallback_action
 Blocking Issues: List of failed tests
 Remediation: Steps to fix
+Log Level: ERROR
+```
+
+**Log Entry:**
+```bash
+log_error "section_commit" "tests_failed" \
+  "$FAILED_TEST_LIST" \
+  "${REMEDIATION[@]}" \
+  "checkpoint_created" \
+  "$FALLBACK_HASH"
 ```
 
 ### Documentation Missing (Section Commit)
@@ -549,6 +625,16 @@ Message: "❌ Cannot commit: documentation required for new code"
 Status: "failed"
 Blocking Issues: List of files needing docs
 Remediation: Where to create docs
+Log Level: ERROR
+```
+
+**Log Entry:**
+```bash
+log_error "section_commit" "documentation_missing" \
+  "Files requiring documentation: $NEW_CODE_FILES" \
+  "${REMEDIATION[@]}" \
+  "none" \
+  ""
 ```
 
 ### Schema Automation Failure
@@ -557,6 +643,15 @@ Action: Create checkpoint without schema files
 Message: "⚠️  Schema automation failed, checkpoint created without generated files"
 Status: "success" with warnings
 Remediation: Manual schema automation steps
+Log Level: WARNING
+```
+
+**Log Entry:**
+```bash
+log_warning "checkpoint" "schema_automation_failed" \
+  "Schema automation error: $AUTOMATION_ERROR" \
+  "Checkpoint created without schema files" \
+  "$COMMIT_HASH"
 ```
 
 ### No Changes to Commit
@@ -564,6 +659,7 @@ Remediation: Manual schema automation steps
 Action: Skip operation
 Status: "no_changes"
 Message: "No uncommitted changes detected"
+Log Level: NONE (not logged)
 ```
 
 ### User Cancels Commit
@@ -571,6 +667,7 @@ Message: "No uncommitted changes detected"
 Action: Preserve staged changes
 Status: "cancelled"
 Message: "Commit cancelled by user. Changes remain staged."
+Log Level: NONE (not logged - intentional user action)
 ```
 
 ### Push Failure
@@ -579,6 +676,105 @@ Action: Commit succeeded locally, push failed
 Status: "success" with push_failed warning
 Message: "Commit created but push failed. Manual push required."
 Push Error: [actual git error]
+Log Level: WARNING
+```
+
+**Log Entry:**
+```bash
+log_warning "section_commit" "push_failed" \
+  "Push error: $PUSH_ERROR" \
+  "Commit $COMMIT_HASH created locally, manual push required" \
+  "$COMMIT_HASH"
+```
+
+### Helper Function for Logging
+
+**Implementation:**
+```bash
+#!/bin/bash
+
+# log_error: Log error details with full context
+# Usage: log_error <operation> <error_type> <error_details> <remediation_array> <fallback_action> <fallback_hash>
+log_error() {
+    local operation="$1"
+    local error_type="$2"
+    local error_details="$3"
+    local remediation="$4"
+    local fallback_action="$5"
+    local fallback_hash="$6"
+
+    local timestamp=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+    local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    local log_file="logs/git-orchestrator-errors.log"
+
+    mkdir -p logs
+
+    cat >> "$log_file" <<EOF
+================================================================================
+TIMESTAMP: $timestamp
+OPERATION: $operation
+BRANCH: $branch
+ERROR_TYPE: $error_type
+STATUS: failed
+
+ERROR_DETAILS:
+$error_details
+
+REMEDIATION:
+$remediation
+
+FALLBACK_ACTION: $fallback_action
+FALLBACK_COMMIT: $fallback_hash
+
+GIT_STATUS:
+$(git status --short 2>/dev/null)
+
+FILES_CHANGED:
+$(git diff --cached --stat 2>/dev/null || echo "No staged changes")
+
+================================================================================
+
+EOF
+}
+
+# log_warning: Log warning details (non-blocking issues)
+# Usage: log_warning <operation> <warning_type> <warning_details> <action_taken> <commit_hash>
+log_warning() {
+    local operation="$1"
+    local warning_type="$2"
+    local warning_details="$3"
+    local action_taken="$4"
+    local commit_hash="$5"
+
+    local timestamp=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+    local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    local log_file="logs/git-orchestrator-errors.log"
+
+    mkdir -p logs
+
+    cat >> "$log_file" <<EOF
+================================================================================
+TIMESTAMP: $timestamp
+OPERATION: $operation
+BRANCH: $branch
+WARNING_TYPE: $warning_type
+STATUS: success_with_warning
+
+WARNING_DETAILS:
+$warning_details
+
+ACTION_TAKEN:
+$action_taken
+
+COMMIT_HASH: $commit_hash
+
+GIT_STATUS:
+$(git status --short 2>/dev/null)
+
+================================================================================
+
+EOF
+}
 ```
 
 ---
