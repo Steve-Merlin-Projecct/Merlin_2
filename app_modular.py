@@ -34,6 +34,7 @@ from modules.workflow.email_application_api import email_application_api
 from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
 from modules.security.rate_limit_manager import init_rate_limiter, before_request_handler, after_request_handler
+from modules.user_preferences.preference_routes import preference_bp
 
 # Application version
 __version__ = "4.3.2"
@@ -125,6 +126,10 @@ app.register_blueprint(step_2_2_workflow_api, name='step_2_2_workflow')
 
 # Register Email Application API
 app.register_blueprint(email_application_api)
+
+# Register User Preferences API
+app.register_blueprint(preference_bp)
+logger.info("User Preferences API registered successfully")
 
 # Register Link Tracking API
 try:
