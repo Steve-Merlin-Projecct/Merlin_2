@@ -8,14 +8,14 @@ from datetime import datetime, timedelta
 import logging
 from functools import wraps
 from sqlalchemy import text
-from .database.database_client import DatabaseClient
+from .database.lazy_instances import get_database_client
 from .salary_formatter import format_salary_range
 
 # Create blueprint
 dashboard_api = Blueprint("dashboard_api", __name__)
 
-# Initialize database client
-db_client = DatabaseClient()
+# NOTE: Database client is now lazy-initialized on demand
+# No module-level instantiation to prevent import-time connections
 
 
 def require_dashboard_auth(f):
@@ -25,6 +25,13 @@ def require_dashboard_auth(f):
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Auto-authenticate in debug/development mode
+        from flask import current_app
+        if current_app.debug and not session.get("authenticated"):
+            session['authenticated'] = True
+            session['auth_time'] = datetime.now().timestamp()
+            logging.info("Auto-authenticated in debug mode (API endpoint)")
+
         if not session.get("authenticated"):
             return jsonify({"error": "Authentication required"}), 401
         return f(*args, **kwargs)
@@ -39,6 +46,7 @@ def get_dashboard_stats():
     Get dashboard statistics including scrapes and applications
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         with db_client.get_session() as session:
             # Calculate date ranges
             now = datetime.utcnow()
@@ -174,6 +182,7 @@ def get_recent_applications():
     Get recent job applications with document links
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         limit = request.args.get("limit", 20, type=int)
 
         with db_client.get_session() as session:
@@ -228,6 +237,7 @@ def get_application_details(application_id):
     Get detailed information about a specific application
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         with db_client.get_session() as session:
             # Get application details
             app_result = session.execute(
@@ -311,6 +321,7 @@ def get_system_status():
     Get system status information
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         # Test database connection
         db_status = "connected"
         storage_status = "available"
@@ -351,6 +362,7 @@ def get_recent_jobs():
     Get recently scraped jobs
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         limit = request.args.get("limit", 10, type=int)
 
         with db_client.get_session() as session:

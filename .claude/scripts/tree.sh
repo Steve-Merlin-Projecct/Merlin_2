@@ -1540,7 +1540,28 @@ tree_build() {
 
         # Create worktree with new branch in one command
         wait_for_git_lock || continue
+<<<<<<< HEAD
         if ! safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+||||||| c628e28
+<<<<<<< Updated upstream
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create worktree with branch: $branch"
+||||||| Stash base
+        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
+            print_error "  Failed to create branch: $branch"
+            failed_count=$((failed_count + 1))
+            continue
+        fi
+
+        # Create worktree
+        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
+            print_error "  Failed to create worktree"
+            git branch -D "$branch" &>/dev/null
+=======
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+=======
+        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+>>>>>>> task/07-dashboard-completion
             print_error "  ✗ Failed to create worktree with branch: $branch"
             failed_count=$((failed_count + 1))
             continue

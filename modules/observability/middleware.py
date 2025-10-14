@@ -10,7 +10,7 @@ from typing import Callable
 from flask import Flask, request, g
 from werkzeug.wrappers import Response
 
-from .context import RequestContext, set_request_context, clear_request_context
+from .context import RequestContext, set_request_context, clear_request_context, get_request_context
 from .logging_config import get_logger
 from .metrics import MetricsCollector
 
