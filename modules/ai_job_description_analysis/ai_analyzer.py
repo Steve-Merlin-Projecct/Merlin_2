@@ -340,6 +340,16 @@ class GeminiJobAnalyzer:
         self.max_retries = 3
         self.retry_delay = 1.0
 
+        # Initialize optimization modules
+        from modules.ai_job_description_analysis.token_optimizer import TokenOptimizer
+        from modules.ai_job_description_analysis.model_selector import ModelSelector
+        from modules.ai_job_description_analysis.batch_size_optimizer import BatchSizeOptimizer
+
+        self.token_optimizer = TokenOptimizer()
+        self.model_selector = ModelSelector(default_model=self.primary_model)
+        self.batch_size_optimizer = BatchSizeOptimizer()
+        logger.info("✅ Optimization modules initialized (Token, Model, Batch Size)")
+
         # Defer google-genai loading until needed
         self._genai_client = None
         self._genai_loaded = False
@@ -529,7 +539,7 @@ class GeminiJobAnalyzer:
     def analyze_jobs_batch(self, jobs: List[Dict]) -> Dict:
         """
         Analyze multiple jobs in a single API call for cost efficiency
-        Uses Gemini 2.0 Flash with automatic fallback to Gemini 2.0 Flash Lite
+        Uses integrated optimizers for token allocation, model selection, and batch sizing
 
         Args:
             jobs: List of job dictionaries with id, title, description
@@ -572,14 +582,40 @@ class GeminiJobAnalyzer:
             }
 
         try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 1
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(valid_jobs),
+                tier='tier1'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 1: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(valid_jobs)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 1 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier1',
+                batch_size=len(valid_jobs),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
             # Ensure google-genai is loaded before making API requests
             genai_client = self._ensure_genai_loaded()
 
             # Prepare batch analysis prompt with security tokens
             prompt = self._create_batch_analysis_prompt(valid_jobs)
 
-            # Make API request with automatic model fallback
-            response = self._make_gemini_request(prompt)
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(prompt, max_output_tokens=token_allocation.max_output_tokens)
 
             # Parse and validate response
             results = self._parse_batch_response(response, valid_jobs)
@@ -593,6 +629,13 @@ class GeminiJobAnalyzer:
                 "success": True,
                 "jobs_analyzed": len(valid_jobs),
                 "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(valid_jobs)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
             }
 
         except Exception as e:
@@ -609,6 +652,7 @@ class GeminiJobAnalyzer:
         """
         Run Tier 2 (Enhanced) analysis with Tier 1 context
         Protected by hash-and-replace security system
+        Uses integrated optimizers for token allocation and model selection
 
         Args:
             jobs_with_tier1: List of dicts with:
@@ -626,6 +670,32 @@ class GeminiJobAnalyzer:
             return {"results": [], "success": False, "error": "No jobs provided"}
 
         try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 2
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(jobs_with_tier1),
+                tier='tier2'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 2: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(jobs_with_tier1)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 2 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier2',
+                batch_size=len(jobs_with_tier1),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
             # Generate Tier 2 prompt
             prompt = create_tier2_enhanced_prompt(jobs_with_tier1)
 
@@ -657,8 +727,8 @@ class GeminiJobAnalyzer:
                 if token_match:
                     self._current_security_token = token_match.group(1)
 
-            # Make API request
-            response = self._make_gemini_request(validated_prompt)
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
 
             # Parse and validate
             results = self._parse_batch_response(
@@ -674,6 +744,13 @@ class GeminiJobAnalyzer:
                 "success": True,
                 "jobs_analyzed": len(jobs_with_tier1),
                 "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(jobs_with_tier1)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
             }
 
         except Exception as e:
@@ -690,6 +767,7 @@ class GeminiJobAnalyzer:
         """
         Run Tier 3 (Strategic) analysis with Tier 1 + 2 context
         Protected by hash-and-replace security system
+        Uses integrated optimizers for token allocation and model selection
 
         Args:
             jobs_with_context: List of dicts with:
@@ -708,6 +786,32 @@ class GeminiJobAnalyzer:
             return {"results": [], "success": False, "error": "No jobs provided"}
 
         try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 3
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(jobs_with_context),
+                tier='tier3'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 3: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(jobs_with_context)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 3 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier3',
+                batch_size=len(jobs_with_context),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
             # Generate Tier 3 prompt
             prompt = create_tier3_strategic_prompt(jobs_with_context)
 
@@ -739,8 +843,8 @@ class GeminiJobAnalyzer:
                 if token_match:
                     self._current_security_token = token_match.group(1)
 
-            # Make API request
-            response = self._make_gemini_request(validated_prompt)
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
 
             # Parse and validate
             results = self._parse_batch_response(
@@ -756,6 +860,13 @@ class GeminiJobAnalyzer:
                 "success": True,
                 "jobs_analyzed": len(jobs_with_context),
                 "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(jobs_with_context)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
             }
 
         except Exception as e:
@@ -1046,8 +1157,17 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         return "".join(prompt_parts)
 
-    def _make_gemini_request(self, prompt: str) -> Dict:
-        """Make request to Gemini API with retry logic"""
+    def _make_gemini_request(self, prompt: str, max_output_tokens: int = 8192) -> Dict:
+        """
+        Make request to Gemini API with retry logic and optimized token allocation
+
+        Args:
+            prompt: The prompt to send to Gemini
+            max_output_tokens: Maximum output tokens (dynamically calculated by optimizer)
+
+        Returns:
+            Dictionary with API response and usage metadata
+        """
 
         # Ensure requests is loaded before making API calls
         if not _ensure_requests_loaded():
@@ -1063,7 +1183,7 @@ DESCRIPTION: {sanitized_description[:2000]}...
                 "temperature": 0.1,
                 "topK": 1,
                 "topP": 0.8,
-                "maxOutputTokens": 8192,
+                "maxOutputTokens": max_output_tokens,  # Now dynamically set
                 "responseMimeType": "application/json",
             },
         }
