@@ -7,8 +7,16 @@ TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
 # Display banner
 echo "════════════════════════════════════════════════════════"
+<<<<<<< HEAD
 echo "🌳 Worktree: git-orchestrator-improvements"
 echo "📋 Task: ||git-orchestrator improvements"
+||||||| c628e28
+echo "🌳 Worktree: dashbaord-completion-the-dashboard-needs-to-integr"
+echo "📋 Task: dashbaord completion the dashboard needs to integr"
+=======
+echo "🌳 Worktree: dashboard-completion"
+echo "📋 Task: ||dashboard completion"
+>>>>>>> task/07-dashboard-completion
 echo "════════════════════════════════════════════════════════"
 echo ""
 echo "✅ Slash commands available after Claude loads:"

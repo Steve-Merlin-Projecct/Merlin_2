@@ -233,22 +233,31 @@
 
                 // Load dashboard data
                 async loadDashboardData() {
+                    console.log('[Dashboard] Starting to load dashboard data...');
                     this.loading = true;
                     try {
+                        console.log('[Dashboard] Fetching /api/v2/dashboard/overview');
                         const response = await fetch('/api/v2/dashboard/overview');
+                        console.log('[Dashboard] Response status:', response.status);
+
                         const data = await response.json();
+                        console.log('[Dashboard] Received data:', data);
+                        console.log('[Dashboard] Data.success:', data.success);
 
                         if (data.success) {
+                            console.log('[Dashboard] Setting metrics...', data.metrics);
                             this.metrics = data.metrics;
                             this.pipeline = data.pipeline;
-                            this.recentApplications = data.recent_applications;
+                            this.recentApplications = data.recent_applications || [];
+                            console.log('[Dashboard] Data loaded successfully!');
                         } else {
-                            console.error('Failed to load dashboard:', data.error);
+                            console.error('[Dashboard] Failed to load dashboard:', data.error);
                         }
                     } catch (error) {
-                        console.error('Error loading dashboard:', error);
+                        console.error('[Dashboard] Error loading dashboard:', error);
                     } finally {
                         this.loading = false;
+                        console.log('[Dashboard] Loading complete, loading state:', this.loading);
                     }
                 },
 

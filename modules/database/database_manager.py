@@ -24,15 +24,23 @@ class DatabaseManager:
 
         Creates instances of DatabaseClient, DatabaseReader, and DatabaseWriter.
         Also initializes database tables and sets default application settings.
+
+        Note: This creates connections immediately. For lazy initialization,
+        use lazy_instances.get_database_manager() instead.
         """
-        self.client = DatabaseClient()
-        self.reader = DatabaseReader()
-        self.writer = DatabaseWriter()
+        try:
+            self.client = DatabaseClient()
+            self.reader = DatabaseReader()
+            self.writer = DatabaseWriter()
 
-        # Initialize database tables
-        self.initialize_database()
+            # Initialize database tables
+            self.initialize_database()
 
-        logging.info("Database manager initialized successfully")
+            logging.info("Database manager initialized successfully")
+        except Exception as e:
+            logging.error(f"Failed to initialize database manager: {e}")
+            # Re-raise to let caller handle the error
+            raise
 
     def initialize_database(self):
         """

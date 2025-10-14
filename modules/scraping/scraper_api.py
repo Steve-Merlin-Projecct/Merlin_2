@@ -12,9 +12,6 @@ from modules.scraping.intelligent_scraper import IntelligentScraper
 from modules.scraping.scrape_pipeline import ScrapeDataPipeline
 from modules.scraping.jobs_populator import JobsPopulator
 from modules.database.database_manager import DatabaseManager
-from modules.database.database_extensions import extend_database_reader
-
-extend_database_reader()  # Extend database functionality for scraper operations
 from modules.security.security_patch import SecurityPatch
 from modules.security.rate_limit_manager import rate_limit_expensive, rate_limit_moderate
 

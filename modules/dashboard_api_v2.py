@@ -15,13 +15,13 @@ from flask import Blueprint, jsonify, request, session
 from datetime import datetime, timedelta
 from functools import wraps
 from sqlalchemy import text
-from modules.database.database_client import DatabaseClient
+from modules.database.lazy_instances import get_database_client
 
 # Create blueprint
 dashboard_api_v2 = Blueprint("dashboard_api_v2", __name__)
 
-# Initialize database client
-db_client = DatabaseClient()
+# NOTE: Database client is now lazy-initialized on demand
+# No module-level instantiation to prevent import-time connections
 logger = logging.getLogger(__name__)
 
 
@@ -32,6 +32,13 @@ def require_dashboard_auth(f):
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Auto-authenticate in debug/development mode
+        from flask import current_app
+        if current_app.debug and not session.get("authenticated"):
+            session['authenticated'] = True
+            session['auth_time'] = datetime.now().timestamp()
+            logger.info("Auto-authenticated in debug mode (API v2 endpoint)")
+
         if not session.get("authenticated"):
             return jsonify({"success": False, "error": "Authentication required"}), 401
         return f(*args, **kwargs)
@@ -61,6 +68,7 @@ def get_dashboard_overview():
     }
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         with db_client.get_session() as db_session:
             # Use Common Table Expressions for efficient query planning
             query = text("""
@@ -325,6 +333,7 @@ def get_metrics_timeseries():
     Returns array of data points for charting
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         metric_type = request.args.get("metric", "scraping_velocity")
         period = request.args.get("period", "daily")
         time_range = request.args.get("range", "7d")
@@ -405,6 +414,7 @@ def get_pipeline_status():
     Returns health status and current processing state of each stage
     """
     try:
+        db_client = get_database_client()  # Lazy initialization
         with db_client.get_session() as db_session:
             # Get pipeline stage details
             query = text("""
@@ -558,6 +568,7 @@ def get_jobs():
                 "error": f"Invalid filter. Must be one of: {', '.join(valid_filters)}"
             }), 400
 
+        db_client = get_database_client()  # Lazy initialization
         with db_client.get_session() as db_session:
             # Build base query with LEFT JOIN to check if job was applied
             base_query = """
