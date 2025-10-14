@@ -27,6 +27,8 @@ INCOMPLETE_DIR="$TREES_DIR/.incomplete"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
 STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
+GIT_OPERATION_LOCK="$WORKSPACE_ROOT/.git/.git-operation.lock"
+GIT_OPERATION_LOG="$WORKSPACE_ROOT/.git/.git-operations.log"
 
 # Command routing
 COMMAND="${1:-help}"
@@ -52,31 +54,127 @@ print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
 }
 
-# Handle git index.lock issues
+# Handle git index.lock issues with enhanced stale lock detection
 wait_for_git_lock() {
-    local max_attempts=5
+    local max_wait=30  # Increased from 5 for better reliability
     local attempt=1
+    local wait_time=1
+    local lock_file="$WORKSPACE_ROOT/.git/index.lock"
 
-    while [ -f "$WORKSPACE_ROOT/.git/index.lock" ] && [ $attempt -le $max_attempts ]; do
-        print_warning "Git lock detected, waiting... (attempt $attempt/$max_attempts)"
-        sleep 1
+    while [ -f "$lock_file" ] && [ $attempt -le $max_wait ]; do
+        # Check if lock is stale (older than 60 seconds and empty)
+        if is_lock_stale "$lock_file"; then
+            print_warning "Stale git lock detected (>60s old), removing automatically..."
+            rm -f "$lock_file" 2>/dev/null || {
+                print_error "Failed to remove stale lock file. Please run: rm $lock_file"
+                return 1
+            }
+            print_success "Stale lock removed successfully"
+            return 0
+        fi
+
+        print_warning "Git lock detected, waiting ${wait_time}s (attempt $attempt/$max_wait)"
+        sleep $wait_time
+
+        # Exponential backoff: 1s, 2s, 4s, 8s, 16s (max)
+        wait_time=$((wait_time * 2))
+        [ $wait_time -gt 16 ] && wait_time=16
+
         attempt=$((attempt + 1))
     done
 
-    if [ -f "$WORKSPACE_ROOT/.git/index.lock" ]; then
-        print_error "Git lock file persists. Please run: rm $WORKSPACE_ROOT/.git/index.lock"
+    # Final check after all attempts
+    if [ -f "$lock_file" ]; then
+        print_error "Git lock file persists after ${max_wait} attempts. Please run: rm $lock_file"
         return 1
     fi
     return 0
+}
+
+# Check if a git lock file is stale
+is_lock_stale() {
+    local lock_file=$1
+
+    # Get lock file age in seconds
+    local current_time=$(date +%s)
+    local lock_time=$(stat -c %Y "$lock_file" 2>/dev/null || stat -f %m "$lock_file" 2>/dev/null || echo "0")
+    local lock_age=$((current_time - lock_time))
+
+    # Get lock file size
+    local lock_size=$(stat -c %s "$lock_file" 2>/dev/null || stat -f %z "$lock_file" 2>/dev/null || echo "0")
+
+    # Consider lock stale if:
+    # 1. Older than 60 seconds AND
+    # 2. File size is 0 (typical for git index.lock)
+    if [ "$lock_age" -gt 60 ] && [ "$lock_size" -eq 0 ]; then
+        return 0  # Stale
+    fi
+    return 1  # Not stale
+}
+
+# Log git operations for debugging and monitoring
+log_git_operation() {
+    local operation=$1
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Create log directory if needed
+    mkdir -p "$(dirname "$GIT_OPERATION_LOG")"
+
+    echo "[$timestamp] $operation" >> "$GIT_OPERATION_LOG"
+}
+
+# Safe git wrapper with flock-based mutex for concurrent operation protection
+safe_git() {
+    local git_cmd="$@"
+    local operation_desc="${git_cmd%% *}"  # First word of command
+
+    # Check if flock is available
+    if ! command -v flock &> /dev/null; then
+        print_warning "flock not available, falling back to wait_for_git_lock"
+        wait_for_git_lock || return 1
+        git $git_cmd
+        return $?
+    fi
+
+    # Create lock file if it doesn't exist
+    touch "$GIT_OPERATION_LOCK" 2>/dev/null || {
+        print_warning "Cannot create lock file, falling back to direct git"
+        git $git_cmd
+        return $?
+    }
+
+    log_git_operation "Acquiring lock for: git $operation_desc"
+
+    # Acquire exclusive lock with 30 second timeout
+    (
+        if ! flock -x -w 30 200; then
+            print_error "Failed to acquire git operation lock after 30s for: git $operation_desc"
+            log_git_operation "Lock acquisition FAILED (timeout) for: git $operation_desc"
+            return 1
+        fi
+
+        log_git_operation "Lock acquired for: git $operation_desc"
+
+        # Run the git command
+        git $git_cmd
+        local exit_code=$?
+
+        log_git_operation "Lock released for: git $operation_desc (exit: $exit_code)"
+
+        return $exit_code
+    ) 200>"$GIT_OPERATION_LOCK"
+
+    local result=$?
+    return $result
 }
 
 # Stash uncommitted changes
 stash_changes() {
     wait_for_git_lock || return 1
 
-    if ! git diff-index --quiet HEAD --; then
+    if ! safe_git diff-index --quiet HEAD --; then
         print_warning "Uncommitted changes detected, stashing..."
-        git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
+        safe_git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
         print_success "Changes stashed"
         return 0
     fi
@@ -296,7 +394,7 @@ closedone_merge() {
     # Switch to base branch
     wait_for_git_lock || return 1
 
-    if ! git checkout "$base" &>/dev/null; then
+    if ! safe_git checkout "$base" &>/dev/null; then
         print_error "  Failed to checkout $base"
         return 1
     fi
@@ -304,7 +402,7 @@ closedone_merge() {
 
     # Attempt merge
     local merge_output
-    if merge_output=$(git merge "$branch" --no-edit 2>&1); then
+    if merge_output=$(safe_git merge "$branch" --no-edit 2>&1); then
         # Check merge type
         if echo "$merge_output" | grep -q "Fast-forward"; then
             print_success "  Merged (fast-forward)"
@@ -330,12 +428,12 @@ closedone_merge() {
             else
                 # Agent couldn't resolve - manual intervention needed
                 print_warning "  Agent resolution failed - manual resolution required"
-                git merge --abort
+                safe_git merge --abort
                 return 1
             fi
         else
             print_error "  Merge failed: $merge_output"
-            git merge --abort 2>/dev/null
+            safe_git merge --abort 2>/dev/null
             return 1
         fi
     fi
@@ -939,16 +1037,16 @@ closedone_cleanup() {
     local branch=$2
 
     # Remove worktree
-    if git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
+    if safe_git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
         print_success "  Removed worktree"
     else
         print_warning "  Failed to remove worktree (may already be removed)"
     fi
 
     # Delete branch (safe delete)
-    if git branch -d "$branch" &>/dev/null; then
+    if safe_git branch -d "$branch" &>/dev/null; then
         print_success "  Deleted branch $branch"
-    elif git branch -D "$branch" &>/dev/null; then
+    elif safe_git branch -D "$branch" &>/dev/null; then
         print_warning "  Force-deleted branch $branch (had unmerged commits)"
     else
         print_warning "  Failed to delete branch $branch"
@@ -1223,8 +1321,10 @@ TASKEOF
             print_warning "  Failed: $wt_name (run manually)"
         fi
 
-        # Staggered launch - 0.5s delay
-        sleep 0.5
+        # Staggered launch - 2s delay with random jitter (0-500ms)
+        # This prevents concurrent git operations during terminal initialization
+        local jitter=$(( RANDOM % 500 ))
+        sleep 2.$(printf "%03d" $jitter)
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
 
@@ -1417,7 +1517,7 @@ tree_build() {
     # Create development branch if not exists
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
         wait_for_git_lock || return 1
-        git checkout -b "$dev_branch" &>/dev/null
+        safe_git checkout -b "$dev_branch" &>/dev/null
         print_success "Created development branch: $dev_branch"
     fi
 
@@ -1440,7 +1540,7 @@ tree_build() {
 
         # Create worktree with new branch in one command
         wait_for_git_lock || continue
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+        if ! safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
             print_error "  ✗ Failed to create worktree with branch: $branch"
             failed_count=$((failed_count + 1))
             continue
