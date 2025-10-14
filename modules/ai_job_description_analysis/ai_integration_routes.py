@@ -211,7 +211,7 @@ def reset_daily_usage():
 
 @ai_bp.route("/health", methods=["GET"])
 @require_auth
-@rate_limit(requests_per_minute=120)
+@rate_limit_expensive
 def ai_health_check():
     """
     Health check for AI integration services
@@ -255,7 +255,7 @@ def ai_health_check():
 
 @ai_bp.route("/gemini-usage", methods=["GET"])
 @require_auth
-@rate_limit(requests_per_minute=120)
+@rate_limit_expensive
 def get_gemini_usage():
     """Get comprehensive Gemini usage statistics with model tracking"""
     try:
