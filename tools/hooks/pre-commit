@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# Pre-commit hook for documentation standards enforcement
+#
+# This hook validates:
+# 1. YAML frontmatter in markdown files
+# 2. File location compliance
+# 3. Broken internal links
+#
+# To install: cp tools/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# To bypass: git commit --no-verify (not recommended)
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "Running documentation validation checks..."
+
+# Get project root (where .git directory is)
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+
+# Get staged markdown files
+STAGED_MD=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$' || true)
+
+if [ -z "$STAGED_MD" ]; then
+    echo -e "${GREEN}✓${NC} No markdown files to validate"
+    exit 0
+fi
+
+echo "Validating $(echo "$STAGED_MD" | wc -l) markdown file(s)..."
+
+# Track if any checks fail
+HAS_ERRORS=0
+
+# Check 1: Validate metadata
+echo ""
+echo "Check 1/3: Validating YAML frontmatter..."
+for file in $STAGED_MD; do
+    if [ -f "$file" ]; then
+        if python tools/validate_metadata.py "$file" > /dev/null 2>&1; then
+            echo -e "  ${GREEN}✓${NC} $file"
+        else
+            echo -e "  ${RED}✗${NC} $file"
+            python tools/validate_metadata.py "$file" 2>&1 | sed 's/^/    /'
+            HAS_ERRORS=1
+        fi
+    fi
+done
+
+# Check 2: Validate file location
+echo ""
+echo "Check 2/3: Validating file placement..."
+for file in $STAGED_MD; do
+    if [ -f "$file" ]; then
+        if python tools/validate_location.py "$file" > /dev/null 2>&1; then
+            echo -e "  ${GREEN}✓${NC} $file"
+        else
+            echo -e "  ${RED}✗${NC} $file"
+            python tools/validate_location.py "$file" 2>&1 | sed 's/^/    /'
+            HAS_ERRORS=1
+        fi
+    fi
+done
+
+# Check 3: Validate links
+echo ""
+echo "Check 3/3: Checking for broken links..."
+for file in $STAGED_MD; do
+    if [ -f "$file" ]; then
+        if python tools/validate_links.py "$file" > /dev/null 2>&1; then
+            echo -e "  ${GREEN}✓${NC} $file"
+        else
+            echo -e "  ${RED}✗${NC} $file"
+            python tools/validate_links.py "$file" 2>&1 | sed 's/^/    /'
+            HAS_ERRORS=1
+        fi
+    fi
+done
+
+# Summary
+echo ""
+echo "=========================================="
+
+if [ $HAS_ERRORS -eq 0 ]; then
+    echo -e "${GREEN}✓ All checks passed!${NC}"
+    echo ""
+    exit 0
+else
+    echo -e "${RED}✗ Validation failed${NC}"
+    echo ""
+    echo "To fix:"
+    echo "  1. Add missing YAML frontmatter (use: python tools/validate_metadata.py --fix <file>)"
+    echo "  2. Move files to correct location (see suggestions above)"
+    echo "  3. Fix broken links"
+    echo ""
+    echo "To bypass (not recommended): git commit --no-verify"
+    echo ""
+    exit 1
+fi
