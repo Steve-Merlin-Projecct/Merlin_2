@@ -321,8 +321,16 @@ def rate_limit_expensive(f: Callable) -> Callable:
         def analyze_jobs():
             ...
     """
-    limit = config.RATE_LIMIT_TIERS["expensive"]["ai_analysis"]
-    return limiter.limit(limit)(f)
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if limiter is None:
+            logger.warning(f"Rate limiter not initialized for {f.__name__}, skipping rate limit check")
+            return f(*args, **kwargs)
+
+        limit = config.RATE_LIMIT_TIERS["expensive"]["ai_analysis"]
+        return limiter.limit(limit)(f)(*args, **kwargs)
+
+    return decorated_function
 
 
 def rate_limit_moderate(f: Callable) -> Callable:
@@ -335,8 +343,16 @@ def rate_limit_moderate(f: Callable) -> Callable:
         def send_email():
             ...
     """
-    limit = config.RATE_LIMIT_TIERS["moderate"]["document_generation"]
-    return limiter.limit(limit)(f)
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if limiter is None:
+            logger.warning(f"Rate limiter not initialized for {f.__name__}, skipping rate limit check")
+            return f(*args, **kwargs)
+
+        limit = config.RATE_LIMIT_TIERS["moderate"]["document_generation"]
+        return limiter.limit(limit)(f)(*args, **kwargs)
+
+    return decorated_function
 
 
 def rate_limit_cheap(f: Callable) -> Callable:
@@ -349,8 +365,18 @@ def rate_limit_cheap(f: Callable) -> Callable:
         def get_jobs():
             ...
     """
-    limit = config.RATE_LIMIT_TIERS["cheap"]["db_read"]
-    return limiter.limit(limit)(f)
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Lazy evaluation: only check limit when function is actually called
+        if limiter is None:
+            logger.warning(f"Rate limiter not initialized for {f.__name__}, skipping rate limit check")
+            return f(*args, **kwargs)
+
+        # Apply rate limiting
+        limit = config.RATE_LIMIT_TIERS["cheap"]["db_read"]
+        return limiter.limit(limit)(f)(*args, **kwargs)
+
+    return decorated_function
 
 
 def rate_limit_custom(limit_string: str) -> Callable:
