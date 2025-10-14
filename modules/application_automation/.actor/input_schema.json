@@ -1,0 +1,53 @@
+{
+  "title": "Application Automation Actor Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "job_id": {
+      "title": "Job ID",
+      "type": "string",
+      "description": "Job posting ID from the database",
+      "editor": "textfield",
+      "example": "job_12345"
+    },
+    "application_id": {
+      "title": "Application ID",
+      "type": "string",
+      "description": "Application tracking ID",
+      "editor": "textfield",
+      "example": "app_67890"
+    },
+    "api_base_url": {
+      "title": "Flask API Base URL",
+      "type": "string",
+      "description": "Base URL of the Flask backend API",
+      "editor": "textfield",
+      "example": "https://api.example.com",
+      "pattern": "^https?://.*"
+    },
+    "api_key": {
+      "title": "API Key",
+      "type": "string",
+      "description": "API authentication key (will be auto-filled from secrets)",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "headless": {
+      "title": "Headless Mode",
+      "type": "boolean",
+      "description": "Run browser in headless mode",
+      "default": true,
+      "editor": "checkbox"
+    },
+    "timeout": {
+      "title": "Operation Timeout (ms)",
+      "type": "integer",
+      "description": "Timeout for browser operations in milliseconds",
+      "default": 30000,
+      "minimum": 5000,
+      "maximum": 120000,
+      "editor": "number"
+    }
+  },
+  "required": ["job_id", "application_id", "api_base_url", "api_key"]
+}
