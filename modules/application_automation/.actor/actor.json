@@ -1,0 +1,43 @@
+{
+  "actorSpecification": 1,
+  "name": "application-automation",
+  "title": "Job Application Automation Actor",
+  "description": "Automates job application form filling for Indeed using Playwright. Part of Merlin Job Application System.",
+  "version": "1.0.0",
+  "meta": {
+    "templateId": "python-playwright"
+  },
+  "input": "./input_schema.json",
+  "dockerfile": "./Dockerfile",
+  "readme": "../README.md",
+  "environmentVariables": {
+    "WEBHOOK_API_KEY": {
+      "type": "secret",
+      "description": "API key for Flask backend authentication",
+      "isRequired": true
+    }
+  },
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Application Submissions",
+      "description": "Stores results of each application attempt",
+      "views": {
+        "submissions": {
+          "title": "Application Submissions",
+          "transformation": {
+            "fields": [
+              "success",
+              "application_id",
+              "job_id",
+              "form_type",
+              "fields_filled",
+              "submission_confirmed",
+              "error_message"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
