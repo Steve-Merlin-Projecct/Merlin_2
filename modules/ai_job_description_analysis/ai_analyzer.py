@@ -1151,11 +1151,22 @@ DESCRIPTION: {sanitized_description[:2000]}...
             validated_results = []
             for result in analysis_results:
                 if self._validate_analysis_result(result):
+                    # SECURITY: Sanitize response before database storage (Layer 6 defense)
+                    sanitized_result, warnings = self._sanitize_response(result)
+
                     # Add metadata
-                    result["analysis_timestamp"] = datetime.now().isoformat()
-                    result["model_used"] = "gemini-1.5-flash-latest"
-                    result["analysis_version"] = "1.0"
-                    validated_results.append(result)
+                    sanitized_result["analysis_timestamp"] = datetime.now().isoformat()
+                    sanitized_result["model_used"] = "gemini-1.5-flash-latest"
+                    sanitized_result["analysis_version"] = "1.0"
+
+                    # Log security warnings if any
+                    if warnings:
+                        sanitized_result["security_warnings"] = len(warnings)
+                        self._log_sanitization_warnings(
+                            result.get("job_id"), warnings
+                        )
+
+                    validated_results.append(sanitized_result)
                 else:
                     logger.warning(
                         f"Invalid analysis result for job {result.get('job_id')}"
@@ -1203,6 +1214,72 @@ DESCRIPTION: {sanitized_description[:2000]}...
             return False
 
         return True
+
+    def _sanitize_response(self, result: Dict) -> tuple[Dict, List[str]]:
+        """
+        Sanitize LLM response before database storage (Layer 6 defense)
+        Final safeguard against malicious payloads if all other defenses fail
+
+        Args:
+            result: Raw analysis result from LLM
+
+        Returns:
+            Tuple of (sanitized_result, warnings)
+        """
+        from modules.ai_job_description_analysis.response_sanitizer import (
+            sanitize_response,
+        )
+
+        job_id = result.get("job_id", "unknown")
+        return sanitize_response(result, job_id)
+
+    def _log_sanitization_warnings(self, job_id: str, warnings: List[str]):
+        """
+        Log response sanitization warnings to security log
+
+        Args:
+            job_id: Job ID
+            warnings: List of sanitization warnings
+        """
+        import json
+        from pathlib import Path
+        from modules.ai_job_description_analysis.response_sanitizer import (
+            get_sanitizer,
+        )
+
+        # Ensure storage directory exists
+        storage_dir = Path("storage")
+        storage_dir.mkdir(exist_ok=True)
+
+        log_file = storage_dir / "response_sanitization.jsonl"
+
+        # Get detailed report
+        sanitizer = get_sanitizer()
+        report = sanitizer.get_sanitization_report(warnings)
+
+        sanitization_record = {
+            "timestamp": datetime.now().isoformat(),
+            "job_id": job_id,
+            "model": self.current_model,
+            "total_warnings": report["total_warnings"],
+            "sql_injection_attempts": report["sql_injection_attempts"],
+            "command_injection_attempts": report["command_injection_attempts"],
+            "xss_attempts": report["xss_attempts"],
+            "path_traversal_attempts": report["path_traversal_attempts"],
+            "suspicious_urls": report["suspicious_urls"],
+            "unauthorized_urls": report["unauthorized_urls"],
+            "sample_warnings": report["warnings"],
+        }
+
+        # Append to JSONL file
+        try:
+            with open(log_file, "a") as f:
+                f.write(json.dumps(sanitization_record) + "\n")
+            logger.warning(
+                f"🧹 Response sanitization: {report['total_warnings']} issues found for job {job_id}"
+            )
+        except Exception as e:
+            logger.error(f"Failed to log sanitization warnings: {e}")
 
     def _log_security_incident(
         self,
