@@ -1,0 +1,64 @@
+{
+  "test_name": "tier1_single_good",
+  "timestamp": "2025-10-14T01:29:55.616181",
+  "input_jobs": [
+    {
+      "id": "test_job_001",
+      "title": "Senior Software Engineer",
+      "company": "TechCorp Solutions",
+      "location": "San Francisco, CA",
+      "description": "\nWe are looking for a Senior Software Engineer to join our growing team!\n\nAbout Us:\nTechCorp Solutions is a fast-growing startup building innovative SaaS solutions for enterprise customers. We've raised $50M in Series B funding and are scaling rapidly.\n\nWhat You'll Do:\n- Design and build scalable backend systems using Python, Go, and AWS\n- Lead technical initiatives and mentor junior engineers\n- Collaborate with product and design teams on new features\n- Participate in code reviews and maintain high code quality standards\n- Work in an agile environment with 2-week sprints\n\nRequirements:\n- 5+ years of software engineering experience\n- Strong proficiency in Python and at least one other language (Go, Java, or C++)\n- Experience with distributed systems, microservices, and cloud infrastructure (AWS/GCP)\n- Bachelor's degree in Computer Science or related field\n- Experience with Docker, Kubernetes, and CI/CD pipelines\n\nNice to Have:\n- Experience in a startup environment\n- Familiarity with machine learning and data pipelines\n- Open source contributions\n\nWhat We Offer:\n- Competitive salary ($180k-$220k) + equity\n- Health, dental, and vision insurance\n- 401(k) matching\n- Unlimited PTO\n- Remote-friendly (3 days in office, 2 days remote)\n- Professional development budget\n- Catered lunches and snacks\n\nOur interview process:\n1. Phone screen (30 min)\n2. Technical assessment (take-home)\n3. Onsite interviews (4 hours)\n4. Final chat with leadership\n\nApply with your resume and a brief cover letter explaining why you're interested!\n        "
+    }
+  ],
+  "output_result": {
+    "results": [],
+    "usage_stats": {
+      "daily_requests": 0,
+      "monthly_requests": 0,
+      "daily_tokens": 0,
+      "monthly_tokens": 0,
+      "daily_request_limit": 1500,
+      "monthly_request_limit": 45000,
+      "daily_token_limit": 3000000,
+      "monthly_token_limit": 50000000,
+      "last_reset": "2025-10-14T01:29:47.731635",
+      "model_switches": 0,
+      "primary_model": "gemini-2.0-flash-001",
+      "available_models": {
+        "gemini-2.0-flash-001": {
+          "name": "Gemini 2.0 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.0-flash-lite-001": {
+          "name": "Gemini 2.0 Flash Lite",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash",
+          "tier": "paid",
+          "input_cost_per_1k": 0.3,
+          "output_cost_per_1k": 2.5
+        },
+        "gemini-1.5-flash": {
+          "name": "Gemini 1.5 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-1.5-pro": {
+          "name": "Gemini 1.5 Pro",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        }
+      }
+    },
+    "success": false,
+    "error": "unsupported operand type(s) for +=: 'dict' and 'int'",
+    "model_used": "gemini-2.0-flash-001"
+  }
+}

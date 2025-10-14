@@ -1,0 +1,78 @@
+{
+  "test_name": "tier1_batch_good",
+  "timestamp": "2025-10-14T01:29:01.803054",
+  "input_jobs": [
+    {
+      "id": "test_job_001",
+      "title": "Senior Software Engineer",
+      "company": "TechCorp Solutions",
+      "location": "San Francisco, CA",
+      "description": "\nWe are looking for a Senior Software Engineer to join our growing team!\n\nAbout Us:\nTechCorp Solutions is a fast-growing startup building innovative SaaS solutions for enterprise customers. We've raised $50M in Series B funding and are scaling rapidly.\n\nWhat You'll Do:\n- Design and build scalable backend systems using Python, Go, and AWS\n- Lead technical initiatives and mentor junior engineers\n- Collaborate with product and design teams on new features\n- Participate in code reviews and maintain high code quality standards\n- Work in an agile environment with 2-week sprints\n\nRequirements:\n- 5+ years of software engineering experience\n- Strong proficiency in Python and at least one other language (Go, Java, or C++)\n- Experience with distributed systems, microservices, and cloud infrastructure (AWS/GCP)\n- Bachelor's degree in Computer Science or related field\n- Experience with Docker, Kubernetes, and CI/CD pipelines\n\nNice to Have:\n- Experience in a startup environment\n- Familiarity with machine learning and data pipelines\n- Open source contributions\n\nWhat We Offer:\n- Competitive salary ($180k-$220k) + equity\n- Health, dental, and vision insurance\n- 401(k) matching\n- Unlimited PTO\n- Remote-friendly (3 days in office, 2 days remote)\n- Professional development budget\n- Catered lunches and snacks\n\nOur interview process:\n1. Phone screen (30 min)\n2. Technical assessment (take-home)\n3. Onsite interviews (4 hours)\n4. Final chat with leadership\n\nApply with your resume and a brief cover letter explaining why you're interested!\n        "
+    },
+    {
+      "id": "test_job_003",
+      "title": "Data Scientist - Machine Learning",
+      "company": "Financial Analytics Corp",
+      "location": "New York, NY",
+      "description": "\nFinancial Analytics Corp is seeking an exceptional Data Scientist to join our Quantitative Research team. This is a unique opportunity to work on cutting-edge machine learning problems in the financial services industry.\n\nPosition Overview:\nYou will be responsible for developing and deploying ML models for trading strategies, risk assessment, and market prediction. You'll work closely with our team of PhDs and researchers to push the boundaries of what's possible with AI in finance.\n\nKey Responsibilities:\n\u2022 Research and develop novel machine learning algorithms for financial applications\n\u2022 Build production ML pipelines using Python, TensorFlow, PyTorch, and scikit-learn\n\u2022 Analyze large-scale financial datasets (terabytes of historical market data)\n\u2022 Collaborate with quantitative traders to validate and refine models\n\u2022 Present findings to senior leadership and stakeholders\n\u2022 Publish research papers at top ML conferences (NeurIPS, ICML, KDD)\n\nRequired Qualifications:\n\u2022 PhD in Computer Science, Statistics, Mathematics, or related quantitative field\n\u2022 3+ years of industry experience in machine learning (finance/fintech strongly preferred)\n\u2022 Deep expertise in deep learning, time series analysis, and statistical modeling\n\u2022 Strong publication record in top-tier venues\n\u2022 Proficiency in Python, R, and SQL\n\u2022 Experience with big data technologies (Spark, Hadoop, Airflow)\n\u2022 Expert knowledge of financial markets and trading strategies\n\nPreferred Qualifications:\n\u2022 Experience with reinforcement learning for trading\n\u2022 Familiarity with alternative data sources (satellite imagery, NLP on news)\n\u2022 Contributions to open-source ML libraries\n\u2022 CFA or FRM certification\n\nCompensation Package:\n\u2022 Base salary: $200k-$300k (commensurate with experience)\n\u2022 Annual performance bonus: 50-100% of base\n\u2022 Signing bonus: $50k\n\u2022 Equity grants\n\u2022 Comprehensive benefits: health, dental, vision, life insurance\n\u2022 401(k) with 6% match\n\u2022 Relocation assistance\n\u2022 Gym membership and wellness stipend\n\nWork Environment:\n\u2022 Hybrid: 4 days in Manhattan office, 1 day remote\n\u2022 State-of-the-art GPU infrastructure\n\u2022 Access to proprietary financial datasets\n\u2022 Collaborative, intellectually stimulating environment\n\nInterview Process:\n1. Initial phone screen (45 min)\n2. Technical interview - ML fundamentals (90 min)\n3. Coding assessment - Python/data structures (90 min)\n4. Onsite: 4 rounds including whiteboard ML design, research presentation\n5. Final interview with CTO\n\nWe are an equal opportunity employer committed to building a diverse team.\n        "
+    },
+    {
+      "id": "test_job_005",
+      "title": "DevOps Engineer / SRE",
+      "company": "Cloud Infrastructure Inc",
+      "location": "Austin, TX (Hybrid)",
+      "description": "\nCloud Infrastructure Inc is looking for a talented DevOps Engineer to help us scale our infrastructure and improve reliability across our platform.\n\nThe Role:\nWe need someone who can bridge the gap between development and operations. You'll be automating everything, building CI/CD pipelines, managing Kubernetes clusters, and ensuring our systems stay up 99.99% of the time.\n\nDay-to-Day:\n- Manage AWS infrastructure (EC2, RDS, S3, Lambda, ECS, EKS)\n- Build and maintain CI/CD pipelines using Jenkins, GitLab CI, or GitHub Actions\n- Write infrastructure as code using Terraform and CloudFormation\n- Monitor system performance and respond to incidents (we use PagerDuty)\n- Optimize costs and performance\n- Collaborate with dev teams on deployment strategies\n- Document everything (runbooks, architecture diagrams, disaster recovery plans)\n- Participate in on-call rotation (1 week per month)\n\nTechnical Requirements:\n- 3+ years of DevOps/SRE experience\n- Strong Linux administration skills\n- Proficiency with AWS (or GCP/Azure)\n- Experience with Kubernetes and Docker\n- Scripting skills in Python, Bash, or Go\n- Understanding of networking, security, and databases\n- Familiarity with monitoring tools (Prometheus, Grafana, DataDog, New Relic)\n\nSoft Skills:\n- Strong problem-solving abilities\n- Excellent communication skills\n- Ability to work independently and as part of a team\n- Comfortable with ambiguity and rapid change\n- Detail-oriented but able to see the big picture\n\nWhat We Offer:\n\ud83d\udcb0 Salary: $130k-$170k based on experience\n\ud83c\udfe5 Excellent health benefits (we cover 90% of premiums)\n\ud83c\udfdd\ufe0f 4 weeks PTO + 11 company holidays\n\ud83d\udcbb Latest MacBook Pro + home office budget ($2k)\n\ud83d\udcda Learning budget ($1.5k/year for courses, conferences, certifications)\n\ud83c\udf54 Lunch stipend when working from office\n\ud83c\udfae Casual, collaborative culture\n\nSchedule:\n- Flexible hours (core hours 10am-3pm)\n- 3 days in office, 2 days remote\n- On-call rotation required\n\nRed Flags to Be Aware Of:\n- Some legacy systems still need migration (PHP monolith from 2010)\n- Fast-paced environment, priorities can shift quickly\n- Growing pains as we scale from 50 to 200 employees this year\n\nIf this sounds like a good fit, please apply with:\n1. Your resume\n2. Links to any relevant projects (GitHub, blog posts, etc.)\n3. A brief note about the most interesting technical problem you've solved\n\nWe review applications on a rolling basis and aim to respond within 5 business days.\n        "
+    }
+  ],
+  "output_result": {
+    "results": [],
+    "usage_stats": {
+      "daily_requests": 0,
+      "monthly_requests": 0,
+      "daily_tokens": 0,
+      "monthly_tokens": 0,
+      "daily_request_limit": 1500,
+      "monthly_request_limit": 45000,
+      "daily_token_limit": 3000000,
+      "monthly_token_limit": 50000000,
+      "last_reset": "2025-10-14T01:28:58.416704",
+      "model_switches": 0,
+      "primary_model": "gemini-2.0-flash-001",
+      "available_models": {
+        "gemini-2.0-flash-001": {
+          "name": "Gemini 2.0 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.0-flash-lite-001": {
+          "name": "Gemini 2.0 Flash Lite",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash",
+          "tier": "paid",
+          "input_cost_per_1k": 0.3,
+          "output_cost_per_1k": 2.5
+        },
+        "gemini-1.5-flash": {
+          "name": "Gemini 1.5 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-1.5-pro": {
+          "name": "Gemini 1.5 Pro",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        }
+      }
+    },
+    "success": false,
+    "error": "Failed to get response from Gemini API",
+    "model_used": "gemini-2.0-flash-001"
+  }
+}
