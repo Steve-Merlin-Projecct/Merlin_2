@@ -7,54 +7,15 @@ TASK_CONTEXT="$WORKTREE_ROOT/.claude-task-context.md"
 
 # Display banner
 echo "════════════════════════════════════════════════════════"
-<<<<<<< HEAD
-echo "🌳 Worktree: git-orchestrator-improvements"
-echo "📋 Task: ||git-orchestrator improvements"
-||||||| c628e28
-echo "🌳 Worktree: dashbaord-completion-the-dashboard-needs-to-integr"
-echo "📋 Task: dashbaord completion the dashboard needs to integr"
-=======
-echo "🌳 Worktree: dashboard-completion"
-echo "📋 Task: ||dashboard completion"
->>>>>>> task/07-dashboard-completion
+echo "🌳 Workspace: Main Development Branch"
+echo "📋 Branch: develop/v4.3.2-worktrees-20251012-044136"
 echo "════════════════════════════════════════════════════════"
 echo ""
-echo "✅ Slash commands available after Claude loads:"
-echo "   /tree close   - Complete this worktree"
-echo "   /tree status  - Show status"
-echo "   /tree restore - Restore terminals"
+echo "✅ Slash commands available:"
+echo "   /tree build   - Create worktrees from staged features"
+echo "   /tree close   - Complete feature in worktree"
+echo "   /tree closedone - Batch merge completed worktrees"
+echo "   /tree status  - Show worktree environment status"
 echo ""
 echo "📝 Task context loaded in .claude-task-context.md"
 echo ""
-
-# Check if Claude is available
-if ! command -v claude &> /dev/null; then
-    echo "⚠️  Warning: Claude Code not found in PATH"
-    echo "Install Claude Code or add to PATH"
-    echo "Terminal will open without Claude"
-    exec bash
-    exit 0
-fi
-
-# Launch Claude with task context
-if [ -f "$TASK_CONTEXT" ]; then
-    # Read task description
-    TASK_DESC=$(cat "$TASK_CONTEXT")
-
-    # Launch Claude with context and clarification instruction
-    claude --append-system-prompt "You are working in a git worktree dedicated to this task:
-
-$TASK_DESC
-
-IMPORTANT: After you receive this context, immediately read the .claude-task-context.md file to understand the full task details, then ask 1-3 clarifying questions to ensure you understand the scope and requirements before beginning implementation. Focus on:
-1. Ambiguous requirements that need clarification
-2. Technical decisions that aren't specified
-3. Edge cases or error handling expectations
-4. Integration points with existing code
-
-Wait for user responses before starting implementation."
-else
-    # Fallback: Launch Claude without context
-    echo "⚠️  Warning: Task context file not found"
-    claude
-fi
