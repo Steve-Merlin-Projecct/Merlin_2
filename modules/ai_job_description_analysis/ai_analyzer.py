@@ -621,7 +621,7 @@ class GeminiJobAnalyzer:
             results = self._parse_batch_response(response, valid_jobs)
 
             # Update usage tracking
-            self._update_usage_stats(response.get("usage", {}))
+            self._update_usage_stats(response.get("usageMetadata", {}))
 
             return {
                 "results": results,
@@ -736,7 +736,7 @@ class GeminiJobAnalyzer:
             )
 
             # Update usage tracking
-            self._update_usage_stats(response.get("usage", {}))
+            self._update_usage_stats(response.get("usageMetadata", {}))
 
             return {
                 "results": results,
@@ -852,7 +852,7 @@ class GeminiJobAnalyzer:
             )
 
             # Update usage tracking
-            self._update_usage_stats(response.get("usage", {}))
+            self._update_usage_stats(response.get("usageMetadata", {}))
 
             return {
                 "results": results,
@@ -1190,8 +1190,11 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         for attempt in range(self.max_retries):
             try:
+                # Construct full API endpoint URL
+                api_endpoint = f"{self.base_url}/v1beta/models/{self.current_model}:generateContent?key={self.api_key}"
+
                 response = requests.post(
-                    f"{self.base_url}?key={self.api_key}",
+                    api_endpoint,
                     headers=headers,
                     json=data,
                     timeout=30,
@@ -1446,22 +1449,43 @@ DESCRIPTION: {sanitized_description[:2000]}...
         except Exception as e:
             logger.error(f"Failed to log security incident: {e}")
 
-    def _update_usage_stats(self, usage_info: Dict):
-        """Update token usage statistics"""
+    def _update_usage_stats(self, usage_data: Dict):
+        """Update usage statistics with new API call data"""
+        try:
+            # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
+            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
+            if tokens_used == 0:
+                # Fallback estimation if no usage data
+                tokens_used = 1000  # Conservative estimate
 
-        tokens_used = usage_info.get("totalTokenCount", 0)
-        self.current_usage += tokens_used
-
-        # Log usage for monitoring
-        logger.info(
-            f"API Usage: {tokens_used} tokens this request, {self.current_usage} total today"
-        )
-
-        # Check if approaching limits
-        if self.current_usage > self.daily_token_limit * 0.8:
-            logger.warning(
-                f"Approaching daily token limit: {self.current_usage}/{self.daily_token_limit}"
+            cost = (tokens_used / 1000) * self.cost_per_1k_tokens.get(
+                self.current_model, 0.00075
             )
+
+            self.current_usage["daily_tokens"] = (
+                self.current_usage.get("daily_tokens", 0) + tokens_used
+            )
+            self.current_usage["monthly_tokens"] = (
+                self.current_usage.get("monthly_tokens", 0) + tokens_used
+            )
+            self.current_usage["daily_cost"] = (
+                self.current_usage.get("daily_cost", 0.0) + cost
+            )
+            self.current_usage["monthly_cost"] = (
+                self.current_usage.get("monthly_cost", 0.0) + cost
+            )
+            self.current_usage["requests_today"] = (
+                self.current_usage.get("requests_today", 0) + 1
+            )
+
+            self._save_usage_stats(self.current_usage)
+
+            # Check if we should switch to lite model
+            if self.current_usage["daily_tokens"] > (self.daily_token_limit * 0.75):
+                self._switch_to_lite_model()
+
+        except Exception as e:
+            logger.error(f"Failed to update usage stats: {str(e)}")
 
     def get_usage_stats(self) -> Dict:
         """Get current usage statistics"""
@@ -1490,6 +1514,25 @@ DESCRIPTION: {sanitized_description[:2000]}...
         """Reset daily usage counter (call this daily)"""
         self.current_usage = 0
         logger.info("Daily usage counter reset")
+
+    def _save_usage_stats(self, usage_data: Dict):
+        """Save usage statistics to file"""
+        try:
+            usage_file = Path("storage/gemini_usage.json")
+            usage_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(usage_file, "w") as f:
+                json.dump(usage_data, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save usage stats: {str(e)}")
+
+    def _switch_to_lite_model(self):
+        """Switch to Gemini 2.0 Flash Lite model to conserve tokens"""
+        if self.current_model == self.primary_model:
+            self.current_model = self.fallback_model
+            self.model_switches += 1
+            logger.info(
+                f"Switched to lite model ({self.fallback_model}) to conserve tokens"
+            )
 
 
 class JobAnalysisManager:
@@ -1742,7 +1785,8 @@ class JobAnalysisManager:
     def _update_usage_stats(self, usage_data: Dict):
         """Update usage statistics with new API call data"""
         try:
-            tokens_used = usage_data.get("totalTokens", 0)
+            # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
+            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
             if tokens_used == 0:
                 # Fallback estimation if no usage data
                 tokens_used = 1000  # Conservative estimate
