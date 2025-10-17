@@ -22,8 +22,33 @@ This command provides comprehensive worktree management with full development cy
 ## Completion Commands
 - `/tree close` - Complete feature and mark ready to merge
 - `/tree close incomplete` - Save progress for continuation in next cycle (NEW)
-- `/tree closedone` - Batch merge and cleanup completed worktrees
+- `/tree closedone` - Batch merge and cleanup completed worktrees (requires all closed)
+- `/tree closedone --force` - Force merge all worktrees even if not closed (NEW)
 - `/tree closedone --full-cycle` - Complete entire development cycle automation (NEW)
+
+## Important: Worktree Validation
+
+**New Behavior:** `/tree closedone` now validates that all worktrees have been properly closed with `/tree close` before merging. This ensures:
+- All work is documented with synopsis files
+- No accidental merges of incomplete work
+- Better tracking of what was accomplished
+
+If you have unclosed worktrees, you'll see a summary like:
+```
+⚠️  Cannot proceed: 3 worktree(s) have not been closed
+
+The following worktrees need to be closed with '/tree close' before merging:
+
+  • feature-name-1
+    Branch: task/01-feature-name-1
+    Path: /workspace/.trees/feature-name-1
+
+Options:
+  1. Close each worktree: cd .trees/<worktree> && /tree close
+  2. Use --force to merge all worktrees anyway: /tree closedone --force
+```
+
+**Use `--force` to bypass validation** if you want to merge everything regardless of close status.
 
 ## Full-Cycle Automation
 

@@ -181,6 +181,105 @@ stash_changes() {
     return 1
 }
 
+# Validate that all active worktrees have been closed
+#
+# Checks all worktrees in .trees/ to see if they have synopsis files
+# in .completed/ directory. If any are missing, displays summary and exits.
+#
+# Returns:
+#   0 - All worktrees closed
+#   1 - Some worktrees not closed
+validate_all_worktrees_closed() {
+    # Get list of all active worktrees (excluding special directories)
+    local all_worktrees=()
+    if [ -d "$TREES_DIR" ]; then
+        while IFS= read -r dir; do
+            local name=$(basename "$dir")
+            # Skip special directories
+            if [[ "$name" != .* ]] && [ -d "$dir" ]; then
+                all_worktrees+=("$name")
+            fi
+        done < <(find "$TREES_DIR" -maxdepth 1 -type d)
+    fi
+
+    if [ ${#all_worktrees[@]} -eq 0 ]; then
+        # No worktrees at all
+        return 0
+    fi
+
+    # Get list of closed worktrees (have synopsis files)
+    local closed_worktrees=()
+    if [ -d "$COMPLETED_DIR" ]; then
+        while IFS= read -r file; do
+            if [ -f "$file" ]; then
+                local filename=$(basename "$file")
+                local worktree_name="${filename%%-synopsis-*}"
+                closed_worktrees+=("$worktree_name")
+            fi
+        done < <(find "$COMPLETED_DIR" -name "*-synopsis-*.md" 2>/dev/null)
+    fi
+
+    # Find unclosed worktrees (in .trees but no synopsis)
+    local unclosed=()
+    for worktree in "${all_worktrees[@]}"; do
+        local is_closed=false
+        for closed in "${closed_worktrees[@]}"; do
+            if [ "$worktree" = "$closed" ]; then
+                is_closed=true
+                break
+            fi
+        done
+
+        if [ "$is_closed" = false ]; then
+            unclosed+=("$worktree")
+        fi
+    done
+
+    # If all are closed, return success
+    if [ ${#unclosed[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    # Display summary of unclosed worktrees
+    echo ""
+    print_error "⚠️  Cannot proceed: ${#unclosed[@]} worktree(s) have not been closed"
+    echo ""
+    echo "The following worktrees need to be closed with '/tree close' before merging:"
+    echo ""
+
+    for worktree in "${unclosed[@]}"; do
+        # Get branch info if available
+        local worktree_path="$TREES_DIR/$worktree"
+        local branch=""
+
+        # Try to get branch from git worktree list first
+        branch=$(git worktree list --porcelain | grep -A 3 "$worktree_path" | grep "^branch " | sed 's/^branch //' | sed 's#refs/heads/##' || echo "")
+
+        # Fallback to checking inside worktree
+        if [ -z "$branch" ] && [ -d "$worktree_path" ]; then
+            branch=$(cd "$worktree_path" && git branch --show-current 2>/dev/null || echo "unknown")
+        fi
+
+        echo "  • $worktree"
+        if [ -n "$branch" ] && [ "$branch" != "unknown" ]; then
+            echo "    Branch: $branch"
+        fi
+        echo "    Path: $worktree_path"
+        echo ""
+    done
+
+    echo "Options:"
+    echo "  1. Close each worktree: cd $TREES_DIR/<worktree> && /tree close"
+    echo "  2. Use --force to merge all worktrees anyway: /tree closedone --force"
+    echo ""
+
+    print_info "💡 Tip: The --force flag will merge all worktrees, but you'll lose"
+    print_info "   the structured synopsis and work description for unclosed worktrees."
+    echo ""
+
+    return 1
+}
+
 #==============================================================================
 # /tree closedone - Phase 1 Core Functionality
 #==============================================================================
@@ -188,6 +287,7 @@ stash_changes() {
 closedone_main() {
     local dry_run=false
     local skip_confirmation=false
+    local force_merge=false
 
     # Check for --full-cycle flag and delegate
     for arg in "$@"; do
@@ -208,15 +308,29 @@ closedone_main() {
                 skip_confirmation=true
                 shift
                 ;;
+            --force)
+                force_merge=true
+                shift
+                ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone [--dry-run] [--yes] [--full-cycle]"
+                echo "Usage: /tree closedone [--dry-run] [--yes] [--force] [--full-cycle]"
                 return 1
                 ;;
         esac
     done
 
     print_header "/tree closedone - Batch Merge & Cleanup"
+
+    # Phase 0: Check for unclosed worktrees (unless --force)
+    if [ "$force_merge" = false ]; then
+        if ! validate_all_worktrees_closed; then
+            return 1
+        fi
+    else
+        print_warning "⚠️  --force flag used: merging all worktrees regardless of close status"
+        echo ""
+    fi
 
     # Phase 1.1: Discover completed worktrees
     print_info "Discovering completed worktrees..."
@@ -2187,8 +2301,12 @@ Available commands:
 Options:
   --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
+  --force                Merge all worktrees even if not closed (NEW)
   --full-cycle           Complete entire development cycle (NEW)
   --bump [type]          Version bump type: patch|minor|major (default: patch)
+
+⚠️  Important: /tree closedone now requires all worktrees to be closed with
+   '/tree close' before merging. Use --force to bypass this check.
 
 Typical Workflow:
   1. /tree stage [description]  # Stage multiple features
