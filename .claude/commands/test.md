@@ -1,5 +1,5 @@
 ---
-description: Run the test suite
+description: Run the test suite with pytest
 ---
 
 Run pytest with verbose output and coverage reporting.

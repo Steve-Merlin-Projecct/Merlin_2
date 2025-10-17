@@ -1,5 +1,6 @@
 ---
 description: Manage git worktrees with intelligent automation and full-cycle development workflows
+argument-hint: stage [description] | list | clear | conflict | build | restore | status | refresh | help | close [incomplete] | closedone [--full-cycle] [--bump patch|minor|major] [--dry-run] [--yes]
 ---
 
 Execute the tree worktree management command.

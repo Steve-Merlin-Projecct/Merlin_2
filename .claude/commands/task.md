@@ -1,5 +1,6 @@
 ---
 description: Start the 4-phase task workflow (Discovery -> PRD → Tasks → Execution)
+argument-hint: [instructions] | go [instructions] | slow [instructions] | communicate [instructions] | analyze [instructions] | research [instructions]
 ---
 
 # /task Command - Hybrid Workflow System

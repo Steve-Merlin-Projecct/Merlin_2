@@ -1,5 +1,6 @@
 ---
 description: Bump project version (patch/minor/major)
+argument-hint: patch | minor | major
 parameters:
   - name: type
     description: Version bump type (patch, minor, or major)

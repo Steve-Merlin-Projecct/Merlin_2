@@ -1,3 +1,8 @@
+---
+description: Execute librarian system commands for documentation management
+argument-hint: index | validate | scan | archive | audit | status
+---
+
 Execute librarian system commands for documentation management
 
 ## Available Commands

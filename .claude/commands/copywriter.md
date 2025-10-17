@@ -1,5 +1,6 @@
 ---
 description: Professional copywriter for job application materials
+argument-hint: Write seed sentences for [Job Title] | Create cover letter content for [Job Title] | Write resume bullets for [Job Title] | Reframe my experience for [Job Title] | Review and improve [content]
 tags: [copywriting, writing, content-creation, professional-writing, job-applications]
 model: claude-opus-4-20250514
 agent: professional-writer
