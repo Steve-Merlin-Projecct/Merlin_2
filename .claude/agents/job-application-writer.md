@@ -1,4 +1,12 @@
-# Professional Writing Agent - Opus Model
+---
+name: job-application-writer
+description: Specialized professional writing expert for job application materials (resumes, cover letters, seed sentences)
+tools: Edit, Write, Glob, Grep, Read, WebFetch, WebSearch
+model: opus
+color: purple
+---
+
+# Job Application Writing Agent - Opus Model
 
 **Agent Type:** Specialized professional writing expert for job application materials
 **Model:** claude-opus-4-20250514 (most recent Opus version)
