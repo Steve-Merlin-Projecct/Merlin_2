@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Dashboard V2</title>
+    <link rel="stylesheet" href="/static/css/dashboard_v2.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-bg" x-data="analyticsPage()" x-init="init()">
+
+    <div class="container">
+
+        <!-- Navigation -->
+        <nav style="margin-bottom: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); backdrop-filter: blur(10px);">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="/dashboard" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📊 Dashboard
+                </a>
+                <a href="/dashboard/jobs" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    💼 Jobs
+                </a>
+                <a href="/dashboard/applications" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    📝 Applications
+                </a>
+                <a href="/dashboard/analytics" style="color: var(--color-cyan); text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-sm); background: rgba(0, 217, 255, 0.1);">
+                    📈 Analytics
+                </a>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Analytics & Insights</h1>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Track your job search performance and trends</p>
+            </div>
+        </header>
+
+        <!-- Loading Spinner -->
+        <div x-show="loading" class="glass-card" style="text-align: center; padding: 2rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            <p style="color: var(--color-text-secondary);">Loading analytics...</p>
+        </div>
+
+        <!-- Error State -->
+        <div x-show="error" class="glass-card" style="text-align: center; padding: 2rem; border: 1px solid var(--color-red);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">❌</div>
+            <h3 style="color: var(--color-red); margin-bottom: 0.5rem;">Error Loading Analytics</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1rem;" x-text="error"></p>
+            <button @click="loadAnalytics()" class="btn btn-primary">Retry</button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div x-show="!loading && !error" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="glass-card">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💼</div>
+                <h3 style="font-size: 1.8rem; color: var(--color-cyan); margin-bottom: 0.25rem;" x-text="stats.total_jobs || 0"></h3>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Total Jobs Scraped</p>
+            </div>
+
+            <div class="glass-card">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+                <h3 style="font-size: 1.8rem; color: var(--color-green); margin-bottom: 0.25rem;" x-text="stats.total_applications || 0"></h3>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Applications Sent</p>
+            </div>
+
+            <div class="glass-card">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                <h3 style="font-size: 1.8rem; color: var(--color-purple); margin-bottom: 0.25rem;" x-text="stats.success_rate || '0%'"></h3>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Success Rate</p>
+            </div>
+
+            <div class="glass-card">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏱️</div>
+                <h3 style="font-size: 1.8rem; color: var(--color-yellow); margin-bottom: 0.25rem;" x-text="stats.avg_response_time || 'N/A'"></h3>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Avg. Response Time</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div x-show="!loading && !error" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1rem; color: var(--color-cyan);">Applications Over Time</h3>
+                <canvas id="applicationsChart" height="200"></canvas>
+            </div>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1rem; color: var(--color-cyan);">Application Status</h3>
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div x-show="!loading && !error" class="glass-card" style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1.5rem; color: var(--color-cyan);">Recent Activity</h3>
+            <template x-for="activity in recentActivity" :key="activity.id">
+                <div style="padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); last-of-type:border-bottom: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p style="color: var(--color-text); margin-bottom: 0.25rem;" x-text="activity.action"></p>
+                            <p style="color: var(--color-text-secondary); font-size: 0.85rem;" x-text="activity.description"></p>
+                        </div>
+                        <span style="color: var(--color-text-muted); font-size: 0.85rem;" x-text="new Date(activity.timestamp).toLocaleString()"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+    </div>
+
+    <script>
+        function analyticsPage() {
+            return {
+                stats: {},
+                recentActivity: [],
+                loading: true,
+                error: null,
+                charts: {},
+
+                init() {
+                    this.loadAnalytics();
+                },
+
+                async loadAnalytics() {
+                    this.loading = true;
+                    this.error = null;
+
+                    try {
+                        const response = await fetch('/api/dashboard/stats');
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+                        this.stats = data.stats || {};
+                        this.recentActivity = data.recent_activity || [];
+
+                        // Initialize charts after loading data
+                        this.$nextTick(() => {
+                            this.initCharts();
+                        });
+                    } catch (err) {
+                        console.error('Error loading analytics:', err);
+                        this.error = err.message;
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                initCharts() {
+                    // Applications Over Time Chart
+                    const applicationsCtx = document.getElementById('applicationsChart');
+                    if (applicationsCtx && !this.charts.applications) {
+                        this.charts.applications = new Chart(applicationsCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                                datasets: [{
+                                    label: 'Applications',
+                                    data: [12, 19, 15, 25],
+                                    borderColor: 'rgb(0, 217, 255)',
+                                    backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
+                            }
+                        });
+                    }
+
+                    // Status Chart
+                    const statusCtx = document.getElementById('statusChart');
+                    if (statusCtx && !this.charts.status) {
+                        this.charts.status = new Chart(statusCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Sent', 'Pending', 'Responded'],
+                                datasets: [{
+                                    data: [30, 15, 5],
+                                    backgroundColor: [
+                                        'rgb(0, 217, 255)',
+                                        'rgb(255, 176, 25)',
+                                        'rgb(0, 255, 127)'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false
+                            }
+                        });
+                    }
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>

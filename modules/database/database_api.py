@@ -2,19 +2,15 @@ import os
 import logging
 from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify
-from .database_manager import DatabaseManager
+from .lazy_instances import get_database_manager
 from modules.security.rate_limit_manager import rate_limit_cheap, rate_limit_moderate
 
 # Create Blueprint for database API endpoints
 database_bp = Blueprint("database", __name__, url_prefix="/api/db")
 
-# Initialize database manager
-try:
-    db_manager = DatabaseManager()
-    logging.info("Database API initialized successfully")
-except Exception as e:
-    logging.error(f"Failed to initialize database API: {e}")
-    db_manager = None
+# NOTE: Database manager is now lazy-initialized on demand
+# No module-level instantiation to prevent import-time connections
+logging.info("Database API blueprint created (lazy initialization)")
 
 
 def validate_api_key():
@@ -44,13 +40,11 @@ def get_jobs():
     - document_type: Filter by document type
     - search: Search term for title/author/filename
     """
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         limit = int(request.args.get("limit", 20))
         status = request.args.get("status")
         document_type = request.args.get("document_type")
@@ -73,13 +67,11 @@ def get_jobs():
 @database_bp.route("/jobs/<job_id>", methods=["GET"])
 def get_job(job_id):
     """Get a specific job by ID"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         job = db_manager.get_job_by_id(job_id)
 
         if job:
@@ -95,13 +87,11 @@ def get_job(job_id):
 @database_bp.route("/statistics", methods=["GET"])
 def get_statistics():
     """Get job statistics and system metrics"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         stats = db_manager.get_job_statistics()
 
         return jsonify({"status": "success", "statistics": stats, "timestamp": datetime.utcnow().isoformat()})
@@ -114,13 +104,11 @@ def get_statistics():
 @database_bp.route("/jobs/<job_id>/logs", methods=["GET"])
 def get_job_logs(job_id):
     """Get logs for a specific job"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         limit = int(request.args.get("limit", 50))
         logs = db_manager.reader.get_job_logs(job_id, limit)
 
@@ -134,13 +122,11 @@ def get_job_logs(job_id):
 @database_bp.route("/settings", methods=["GET"])
 def get_settings():
     """Get all application settings"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         settings = db_manager.reader.get_all_settings()
 
         return jsonify({"status": "success", "settings": settings, "count": len(settings)})
@@ -153,13 +139,11 @@ def get_settings():
 @database_bp.route("/settings/<setting_key>", methods=["GET"])
 def get_setting(setting_key):
     """Get a specific application setting"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         setting = db_manager.get_application_setting(setting_key)
 
         if setting:
@@ -175,13 +159,11 @@ def get_setting(setting_key):
 @database_bp.route("/settings/<setting_key>", methods=["POST"])
 def set_setting(setting_key):
     """Set an application setting"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         if not request.is_json:
             return jsonify({"error": "Request must be JSON"}), 400
 
@@ -208,13 +190,11 @@ def set_setting(setting_key):
 @database_bp.route("/jobs/summary/<author>", methods=["GET"])
 def get_author_summary(author):
     """Get job summary for a specific author"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     if not validate_api_key():
         return jsonify({"error": "Invalid or missing API key"}), 401
 
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         summary = db_manager.reader.get_jobs_summary_by_author(author)
 
         return jsonify({"status": "success", "summary": summary})
@@ -227,10 +207,9 @@ def get_author_summary(author):
 @database_bp.route("/raw-scrapes", methods=["POST"])
 def store_raw_scrape():
     """Store raw scrape data in raw_job_scrapes table"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     try:
+        # Note: This endpoint doesn't use db_manager directly
+        # It uses ScrapeDataPipeline which creates its own database connections
         data = request.get_json()
         if not data:
             return jsonify({"error": "JSON payload required"}), 400
@@ -267,10 +246,8 @@ def store_raw_scrape():
 @database_bp.route("/test", methods=["GET"])
 def test_database():
     """Test database connectivity"""
-    if not db_manager:
-        return jsonify({"error": "Database not available"}), 500
-
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         connection_test = db_manager.client.test_connection()
 
         return jsonify(
@@ -289,13 +266,8 @@ def test_database():
 @database_bp.route("/health", methods=["GET"])
 def database_health():
     """Database health check endpoint"""
-    if not db_manager:
-        return (
-            jsonify({"status": "unhealthy", "database_available": False, "error": "Database manager not initialized"}),
-            500,
-        )
-
     try:
+        db_manager = get_database_manager()  # Lazy initialization
         connection_test = db_manager.client.test_connection()
         stats = db_manager.get_job_statistics()
 

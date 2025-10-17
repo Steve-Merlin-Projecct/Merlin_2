@@ -23,7 +23,7 @@ import uuid
 from datetime import datetime
 
 # Add modules to path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from modules.content.document_generation.template_engine import TemplateEngine
 from modules.content.document_generation.document_generator import DocumentGenerator
@@ -32,7 +32,7 @@ from modules.user_management.candidate_profile_manager import CandidateProfileMa
 # Skip these tests if database is not available
 pytestmark = pytest.mark.skipif(
     os.environ.get("SKIP_INTEGRATION_TESTS") == "true",
-    reason="Integration tests skipped (set SKIP_INTEGRATION_TESTS=false to run)"
+    reason="Integration tests skipped (set SKIP_INTEGRATION_TESTS=false to run)",
 )
 
 
@@ -65,7 +65,7 @@ class TestCalendlyWorkflowIntegration:
         candidate_info = self.profile_manager.get_candidate_info(self.test_user_id)
 
         # Skip test if no Calendly URL configured
-        if not candidate_info.get('calendly_url'):
+        if not candidate_info.get("calendly_url"):
             pytest.skip("No Calendly URL configured for test user")
 
         # Prepare template text
@@ -83,16 +83,18 @@ class TestCalendlyWorkflowIntegration:
 
         # Prepare data
         data = {
-            'first_name': candidate_info['first_name'],
-            'last_name': candidate_info['last_name'],
-            'calendly_url': candidate_info['calendly_url'],
-            'linkedin_url': candidate_info.get('linkedin_url', 'https://linkedin.com/in/default')
+            "first_name": candidate_info["first_name"],
+            "last_name": candidate_info["last_name"],
+            "calendly_url": candidate_info["calendly_url"],
+            "linkedin_url": candidate_info.get(
+                "linkedin_url", "https://linkedin.com/in/default"
+            ),
         }
 
         stats = {
-            'variables_found': set(),
-            'variables_substituted': set(),
-            'variables_missing': set()
+            "variables_found": set(),
+            "variables_substituted": set(),
+            "variables_missing": set(),
         }
 
         # Execute substitution with tracking context
@@ -101,16 +103,16 @@ class TestCalendlyWorkflowIntegration:
             data,
             stats,
             job_id=self.test_job_id,
-            application_id=self.test_application_id
+            application_id=self.test_application_id,
         )
 
         # Verify tracked URLs are present
         # Note: In a real integration test, this would contain actual tracked URLs
         # For now, we verify the substitution occurred
-        assert data['first_name'] in result
-        assert data['last_name'] in result
-        assert 'calendly_url' in stats['variables_substituted']
-        assert 'linkedin_url' in stats['variables_substituted']
+        assert data["first_name"] in result
+        assert data["last_name"] in result
+        assert "calendly_url" in stats["variables_substituted"]
+        assert "linkedin_url" in stats["variables_substituted"]
 
     def test_document_generator_with_tracking_context(self):
         """
@@ -126,12 +128,12 @@ class TestCalendlyWorkflowIntegration:
         """
         # Prepare test data
         test_data = {
-            'first_name': 'Steve',
-            'last_name': 'Glen',
-            'email': 'test@example.com',
-            'phone_number': '(780) 555-0123',
-            'professional_summary': 'Marketing professional with 10+ years experience',
-            'target_position': 'Marketing Manager'
+            "first_name": "Steve",
+            "last_name": "Glen",
+            "email": "test@example.com",
+            "phone_number": "(780) 555-0123",
+            "professional_summary": "Marketing professional with 10+ years experience",
+            "target_position": "Marketing Manager",
         }
 
         # Note: This test would fail in actual execution without proper template
@@ -148,10 +150,10 @@ class TestCalendlyWorkflowIntegration:
                 data=test_data,
                 document_type="resume",
                 job_id=self.test_job_id,
-                application_id=self.test_application_id
+                application_id=self.test_application_id,
             )
             # If it succeeds, verify structure
-            assert 'success' in result or 'output_path' in result
+            assert "success" in result or "output_path" in result
         except FileNotFoundError:
             # Expected if template doesn't exist
             pytest.skip("Test template not available for integration test")
@@ -173,21 +175,21 @@ class TestCalendlyWorkflowIntegration:
             candidate_info = self.profile_manager.get_candidate_info(self.test_user_id)
 
             # Verify structure
-            assert 'first_name' in candidate_info
-            assert 'last_name' in candidate_info
-            assert 'email' in candidate_info
-            assert 'calendly_url' in candidate_info
-            assert 'linkedin_url' in candidate_info
-            assert 'portfolio_url' in candidate_info
+            assert "first_name" in candidate_info
+            assert "last_name" in candidate_info
+            assert "email" in candidate_info
+            assert "calendly_url" in candidate_info
+            assert "linkedin_url" in candidate_info
+            assert "portfolio_url" in candidate_info
 
             # Verify data types
-            assert isinstance(candidate_info['first_name'], str)
-            assert isinstance(candidate_info['email'], str)
+            assert isinstance(candidate_info["first_name"], str)
+            assert isinstance(candidate_info["email"], str)
 
             # If URLs are set, verify they are strings or None
-            if candidate_info['calendly_url']:
-                assert isinstance(candidate_info['calendly_url'], str)
-                assert 'calendly.com' in candidate_info['calendly_url'].lower()
+            if candidate_info["calendly_url"]:
+                assert isinstance(candidate_info["calendly_url"], str)
+                assert "calendly.com" in candidate_info["calendly_url"].lower()
 
         except Exception as e:
             pytest.fail(f"Database integration failed: {e}")
@@ -211,12 +213,18 @@ class TestCalendlyWorkflowIntegration:
         template_text1 = "Resume: <<calendly_url>>"
         template_text2 = "Cover Letter: <<calendly_url>>"
 
-        data = {
-            'calendly_url': 'https://calendly.com/test-user/30min'
-        }
+        data = {"calendly_url": "https://calendly.com/test-user/30min"}
 
-        stats1 = {'variables_found': set(), 'variables_substituted': set(), 'variables_missing': set()}
-        stats2 = {'variables_found': set(), 'variables_substituted': set(), 'variables_missing': set()}
+        stats1 = {
+            "variables_found": set(),
+            "variables_substituted": set(),
+            "variables_missing": set(),
+        }
+        stats2 = {
+            "variables_found": set(),
+            "variables_substituted": set(),
+            "variables_missing": set(),
+        }
 
         # Create new engine to test caching
         engine = TemplateEngine(enable_url_tracking=True)
@@ -227,7 +235,7 @@ class TestCalendlyWorkflowIntegration:
             data,
             stats1,
             job_id=self.test_job_id,
-            application_id=self.test_application_id
+            application_id=self.test_application_id,
         )
 
         # Second substitution with same parameters
@@ -236,12 +244,12 @@ class TestCalendlyWorkflowIntegration:
             data,
             stats2,
             job_id=self.test_job_id,
-            application_id=self.test_application_id
+            application_id=self.test_application_id,
         )
 
         # Both should have substituted the variable
-        assert 'calendly_url' in stats1['variables_substituted']
-        assert 'calendly_url' in stats2['variables_substituted']
+        assert "calendly_url" in stats1["variables_substituted"]
+        assert "calendly_url" in stats2["variables_substituted"]
 
         # In a real test with monitoring, you would verify:
         # assert engine.tracked_url_cache has the cached entry
@@ -266,8 +274,8 @@ class TestLinkTrackingSystemIntegration:
             assert tracker is not None
 
             # Verify key attributes exist
-            assert hasattr(tracker, 'create_tracked_link')
-            assert hasattr(tracker, 'record_click')
+            assert hasattr(tracker, "create_tracked_link")
+            assert hasattr(tracker, "record_click")
 
         except ImportError:
             pytest.skip("LinkTracker module not available")
@@ -297,14 +305,14 @@ class TestLinkTrackingSystemIntegration:
                 job_id=str(uuid.uuid4()),
                 application_id=str(uuid.uuid4()),
                 link_type="profile",
-                description="Integration test link"
+                description="Integration test link",
             )
 
             # Verify result structure
-            assert 'tracking_id' in result
-            assert 'redirect_url' in result
-            assert result['tracking_id'].startswith('lt_')
-            assert '/track/' in result['redirect_url']
+            assert "tracking_id" in result
+            assert "redirect_url" in result
+            assert result["tracking_id"].startswith("lt_")
+            assert "/track/" in result["redirect_url"]
 
         except ImportError:
             pytest.skip("LinkTracker module not available")
@@ -369,7 +377,11 @@ class TestErrorHandlingIntegration:
         """
         template_text = "Contact: <<calendly_url>>"
         data = {}  # No calendly_url provided
-        stats = {'variables_found': set(), 'variables_substituted': set(), 'variables_missing': set()}
+        stats = {
+            "variables_found": set(),
+            "variables_substituted": set(),
+            "variables_missing": set(),
+        }
 
         engine = TemplateEngine(enable_url_tracking=True)
 
@@ -377,9 +389,9 @@ class TestErrorHandlingIntegration:
         result = engine.substitute_variables(template_text, data, stats)
 
         # Variable should be marked as missing, but process continues
-        assert 'calendly_url' in stats['variables_missing']
+        assert "calendly_url" in stats["variables_missing"]
         # Original placeholder should remain
-        assert '<<calendly_url>>' in result
+        assert "<<calendly_url>>" in result
 
     def test_link_tracker_unavailable_fallback(self):
         """
@@ -399,10 +411,7 @@ class TestErrorHandlingIntegration:
         # Here we just verify no exceptions are raised
         try:
             result = engine._get_tracked_url(
-                original_url,
-                "Calendly",
-                job_id="test-job",
-                application_id="test-app"
+                original_url, "Calendly", job_id="test-job", application_id="test-app"
             )
             # Result should be a string (either tracked URL or original URL)
             assert isinstance(result, str)
@@ -410,6 +419,6 @@ class TestErrorHandlingIntegration:
             pytest.fail(f"Unexpected exception during fallback: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run with: python -m pytest tests/integration/test_calendly_workflow.py -v
-    pytest.main([__file__, '-v', '-s'])
+    pytest.main([__file__, "-v", "-s"])

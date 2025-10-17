@@ -379,9 +379,10 @@ class SecurityPatch:
         Enhanced with strict Content Security Policy and additional protections
         """
         # Enhanced Content Security Policy for maximum protection
+        # Note: 'unsafe-eval' required for Alpine.js in dashboard
         csp_policy = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "font-src 'self' https://cdnjs.cloudflare.com; "
             "img-src 'self' data: https:; "

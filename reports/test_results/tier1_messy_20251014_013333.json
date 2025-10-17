@@ -1,0 +1,64 @@
+{
+  "test_name": "tier1_messy",
+  "timestamp": "2025-10-14T01:33:33.448998",
+  "input_jobs": [
+    {
+      "id": "test_job_004",
+      "title": "customer service rep",
+      "company": "CallCenter Plus LLC",
+      "location": "work from home",
+      "description": "\nhello we are hiring for customer service position starting immediately no experience needed we provide training\n\njob duties answer phones help customers with questions about products take orders process returns use computer system\n\nrequirements high school diploma or GED good communication must have reliable internet computer with webcam quiet workspace\n\nhours monday to friday 9am to 6pm some saturdays required during busy season\n\npay $15/hour\n\nemail resume to hiring@callcenterplus.com\n\nbenefits after 6 months health insurance 5 days pto per year\n\nthis is great opportunity for someone looking to work from home and make extra money our company has been in business for 12 years and we have great reviews online\n\nif interested please send resume with subject line CUSTOMER SERVICE and we will contact you for phone interview\n\nmust be able to start within 2 weeks\n\nlooking forward to hearing from you!!\n        "
+    }
+  ],
+  "output_result": {
+    "results": [],
+    "usage_stats": {
+      "daily_requests": 0,
+      "monthly_requests": 0,
+      "daily_tokens": 0,
+      "monthly_tokens": 0,
+      "daily_request_limit": 1500,
+      "monthly_request_limit": 45000,
+      "daily_token_limit": 3000000,
+      "monthly_token_limit": 50000000,
+      "last_reset": "2025-10-14T01:33:00.619878",
+      "model_switches": 0,
+      "primary_model": "gemini-2.0-flash-001",
+      "available_models": {
+        "gemini-2.0-flash-001": {
+          "name": "Gemini 2.0 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.0-flash-lite-001": {
+          "name": "Gemini 2.0 Flash Lite",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash",
+          "tier": "paid",
+          "input_cost_per_1k": 0.3,
+          "output_cost_per_1k": 2.5
+        },
+        "gemini-1.5-flash": {
+          "name": "Gemini 1.5 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-1.5-pro": {
+          "name": "Gemini 1.5 Pro",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        }
+      }
+    },
+    "success": false,
+    "error": "'GeminiJobAnalyzer' object has no attribute '_update_usage_stats'",
+    "model_used": "gemini-2.0-flash-001"
+  }
+}

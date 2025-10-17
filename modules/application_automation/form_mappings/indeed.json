@@ -1,0 +1,194 @@
+{
+  "platform": "indeed",
+  "version": "1.0",
+  "description": "Pre-mapped selectors for Indeed application forms - MVP version",
+  "last_updated": "2025-10-14",
+  "form_types": {
+    "standard_indeed_apply": {
+      "description": "Standard Indeed application form with common fields",
+      "url_patterns": [
+        "https://www.indeed.com/apply/*",
+        "https://ca.indeed.com/apply/*",
+        "https://*.indeed.com/m/basecamp/apply*"
+      ],
+      "fields": {
+        "full_name": {
+          "selectors": [
+            "input[name='applicant.name']",
+            "input[id='applicant-name']",
+            "input[placeholder*='Full name' i]",
+            "input[placeholder*='Your name' i]",
+            "#input-applicant\\.name"
+          ],
+          "type": "text",
+          "required": true,
+          "validation": "^[A-Za-z\\s'-]+$"
+        },
+        "email": {
+          "selectors": [
+            "input[name='applicant.email']",
+            "input[id='applicant-email']",
+            "input[type='email']",
+            "input[placeholder*='Email' i]",
+            "#input-applicant\\.email"
+          ],
+          "type": "email",
+          "required": true,
+          "validation": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        "phone": {
+          "selectors": [
+            "input[name='applicant.phoneNumber']",
+            "input[id='applicant-phone']",
+            "input[type='tel']",
+            "input[placeholder*='Phone' i]",
+            "#input-applicant\\.phoneNumber"
+          ],
+          "type": "tel",
+          "required": false,
+          "validation": "^[0-9\\s()+-]+$"
+        },
+        "location": {
+          "selectors": [
+            "input[name='applicant.location']",
+            "input[id='applicant-location']",
+            "input[placeholder*='Location' i]",
+            "input[placeholder*='City' i]"
+          ],
+          "type": "text",
+          "required": false
+        },
+        "resume": {
+          "selectors": [
+            "input[type='file'][id*='resume' i]",
+            "input[type='file'][name*='resume' i]",
+            "input[type='file'][accept*='pdf']",
+            "input[type='file'].ia-Resume-file",
+            "#resume-upload-input"
+          ],
+          "type": "file",
+          "required": true,
+          "accept": [".pdf", ".doc", ".docx"],
+          "max_size_mb": 5
+        },
+        "cover_letter": {
+          "selectors": [
+            "input[type='file'][id*='cover' i]",
+            "input[type='file'][name*='cover' i]",
+            "textarea[name*='coverLetter']",
+            "textarea[placeholder*='Cover letter' i]",
+            "#cover-letter-upload-input"
+          ],
+          "type": "file_or_text",
+          "required": false,
+          "accept": [".pdf", ".doc", ".docx"],
+          "max_size_mb": 5
+        },
+        "years_experience": {
+          "selectors": [
+            "input[name*='experience' i]",
+            "select[name*='experience' i]",
+            "input[placeholder*='years of experience' i]"
+          ],
+          "type": "text_or_select",
+          "required": false
+        },
+        "linkedin_url": {
+          "selectors": [
+            "input[name*='linkedin' i]",
+            "input[placeholder*='linkedin' i]",
+            "input[type='url'][placeholder*='profile' i]"
+          ],
+          "type": "url",
+          "required": false,
+          "validation": "^https?://(www\\.)?linkedin\\.com/.*$"
+        },
+        "website": {
+          "selectors": [
+            "input[name*='website' i]",
+            "input[name*='portfolio' i]",
+            "input[placeholder*='website' i]",
+            "input[placeholder*='portfolio' i]"
+          ],
+          "type": "url",
+          "required": false,
+          "validation": "^https?://.*$"
+        }
+      },
+      "submit_button": {
+        "selectors": [
+          "button[type='submit']",
+          "button[id*='submit' i]",
+          "button[class*='submit' i]",
+          "button:has-text('Submit application')",
+          "button:has-text('Apply now')",
+          "button.ia-continueButton"
+        ]
+      },
+      "confirmation_indicators": {
+        "success_messages": [
+          "Application submitted",
+          "Your application has been sent",
+          "Thank you for applying",
+          "Application received"
+        ],
+        "success_selectors": [
+          ".ia-BaseCamp-confirmation",
+          "[data-testid='application-confirmation']",
+          ".confirmation-message"
+        ],
+        "url_patterns": [
+          "**/application-confirmation**",
+          "**/thank-you**",
+          "**/submitted**"
+        ]
+      }
+    },
+    "indeed_quick_apply": {
+      "description": "Indeed's one-click Quick Apply (uses saved profile)",
+      "url_patterns": [
+        "https://*.indeed.com/viewjob*",
+        "https://*.indeed.com/m/jobs*"
+      ],
+      "fields": {
+        "quick_apply_button": {
+          "selectors": [
+            "button[id='indeedApplyButton']",
+            "button[data-indeed-apply-button-id]",
+            "button:has-text('Apply now')",
+            "button.ia-BaseCamp-continue"
+          ],
+          "type": "button",
+          "required": true
+        }
+      },
+      "submit_button": {
+        "selectors": [
+          "button[type='submit']",
+          "button:has-text('Submit your application')",
+          "button.ia-continueButton"
+        ]
+      }
+    }
+  },
+  "detection_strategy": {
+    "description": "Strategy to detect which form type is present",
+    "priority_order": ["indeed_quick_apply", "standard_indeed_apply"],
+    "detection_timeout_ms": 5000
+  },
+  "notes": [
+    "TODO: Implement hybrid approach (pre-mapped + AI fallback) in next development cycle",
+    "TODO: Add support for multi-page application forms",
+    "TODO: Add support for custom questions and screening questions",
+    "Selectors are checked in order - first matching selector is used",
+    "Form detection uses priority order - checks for Quick Apply first",
+    "This is MVP version - focused on common Indeed application patterns"
+  ],
+  "future_enhancements": [
+    "AI-powered form field detection using GPT-4 Vision",
+    "Dynamic selector learning from successful applications",
+    "Support for custom screening questions",
+    "Multi-step form navigation",
+    "Support for additional platforms (Greenhouse, Lever, Workday)"
+  ]
+}

@@ -23,17 +23,17 @@ TREE='\U1F333'
 WORKSPACE_ROOT="/workspace"
 TREES_DIR="$WORKSPACE_ROOT/.trees"
 COMPLETED_DIR="$TREES_DIR/.completed"
+INCOMPLETE_DIR="$TREES_DIR/.incomplete"
 ARCHIVED_DIR="$TREES_DIR/.archived"
 CONFLICT_BACKUP_DIR="$TREES_DIR/.conflict-backup"
 STAGED_FEATURES_FILE="$TREES_DIR/.staged-features.txt"
+GIT_OPERATION_LOCK="$WORKSPACE_ROOT/.git/.git-operation.lock"
+GIT_OPERATION_LOG="$WORKSPACE_ROOT/.git/.git-operations.log"
 
 # Command routing
 COMMAND="${1:-help}"
 shift || true
 
-# Rest of the script remains the same as the "Stashed changes" version...
-
-<<<<<<< HEAD
 print_header() {
     echo -e "\n${TREE} ${BOLD}$1${NC}\n"
 }
@@ -54,31 +54,127 @@ print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
 }
 
-# Handle git index.lock issues
+# Handle git index.lock issues with enhanced stale lock detection
 wait_for_git_lock() {
-    local max_attempts=5
+    local max_wait=30  # Increased from 5 for better reliability
     local attempt=1
+    local wait_time=1
+    local lock_file="$WORKSPACE_ROOT/.git/index.lock"
 
-    while [ -f "$WORKSPACE_ROOT/.git/index.lock" ] && [ $attempt -le $max_attempts ]; do
-        print_warning "Git lock detected, waiting... (attempt $attempt/$max_attempts)"
-        sleep 1
+    while [ -f "$lock_file" ] && [ $attempt -le $max_wait ]; do
+        # Check if lock is stale (older than 60 seconds and empty)
+        if is_lock_stale "$lock_file"; then
+            print_warning "Stale git lock detected (>60s old), removing automatically..."
+            rm -f "$lock_file" 2>/dev/null || {
+                print_error "Failed to remove stale lock file. Please run: rm $lock_file"
+                return 1
+            }
+            print_success "Stale lock removed successfully"
+            return 0
+        fi
+
+        print_warning "Git lock detected, waiting ${wait_time}s (attempt $attempt/$max_wait)"
+        sleep $wait_time
+
+        # Exponential backoff: 1s, 2s, 4s, 8s, 16s (max)
+        wait_time=$((wait_time * 2))
+        [ $wait_time -gt 16 ] && wait_time=16
+
         attempt=$((attempt + 1))
     done
 
-    if [ -f "$WORKSPACE_ROOT/.git/index.lock" ]; then
-        print_error "Git lock file persists. Please run: rm $WORKSPACE_ROOT/.git/index.lock"
+    # Final check after all attempts
+    if [ -f "$lock_file" ]; then
+        print_error "Git lock file persists after ${max_wait} attempts. Please run: rm $lock_file"
         return 1
     fi
     return 0
+}
+
+# Check if a git lock file is stale
+is_lock_stale() {
+    local lock_file=$1
+
+    # Get lock file age in seconds
+    local current_time=$(date +%s)
+    local lock_time=$(stat -c %Y "$lock_file" 2>/dev/null || stat -f %m "$lock_file" 2>/dev/null || echo "0")
+    local lock_age=$((current_time - lock_time))
+
+    # Get lock file size
+    local lock_size=$(stat -c %s "$lock_file" 2>/dev/null || stat -f %z "$lock_file" 2>/dev/null || echo "0")
+
+    # Consider lock stale if:
+    # 1. Older than 60 seconds AND
+    # 2. File size is 0 (typical for git index.lock)
+    if [ "$lock_age" -gt 60 ] && [ "$lock_size" -eq 0 ]; then
+        return 0  # Stale
+    fi
+    return 1  # Not stale
+}
+
+# Log git operations for debugging and monitoring
+log_git_operation() {
+    local operation=$1
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Create log directory if needed
+    mkdir -p "$(dirname "$GIT_OPERATION_LOG")"
+
+    echo "[$timestamp] $operation" >> "$GIT_OPERATION_LOG"
+}
+
+# Safe git wrapper with flock-based mutex for concurrent operation protection
+safe_git() {
+    local git_cmd="$@"
+    local operation_desc="${git_cmd%% *}"  # First word of command
+
+    # Check if flock is available
+    if ! command -v flock &> /dev/null; then
+        print_warning "flock not available, falling back to wait_for_git_lock"
+        wait_for_git_lock || return 1
+        git $git_cmd
+        return $?
+    fi
+
+    # Create lock file if it doesn't exist
+    touch "$GIT_OPERATION_LOCK" 2>/dev/null || {
+        print_warning "Cannot create lock file, falling back to direct git"
+        git $git_cmd
+        return $?
+    }
+
+    log_git_operation "Acquiring lock for: git $operation_desc"
+
+    # Acquire exclusive lock with 30 second timeout
+    (
+        if ! flock -x -w 30 200; then
+            print_error "Failed to acquire git operation lock after 30s for: git $operation_desc"
+            log_git_operation "Lock acquisition FAILED (timeout) for: git $operation_desc"
+            return 1
+        fi
+
+        log_git_operation "Lock acquired for: git $operation_desc"
+
+        # Run the git command
+        git $git_cmd
+        local exit_code=$?
+
+        log_git_operation "Lock released for: git $operation_desc (exit: $exit_code)"
+
+        return $exit_code
+    ) 200>"$GIT_OPERATION_LOCK"
+
+    local result=$?
+    return $result
 }
 
 # Stash uncommitted changes
 stash_changes() {
     wait_for_git_lock || return 1
 
-    if ! git diff-index --quiet HEAD --; then
+    if ! safe_git diff-index --quiet HEAD --; then
         print_warning "Uncommitted changes detected, stashing..."
-        git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
+        safe_git stash push -m "Auto-stash before /tree closedone at $(date +%Y%m%d-%H%M%S)"
         print_success "Changes stashed"
         return 0
     fi
@@ -93,7 +189,15 @@ closedone_main() {
     local dry_run=false
     local skip_confirmation=false
 
-    # Parse options
+    # Check for --full-cycle flag and delegate
+    for arg in "$@"; do
+        if [ "$arg" = "--full-cycle" ]; then
+            closedone_full_cycle "$@"
+            return $?
+        fi
+    done
+
+    # Parse options for regular closedone
     while [[ $# -gt 0 ]]; do
         case $1 in
             --dry-run)
@@ -106,7 +210,7 @@ closedone_main() {
                 ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone [--dry-run] [--yes]"
+                echo "Usage: /tree closedone [--dry-run] [--yes] [--full-cycle]"
                 return 1
                 ;;
         esac
@@ -290,7 +394,7 @@ closedone_merge() {
     # Switch to base branch
     wait_for_git_lock || return 1
 
-    if ! git checkout "$base" &>/dev/null; then
+    if ! safe_git checkout "$base" &>/dev/null; then
         print_error "  Failed to checkout $base"
         return 1
     fi
@@ -298,7 +402,7 @@ closedone_merge() {
 
     # Attempt merge
     local merge_output
-    if merge_output=$(git merge "$branch" --no-edit 2>&1); then
+    if merge_output=$(safe_git merge "$branch" --no-edit 2>&1); then
         # Check merge type
         if echo "$merge_output" | grep -q "Fast-forward"; then
             print_success "  Merged (fast-forward)"
@@ -324,12 +428,12 @@ closedone_merge() {
             else
                 # Agent couldn't resolve - manual intervention needed
                 print_warning "  Agent resolution failed - manual resolution required"
-                git merge --abort
+                safe_git merge --abort
                 return 1
             fi
         else
             print_error "  Merge failed: $merge_output"
-            git merge --abort 2>/dev/null
+            safe_git merge --abort 2>/dev/null
             return 1
         fi
     fi
@@ -460,22 +564,489 @@ EOF
     return 1  # Indicate manual resolution needed for now
 }
 
+#==============================================================================
+# Full-Cycle Automation - Phase Functions
+#==============================================================================
+
+# Phase 1: Validation & Checkpoint
+closedone_full_cycle_phase1() {
+    print_info "Phase 1: Validation & Checkpoint"
+
+    # Check for unclosed worktrees
+    local unclosed_count=0
+    if [ -d "$TREES_DIR" ]; then
+        for dir in "$TREES_DIR"/*/ ; do
+            [ -d "$dir/.git" ] || [ -f "$dir/.git" ] || continue
+
+            local name=$(basename "$dir")
+            # Skip if completed or incomplete synopsis exists
+            if ! ls "$COMPLETED_DIR/$name-synopsis-"*.md &>/dev/null && \
+               ! ls "$INCOMPLETE_DIR/$name-synopsis-"*.md &>/dev/null; then
+                print_warning "  Unclosed worktree: $name"
+                unclosed_count=$((unclosed_count + 1))
+            fi
+        done
+    fi
+
+    if [ $unclosed_count -gt 0 ]; then
+        print_error "Found $unclosed_count unclosed worktree(s)"
+        echo "Please run /tree close or /tree close incomplete in each worktree first"
+        return 1
+    fi
+
+    # Get current branch
+    local current_branch=$(git branch --show-current)
+    echo "$current_branch" > /tmp/cycle-branch-backup
+
+    # Create checkpoint
+    local checkpoint_tag="checkpoint-before-full-cycle-$(date +%Y%m%d-%H%M%S)"
+    git tag "$checkpoint_tag" 2>/dev/null
+    echo "$checkpoint_tag" > /tmp/cycle-checkpoint-tag
+
+    print_success "  ✓ All worktrees closed"
+    print_success "  ✓ Checkpoint created: $checkpoint_tag"
+
+    return 0
+}
+
+# Phase 2: Merge Completed Features
+closedone_full_cycle_phase2() {
+    print_info "Phase 2: Merge Completed Features"
+
+    # Get current dev branch
+    local dev_branch=$(git branch --show-current)
+
+    # Run existing closedone logic
+    if ! closedone_main --yes; then
+        print_error "  Failed to merge completed worktrees"
+        return 1
+    fi
+
+    # Push dev branch to remote
+    if ! git push origin "$dev_branch" 2>/dev/null; then
+        print_warning "  Failed to push dev branch (may not have remote)"
+    else
+        print_success "  ✓ Dev branch pushed: $dev_branch"
+    fi
+
+    print_success "  ✓ Completed features merged"
+    echo "$dev_branch"  # Return dev branch name
+    return 0
+}
+
+# Phase 3: Promote to Main
+closedone_full_cycle_phase3() {
+    local dev_branch=$1
+
+    print_info "Phase 3: Promote to Main"
+
+    # Switch to main
+    if ! git checkout main &>/dev/null; then
+        print_error "  Failed to checkout main branch"
+        return 1
+    fi
+
+    # Pull latest main (optional, non-blocking)
+    git pull origin main &>/dev/null || true
+
+    # Merge dev branch with --no-ff to preserve history
+    if ! git merge "$dev_branch" --no-ff -m "Merge $dev_branch into main" &>/dev/null; then
+        # Check if conflicts
+        if git diff --name-only --diff-filter=U | grep -q .; then
+            print_error "  Merge conflicts detected"
+            echo "  Conflicted files:"
+            git diff --name-only --diff-filter=U | while read file; do
+                echo "    - $file"
+            done
+            git merge --abort 2>/dev/null
+            return 1
+        else
+            print_error "  Merge failed"
+            git merge --abort 2>/dev/null
+            return 1
+        fi
+    fi
+
+    # Push main to remote
+    if ! git push origin main 2>/dev/null; then
+        print_warning "  Failed to push main (may not have remote)"
+    else
+        print_success "  ✓ Main branch pushed"
+    fi
+
+    print_success "  ✓ Promoted to main"
+    return 0
+}
+
+# Phase 4: Version Bump
+closedone_full_cycle_phase4() {
+    local bump_type="${1:-patch}"
+
+    print_info "Phase 4: Version Bump ($bump_type)"
+
+    # Validate bump type
+    if [[ ! "$bump_type" =~ ^(patch|minor|major)$ ]]; then
+        print_error "  Invalid bump type: $bump_type (must be patch, minor, or major)"
+        return 1
+    fi
+
+    # Run version bump
+    if ! python tools/version_manager.py --bump "$bump_type" &>/dev/null; then
+        print_error "  Version bump failed"
+        return 1
+    fi
+
+    # Sync version to all files
+    if ! python tools/version_manager.py --sync &>/dev/null; then
+        print_error "  Version sync failed"
+        return 1
+    fi
+
+    # Read new version
+    local new_version=$(cat VERSION 2>/dev/null || echo "unknown")
+
+    # Commit version changes
+    git add . &>/dev/null
+    if ! git commit -m "chore: Bump version to $new_version" &>/dev/null; then
+        print_warning "  No version changes to commit"
+    fi
+
+    # Push to main
+    git push origin main &>/dev/null || true
+
+    print_success "  ✓ Version: $new_version"
+    echo "$new_version"  # Return new version
+    return 0
+}
+
+# Phase 5: New Cycle Setup
+closedone_full_cycle_phase5() {
+    local new_version=$1
+
+    print_info "Phase 5: New Cycle Setup"
+
+    # Generate new dev branch name
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local new_dev_branch="develop/v${new_version}-worktrees-${timestamp}"
+
+    # Create and checkout new dev branch from main
+    if ! git checkout -b "$new_dev_branch" main &>/dev/null; then
+        print_error "  Failed to create new dev branch"
+        return 1
+    fi
+
+    # Push with --set-upstream
+    if ! git push -u origin "$new_dev_branch" 2>/dev/null; then
+        print_warning "  Failed to push new dev branch (may not have remote)"
+    else
+        print_success "  ✓ New dev branch pushed: $new_dev_branch"
+    fi
+
+    # Detect and stage incomplete features
+    local incomplete_count=0
+    if [ -d "$INCOMPLETE_DIR" ]; then
+        # Get incomplete features
+        while IFS= read -r description; do
+            if [ -n "$description" ]; then
+                # Stage the feature
+                tree_stage "$description" &>/dev/null
+                print_info "  Staged incomplete: $description"
+                incomplete_count=$((incomplete_count + 1))
+            fi
+        done < <(detect_incomplete_features)
+    fi
+
+    print_success "  ✓ New dev branch: $new_dev_branch"
+    if [ $incomplete_count -gt 0 ]; then
+        print_success "  ✓ Staged $incomplete_count incomplete feature(s)"
+    fi
+
+    echo "$new_dev_branch"  # Return new dev branch name
+    return 0
+}
+
+# Phase 6: Cleanup & Report
+closedone_full_cycle_phase6() {
+    local dev_branch=$1
+    local new_version=$2
+    local new_dev_branch=$3
+
+    print_info "Phase 6: Cleanup & Report"
+
+    # Generate cycle timestamp
+    local cycle_timestamp=$(date +%Y%m%d-%H%M%S)
+    local archive_dir="$ARCHIVED_DIR/cycle-$cycle_timestamp"
+
+    # Create archive directories
+    mkdir -p "$archive_dir/completed" "$archive_dir/incomplete"
+
+    # Archive completed synopses
+    local completed_count=0
+    if [ -d "$COMPLETED_DIR" ]; then
+        for file in "$COMPLETED_DIR"/*.md; do
+            [ -f "$file" ] || continue
+            mv "$file" "$archive_dir/completed/" 2>/dev/null && completed_count=$((completed_count + 1))
+        done
+    fi
+
+    # Archive incomplete synopses
+    local incomplete_count=0
+    if [ -d "$INCOMPLETE_DIR" ]; then
+        for file in "$INCOMPLETE_DIR"/*.md; do
+            [ -f "$file" ] || continue
+            mv "$file" "$archive_dir/incomplete/" 2>/dev/null && incomplete_count=$((incomplete_count + 1))
+        done
+    fi
+
+    print_success "  ✓ Archived $completed_count completed, $incomplete_count incomplete"
+    print_success "  ✓ Archive location: $archive_dir"
+
+    # Generate completion report
+    local report_file="$archive_dir/cycle-report.md"
+    cat > "$report_file" << EOF
+# Development Cycle Completion Report
+
+**Timestamp:** $(date +"%Y-%m-%d %H:%M:%S")
+**Cycle ID:** $cycle_timestamp
+
+## Summary
+
+- **Previous Dev Branch:** $dev_branch
+- **New Version:** $new_version
+- **New Dev Branch:** $new_dev_branch
+
+## Features Completed
+
+$completed_count worktree(s) merged and deployed to main.
+
+## Features Continuing
+
+$incomplete_count incomplete feature(s) staged for next cycle.
+
+## Next Steps
+
+1. Review archived synopses in: $archive_dir
+2. Stage additional features: \`/tree stage [description]\`
+3. Build new worktrees: \`/tree build\`
+4. Continue development!
+
+---
+Generated by /tree closedone --full-cycle
+EOF
+
+    print_success "  ✓ Report generated: $report_file"
+    return 0
+}
+
+# Rollback full cycle on failure
+rollback_full_cycle() {
+    local failed_phase=$1
+    local checkpoint_tag=$(cat /tmp/cycle-checkpoint-tag 2>/dev/null || echo "")
+    local original_branch=$(cat /tmp/cycle-branch-backup 2>/dev/null || echo "main")
+
+    print_error "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    print_error "ROLLBACK: Phase $failed_phase failed"
+    print_error "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    # Reset to checkpoint if it exists
+    if [ -n "$checkpoint_tag" ] && git rev-parse "$checkpoint_tag" &>/dev/null; then
+        print_warning "Rolling back to checkpoint: $checkpoint_tag"
+        git reset --hard "$checkpoint_tag" &>/dev/null
+        git tag -d "$checkpoint_tag" &>/dev/null
+        print_success "  ✓ Repository reset to checkpoint"
+    fi
+
+    # Restore original branch
+    if [ -n "$original_branch" ]; then
+        git checkout "$original_branch" &>/dev/null || true
+        print_success "  ✓ Restored branch: $original_branch"
+    fi
+
+    # Cleanup temp files
+    rm -f /tmp/cycle-branch-backup /tmp/cycle-checkpoint-tag
+
+    echo ""
+    print_info "Manual Recovery Steps:"
+    echo "  1. Review git log to see partial changes"
+    echo "  2. Fix any issues that caused the failure"
+    echo "  3. Run: /tree closedone --full-cycle --dry-run (to preview)"
+    echo "  4. Retry when ready"
+    echo ""
+
+    return 1
+}
+
+# Full-Cycle Orchestrator
+closedone_full_cycle() {
+    local dry_run=false
+    local skip_confirmation=false
+    local bump_type="patch"
+
+    # Parse options
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --dry-run)
+                dry_run=true
+                shift
+                ;;
+            --yes|-y)
+                skip_confirmation=true
+                shift
+                ;;
+            --bump)
+                bump_type="$2"
+                shift 2
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                echo "Usage: /tree closedone --full-cycle [--dry-run] [--yes] [--bump patch|minor|major]"
+                return 1
+                ;;
+        esac
+    done
+
+    print_header "/tree closedone - Full Development Cycle"
+
+    if [ "$dry_run" = true ]; then
+        print_warning "DRY RUN MODE - No changes will be made"
+        echo ""
+    fi
+
+    # Preview what will happen
+    echo "This will execute the complete development cycle:"
+    echo "  1. Validate all worktrees closed"
+    echo "  2. Merge completed features to dev branch"
+    echo "  3. Promote dev branch to main"
+    echo "  4. Bump version ($bump_type)"
+    echo "  5. Create new dev branch"
+    echo "  6. Auto-stage incomplete features"
+    echo "  7. Archive and cleanup"
+    echo ""
+
+    # Count features
+    local completed_count=0
+    local incomplete_count=0
+    [ -d "$COMPLETED_DIR" ] && completed_count=$(ls "$COMPLETED_DIR"/*-synopsis-*.md 2>/dev/null | wc -l)
+    [ -d "$INCOMPLETE_DIR" ] && incomplete_count=$(ls "$INCOMPLETE_DIR"/*-synopsis-*.md 2>/dev/null | wc -l)
+
+    echo "Features to process:"
+    echo "  • Completed: $completed_count"
+    echo "  • Incomplete: $incomplete_count"
+    echo ""
+
+    # Confirmation
+    if [ "$skip_confirmation" = false ]; then
+        echo -n "Proceed with full cycle? (y/n): "
+        read -r response
+
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            print_info "Operation cancelled"
+            return 0
+        fi
+        echo ""
+    fi
+
+    if [ "$dry_run" = true ]; then
+        print_info "[DRY RUN] Would execute all 6 phases"
+        print_info "[DRY RUN] Phase 1: Validation & Checkpoint"
+        print_info "[DRY RUN] Phase 2: Merge completed features"
+        print_info "[DRY RUN] Phase 3: Promote to main"
+        print_info "[DRY RUN] Phase 4: Version bump ($bump_type)"
+        print_info "[DRY RUN] Phase 5: New dev branch + stage incomplete"
+        print_info "[DRY RUN] Phase 6: Archive and report"
+        return 0
+    fi
+
+    # Execute phases
+    local dev_branch=""
+    local new_version=""
+    local new_dev_branch=""
+
+    # Phase 1: Validation & Checkpoint
+    if ! closedone_full_cycle_phase1; then
+        rollback_full_cycle 1
+        return 1
+    fi
+    echo ""
+
+    # Phase 2: Merge Completed Features
+    dev_branch=$(closedone_full_cycle_phase2)
+    if [ $? -ne 0 ]; then
+        rollback_full_cycle 2
+        return 1
+    fi
+    echo ""
+
+    # Phase 3: Promote to Main
+    if ! closedone_full_cycle_phase3 "$dev_branch"; then
+        rollback_full_cycle 3
+        return 1
+    fi
+    echo ""
+
+    # Phase 4: Version Bump
+    new_version=$(closedone_full_cycle_phase4 "$bump_type")
+    if [ $? -ne 0 ]; then
+        rollback_full_cycle 4
+        return 1
+    fi
+    echo ""
+
+    # Phase 5: New Cycle Setup
+    new_dev_branch=$(closedone_full_cycle_phase5 "$new_version")
+    if [ $? -ne 0 ]; then
+        rollback_full_cycle 5
+        return 1
+    fi
+    echo ""
+
+    # Phase 6: Cleanup & Report
+    if ! closedone_full_cycle_phase6 "$dev_branch" "$new_version" "$new_dev_branch"; then
+        # Non-critical failure, continue
+        print_warning "  Cleanup had issues but cycle completed"
+    fi
+    echo ""
+
+    # Cleanup temp files
+    rm -f /tmp/cycle-branch-backup /tmp/cycle-checkpoint-tag
+
+    # Final summary
+    echo "═══════════════════════════════════════════════════════════════"
+    echo "✅ FULL CYCLE COMPLETE"
+    echo "═══════════════════════════════════════════════════════════════"
+    echo ""
+    echo "Previous Dev Branch: $dev_branch (preserved as rollback point)"
+    echo "New Version: $new_version"
+    echo "New Dev Branch: $new_dev_branch"
+    echo ""
+    echo "Completed Features: $completed_count (merged to main)"
+    echo "Incomplete Features: $incomplete_count (staged for next cycle)"
+    echo ""
+    echo "🎯 Next Steps:"
+    echo "  • Stage more features: /tree stage [description]"
+    echo "  • Build worktrees: /tree build"
+    echo "  • Continue development!"
+    echo "═══════════════════════════════════════════════════════════════"
+
+    return 0
+}
+
 # Cleanup worktree and branch
 closedone_cleanup() {
     local worktree=$1
     local branch=$2
 
     # Remove worktree
-    if git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
+    if safe_git worktree remove "$TREES_DIR/$worktree" &>/dev/null; then
         print_success "  Removed worktree"
     else
         print_warning "  Failed to remove worktree (may already be removed)"
     fi
 
     # Delete branch (safe delete)
-    if git branch -d "$branch" &>/dev/null; then
+    if safe_git branch -d "$branch" &>/dev/null; then
         print_success "  Deleted branch $branch"
-    elif git branch -D "$branch" &>/dev/null; then
+    elif safe_git branch -D "$branch" &>/dev/null; then
         print_warning "  Force-deleted branch $branch (had unmerged commits)"
     else
         print_warning "  Failed to delete branch $branch"
@@ -490,6 +1061,48 @@ closedone_cleanup() {
     fi
 
     print_success "  Status: ✅ SUCCESS"
+}
+
+# Detect incomplete features for auto-staging in next cycle
+detect_incomplete_features() {
+    local incomplete_features=()
+
+    # Check if incomplete directory exists
+    if [ ! -d "$INCOMPLETE_DIR" ]; then
+        echo ""  # Return empty array
+        return 0
+    fi
+
+    # Find all incomplete synopsis files
+    local synopsis_files=($(find "$INCOMPLETE_DIR" -name "*-synopsis-*.md" 2>/dev/null))
+
+    for synopsis_file in "${synopsis_files[@]}"; do
+        # Verify INCOMPLETE status
+        if grep -q "^# Status: INCOMPLETE" "$synopsis_file" 2>/dev/null; then
+            # Extract original task description
+            local description=""
+
+            # Try to extract from "## Original Task Description" section
+            if grep -q "^## Original Task Description" "$synopsis_file"; then
+                description=$(sed -n '/^## Original Task Description/,/^##/p' "$synopsis_file" | \
+                             grep -v "^##" | grep -v "^$" | head -n 1 | sed 's/^[[:space:]]*//')
+            fi
+
+            # Fallback: extract from worktree name if description empty
+            if [ -z "$description" ]; then
+                local worktree_name=$(basename "$synopsis_file" | sed 's/-synopsis-.*\.md$//')
+                description=$(echo "$worktree_name" | tr '-' ' ')
+            fi
+
+            # Add to array if we have a description
+            if [ -n "$description" ]; then
+                incomplete_features+=("$description")
+            fi
+        fi
+    done
+
+    # Return array (space-separated for bash arrays)
+    printf '%s\n' "${incomplete_features[@]}"
 }
 
 #==============================================================================
@@ -708,8 +1321,10 @@ TASKEOF
             print_warning "  Failed: $wt_name (run manually)"
         fi
 
-        # Staggered launch - 0.5s delay
-        sleep 0.5
+        # Staggered launch - 2s delay with random jitter (0-500ms)
+        # This prevents concurrent git operations during terminal initialization
+        local jitter=$(( RANDOM % 500 ))
+        sleep 2.$(printf "%03d" $jitter)
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
 
@@ -902,7 +1517,7 @@ tree_build() {
     # Create development branch if not exists
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
         wait_for_git_lock || return 1
-        git checkout -b "$dev_branch" &>/dev/null
+        safe_git checkout -b "$dev_branch" &>/dev/null
         print_success "Created development branch: $dev_branch"
     fi
 
@@ -925,24 +1540,8 @@ tree_build() {
 
         # Create worktree with new branch in one command
         wait_for_git_lock || continue
-<<<<<<< Updated upstream
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create worktree with branch: $branch"
-||||||| Stash base
-        if ! git checkout -b "$branch" "$dev_branch" &>/dev/null; then
-            print_error "  Failed to create branch: $branch"
-            failed_count=$((failed_count + 1))
-            continue
-        fi
-
-        # Create worktree
-        if ! git worktree add "$worktree_path" "$branch" &>/dev/null; then
-            print_error "  Failed to create worktree"
-            git branch -D "$branch" &>/dev/null
-=======
-        if ! git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
+        if ! safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
             print_error "  ✗ Failed to create worktree with branch: $branch"
->>>>>>> Stashed changes
             failed_count=$((failed_count + 1))
             continue
         fi
@@ -1020,41 +1619,6 @@ EOF
     echo "Worktree Location: $TREES_DIR/"
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
-<<<<<<< Updated upstream
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        echo ""
-        print_success "All worktrees configured and ready!"
-        echo ""
-        print_info "Each worktree has:"
-        echo "  • .claude-init.sh (launches Claude with task context)"
-        echo "  • .claude-task-context.md (full task description)"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo ""
-        print_header "Next Steps"
-        echo ""
-        print_info "Open terminals manually for each worktree:"
-        echo ""
-        print_success "  1. Open new terminal (Ctrl+Shift+\`)"
-        print_success "  2. cd /workspace/.trees/<worktree-name>"
-        print_success "  3. bash /workspace/.claude/scripts/cltr.sh"
-        echo ""
-        print_info "Then continue development:"
-        echo "  • Answer Claude's clarifying questions"
-        echo "  • Implement the feature"
-        echo "  • When done: /tree close"
-        echo "  • Merge all: /tree closedone (from main workspace)"
-        echo ""
-        print_info "📖 See: docs/tree-manual-workflow.md for detailed guide"
-    fi
-||||||| Stash base
-=======
 
     # Create integrated terminals with Claude auto-launch
     if [ $success_count -gt 0 ]; then
@@ -1076,30 +1640,6 @@ EOF
         echo "  3. When done: /tree close (from within worktree)"
         echo "  4. Merge all: /tree closedone (from main workspace)"
     fi
-||||||| Stash base
-=======
-
-    # Create integrated terminals with Claude auto-launch
-    if [ $success_count -gt 0 ]; then
-        echo ""
-        print_header "Auto-Launching Terminals with Claude"
-
-        generate_and_run_vscode_tasks
-
-        print_success "All worktrees ready! Claude instances launched with task context."
-        echo ""
-        print_info "Each terminal has:"
-        echo "  • Claude Code running with task context loaded"
-        echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo "  • Full task description in .claude-task-context.md"
-        echo ""
-        print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
-    fi
->>>>>>> Stashed changes
 }
 
 #==============================================================================
@@ -1180,6 +1720,15 @@ tree_conflict() {
 #==============================================================================
 
 tree_close() {
+    # Parse options
+    local status="COMPLETE"
+    local incomplete_flag=false
+
+    if [[ "$1" == "incomplete" ]]; then
+        incomplete_flag=true
+        status="INCOMPLETE"
+    fi
+
     # Detect if we're in a worktree
     local current_dir=$(pwd)
     local worktree_name=""
@@ -1192,7 +1741,11 @@ tree_close() {
         return 1
     fi
 
-    print_header "Completing Work: $worktree_name"
+    if [ "$incomplete_flag" = true ]; then
+        print_header "Saving Work Progress: $worktree_name (INCOMPLETE)"
+    else
+        print_header "Completing Work: $worktree_name"
+    fi
 
     # Get branch info
     local branch=$(git branch --show-current)
@@ -1201,6 +1754,9 @@ tree_close() {
     echo "Worktree: $worktree_name"
     echo "Branch: $branch"
     echo "Base: $base_branch"
+    if [ "$incomplete_flag" = true ]; then
+        echo "Status: ⚠️  INCOMPLETE - will continue in next cycle"
+    fi
     echo ""
 
     # Analyze changes
@@ -1216,18 +1772,83 @@ tree_close() {
     echo "  Commits: $commit_count"
     echo ""
 
+    # Determine target directory based on status
+    local target_dir
+    if [ "$incomplete_flag" = true ]; then
+        target_dir="$TREES_DIR/.incomplete"
+    else
+        target_dir="$COMPLETED_DIR"
+    fi
+    mkdir -p "$target_dir"
+
+    # Extract original task description if available
+    local original_description=""
+    local task_context_file="$current_dir/.claude-task-context.md"
+    if [ -f "$task_context_file" ]; then
+        original_description=$(grep -A 5 "^## Task Description" "$task_context_file" | tail -n +2 | head -n 3)
+    fi
+
     # Generate synopsis
     local timestamp=$(date +%Y%m%d-%H%M%S)
-    local synopsis_file="$COMPLETED_DIR/${worktree_name}-synopsis-${timestamp}.md"
+    local synopsis_file="$target_dir/${worktree_name}-synopsis-${timestamp}.md"
 
-    mkdir -p "$COMPLETED_DIR"
+    if [ "$incomplete_flag" = true ]; then
+        # Generate INCOMPLETE synopsis
+        cat > "$synopsis_file" << EOF
+# Work In Progress: ${worktree_name//-/ }
 
-    cat > "$synopsis_file" << EOF
+# Branch: $branch
+# Base: $base_branch
+# Closed: $(date +"%Y-%m-%d %H:%M:%S")
+# Status: INCOMPLETE
+# Resume: This feature needs to continue in the next development cycle
+
+## Original Task Description
+
+$original_description
+
+## Progress Summary
+
+Work has been started on this feature but requires additional work to complete.
+
+## Changes So Far
+
+- Files created: $files_created
+- Files modified: $files_modified
+- Files deleted: $files_deleted
+- Total commits: $commit_count
+
+## Files Changed
+
+$(git diff --name-status $base_branch..$branch 2>/dev/null || echo "No changes detected")
+
+## Commit History
+
+$(git log --oneline $base_branch..$branch 2>/dev/null || echo "No commits")
+
+## Remaining Work
+
+- [ ] Additional tasks to be defined in next cycle
+- [ ] Complete feature implementation
+- [ ] Add comprehensive tests
+- [ ] Update documentation
+
+## Next Steps
+
+1. This feature will be automatically staged in the next development cycle
+2. Run /tree closedone --full-cycle to start the next cycle
+3. The task description will be preserved for continuation
+
+EOF
+    else
+        # Generate COMPLETE synopsis (original behavior)
+        cat > "$synopsis_file" << EOF
 # Work Completed: ${worktree_name//-/ }
 
 # Branch: $branch
 # Base: $base_branch
 # Completed: $(date +"%Y-%m-%d %H:%M:%S")
+# Status: COMPLETE
 
 ## Summary
 
@@ -1255,11 +1876,16 @@ $(git log --oneline $base_branch..$branch 2>/dev/null || echo "No commits")
 3. Or manually merge: git checkout $base_branch && git merge $branch
 
 EOF
+    fi
 
     print_success "Synopsis generated: $synopsis_file"
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📋 Work Summary: $worktree_name"
+    if [ "$incomplete_flag" = true ]; then
+        echo "⚠️  Work Progress Saved: $worktree_name (INCOMPLETE)"
+    else
+        echo "📋 Work Summary: $worktree_name"
+    fi
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     echo "Changes:"
@@ -1272,12 +1898,22 @@ EOF
     echo ""
     echo "📝 Documentation: $synopsis_file"
     echo ""
-    echo "🎯 Next Steps:"
-    echo "  1. Review synopsis before merging"
-    echo "  2. Run /tree closedone to batch merge all completed worktrees"
-    echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
-    echo ""
-    echo "✅ This worktree is ready to merge"
+    if [ "$incomplete_flag" = true ]; then
+        echo "⚠️  Status: INCOMPLETE"
+        echo "  This feature will automatically continue in the next development cycle"
+        echo ""
+        echo "🎯 Next Steps:"
+        echo "  1. Work on other features"
+        echo "  2. Run /tree closedone --full-cycle when ready"
+        echo "  3. This feature will be auto-staged in the new cycle"
+    else
+        echo "🎯 Next Steps:"
+        echo "  1. Review synopsis before merging"
+        echo "  2. Run /tree closedone to batch merge all completed worktrees"
+        echo "  3. Or merge manually: git checkout $base_branch && git merge $branch"
+        echo ""
+        echo "✅ This worktree is ready to merge"
+    fi
 }
 
 #==============================================================================
@@ -1361,104 +1997,6 @@ tree_status() {
 }
 
 #==============================================================================
-<<<<<<< Updated upstream
-# /tree refresh - Session guidance for slash command loading
-#==============================================================================
-
-tree_refresh() {
-    print_header "Slash Command Session Check"
-
-    local current_dir=$(pwd)
-    local workspace_root="/workspace"
-    local in_worktree=false
-
-    # Detect if we're in a worktree
-    if [[ "$current_dir" == *"/.trees/"* ]]; then
-        in_worktree=true
-        local worktree_name=$(basename "$current_dir")
-    fi
-
-    echo "📍 Current Location:"
-    echo "   $current_dir"
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        echo "🌳 Worktree Detected: $worktree_name"
-        echo ""
-    fi
-
-    # Check if slash command files exist
-    echo "🔍 Checking Slash Command Files:"
-
-    local commands_found=0
-    local commands_missing=0
-
-    for cmd in tree task; do
-        if [ -f ".claude/commands/$cmd.md" ]; then
-            print_success "/$cmd command file exists"
-            commands_found=$((commands_found + 1))
-        else
-            print_error "/$cmd command file MISSING"
-            commands_missing=$((commands_missing + 1))
-        fi
-    done
-
-    echo ""
-
-    if [ $commands_missing -gt 0 ]; then
-        print_error "Missing command files detected!"
-        echo ""
-        echo "This worktree may be on an older commit. Consider:"
-        echo "  1. Merge latest changes from main/develop"
-        echo "  2. Cherry-pick the slash command commits"
-        echo ""
-        return 1
-    fi
-
-    # Provide session reload guidance
-    print_header "Claude Code CLI Session Guidance"
-
-    echo "ℹ️  Known Issue: Claude Code doesn't always reload slash commands"
-    echo "   when switching between worktrees mid-session."
-    echo ""
-
-    if [ "$in_worktree" = true ]; then
-        print_warning "You're in a worktree. If /tree or /task don't work:"
-        echo ""
-        echo "  Quick Fix (Recommended):"
-        echo "    • Use direct command: bash /workspace/.claude/scripts/tree.sh <command>"
-        echo "    • Example: bash /workspace/.claude/scripts/tree.sh status"
-        echo ""
-        echo "  Permanent Fix:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Start new session FROM this worktree directory"
-        echo "    • CLI will rescan .claude/commands/ on session start"
-    else
-        print_success "You're in main workspace - slash commands should work"
-        echo ""
-        echo "  If commands still don't work:"
-        echo "    • Restart Claude Code CLI session"
-        echo "    • Check .claude/commands/ directory exists"
-    fi
-
-    echo ""
-    print_header "Workaround Commands"
-    echo ""
-    echo "Instead of /tree commands, use:"
-    echo "  bash /workspace/.claude/scripts/tree.sh stage [description]"
-    echo "  bash /workspace/.claude/scripts/tree.sh list"
-    echo "  bash /workspace/.claude/scripts/tree.sh build"
-    echo "  bash /workspace/.claude/scripts/tree.sh close"
-    echo "  bash /workspace/.claude/scripts/tree.sh closedone"
-    echo "  bash /workspace/.claude/scripts/tree.sh status"
-    echo ""
-
-    print_info "All functionality works identically via direct script calls"
-}
-
-#==============================================================================
-||||||| Stash base
-=======
 # /tree restore - Restore terminals for worktrees without active shells
 #==============================================================================
 
@@ -1619,7 +2157,6 @@ tree_refresh() {
 }
 
 #==============================================================================
->>>>>>> Stashed changes
 # /tree help
 #==============================================================================
 
@@ -1634,11 +2171,15 @@ Available commands:
   conflict               - Analyze conflicts and suggest merges ✅
   build                  - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
-  close                  - Complete work and generate synopsis ✅
+  close [incomplete]     - Complete work and generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
   refresh                - Check slash command availability & session guidance ✅
   help                   - Show this help ✅
+
+/tree close usage:
+  /tree close              Complete feature and mark ready to merge
+  /tree close incomplete   Save progress for continuation in next cycle
 
 /tree closedone usage:
   /tree closedone [options]
@@ -1646,6 +2187,8 @@ Available commands:
 Options:
   --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
+  --full-cycle           Complete entire development cycle (NEW)
+  --bump [type]          Version bump type: patch|minor|major (default: patch)
 
 Typical Workflow:
   1. /tree stage [description]  # Stage multiple features
@@ -1653,8 +2196,9 @@ Typical Workflow:
   3. /tree conflict             # Analyze conflicts (optional)
   4. /tree build                # Create all worktrees
   5. [work in worktrees]        # Implement features
-  6. /tree close                # Complete work (in each worktree)
+  6. /tree close                # Complete work (or 'close incomplete')
   7. /tree closedone            # Merge all completed worktrees
+  8. /tree closedone --full-cycle  # Full automation (optional)
 
 Examples:
   /tree stage Add user preferences backend
@@ -1663,8 +2207,10 @@ Examples:
   /tree conflict
   /tree build
   # ... work in worktrees ...
-  /tree close                    # Run from within worktree
-  /tree closedone                # Run from main workspace
+  /tree close                    # Feature complete
+  /tree close incomplete         # Need more work later
+  /tree closedone                # Merge completed only
+  /tree closedone --full-cycle   # Full cycle: merge → main → version bump → new cycle
   /tree status                   # Check environment status
 
 For full documentation, see: tasks/prd-tree-slash-command.md
@@ -1674,9 +2220,6 @@ EOF
 #==============================================================================
 # Main Command Router
 #==============================================================================
-=======
-# All script functions would remain unchanged
->>>>>>> task/06-docx-security-verification-system-prevent-maliciou
 
 # Main command routing with both restore and refresh
 case "$COMMAND" in
@@ -1701,19 +2244,12 @@ case "$COMMAND" in
     status)
         tree_status "$@"
         ;;
-<<<<<<< Updated upstream
-    refresh)
-        tree_refresh "$@"
-        ;;
-||||||| Stash base
-=======
     restore)
         tree_restore "$@"
         ;;
     refresh)
         tree_refresh "$@"
         ;;
->>>>>>> Stashed changes
     closedone)
         closedone_main "$@"
         ;;

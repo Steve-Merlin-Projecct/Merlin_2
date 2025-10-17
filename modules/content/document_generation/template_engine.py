@@ -21,11 +21,13 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from distutils.util import strtobool
 
 # Authenticity enhancement imports
 try:
     from .smart_typography import SmartTypography
     from .metadata_generator import MetadataGenerator
+
     AUTHENTICITY_AVAILABLE = True
 except ImportError:
     logging.warning("Authenticity enhancement modules not available")
@@ -35,6 +37,7 @@ except ImportError:
 try:
     from .docx_security_scanner import DOCXSecurityScanner
     from .security_audit_logger import SecurityAuditLogger
+
     SECURITY_SCANNER_AVAILABLE = True
 except ImportError:
     logging.warning("Security scanner modules not available")
@@ -52,36 +55,68 @@ class TemplateEngine:
     4. Generating final documents with professional metadata
     """
 
-    def __init__(self, enable_url_tracking=True, enable_authenticity=True, enable_security_scan=True):
+    def __init__(
+        self,
+        enable_url_tracking=None,
+        enable_authenticity=True,
+        enable_security_scan=True,
+    ):
         """
         Initialize the template engine with configuration
 
         Args:
-            enable_url_tracking (bool): Enable automatic URL tracking for candidate URLs (default: True)
+            enable_url_tracking (bool, optional): Enable automatic URL tracking for candidate URLs.
+                If None, reads from ENABLE_URL_TRACKING environment variable (default: True if not set)
             enable_authenticity (bool): Enable authenticity enhancements (smart typography, realistic metadata)
             enable_security_scan (bool): Enable security scanning of generated documents (default: True)
         """
         self.setup_logging()
         self.template_cache = {}  # Cache loaded templates for performance
-        self.variable_pattern = re.compile(r"<<([^>]+)>>")  # Pattern for <<variable_name>>
-        self.job_variable_pattern = re.compile(r"\{(job_title|company_name)\}")  # Pattern for {job_title} and {company_name}
+        self.variable_pattern = re.compile(
+            r"<<([^>]+)>>"
+        )  # Pattern for <<variable_name>>
+        self.job_variable_pattern = re.compile(
+            r"\{(job_title|company_name)\}"
+        )  # Pattern for {job_title} and {company_name}
 
         # Enhanced formatting patterns
-        self.italics_pattern = re.compile(r'\*([^*]+)\*')  # Pattern for *italics*
-        self.publication_pattern = re.compile(r'\b(?:[A-Z][a-z]*(?:\s[A-Z][a-z]*)*\s(?:Journal|Magazine|Review|Times|Post|Herald|Tribune|Gazette|Chronicle|News|Weekly|Monthly|Quarterly|Report|Bulletin|Digest|Today|Business|Financial|Economic|Scientific|Academic|Medical|Legal|Technical|International|National|Global|Daily|Press|Media|Communications?|Technology|Science|Nature|Cell|PLOS|BMJ|NEJM|JAMA|IEEE|ACM|Harvard|Stanford|MIT|Oxford|Cambridge))\b')  # Pattern for publications
+        self.italics_pattern = re.compile(r"\*([^*]+)\*")  # Pattern for *italics*
+        self.publication_pattern = re.compile(
+            r"\b(?:[A-Z][a-z]*(?:\s[A-Z][a-z]*)*\s(?:Journal|Magazine|Review|Times|Post|Herald|Tribune|Gazette|Chronicle|News|Weekly|Monthly|Quarterly|Report|Bulletin|Digest|Today|Business|Financial|Economic|Scientific|Academic|Medical|Legal|Technical|International|National|Global|Daily|Press|Media|Communications?|Technology|Science|Nature|Cell|PLOS|BMJ|NEJM|JAMA|IEEE|ACM|Harvard|Stanford|MIT|Oxford|Cambridge))\b"
+        )  # Pattern for publications
 
-        # URL tracking configuration
+        # URL tracking configuration - read from environment if not explicitly set
+        if enable_url_tracking is None:
+            try:
+                enable_url_tracking = bool(
+                    strtobool(os.environ.get("ENABLE_URL_TRACKING", "true"))
+                )
+            except ValueError:
+                enable_url_tracking = True  # Default to True if env var is invalid
+                self.logger.warning(
+                    "Invalid ENABLE_URL_TRACKING value, defaulting to True"
+                )
+
         self.enable_url_tracking = enable_url_tracking
-        self.tracked_url_cache = {}  # Cache for tracked URLs to prevent duplicate tracking entries
+        self.tracked_url_cache = (
+            {}
+        )  # Cache for tracked URLs to prevent duplicate tracking entries
+
+        if self.enable_url_tracking:
+            self.logger.info(
+                "URL tracking enabled (will convert Calendly/LinkedIn/Portfolio URLs to tracked URLs)"
+            )
+        else:
+            self.logger.info("URL tracking disabled (will use original URLs)")
 
         # Define which variables should be converted to tracked URLs
-        self.TRACKABLE_URL_VARIABLES = ['calendly_url', 'linkedin_url', 'portfolio_url']
+        self.TRACKABLE_URL_VARIABLES = ["calendly_url", "linkedin_url", "portfolio_url"]
 
         # Mapping from variable name to link function name for tracking system
         self.URL_VARIABLE_TO_FUNCTION = {
-            'calendly_url': 'Calendly',
-            'linkedin_url': 'LinkedIn',
-            'portfolio_url': 'Portfolio'
+            "calendly_url": "Calendly",
+            "linkedin_url": "LinkedIn",
+            "portfolio_url": "Portfolio",
         }
 
         # Authenticity enhancement configuration
@@ -104,7 +139,9 @@ class TemplateEngine:
             self.security_scanner = None
             self.security_audit_logger = None
             if enable_security_scan and not SECURITY_SCANNER_AVAILABLE:
-                self.logger.warning("Security scanning requested but modules not available")
+                self.logger.warning(
+                    "Security scanning requested but modules not available"
+                )
 
     def setup_logging(self):
         """Configure logging for template processing"""
@@ -140,7 +177,9 @@ class TemplateEngine:
             self.logger.error(f"Error loading template {template_path}: {str(e)}")
             raise
 
-    def generate_document(self, template_path, data, output_path=None, job_id=None, application_id=None):
+    def generate_document(
+        self, template_path, data, output_path=None, job_id=None, application_id=None
+    ):
         """
         Generate a document from a template using provided data
 
@@ -175,18 +214,24 @@ class TemplateEngine:
                 # Find all variables in the paragraph (both types)
                 template_variables = self.variable_pattern.findall(original_text)
                 job_variables = self.job_variable_pattern.findall(original_text)
-                
-                all_variables = template_variables + [f"job_variable_{var}" for var in job_variables]
+
+                all_variables = template_variables + [
+                    f"job_variable_{var}" for var in job_variables
+                ]
 
                 if all_variables:
                     substitution_stats["variables_found"].update(all_variables)
 
                     # Replace variables with actual data
-                    new_text = self.substitute_variables(original_text, data, substitution_stats, job_id, application_id)
+                    new_text = self.substitute_variables(
+                        original_text, data, substitution_stats, job_id, application_id
+                    )
 
                     # Apply smart typography if enabled
                     if self.enable_authenticity and self.smart_typography:
-                        new_text = self.smart_typography.enhance_paragraph_text(new_text)
+                        new_text = self.smart_typography.enhance_paragraph_text(
+                            new_text
+                        )
 
                     # Apply enhanced text formatting
                     formatted_text = self.apply_enhanced_formatting(paragraph, new_text)
@@ -195,11 +240,15 @@ class TemplateEngine:
                     if formatted_text != original_text:
                         self.update_paragraph_text(paragraph, formatted_text)
                         substitution_stats["total_substitutions"] += 1
-                        self.logger.debug(f"Processed: '{original_text}' -> '{formatted_text}'")
+                        self.logger.debug(
+                            f"Processed: '{original_text}' -> '{formatted_text}'"
+                        )
 
             # Process tables if they exist
             for table in doc.tables:
-                self.process_table_variables(table, data, substitution_stats, job_id, application_id)
+                self.process_table_variables(
+                    table, data, substitution_stats, job_id, application_id
+                )
 
             # Set document properties
             self.set_document_properties(doc, data)
@@ -240,7 +289,7 @@ class TemplateEngine:
                 "variables_processed": final_stats,
                 "generation_time": datetime.now().isoformat(),
                 "success": True,
-                "security_scan": security_result
+                "security_scan": security_result,
             }
 
             self.logger.info(f"Document generated successfully: {output_path}")
@@ -276,17 +325,22 @@ class TemplateEngine:
 
             if value is not None:
                 # Check if this is a trackable URL variable
-                if self.enable_url_tracking and variable_name in self.TRACKABLE_URL_VARIABLES:
+                if (
+                    self.enable_url_tracking
+                    and variable_name in self.TRACKABLE_URL_VARIABLES
+                ):
                     # Convert to tracked URL
                     link_function = self.URL_VARIABLE_TO_FUNCTION[variable_name]
                     tracked_url = self._get_tracked_url(
                         original_url=str(value),
                         link_function=link_function,
                         job_id=job_id,
-                        application_id=application_id
+                        application_id=application_id,
                     )
                     stats["variables_substituted"].add(variable_name)
-                    self.logger.info(f"Converted {variable_name} to tracked URL: {tracked_url}")
+                    self.logger.info(
+                        f"Converted {variable_name} to tracked URL: {tracked_url}"
+                    )
                     return tracked_url
                 else:
                     # Normal variable substitution
@@ -294,7 +348,9 @@ class TemplateEngine:
                     return str(value)
             else:
                 stats["variables_missing"].add(variable_name)
-                self.logger.warning(f"Template variable '{variable_name}' not found in data")
+                self.logger.warning(
+                    f"Template variable '{variable_name}' not found in data"
+                )
                 return match.group(0)  # Return original placeholder
 
         def replace_job_variable(match):
@@ -303,14 +359,24 @@ class TemplateEngine:
 
             # Look for job-specific data
             value = None
-            if variable_name == 'job_title':
-                value = data.get('job_title') or data.get('position_title') or data.get('title')
-            elif variable_name == 'company_name':
-                value = data.get('company_name') or data.get('company') or data.get('organization')
+            if variable_name == "job_title":
+                value = (
+                    data.get("job_title")
+                    or data.get("position_title")
+                    or data.get("title")
+                )
+            elif variable_name == "company_name":
+                value = (
+                    data.get("company_name")
+                    or data.get("company")
+                    or data.get("organization")
+                )
 
             if value is not None:
                 stats["variables_substituted"].add(f"job_variable_{variable_name}")
-                self.logger.debug(f"Substituted job variable '{variable_name}' with '{value}'")
+                self.logger.debug(
+                    f"Substituted job variable '{variable_name}' with '{value}'"
+                )
                 return str(value)
             else:
                 stats["variables_missing"].add(f"job_variable_{variable_name}")
@@ -325,7 +391,9 @@ class TemplateEngine:
 
         return text
 
-    def _get_tracked_url(self, original_url, link_function, job_id=None, application_id=None):
+    def _get_tracked_url(
+        self, original_url, link_function, job_id=None, application_id=None
+    ):
         """
         Generate tracked redirect URL using LinkTracker system
 
@@ -355,7 +423,9 @@ class TemplateEngine:
         cache_key = f"{job_id}:{application_id}:{link_function}:{original_url}"
         if cache_key in self.tracked_url_cache:
             cached_url = self.tracked_url_cache[cache_key]
-            self.logger.debug(f"Using cached tracked URL for {link_function}: {cached_url}")
+            self.logger.debug(
+                f"Using cached tracked URL for {link_function}: {cached_url}"
+            )
             return cached_url
 
         try:
@@ -371,13 +441,13 @@ class TemplateEngine:
                 link_function=link_function,
                 job_id=job_id,
                 application_id=application_id,
-                link_type='profile',  # All candidate URLs are profile type
-                description=f'{link_function} link for job application'
+                link_type="profile",  # All candidate URLs are profile type
+                description=f"{link_function} link for job application",
             )
 
             # Extract redirect URL from result
-            redirect_url = result['redirect_url']
-            tracking_id = result['tracking_id']
+            redirect_url = result["redirect_url"]
+            tracking_id = result["tracking_id"]
 
             # Cache the result
             self.tracked_url_cache[cache_key] = redirect_url
@@ -390,7 +460,9 @@ class TemplateEngine:
             return redirect_url
 
         except ImportError as e:
-            self.logger.error(f"LinkTracker module not available: {e}. Using original URL.")
+            self.logger.error(
+                f"LinkTracker module not available: {e}. Using original URL."
+            )
             return original_url  # Graceful fallback
 
         except Exception as e:
@@ -427,61 +499,68 @@ class TemplateEngine:
     def apply_enhanced_formatting(self, paragraph, text):
         """
         Apply enhanced text formatting including publication italics and Canadian spelling
-        
+
         Args:
             paragraph: python-docx paragraph object
             text (str): Text to format
-            
+
         Returns:
             str: Formatted text
         """
         # Apply Canadian spelling corrections
         text = self.apply_canadian_spelling(text)
-        
+
         # Apply publication italics formatting
         text = self.apply_publication_italics(paragraph, text)
-        
+
         return text
-    
+
     def apply_canadian_spelling(self, text):
         """
         Apply Canadian spelling corrections to text
-        
+
         Args:
             text (str): Text to convert
-            
+
         Returns:
             str: Text with Canadian spellings
         """
         try:
             # Import Canadian spelling processor
             import sys
-            sys.path.append('.')
-            from modules.content.copywriting_evaluator.canadian_spelling_processor import CanadianSpellingProcessor
-            
+
+            sys.path.append(".")
+            from modules.content.copywriting_evaluator.canadian_spelling_processor import (
+                CanadianSpellingProcessor,
+            )
+
             processor = CanadianSpellingProcessor()
-            
+
             # Apply spelling conversions
             conversions = processor._get_spelling_conversions()
-            converted_text, changes = processor._apply_spelling_conversions(text, conversions)
-            
+            converted_text, changes = processor._apply_spelling_conversions(
+                text, conversions
+            )
+
             if changes:
-                self.logger.info(f"Applied {len(changes)} Canadian spelling corrections")
-                
+                self.logger.info(
+                    f"Applied {len(changes)} Canadian spelling corrections"
+                )
+
             return converted_text
-            
+
         except Exception as e:
             self.logger.warning(f"Canadian spelling conversion failed: {str(e)}")
             return text  # Return original text if conversion fails
-    
+
     def apply_publication_italics(self, paragraph, text):
         """
         Apply italics formatting to publications and manual italics markers
-        
+
         Args:
-            paragraph: python-docx paragraph object  
+            paragraph: python-docx paragraph object
             text (str): Text to format
-            
+
         Returns:
             str: Text with italics markers processed
         """
@@ -489,90 +568,98 @@ class TemplateEngine:
             # Process manual italics markers (*text*)
             def process_manual_italics(match):
                 return match.group(1)  # Remove asterisks, formatting applied to run
-            
+
             # Remove manual italics markers from text
             processed_text = self.italics_pattern.sub(process_manual_italics, text)
-            
+
             # Find publication names and manual italics for run-level formatting
             self.apply_run_formatting(paragraph, text)
-            
+
             return processed_text
-            
+
         except Exception as e:
             self.logger.warning(f"Publication italics formatting failed: {str(e)}")
             return text
-    
+
     def apply_run_formatting(self, paragraph, text):
         """
         Apply run-level formatting for italics to specific text patterns
-        
+
         Args:
             paragraph: python-docx paragraph object
             text (str): Text content to analyze for formatting
         """
         try:
             from docx.shared import RGBColor
-            
+
             # Clear existing runs to rebuild with formatting
             for run in paragraph.runs[:]:
                 paragraph._element.remove(run._element)
-            
+
             current_pos = 0
-            
+
             # Find all manual italics (*text*) and publications
             manual_italics = list(self.italics_pattern.finditer(text))
             publications = list(self.publication_pattern.finditer(text))
-            
+
             # Combine and sort all formatting ranges
             formatting_ranges = []
-            
+
             for match in manual_italics:
-                formatting_ranges.append({
-                    'start': match.start(),
-                    'end': match.end(),
-                    'type': 'manual_italics',
-                    'content': match.group(1)
-                })
-            
+                formatting_ranges.append(
+                    {
+                        "start": match.start(),
+                        "end": match.end(),
+                        "type": "manual_italics",
+                        "content": match.group(1),
+                    }
+                )
+
             for match in publications:
-                formatting_ranges.append({
-                    'start': match.start(),
-                    'end': match.end(),
-                    'type': 'publication',
-                    'content': match.group(0)
-                })
-            
+                formatting_ranges.append(
+                    {
+                        "start": match.start(),
+                        "end": match.end(),
+                        "type": "publication",
+                        "content": match.group(0),
+                    }
+                )
+
             # Sort by start position
-            formatting_ranges.sort(key=lambda x: x['start'])
-            
+            formatting_ranges.sort(key=lambda x: x["start"])
+
             # Build text with appropriate formatting
             for formatting in formatting_ranges:
                 # Add text before formatting
-                if current_pos < formatting['start']:
-                    normal_run = paragraph.add_run(text[current_pos:formatting['start']])
-                
+                if current_pos < formatting["start"]:
+                    normal_run = paragraph.add_run(
+                        text[current_pos : formatting["start"]]
+                    )
+
                 # Add formatted text
-                if formatting['type'] == 'manual_italics':
+                if formatting["type"] == "manual_italics":
                     # Manual italics: use inner content with italics
-                    italic_run = paragraph.add_run(formatting['content'])
+                    italic_run = paragraph.add_run(formatting["content"])
                     italic_run.italic = True
-                elif formatting['type'] == 'publication':
+                elif formatting["type"] == "publication":
                     # Publication: use full content with italics
-                    pub_run = paragraph.add_run(formatting['content'])
+                    pub_run = paragraph.add_run(formatting["content"])
                     pub_run.italic = True
-                
-                current_pos = formatting['end']
-            
+
+                current_pos = formatting["end"]
+
             # Add remaining text
             if current_pos < len(text):
                 final_run = paragraph.add_run(text[current_pos:])
-                
+
         except Exception as e:
             self.logger.warning(f"Run formatting failed: {str(e)}")
             # Fallback: add text without special formatting
             paragraph.add_run(text)
 
-    def process_table_variables(self, table, data, stats, job_id=None, application_id=None):
+    def process_table_variables(
+        self, table, data, stats, job_id=None, application_id=None
+    ):
         """
         Process variables within document tables
 
@@ -590,15 +677,21 @@ class TemplateEngine:
                     template_variables = self.variable_pattern.findall(original_text)
                     job_variables = self.job_variable_pattern.findall(original_text)
 
-                    all_variables = template_variables + [f"job_variable_{var}" for var in job_variables]
+                    all_variables = template_variables + [
+                        f"job_variable_{var}" for var in job_variables
+                    ]
 
                     if all_variables:
                         stats["variables_found"].update(all_variables)
-                        new_text = self.substitute_variables(original_text, data, stats, job_id, application_id)
+                        new_text = self.substitute_variables(
+                            original_text, data, stats, job_id, application_id
+                        )
 
                         if new_text != original_text:
                             # Apply enhanced formatting to table cells too
-                            formatted_text = self.apply_enhanced_formatting(paragraph, new_text)
+                            formatted_text = self.apply_enhanced_formatting(
+                                paragraph, new_text
+                            )
                             self.update_paragraph_text(paragraph, formatted_text)
                             stats["total_substitutions"] += 1
 
@@ -631,9 +724,12 @@ class TemplateEngine:
         # Use MetadataGenerator if authenticity is enabled
         if self.enable_authenticity and self.metadata_generator:
             # Prepare metadata parameters
-            author_name = data.get("author") or (
-                data.get("first_name", "") + " " + data.get("last_name", "")
-            ).strip()
+            author_name = (
+                data.get("author")
+                or (
+                    data.get("first_name", "") + " " + data.get("last_name", "")
+                ).strip()
+            )
             document_title = data.get("title", "Generated Document")
             document_type = data.get("document_type", "resume")
 
@@ -660,9 +756,12 @@ class TemplateEngine:
                 "author", data.get("first_name", "") + " " + data.get("last_name", "")
             ).strip()
             doc.core_properties.subject = data.get("subject", "Professional Document")
-            doc.core_properties.keywords = data.get("keywords", "Resume, Professional, Application")
+            doc.core_properties.keywords = data.get(
+                "keywords", "Resume, Professional, Application"
+            )
             doc.core_properties.comments = data.get(
-                "comments", f"Generated on {datetime.now().strftime('%Y-%m-%d')} for professional use"
+                "comments",
+                f"Generated on {datetime.now().strftime('%Y-%m-%d')} for professional use",
             )
             doc.core_properties.category = data.get("category", "Job Application")
             doc.core_properties.created = datetime.now()
@@ -724,7 +823,8 @@ class TemplateEngine:
             "variables_substituted": len(stats["variables_substituted"]),
             "variables_missing": len(stats["variables_missing"]),
             "total_substitutions": stats["total_substitutions"],
-            "substitution_rate": len(stats["variables_substituted"]) / max(1, len(stats["variables_found"])),
+            "substitution_rate": len(stats["variables_substituted"])
+            / max(1, len(stats["variables_found"])),
             "missing_variables": list(stats["variables_missing"]),
             "processed_variables": list(stats["variables_substituted"]),
         }
@@ -745,7 +845,7 @@ class TemplateEngine:
             # Find all variables in the template (both types)
             template_variables = set()
             job_variables = set()
-            
+
             for paragraph in doc.paragraphs:
                 template_variables.update(self.variable_pattern.findall(paragraph.text))
                 job_variables.update(self.job_variable_pattern.findall(paragraph.text))
@@ -755,11 +855,17 @@ class TemplateEngine:
                 for row in table.rows:
                     for cell in row.cells:
                         for paragraph in cell.paragraphs:
-                            template_variables.update(self.variable_pattern.findall(paragraph.text))
-                            job_variables.update(self.job_variable_pattern.findall(paragraph.text))
+                            template_variables.update(
+                                self.variable_pattern.findall(paragraph.text)
+                            )
+                            job_variables.update(
+                                self.job_variable_pattern.findall(paragraph.text)
+                            )
 
             # Combine all variables for reporting
-            all_variables = list(template_variables) + [f"job_variable_{var}" for var in job_variables]
+            all_variables = list(template_variables) + [
+                f"job_variable_{var}" for var in job_variables
+            ]
 
             return {
                 "valid": True,
@@ -772,7 +878,12 @@ class TemplateEngine:
             }
 
         except Exception as e:
-            return {"valid": False, "error": str(e), "variables_found": [], "variable_count": 0}
+            return {
+                "valid": False,
+                "error": str(e),
+                "variables_found": [],
+                "variable_count": 0,
+            }
 
     def _perform_security_scan(self, file_path: str, metadata: dict) -> dict:
         """
@@ -811,8 +922,8 @@ class TemplateEngine:
                 "metadata": {
                     "author": metadata.get("author", "unknown"),
                     "title": metadata.get("title", "unknown"),
-                    "document_type": metadata.get("document_type", "unknown")
-                }
+                    "document_type": metadata.get("document_type", "unknown"),
+                },
             }
 
             self.security_audit_logger.log_scan(audit_entry)
@@ -824,11 +935,15 @@ class TemplateEngine:
                 high_threats = [t for t in threats if t.severity == "high"]
 
                 if critical_threats:
-                    threat_summary = f"{len(critical_threats)} critical threat(s): " + \
-                                   ", ".join([t.threat_type for t in critical_threats[:3]])
+                    threat_summary = (
+                        f"{len(critical_threats)} critical threat(s): "
+                        + ", ".join([t.threat_type for t in critical_threats[:3]])
+                    )
                 elif high_threats:
-                    threat_summary = f"{len(high_threats)} high severity threat(s): " + \
-                                   ", ".join([t.threat_type for t in high_threats[:3]])
+                    threat_summary = (
+                        f"{len(high_threats)} high severity threat(s): "
+                        + ", ".join([t.threat_type for t in high_threats[:3]])
+                    )
 
             # Return comprehensive result
             result = {
@@ -836,7 +951,7 @@ class TemplateEngine:
                 "threat_count": len(threats),
                 "threat_summary": threat_summary,
                 "scan_report": scan_report,
-                "scan_timestamp": datetime.now().isoformat()
+                "scan_timestamp": datetime.now().isoformat(),
             }
 
             if is_safe:
@@ -855,12 +970,13 @@ class TemplateEngine:
                 "is_safe": False,
                 "threat_count": 1,
                 "threat_summary": f"Security scan error: {str(e)}",
-                "scan_error": str(e)
+                "scan_error": str(e),
             }
 
 
 class SecurityError(Exception):
     """Exception raised when document fails security validation"""
+
     pass
 
 
