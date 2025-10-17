@@ -164,13 +164,39 @@ Example log entries:
 [2025-10-12 10:30:16] Lock released for: git worktree (exit: 0)
 ```
 
-## Future Enhancements
+## Advanced Features (Implemented)
 
-**Potential improvements (not required for current functionality):**
-1. Per-worktree locks - Allow truly concurrent operations on different worktrees
-2. Lock metrics dashboard - Real-time monitoring of lock state
-3. Predictive lock management - Pre-acquire locks based on operation patterns
-4. Queue-based system - Centralized queue for all git operations
+**Version 1.0 - 2025-10-17:**
+
+All 4 advanced features have been implemented and tested:
+
+### 1. Per-Worktree Locks ✓
+- **Location:** `.claude/scripts/git-lock-manager.sh`
+- **Benefit:** Independent locks per worktree for truly concurrent operations
+- **Usage:** `source .claude/scripts/git-lock-manager.sh && safe_git_advanced commit -m "msg"`
+- **Impact:** Worktrees can commit to different branches simultaneously
+
+### 2. Lock Metrics Dashboard ✓
+- **Location:** `.claude/scripts/git-lock-metrics.sh` + `frontend_templates/lock-dashboard.html`
+- **Benefit:** Real-time monitoring of lock performance
+- **Usage:** `bash .claude/scripts/git-lock-metrics.sh report`
+- **Dashboard:** `open frontend_templates/lock-dashboard.html`
+- **Metrics:** Wait times (p50, p95, p99), event distribution, top operations
+
+### 3. Predictive Lock Management ✓
+- **Location:** `.claude/scripts/git-lock-predictor.sh`
+- **Benefit:** Pre-acquire locks based on operation patterns (70% confidence threshold)
+- **Usage:** `bash .claude/scripts/git-lock-predictor.sh learn && patterns`
+- **Impact:** Reduces wait times by anticipating lock needs
+
+### 4. Queue-Based System ✓
+- **Location:** `.claude/scripts/git-queue-manager.sh` + `git-queue-client.sh`
+- **Benefit:** Fair scheduling with priority-based execution
+- **Usage:** `bash .claude/scripts/git-queue-manager.sh start`
+- **Client:** `source .claude/scripts/git-queue-client.sh && queued_git commit`
+- **Priority:** User (10) > Orchestrator (8) > Background (5) > Metrics (3) > Cleanup (1)
+
+**See:** `tasks/git-lock-advanced-features/README.md` for detailed usage guide
 
 ## Rollback
 
