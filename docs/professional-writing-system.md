@@ -1,7 +1,7 @@
 # Professional Writing System for Marketing Content
 
 **Version:** 1.0.0
-**Created:** January 2025
+
 **Branch:** task/02-marketing-content
 **Purpose:** Generate high-quality, job-specific seed sentences for Marketing Automation Manager and related positions
 
@@ -16,6 +16,20 @@ This system creates professional-quality resume and cover letter sentences tailo
 3. **Professional writing expertise** (tone, style, Canadian standards)
 4. **AI-powered variation generation** (Gemini API for scaling)
 5. **Quality evaluation pipeline** (5-stage approval process)
+
+### Design Philosophy: Wide Funnel → Strict Filtering
+
+**Seed Generation Strategy:**
+The seed sentences are intentionally experimental and varied. The goal at this stage is NOT to maintain a consistent brand voice - it's to create diverse, high-quality content that maximizes creative range. This allows the variation generation phase to experiment more widely.
+
+**Filtering Pipeline:**
+Consistency and context-appropriateness emerge through rigorous downstream filtering:
+- **Variation Phase:** Gemini generates 7 variations per seed (widens the pool)
+- **Truthfulness Phase:** Validates factual accuracy against source materials
+- **Keyword Phase:** Filters for job-specific relevance
+- **Tone Analysis Phase:** Matches tone to specific contexts
+
+This architecture ensures the right sentence is available at the right time, rather than constraining creative generation upfront.
 
 ---
 
