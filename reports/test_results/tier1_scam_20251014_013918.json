@@ -1,0 +1,71 @@
+{
+  "test_name": "tier1_scam",
+  "timestamp": "2025-10-14T01:39:18.071333",
+  "input_jobs": [
+    {
+      "id": "test_job_006",
+      "title": "$10K/MONTH WORKING FROM HOME!!! NO EXPERIENCE!!",
+      "company": "Digital Success Academy",
+      "location": "Anywhere!!!",
+      "description": "\n\ud83d\udea8 INCREDIBLE OPPORTUNITY \ud83d\udea8\n\nMake $10,000 per month working from your phone!!!\n\nNO EXPERIENCE NEEDED! NO DEGREE NEEDED! NO AGE LIMIT!\n\nOur proven system has helped THOUSANDS of people quit their 9-5 jobs and achieve FINANCIAL FREEDOM!!!\n\nWhat you'll do:\n\u2705 Post on social media (15 minutes per day)\n\u2705 Share our proven system with friends and family\n\u2705 Watch your bank account EXPLODE!!! \ud83d\udcb0\ud83d\udcb0\ud83d\udcb0\n\nInvestment required: $299 one-time setup fee (makes you $10k/month so it pays for itself in 1 day!)\n\nPLUS when you sign up NOW you get:\n- Exclusive training videos ($5,000 value) FREE!\n- Private Facebook group access\n- 1-on-1 coaching with our founder\n- Bonus eBook: \"Secrets to Online Success\"\n\nDon't let this opportunity pass you by!!! Spots are LIMITED!!!\n\nSend $299 via Venmo to @DigitalSuccessAcademy today and we'll send you immediate access to our system!\n\n\u26a0\ufe0f WARNING: Do not share this with anyone, we're only accepting 10 more people this month!\n\nThis is NOT a pyramid scheme! This is a LEGITIMATE business opportunity!\n\nMessage me to learn more! Must be able to invest $299 TODAY to secure your spot!\n\nP.S. - Don't wait, my last post got 400 responses in 24 hours and all spots filled up!\n        "
+    }
+  ],
+  "output_result": {
+    "results": [],
+    "usage_stats": {
+      "daily_requests": 0,
+      "monthly_requests": 0,
+      "daily_tokens": 15849,
+      "monthly_tokens": 15849,
+      "daily_request_limit": 1500,
+      "monthly_request_limit": 45000,
+      "daily_token_limit": 3000000,
+      "monthly_token_limit": 50000000,
+      "last_reset": "2025-10-14T01:38:39.917662",
+      "model_switches": 0,
+      "primary_model": "gemini-2.0-flash-001",
+      "available_models": {
+        "gemini-2.0-flash-001": {
+          "name": "Gemini 2.0 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.0-flash-lite-001": {
+          "name": "Gemini 2.0 Flash Lite",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash",
+          "tier": "paid",
+          "input_cost_per_1k": 0.3,
+          "output_cost_per_1k": 2.5
+        },
+        "gemini-1.5-flash": {
+          "name": "Gemini 1.5 Flash",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        },
+        "gemini-1.5-pro": {
+          "name": "Gemini 1.5 Pro",
+          "tier": "free",
+          "input_cost_per_1k": 0.0,
+          "output_cost_per_1k": 0.0
+        }
+      }
+    },
+    "success": true,
+    "jobs_analyzed": 1,
+    "model_used": "gemini-2.0-flash-001",
+    "optimization_metrics": {
+      "max_output_tokens": 1140,
+      "token_efficiency": "70.2%",
+      "model_selection_reason": "Low token usage (0%), using standard model",
+      "estimated_cost": 0.0,
+      "estimated_quality": 0.92
+    }
+  }
+}
