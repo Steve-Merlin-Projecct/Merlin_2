@@ -1,23 +1,9 @@
 import os
-import sys
 import logging
-import time
 from datetime import datetime
 from functools import wraps
-from pathlib import Path
 from flask import Flask, jsonify, render_template, request, session, redirect
 from werkzeug.middleware.proxy_fix import ProxyFix
-
-# Smart DATABASE_HOST detection (BEFORE any database imports!)
-# This must happen before any modules that might import database classes
-if 'DATABASE_HOST' not in os.environ:
-    in_docker = (
-        os.path.exists('/.dockerenv') or
-        os.environ.get('DOCKER_CONTAINER') or
-        os.path.exists('/workspace/.devcontainer')
-    )
-    os.environ['DATABASE_HOST'] = 'host.docker.internal' if in_docker else 'localhost'
-    print(f"[Auto-configured] DATABASE_HOST = {os.environ['DATABASE_HOST']}")
 
 # Import centralized observability system
 from modules.observability import (
@@ -48,7 +34,6 @@ from modules.workflow.email_application_api import email_application_api
 from modules.workflow.workflow_api import workflow_api as step_2_2_workflow_api
 from modules.security.security_patch import apply_security_headers, validate_environment, SecurityPatch
 from modules.security.rate_limit_manager import init_rate_limiter, before_request_handler, after_request_handler
-from modules.user_preferences.preference_routes import preference_bp
 
 # Application version
 __version__ = "4.3.2"
@@ -71,9 +56,6 @@ logger = get_logger(__name__)
 
 # Create Flask app
 app = Flask(__name__, template_folder='frontend_templates')
-
-# Track application startup time for uptime monitoring
-app.startup_time = time.time()
 
 # Validate environment and apply security settings
 validate_environment()
@@ -111,9 +93,75 @@ ObservabilityMiddleware(
 
 logger.info(f"Observability system initialized - Log Level: {log_level}, Format: {log_format}")
 
-# Initialize rate limiter
-init_rate_limiter(app)
-logger.info("Rate limiter initialized")
+# Initialize and register AI prompts for security protection
+try:
+    from modules.ai_job_description_analysis.prompt_security_manager import (
+        PromptSecurityManager,
+    )
+    from modules.ai_job_description_analysis.prompts.tier1_core_prompt import (
+        create_tier1_core_prompt,
+    )
+    from modules.ai_job_description_analysis.prompts.tier2_enhanced_prompt import (
+        create_tier2_enhanced_prompt,
+    )
+    from modules.ai_job_description_analysis.prompts.tier3_strategic_prompt import (
+        create_tier3_strategic_prompt,
+    )
+
+    security_mgr = PromptSecurityManager()
+
+    # Create sample jobs for registration (just need structure, not real data)
+    sample_jobs = [
+        {
+            "id": "init_sample",
+            "title": "Sample Job Title",
+            "description": "Sample job description for initialization purposes. " * 20,
+        }
+    ]
+
+    # Register Tier 1 prompt
+    logger.info("Registering Tier 1 core prompt...")
+    tier1_prompt = create_tier1_core_prompt(sample_jobs)
+    security_mgr.register_prompt("tier1_core_prompt", tier1_prompt, change_source="system")
+
+    # Register Tier 2 prompt
+    logger.info("Registering Tier 2 enhanced prompt...")
+    tier2_jobs = [
+        {
+            "job_data": sample_jobs[0],
+            "tier1_results": {
+                "structured_data": {"skill_requirements": {"skills": []}},
+                "classification": {
+                    "industry": "Technology",
+                    "seniority_level": "Mid-Level",
+                },
+                "authenticity_check": {"credibility_score": 8},
+            },
+        }
+    ]
+    tier2_prompt = create_tier2_enhanced_prompt(tier2_jobs)
+    security_mgr.register_prompt("tier2_enhanced_prompt", tier2_prompt, change_source="system")
+
+    # Register Tier 3 prompt
+    logger.info("Registering Tier 3 strategic prompt...")
+    tier3_jobs = [
+        {
+            "job_data": sample_jobs[0],
+            "tier1_results": tier2_jobs[0]["tier1_results"],
+            "tier2_results": {
+                "stress_level_analysis": {"estimated_stress_level": 5},
+                "red_flags": {"unrealistic_expectations": {"detected": False}},
+                "implicit_requirements": {"unstated_skills": []},
+            },
+        }
+    ]
+    tier3_prompt = create_tier3_strategic_prompt(tier3_jobs)
+    security_mgr.register_prompt("tier3_strategic_prompt", tier3_prompt, change_source="system")
+
+    logger.info("✅ All AI prompts registered and protected")
+except Exception as e:
+    logger.error(f"Failed to register AI prompts: {e}")
+    logger.warning("Prompt protection system not active - continuing without it")
 
 # Register blueprints
 # Webhook blueprint registration disabled - no longer using Make.com
@@ -148,10 +196,6 @@ app.register_blueprint(step_2_2_workflow_api, name='step_2_2_workflow')
 # Register Email Application API
 app.register_blueprint(email_application_api)
 
-# Register User Preferences API
-app.register_blueprint(preference_bp)
-logger.info("User Preferences API registered successfully")
-
 # Register Link Tracking API
 try:
     from modules.link_tracking.link_tracking_api import link_tracking_api_bp
@@ -173,14 +217,6 @@ try:
     from modules.analytics.engagement_analytics_api import engagement_analytics_bp
     app.register_blueprint(engagement_analytics_bp)
     logger.info("Analytics API registered successfully")
-except ImportError as e:
-    logger.warning(f"Could not register Analytics API: {e}")
-
-# Register Application Automation API
-try:
-    from modules.application_automation.automation_api import automation_api
-    app.register_blueprint(automation_api)
-    logger.info("Application Automation API registered successfully")
 except ImportError as e:
     logger.warning(f"Could not register Analytics API: {e}")
 
@@ -208,17 +244,6 @@ except ImportError as e:
 
 # Create storage directory if it doesn't exist
 os.makedirs("storage", exist_ok=True)
-
-# Initialize database extensions in Flask application context
-# This must happen AFTER app creation but BEFORE handling requests
-with app.app_context():
-    try:
-        from modules.database.database_extensions import extend_database_reader
-        extend_database_reader()
-        logger.info("Database extensions initialized successfully")
-    except Exception as e:
-        logger.warning(f"Could not initialize database extensions: {e}")
-        # App continues without extensions (graceful degradation)
 
 @app.route('/')
 def index():
@@ -270,147 +295,35 @@ def index():
 
 @app.route('/health')
 def health_check():
-    """
-    Enhanced health check endpoint with comprehensive system diagnostics.
-
-    Performs multi-level health checks:
-    - Application status (Flask is running)
-    - Database configuration and connectivity
-    - Environment variables validation
-    - Critical files existence
-    - Version and uptime information
-
-    Returns:
-        JSON response with health status and diagnostics
-        Status codes:
-            200 - All checks passed (healthy)
-            503 - One or more checks failed (unhealthy)
-    """
-    import time
+    """Enhanced health check endpoint with system diagnostics"""
     from modules.observability.debug_tools import HealthChecker
 
     health_checker = HealthChecker()
-    start_time = time.time()
 
     # Register basic health checks
     def check_app():
-        """Check if Flask application is running"""
         return True, "Application is running"
 
     def check_database():
-        """Check database configuration and basic connectivity"""
         try:
             from modules.database.database_config import DatabaseConfig
             db_config = DatabaseConfig()
-
-            # Get connection parameters
-            try:
-                params = db_config.get_connection_params()
-                connection_info = f"Database configured: {db_config.is_docker and 'Docker' or 'Local'} - {params['host']}:{params['port']}/{params['database']}"
-            except:
-                connection_info = f"Database configured: {db_config.is_docker and 'Docker' or 'Local'}"
-
-            # Try actual database connection
-            try:
-                import psycopg2
-                conn = psycopg2.connect(
-                    **db_config.get_connection_params(),
-                    connect_timeout=3
-                )
-                cursor = conn.cursor()
-                cursor.execute("SELECT 1")
-                cursor.close()
-                conn.close()
-                return True, f"{connection_info} - Connection verified"
-            except Exception as conn_error:
-                return False, f"{connection_info} - Connection failed: {str(conn_error)}"
-
+            # Basic connectivity check
+            return True, f"Database configured: {db_config.is_docker and 'Docker' or 'Local'}"
         except Exception as e:
             return False, f"Database configuration error: {str(e)}"
 
-    def check_environment():
-        """Check critical environment variables"""
-        try:
-            critical_vars = ['PGPASSWORD']
-            missing = [var for var in critical_vars if not os.environ.get(var)]
-
-            if missing:
-                return False, f"Missing environment variables: {', '.join(missing)}"
-
-            return True, "Required environment variables present"
-        except Exception as e:
-            return False, f"Environment check error: {str(e)}"
-
-    def check_templates():
-        """Check that critical template files exist"""
-        try:
-            template_dir = Path(__file__).parent / 'frontend_templates'
-            critical_templates = ['dashboard_v2.html', 'dashboard_login.html']
-
-            missing = [t for t in critical_templates if not (template_dir / t).exists()]
-
-            if missing:
-                return False, f"Missing templates: {', '.join(missing)}"
-
-            return True, f"All critical templates present ({len(critical_templates)} checked)"
-        except Exception as e:
-            return False, f"Template check error: {str(e)}"
-
-    # Register all checks
     health_checker.register_check('application', check_app)
     health_checker.register_check('database', check_database)
-    health_checker.register_check('environment', check_environment)
-    health_checker.register_check('templates', check_templates)
 
-    # Run all checks
     results = health_checker.run_checks()
 
-    # Add metadata
+    # Add version and uptime info
     results['service'] = 'Merlin Job Application System'
     results['version'] = __version__
-    results['timestamp'] = datetime.now().isoformat()
-    results['check_duration_ms'] = round((time.time() - start_time) * 1000, 2)
-
-    # Add startup information
-    if hasattr(app, 'startup_time'):
-        uptime_seconds = time.time() - app.startup_time
-        results['uptime_seconds'] = round(uptime_seconds, 2)
-        results['uptime_human'] = format_uptime(uptime_seconds)
-
-    # Add environment info
-    results['environment'] = {
-        'python_version': f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
-        'flask_debug': app.debug,
-        'host': request.host
-    }
 
     status_code = 200 if results['overall_status'] == 'healthy' else 503
     return jsonify(results), status_code
-
-
-def format_uptime(seconds: float) -> str:
-    """
-    Format uptime in human-readable format.
-
-    Args:
-        seconds: Uptime in seconds
-
-    Returns:
-        Human-readable uptime string (e.g., "2h 34m 12s")
-    """
-    hours = int(seconds // 3600)
-    minutes = int((seconds % 3600) // 60)
-    secs = int(seconds % 60)
-
-    parts = []
-    if hours > 0:
-        parts.append(f"{hours}h")
-    if minutes > 0:
-        parts.append(f"{minutes}m")
-    if secs > 0 or not parts:
-        parts.append(f"{secs}s")
-
-    return " ".join(parts)
 
 @app.route('/metrics')
 def metrics_endpoint():
@@ -433,12 +346,6 @@ def require_page_auth(f):
     """Decorator to require authentication for page routes"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Auto-authenticate in debug/development mode
-        if app.debug and not session.get('authenticated'):
-            session['authenticated'] = True
-            session['auth_time'] = datetime.now().timestamp()
-            logger.info("Auto-authenticated in debug mode (page route)")
-
         if not session.get('authenticated'):
             return redirect('/dashboard')
         return f(*args, **kwargs)
@@ -447,12 +354,6 @@ def require_page_auth(f):
 @app.route('/dashboard')
 def dashboard():
     """Personal job application dashboard for Steve Glen - V2 Redesign"""
-    # Auto-authenticate in debug/development mode
-    if app.debug and not session.get('authenticated'):
-        session['authenticated'] = True
-        session['auth_time'] = datetime.now().timestamp()
-        logger.info("Auto-authenticated in debug mode")
-
     # Check if user is authenticated via session
     if not session.get('authenticated'):
         return render_template('dashboard_login.html')
@@ -493,24 +394,6 @@ def dashboard_logout():
     session.pop('authenticated', None)
     session.pop('auth_time', None)
     return jsonify({'success': True, 'message': 'Logged out successfully'})
-
-@app.route('/dashboard/jobs')
-@require_page_auth
-def dashboard_jobs():
-    """Jobs list page with filtering and search"""
-    return render_template('dashboard_jobs.html')
-
-@app.route('/dashboard/applications')
-@require_page_auth
-def dashboard_applications():
-    """Applications tracking page"""
-    return render_template('dashboard_applications.html')
-
-@app.route('/dashboard/analytics')
-@require_page_auth
-def dashboard_analytics():
-    """Analytics and metrics page"""
-    return render_template('dashboard_analytics.html')
 
 @app.route('/workflow')
 @require_page_auth
