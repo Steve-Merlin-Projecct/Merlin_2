@@ -176,6 +176,14 @@ try:
 except ImportError as e:
     logger.warning(f"Could not register Analytics API: {e}")
 
+# Register Application Automation API
+try:
+    from modules.application_automation.automation_api import automation_api
+    app.register_blueprint(automation_api)
+    logger.info("Application Automation API registered successfully")
+except ImportError as e:
+    logger.warning(f"Could not register Analytics API: {e}")
+
 # Register Sentence Variation API
 try:
     from modules.content.sentence_variation_api import sentence_variation_bp
