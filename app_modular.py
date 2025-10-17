@@ -93,6 +93,76 @@ ObservabilityMiddleware(
 
 logger.info(f"Observability system initialized - Log Level: {log_level}, Format: {log_format}")
 
+# Initialize and register AI prompts for security protection
+try:
+    from modules.ai_job_description_analysis.prompt_security_manager import (
+        PromptSecurityManager,
+    )
+    from modules.ai_job_description_analysis.prompts.tier1_core_prompt import (
+        create_tier1_core_prompt,
+    )
+    from modules.ai_job_description_analysis.prompts.tier2_enhanced_prompt import (
+        create_tier2_enhanced_prompt,
+    )
+    from modules.ai_job_description_analysis.prompts.tier3_strategic_prompt import (
+        create_tier3_strategic_prompt,
+    )
+
+    security_mgr = PromptSecurityManager()
+
+    # Create sample jobs for registration (just need structure, not real data)
+    sample_jobs = [
+        {
+            "id": "init_sample",
+            "title": "Sample Job Title",
+            "description": "Sample job description for initialization purposes. " * 20,
+        }
+    ]
+
+    # Register Tier 1 prompt
+    logger.info("Registering Tier 1 core prompt...")
+    tier1_prompt = create_tier1_core_prompt(sample_jobs)
+    security_mgr.register_prompt("tier1_core_prompt", tier1_prompt, change_source="system")
+
+    # Register Tier 2 prompt
+    logger.info("Registering Tier 2 enhanced prompt...")
+    tier2_jobs = [
+        {
+            "job_data": sample_jobs[0],
+            "tier1_results": {
+                "structured_data": {"skill_requirements": {"skills": []}},
+                "classification": {
+                    "industry": "Technology",
+                    "seniority_level": "Mid-Level",
+                },
+                "authenticity_check": {"credibility_score": 8},
+            },
+        }
+    ]
+    tier2_prompt = create_tier2_enhanced_prompt(tier2_jobs)
+    security_mgr.register_prompt("tier2_enhanced_prompt", tier2_prompt, change_source="system")
+
+    # Register Tier 3 prompt
+    logger.info("Registering Tier 3 strategic prompt...")
+    tier3_jobs = [
+        {
+            "job_data": sample_jobs[0],
+            "tier1_results": tier2_jobs[0]["tier1_results"],
+            "tier2_results": {
+                "stress_level_analysis": {"estimated_stress_level": 5},
+                "red_flags": {"unrealistic_expectations": {"detected": False}},
+                "implicit_requirements": {"unstated_skills": []},
+            },
+        }
+    ]
+    tier3_prompt = create_tier3_strategic_prompt(tier3_jobs)
+    security_mgr.register_prompt("tier3_strategic_prompt", tier3_prompt, change_source="system")
+
+    logger.info("✅ All AI prompts registered and protected")
+except Exception as e:
+    logger.error(f"Failed to register AI prompts: {e}")
+    logger.warning("Prompt protection system not active - continuing without it")
+
 # Register blueprints
 # Webhook blueprint registration disabled - no longer using Make.com
 # app.register_blueprint(webhook_bp)

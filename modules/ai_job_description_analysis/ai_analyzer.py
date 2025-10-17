@@ -16,6 +16,7 @@ import string
 import sys
 from typing import Dict, List, Optional, Any
 from datetime import datetime
+from pathlib import Path
 from modules.security.security_patch import SecurityPatch
 
 
@@ -25,8 +26,8 @@ def _get_requests_module():
     try:
         # Add utils directory to path for dependency manager
         utils_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-            "utils")
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "utils"
+        )
         if utils_path not in sys.path:
             sys.path.append(utils_path)
 
@@ -97,7 +98,7 @@ def sanitize_job_description(text):
             text,
             ["unpunctuated_stream"],
             severity=unpunct_result.severity,
-            details=unpunct_result.detection_details
+            details=unpunct_result.detection_details,
         )
         injection_detected = True
 
@@ -108,7 +109,7 @@ def sanitize_job_description(text):
     return text
 
 
-def log_potential_injection(text, patterns, severity='medium', details=None):
+def log_potential_injection(text, patterns, severity="medium", details=None):
     """
     Log potential injection attempts for security monitoring
     NOW ENHANCED: Supports severity levels and database logging
@@ -123,15 +124,17 @@ def log_potential_injection(text, patterns, severity='medium', details=None):
     text_sample = text[:200] if text else ""
 
     logger.warning(
-        f"Potential LLM injection detected - Patterns: {', '.join(patterns)}, Severity: {severity}")
+        f"Potential LLM injection detected - Patterns: {', '.join(patterns)}, Severity: {severity}"
+    )
     logger.warning(f"Text sample (first 200 chars): {text_sample}")
 
     # Log to security_detections table
     try:
         from modules.database.database_manager import DatabaseManager
+
         db = DatabaseManager()
 
-        detection_type = patterns[0] if patterns else 'unknown'
+        detection_type = patterns[0] if patterns else "unknown"
 
         insert_query = """
             INSERT INTO security_detections
@@ -139,11 +142,18 @@ def log_potential_injection(text, patterns, severity='medium', details=None):
             VALUES (%s, %s, %s, %s, %s, %s)
         """
 
-        metadata = details if details else {'patterns': patterns}
+        metadata = details if details else {"patterns": patterns}
 
         db.execute_query(
             insert_query,
-            (detection_type, severity, ', '.join(patterns), text_sample, json.dumps(metadata), 'logged')
+            (
+                detection_type,
+                severity,
+                ", ".join(patterns),
+                text_sample,
+                json.dumps(metadata),
+                "logged",
+            ),
         )
 
     except Exception as e:
@@ -289,17 +299,17 @@ def contains_non_job_content(response_text, parsed_response):
         # Check if job_ids look suspicious (not matching expected format)
         for result in analysis_results:
             job_id = result.get("job_id", "")
-            if not job_id or len(
-                    str(job_id)) > 100:  # Suspiciously long job IDs
+            if not job_id or len(str(job_id)) > 100:  # Suspiciously long job IDs
                 return True
 
             # Check if skills look realistic
             skills = result.get("skills_analysis", {}).get("top_skills", [])
             for skill in skills:
-                skill_name = skill.get("skill", "") if isinstance(skill,
-                                                                  dict) else ""
-                if any(word in skill_name.lower() for word in
-                       ["system", "prompt", "injection", "hack", "bypass"]):
+                skill_name = skill.get("skill", "") if isinstance(skill, dict) else ""
+                if any(
+                    word in skill_name.lower()
+                    for word in ["system", "prompt", "injection", "hack", "bypass"]
+                ):
                     logger.warning(f"Suspicious skill detected: {skill_name}")
                     return True
 
@@ -330,6 +340,16 @@ class GeminiJobAnalyzer:
         self.current_model = self.primary_model
         self.max_retries = 3
         self.retry_delay = 1.0
+
+        # Initialize optimization modules
+        from modules.ai_job_description_analysis.token_optimizer import TokenOptimizer
+        from modules.ai_job_description_analysis.model_selector import ModelSelector
+        from modules.ai_job_description_analysis.batch_size_optimizer import BatchSizeOptimizer
+
+        self.token_optimizer = TokenOptimizer()
+        self.model_selector = ModelSelector(default_model=self.primary_model)
+        self.batch_size_optimizer = BatchSizeOptimizer()
+        logger.info("✅ Optimization modules initialized (Token, Model, Batch Size)")
 
         # Defer google-genai loading until needed
         self._genai_client = None
@@ -396,9 +416,16 @@ class GeminiJobAnalyzer:
         }
 
         # File-based usage tracking setup
-        self.usage_file = os.path.join(os.getcwd(), "storage",
-                                       "gemini_usage.json")
+        self.usage_file = os.path.join(os.getcwd(), "storage", "gemini_usage.json")
         os.makedirs(os.path.dirname(self.usage_file), exist_ok=True)
+
+        # Initialize prompt security manager
+        from modules.ai_job_description_analysis.prompt_security_manager import (
+            PromptSecurityManager,
+        )
+
+        self.security_mgr = PromptSecurityManager()
+        logger.info("✅ Prompt security manager initialized")
 
     def _ensure_genai_loaded(self):
         """
@@ -418,8 +445,8 @@ class GeminiJobAnalyzer:
         try:
             # Add utils directory to path for dependency manager
             utils_path = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                "utils")
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "utils"
+            )
             if utils_path not in sys.path:
                 sys.path.append(utils_path)
 
@@ -430,14 +457,12 @@ class GeminiJobAnalyzer:
             # Initialize the client with API key
             self._genai_client = genai.Client(api_key=self.api_key)
             self._genai_loaded = True
-            logging.info(
-                "google-genai loaded successfully for AI job analysis")
+            logging.info("google-genai loaded successfully for AI job analysis")
             return self._genai_client
 
         except ImportError as e:
             logging.error(f"Failed to load google-genai: {e}")
-            raise ImportError(
-                f"google-genai not available for AI analysis: {e}")
+            raise ImportError(f"google-genai not available for AI analysis: {e}")
         except Exception as e:
             logging.error(f"Failed to initialize Gemini client: {e}")
             raise Exception(f"Failed to initialize Gemini client: {e}")
@@ -451,8 +476,7 @@ class GeminiJobAnalyzer:
             db_reader = db_manager.reader
 
             # Get settings as dictionary using the new as_dict parameter
-            settings = db_reader.get_setting_by_key("gemini_usage_stats",
-                                                    as_dict=True)
+            settings = db_reader.get_setting_by_key("gemini_usage_stats", as_dict=True)
             if settings is not None:
                 setting_value = settings.get("setting_value")
                 if setting_value:
@@ -460,44 +484,39 @@ class GeminiJobAnalyzer:
 
             # Return default usage stats
             return {
-                "daily_requests":
-                0,
-                "monthly_requests":
-                0,
-                "daily_tokens":
-                0,
-                "monthly_tokens":
-                0,
-                "last_reset":
-                datetime.utcnow().isoformat(),
-                "last_daily_reset":
-                datetime.utcnow().date().isoformat(),
-                "last_monthly_reset":
-                datetime.utcnow().replace(day=1).date().isoformat(),
+                "daily_requests": 0,
+                "monthly_requests": 0,
+                "daily_tokens": 0,
+                "monthly_tokens": 0,
+                "last_reset": datetime.utcnow().isoformat(),
+                "last_daily_reset": datetime.utcnow().date().isoformat(),
+                "last_monthly_reset": datetime.utcnow()
+                .replace(day=1)
+                .date()
+                .isoformat(),
             }
         except Exception as e:
             logging.error(f"Failed to load usage stats: {e}")
             return {
-                "daily_requests":
-                0,
-                "monthly_requests":
-                0,
-                "daily_tokens":
-                0,
-                "monthly_tokens":
-                0,
-                "last_reset":
-                datetime.utcnow().isoformat(),
-                "last_daily_reset":
-                datetime.utcnow().date().isoformat(),
-                "last_monthly_reset":
-                datetime.utcnow().replace(day=1).date().isoformat(),
+                "daily_requests": 0,
+                "monthly_requests": 0,
+                "daily_tokens": 0,
+                "monthly_tokens": 0,
+                "last_reset": datetime.utcnow().isoformat(),
+                "last_daily_reset": datetime.utcnow().date().isoformat(),
+                "last_monthly_reset": datetime.utcnow()
+                .replace(day=1)
+                .date()
+                .isoformat(),
             }
 
     def _get_usage_summary(self) -> dict:
         """Get formatted usage summary"""
-        stats = self.current_usage if hasattr(
-            self, "current_usage") else self._load_usage_stats()
+        stats = (
+            self.current_usage
+            if hasattr(self, "current_usage")
+            else self._load_usage_stats()
+        )
 
         # Ensure stats is a dictionary
         if not isinstance(stats, dict):
@@ -509,23 +528,19 @@ class GeminiJobAnalyzer:
             "daily_tokens": stats.get("daily_tokens", 0),
             "monthly_tokens": stats.get("monthly_tokens", 0),
             "daily_request_limit": getattr(self, "daily_request_limit", 1500),
-            "monthly_request_limit": getattr(self, "monthly_request_limit",
-                                             45000),
+            "monthly_request_limit": getattr(self, "monthly_request_limit", 45000),
             "daily_token_limit": getattr(self, "daily_token_limit", 3000000),
-            "monthly_token_limit": getattr(self, "monthly_token_limit",
-                                           50000000),
-            "last_reset": stats.get("last_reset",
-                                    datetime.utcnow().isoformat()),
+            "monthly_token_limit": getattr(self, "monthly_token_limit", 50000000),
+            "last_reset": stats.get("last_reset", datetime.utcnow().isoformat()),
             "model_switches": getattr(self, "model_switches", 0),
-            "primary_model": getattr(self, "primary_model",
-                                     "gemini-2.0-flash-001"),
+            "primary_model": getattr(self, "primary_model", "gemini-2.0-flash-001"),
             "available_models": getattr(self, "available_models", {}),
         }
 
     def analyze_jobs_batch(self, jobs: List[Dict]) -> Dict:
         """
         Analyze multiple jobs in a single API call for cost efficiency
-        Uses Gemini 2.0 Flash with automatic fallback to Gemini 2.0 Flash Lite
+        Uses integrated optimizers for token allocation, model selection, and batch sizing
 
         Args:
             jobs: List of job dictionaries with id, title, description
@@ -568,20 +583,46 @@ class GeminiJobAnalyzer:
             }
 
         try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 1
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(valid_jobs),
+                tier='tier1'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 1: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(valid_jobs)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 1 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier1',
+                batch_size=len(valid_jobs),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
             # Ensure google-genai is loaded before making API requests
             genai_client = self._ensure_genai_loaded()
 
             # Prepare batch analysis prompt with security tokens
             prompt = self._create_batch_analysis_prompt(valid_jobs)
 
-            # Make API request with automatic model fallback
-            response = self._make_gemini_request(prompt)
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(prompt, max_output_tokens=token_allocation.max_output_tokens)
 
             # Parse and validate response
             results = self._parse_batch_response(response, valid_jobs)
 
             # Update usage tracking
-            self._update_usage_stats(response.get("usage", {}))
+            self._update_usage_stats(response.get("usageMetadata", {}))
 
             return {
                 "results": results,
@@ -589,10 +630,248 @@ class GeminiJobAnalyzer:
                 "success": True,
                 "jobs_analyzed": len(valid_jobs),
                 "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(valid_jobs)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
             }
 
         except Exception as e:
             logger.error(f"Batch analysis failed: {str(e)}")
+            return {
+                "results": [],
+                "usage_stats": self._get_usage_summary(),
+                "success": False,
+                "error": str(e),
+                "model_used": self.current_model,
+            }
+
+    def analyze_jobs_tier2(self, jobs_with_tier1: List[Dict]) -> Dict:
+        """
+        Run Tier 2 (Enhanced) analysis with Tier 1 context
+        Protected by hash-and-replace security system
+        Uses integrated optimizers for token allocation and model selection
+
+        Args:
+            jobs_with_tier1: List of dicts with:
+                - job_data: {id, title, description, company}
+                - tier1_results: Complete Tier 1 analysis
+
+        Returns:
+            Dictionary with Tier 2 analysis results
+        """
+        from modules.ai_job_description_analysis.prompts.tier2_enhanced_prompt import (
+            create_tier2_enhanced_prompt,
+        )
+
+        if not jobs_with_tier1:
+            return {"results": [], "success": False, "error": "No jobs provided"}
+
+        try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 2
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(jobs_with_tier1),
+                tier='tier2'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 2: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(jobs_with_tier1)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 2 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier2',
+                batch_size=len(jobs_with_tier1),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
+            # Generate Tier 2 prompt
+            prompt = create_tier2_enhanced_prompt(jobs_with_tier1)
+
+            # Extract security token for response validation
+            import re
+
+            token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", prompt)
+            if token_match:
+                self._current_security_token = token_match.group(1)
+
+            # SECURITY: Validate with hash-and-replace system
+            validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
+                prompt_name="tier2_enhanced_prompt",
+                current_prompt=prompt,
+                change_source="agent",
+                canonical_prompt_getter=lambda: create_tier2_enhanced_prompt(
+                    jobs_with_tier1
+                ),
+            )
+
+            if was_replaced:
+                logger.warning(
+                    "⚠️ Tier 2 prompt was replaced due to unauthorized modification"
+                )
+                # Re-extract token from replaced prompt
+                token_match = re.search(
+                    r"SECURITY TOKEN: ([a-zA-Z0-9]+)", validated_prompt
+                )
+                if token_match:
+                    self._current_security_token = token_match.group(1)
+
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
+
+            # Parse and validate
+            results = self._parse_batch_response(
+                response, [j["job_data"] for j in jobs_with_tier1]
+            )
+
+            # Update usage tracking
+            self._update_usage_stats(response.get("usageMetadata", {}))
+
+            return {
+                "results": results,
+                "usage_stats": self._get_usage_summary(),
+                "success": True,
+                "jobs_analyzed": len(jobs_with_tier1),
+                "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(jobs_with_tier1)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
+            }
+
+        except Exception as e:
+            logger.error(f"Tier 2 analysis failed: {str(e)}")
+            return {
+                "results": [],
+                "usage_stats": self._get_usage_summary(),
+                "success": False,
+                "error": str(e),
+                "model_used": self.current_model,
+            }
+
+    def analyze_jobs_tier3(self, jobs_with_context: List[Dict]) -> Dict:
+        """
+        Run Tier 3 (Strategic) analysis with Tier 1 + 2 context
+        Protected by hash-and-replace security system
+        Uses integrated optimizers for token allocation and model selection
+
+        Args:
+            jobs_with_context: List of dicts with:
+                - job_data: {id, title, description, company}
+                - tier1_results: Complete Tier 1 analysis
+                - tier2_results: Complete Tier 2 analysis
+
+        Returns:
+            Dictionary with Tier 3 analysis results
+        """
+        from modules.ai_job_description_analysis.prompts.tier3_strategic_prompt import (
+            create_tier3_strategic_prompt,
+        )
+
+        if not jobs_with_context:
+            return {"results": [], "success": False, "error": "No jobs provided"}
+
+        try:
+            # OPTIMIZATION: Calculate optimal token allocation for Tier 3
+            token_allocation = self.token_optimizer.calculate_optimal_tokens(
+                job_count=len(jobs_with_context),
+                tier='tier3'
+            )
+            logger.info(
+                f"📊 Token allocation for Tier 3: {token_allocation.max_output_tokens} tokens "
+                f"(efficiency: {(token_allocation.estimated_tokens_per_job * len(jobs_with_context)) / token_allocation.max_output_tokens * 100:.1f}%)"
+            )
+
+            # OPTIMIZATION: Select optimal model for Tier 3 analysis
+            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            daily_tokens_used = current_usage.get("daily_tokens", 0)
+
+            model_selection = self.model_selector.select_model(
+                tier='tier3',
+                batch_size=len(jobs_with_context),
+                daily_tokens_used=daily_tokens_used,
+                daily_token_limit=self.daily_token_limit
+            )
+
+            # Update current model based on selection
+            if model_selection.model_id != self.current_model:
+                self.current_model = model_selection.model_id
+                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+
+            # Generate Tier 3 prompt
+            prompt = create_tier3_strategic_prompt(jobs_with_context)
+
+            # Extract security token for response validation
+            import re
+
+            token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", prompt)
+            if token_match:
+                self._current_security_token = token_match.group(1)
+
+            # SECURITY: Validate with hash-and-replace system
+            validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
+                prompt_name="tier3_strategic_prompt",
+                current_prompt=prompt,
+                change_source="agent",
+                canonical_prompt_getter=lambda: create_tier3_strategic_prompt(
+                    jobs_with_context
+                ),
+            )
+
+            if was_replaced:
+                logger.warning(
+                    "⚠️ Tier 3 prompt was replaced due to unauthorized modification"
+                )
+                # Re-extract token from replaced prompt
+                token_match = re.search(
+                    r"SECURITY TOKEN: ([a-zA-Z0-9]+)", validated_prompt
+                )
+                if token_match:
+                    self._current_security_token = token_match.group(1)
+
+            # Make API request with optimized token limit
+            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
+
+            # Parse and validate
+            results = self._parse_batch_response(
+                response, [j["job_data"] for j in jobs_with_context]
+            )
+
+            # Update usage tracking
+            self._update_usage_stats(response.get("usageMetadata", {}))
+
+            return {
+                "results": results,
+                "usage_stats": self._get_usage_summary(),
+                "success": True,
+                "jobs_analyzed": len(jobs_with_context),
+                "model_used": self.current_model,
+                "optimization_metrics": {
+                    "max_output_tokens": token_allocation.max_output_tokens,
+                    "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(jobs_with_context)) / token_allocation.max_output_tokens * 100:.1f}%",
+                    "model_selection_reason": model_selection.selection_reason,
+                    "estimated_cost": model_selection.estimated_cost,
+                    "estimated_quality": model_selection.estimated_quality,
+                }
+            }
+
+        except Exception as e:
+            logger.error(f"Tier 3 analysis failed: {str(e)}")
             return {
                 "results": [],
                 "usage_stats": self._get_usage_summary(),
@@ -621,8 +900,8 @@ class GeminiJobAnalyzer:
     def _check_usage_limits(self, jobs: List[Dict]) -> bool:
         """Check if analysis would exceed daily limits"""
         estimated_tokens = sum(
-            len(job.get("description", "")) / 3
-            for job in jobs)  # ~3 chars per token
+            len(job.get("description", "")) / 3 for job in jobs
+        )  # ~3 chars per token
 
         # Ensure current_usage is a number, not a dict
         current_tokens = 0
@@ -641,8 +920,48 @@ class GeminiJobAnalyzer:
         return True
 
     def _create_batch_analysis_prompt(self, jobs: List[Dict]) -> str:
-        """Create comprehensive analysis prompt for batch processing"""
+        """
+        Create Tier 1 analysis prompt with hash-and-replace protection
+        Uses modular tier1_core_prompt with security validation
+        """
+        from modules.ai_job_description_analysis.prompts.tier1_core_prompt import (
+            create_tier1_core_prompt,
+        )
 
+        # Generate prompt using tier1 module
+        prompt = create_tier1_core_prompt(jobs)
+
+        # Extract security token from generated prompt for response validation
+        import re
+
+        token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", prompt)
+        if token_match:
+            self._current_security_token = token_match.group(1)
+
+        # SECURITY: Validate with hash-and-replace system
+        validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
+            prompt_name="tier1_core_prompt",
+            current_prompt=prompt,
+            change_source="agent",
+            canonical_prompt_getter=lambda: create_tier1_core_prompt(jobs),
+        )
+
+        if was_replaced:
+            logger.warning(
+                "⚠️ Tier 1 prompt was replaced due to unauthorized modification"
+            )
+            # Re-extract token from replaced prompt
+            token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", validated_prompt)
+            if token_match:
+                self._current_security_token = token_match.group(1)
+
+        return validated_prompt
+
+    def _create_batch_analysis_prompt_legacy(self, jobs: List[Dict]) -> str:
+        """
+        LEGACY: Old monolithic prompt (kept for reference/fallback)
+        Use _create_batch_analysis_prompt() instead
+        """
         jobs_text = ""
         for i, job in enumerate(jobs, 1):
             # Sanitize job description and title before processing
@@ -650,8 +969,7 @@ class GeminiJobAnalyzer:
             title = job.get("title", "")
 
             sanitized_description = sanitize_job_description(description)
-            sanitized_title = sanitize_job_description(
-                title)  # Also sanitize titles
+            sanitized_title = sanitize_job_description(title)  # Also sanitize titles
 
             jobs_text += f"""
 JOB {i}:
@@ -663,6 +981,8 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         # Generate security token for this batch
         security_token = generate_security_token()
+        # Store token for response validation
+        self._current_security_token = security_token
         job_count = len(jobs)
 
         # Build the prompt using string concatenation to avoid f-string nesting
@@ -838,8 +1158,17 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         return "".join(prompt_parts)
 
-    def _make_gemini_request(self, prompt: str) -> Dict:
-        """Make request to Gemini API with retry logic"""
+    def _make_gemini_request(self, prompt: str, max_output_tokens: int = 8192) -> Dict:
+        """
+        Make request to Gemini API with retry logic and optimized token allocation
+
+        Args:
+            prompt: The prompt to send to Gemini
+            max_output_tokens: Maximum output tokens (dynamically calculated by optimizer)
+
+        Returns:
+            Dictionary with API response and usage metadata
+        """
 
         # Ensure requests is loaded before making API calls
         if not _ensure_requests_loaded():
@@ -850,26 +1179,27 @@ DESCRIPTION: {sanitized_description[:2000]}...
         }
 
         data = {
-            "contents": [{
-                "parts": [{
-                    "text": prompt
-                }]
-            }],
+            "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
                 "temperature": 0.1,
                 "topK": 1,
                 "topP": 0.8,
-                "maxOutputTokens": 8192,
+                "maxOutputTokens": max_output_tokens,  # Now dynamically set
                 "responseMimeType": "application/json",
             },
         }
 
         for attempt in range(self.max_retries):
             try:
-                response = requests.post(f"{self.base_url}?key={self.api_key}",
-                                         headers=headers,
-                                         json=data,
-                                         timeout=30)
+                # Construct full API endpoint URL
+                api_endpoint = f"{self.base_url}/v1beta/models/{self.current_model}:generateContent?key={self.api_key}"
+
+                response = requests.post(
+                    api_endpoint,
+                    headers=headers,
+                    json=data,
+                    timeout=30,
+                )
 
                 if response.status_code == 200:
                     return response.json()
@@ -880,8 +1210,7 @@ DESCRIPTION: {sanitized_description[:2000]}...
                     continue
                 else:
                     response_text = getattr(response, "text", "Unknown error")
-                    logger.error(
-                        f"API error: {response.status_code} - {response_text}")
+                    logger.error(f"API error: {response.status_code} - {response_text}")
                     break
 
             except requests.exceptions.Timeout:
@@ -897,8 +1226,9 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         raise Exception("Failed to get response from Gemini API")
 
-    def _parse_batch_response(self, response: Dict,
-                              original_jobs: List[Dict]) -> List[Dict]:
+    def _parse_batch_response(
+        self, response: Dict, original_jobs: List[Dict]
+    ) -> List[Dict]:
         """Parse and validate Gemini response"""
 
         try:
@@ -919,17 +1249,48 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
             # Parse JSON response
             parsed_data = json.loads(text)
+
+            # SECURITY: Validate round-trip token (Layer 3 defense)
+            response_token = parsed_data.get("security_token", "")
+            expected_token = getattr(self, "_current_security_token", None)
+
+            if expected_token and response_token != expected_token:
+                logger.error(
+                    f"Security token mismatch! Expected: {expected_token[:8]}..., "
+                    f"Got: {response_token[:8] if response_token else 'MISSING'}..."
+                )
+                self._log_security_incident(
+                    incident_type="token_mismatch",
+                    expected_token=expected_token,
+                    received_token=response_token,
+                    full_response=text[:500]
+                )
+                return []
+
+            logger.info(f"✅ Security token validated: {response_token[:8]}...")
+
             analysis_results = parsed_data.get("analysis_results", [])
 
             # Validate and enrich results
             validated_results = []
             for result in analysis_results:
                 if self._validate_analysis_result(result):
+                    # SECURITY: Sanitize response before database storage (Layer 6 defense)
+                    sanitized_result, warnings = self._sanitize_response(result)
+
                     # Add metadata
-                    result["analysis_timestamp"] = datetime.now().isoformat()
-                    result["model_used"] = "gemini-1.5-flash-latest"
-                    result["analysis_version"] = "1.0"
-                    validated_results.append(result)
+                    sanitized_result["analysis_timestamp"] = datetime.now().isoformat()
+                    sanitized_result["model_used"] = "gemini-1.5-flash-latest"
+                    sanitized_result["analysis_version"] = "1.0"
+
+                    # Log security warnings if any
+                    if warnings:
+                        sanitized_result["security_warnings"] = len(warnings)
+                        self._log_sanitization_warnings(
+                            result.get("job_id"), warnings
+                        )
+
+                    validated_results.append(sanitized_result)
                 else:
                     logger.warning(
                         f"Invalid analysis result for job {result.get('job_id')}"
@@ -949,8 +1310,10 @@ DESCRIPTION: {sanitized_description[:2000]}...
         """Validate individual analysis result structure"""
 
         required_sections = [
-            "job_id", "skills_analysis", "authenticity_check",
-            "industry_classification"
+            "job_id",
+            "skills_analysis",
+            "authenticity_check",
+            "industry_classification",
         ]
 
         for section in required_sections:
@@ -976,22 +1339,154 @@ DESCRIPTION: {sanitized_description[:2000]}...
 
         return True
 
-    def _update_usage_stats(self, usage_info: Dict):
-        """Update token usage statistics"""
+    def _sanitize_response(self, result: Dict) -> tuple[Dict, List[str]]:
+        """
+        Sanitize LLM response before database storage (Layer 6 defense)
+        Final safeguard against malicious payloads if all other defenses fail
 
-        tokens_used = usage_info.get("totalTokenCount", 0)
-        self.current_usage += tokens_used
+        Args:
+            result: Raw analysis result from LLM
 
-        # Log usage for monitoring
-        logger.info(
-            f"API Usage: {tokens_used} tokens this request, {self.current_usage} total today"
+        Returns:
+            Tuple of (sanitized_result, warnings)
+        """
+        from modules.ai_job_description_analysis.response_sanitizer import (
+            sanitize_response,
         )
 
-        # Check if approaching limits
-        if self.current_usage > self.daily_token_limit * 0.8:
+        job_id = result.get("job_id", "unknown")
+        return sanitize_response(result, job_id)
+
+    def _log_sanitization_warnings(self, job_id: str, warnings: List[str]):
+        """
+        Log response sanitization warnings to security log
+
+        Args:
+            job_id: Job ID
+            warnings: List of sanitization warnings
+        """
+        import json
+        from pathlib import Path
+        from modules.ai_job_description_analysis.response_sanitizer import (
+            get_sanitizer,
+        )
+
+        # Ensure storage directory exists
+        storage_dir = Path("storage")
+        storage_dir.mkdir(exist_ok=True)
+
+        log_file = storage_dir / "response_sanitization.jsonl"
+
+        # Get detailed report
+        sanitizer = get_sanitizer()
+        report = sanitizer.get_sanitization_report(warnings)
+
+        sanitization_record = {
+            "timestamp": datetime.now().isoformat(),
+            "job_id": job_id,
+            "model": self.current_model,
+            "total_warnings": report["total_warnings"],
+            "sql_injection_attempts": report["sql_injection_attempts"],
+            "command_injection_attempts": report["command_injection_attempts"],
+            "xss_attempts": report["xss_attempts"],
+            "path_traversal_attempts": report["path_traversal_attempts"],
+            "suspicious_urls": report["suspicious_urls"],
+            "unauthorized_urls": report["unauthorized_urls"],
+            "sample_warnings": report["warnings"],
+        }
+
+        # Append to JSONL file
+        try:
+            with open(log_file, "a") as f:
+                f.write(json.dumps(sanitization_record) + "\n")
             logger.warning(
-                f"Approaching daily token limit: {self.current_usage}/{self.daily_token_limit}"
+                f"🧹 Response sanitization: {report['total_warnings']} issues found for job {job_id}"
             )
+        except Exception as e:
+            logger.error(f"Failed to log sanitization warnings: {e}")
+
+    def _log_security_incident(
+        self,
+        incident_type: str,
+        expected_token: Optional[str] = None,
+        received_token: Optional[str] = None,
+        full_response: Optional[str] = None
+    ):
+        """
+        Log security incidents to dedicated security log file
+        Used for round-trip token validation failures and other security events
+
+        Args:
+            incident_type: Type of security incident (e.g., 'token_mismatch')
+            expected_token: The security token that was sent in the prompt
+            received_token: The security token received in the response (or empty)
+            full_response: Truncated response for investigation
+        """
+        import json
+        from pathlib import Path
+
+        # Ensure storage directory exists
+        storage_dir = Path("storage")
+        storage_dir.mkdir(exist_ok=True)
+
+        log_file = storage_dir / "security_incidents.jsonl"
+
+        incident_record = {
+            "timestamp": datetime.now().isoformat(),
+            "incident_type": incident_type,
+            "expected_token": expected_token[:16] if expected_token else None,
+            "received_token": received_token[:16] if received_token else None,
+            "full_expected_token": expected_token,
+            "full_received_token": received_token,
+            "response_preview": full_response,
+            "model": self.current_model,
+        }
+
+        # Append to JSONL file
+        try:
+            with open(log_file, "a") as f:
+                f.write(json.dumps(incident_record) + "\n")
+            logger.warning(f"🚨 Security incident logged: {incident_type}")
+        except Exception as e:
+            logger.error(f"Failed to log security incident: {e}")
+
+    def _update_usage_stats(self, usage_data: Dict):
+        """Update usage statistics with new API call data"""
+        try:
+            # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
+            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
+            if tokens_used == 0:
+                # Fallback estimation if no usage data
+                tokens_used = 1000  # Conservative estimate
+
+            cost = (tokens_used / 1000) * self.cost_per_1k_tokens.get(
+                self.current_model, 0.00075
+            )
+
+            self.current_usage["daily_tokens"] = (
+                self.current_usage.get("daily_tokens", 0) + tokens_used
+            )
+            self.current_usage["monthly_tokens"] = (
+                self.current_usage.get("monthly_tokens", 0) + tokens_used
+            )
+            self.current_usage["daily_cost"] = (
+                self.current_usage.get("daily_cost", 0.0) + cost
+            )
+            self.current_usage["monthly_cost"] = (
+                self.current_usage.get("monthly_cost", 0.0) + cost
+            )
+            self.current_usage["requests_today"] = (
+                self.current_usage.get("requests_today", 0) + 1
+            )
+
+            self._save_usage_stats(self.current_usage)
+
+            # Check if we should switch to lite model
+            if self.current_usage["daily_tokens"] > (self.daily_token_limit * 0.75):
+                self._switch_to_lite_model()
+
+        except Exception as e:
+            logger.error(f"Failed to update usage stats: {str(e)}")
 
     def get_usage_stats(self) -> Dict:
         """Get current usage statistics"""
@@ -1003,22 +1498,42 @@ DESCRIPTION: {sanitized_description[:2000]}...
             current_usage_val = self.current_usage or 0
 
         return {
-            "current_usage":
-            current_usage_val,
-            "daily_limit":
-            self.daily_token_limit,
-            "usage_percentage": (current_usage_val / self.daily_token_limit) *
-            100 if self.daily_token_limit > 0 else 0,
-            "estimated_cost":
-            current_usage_val * 0.00075 / 1000,  # $0.00075 per 1K tokens
-            "remaining_capacity":
-            self.daily_token_limit - current_usage_val,
+            "current_usage": current_usage_val,
+            "daily_limit": self.daily_token_limit,
+            "usage_percentage": (
+                (current_usage_val / self.daily_token_limit) * 100
+                if self.daily_token_limit > 0
+                else 0
+            ),
+            "estimated_cost": current_usage_val
+            * 0.00075
+            / 1000,  # $0.00075 per 1K tokens
+            "remaining_capacity": self.daily_token_limit - current_usage_val,
         }
 
     def reset_daily_usage(self):
         """Reset daily usage counter (call this daily)"""
         self.current_usage = 0
         logger.info("Daily usage counter reset")
+
+    def _save_usage_stats(self, usage_data: Dict):
+        """Save usage statistics to file"""
+        try:
+            usage_file = Path("storage/gemini_usage.json")
+            usage_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(usage_file, "w") as f:
+                json.dump(usage_data, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save usage stats: {str(e)}")
+
+    def _switch_to_lite_model(self):
+        """Switch to Gemini 2.0 Flash Lite model to conserve tokens"""
+        if self.current_model == self.primary_model:
+            self.current_model = self.fallback_model
+            self.model_switches += 1
+            logger.info(
+                f"Switched to lite model ({self.fallback_model}) to conserve tokens"
+            )
 
 
 class JobAnalysisManager:
@@ -1041,18 +1556,9 @@ class JobAnalysisManager:
         self.primary_model = "gemini-2.0-flash-001"
         self.fallback_model = "gemini-2.5-flash"
         self.available_models = {
-            "gemini-2.0-flash-001": {
-                "cost_per_1k_tokens": 0.0,
-                "tier": "free"
-            },
-            "gemini-2.5-flash": {
-                "cost_per_1k_tokens": 0.0,
-                "tier": "free"
-            },
-            "gemini-2.5-pro": {
-                "cost_per_1k_tokens": 0.0,
-                "tier": "free"
-            },
+            "gemini-2.0-flash-001": {"cost_per_1k_tokens": 0.0, "tier": "free"},
+            "gemini-2.5-flash": {"cost_per_1k_tokens": 0.0, "tier": "free"},
+            "gemini-2.5-pro": {"cost_per_1k_tokens": 0.0, "tier": "free"},
         }
         self.cost_per_1k_tokens = 0.0  # Free tier
         self.api_key = None  # Will be set from environment when needed
@@ -1063,8 +1569,7 @@ class JobAnalysisManager:
             db_reader = self.db_manager.reader
 
             # Get settings as dictionary using the new as_dict parameter
-            settings = db_reader.get_setting_by_key("gemini_usage_stats",
-                                                    as_dict=True)
+            settings = db_reader.get_setting_by_key("gemini_usage_stats", as_dict=True)
             if settings is not None:
                 return settings
             else:
@@ -1104,17 +1609,14 @@ class JobAnalysisManager:
             unanalyzed_jobs = self._get_unanalyzed_jobs(batch_size)
 
             if not unanalyzed_jobs:
-                return {
-                    "status": "no_jobs",
-                    "message": "No jobs pending analysis"
-                }
+                return {"status": "no_jobs", "message": "No jobs pending analysis"}
 
             logger.info(f"Starting analysis of {len(unanalyzed_jobs)} jobs")
 
             # Process in batches
             results = []
             for i in range(0, len(unanalyzed_jobs), batch_size):
-                batch = unanalyzed_jobs[i:i + batch_size]
+                batch = unanalyzed_jobs[i : i + batch_size]
                 batch_results = self.analyzer.analyze_jobs_batch(batch)
                 results.extend(batch_results)
 
@@ -1151,7 +1653,7 @@ class JobAnalysisManager:
         """
 
         try:
-            results = self.db_manager.execute_query(query, (limit, ))
+            results = self.db_manager.execute_query(query, (limit,))
             return [dict(row) for row in results] if results else []
         except Exception as e:
             logger.error(f"Failed to get unanalyzed jobs: {str(e)}")
@@ -1161,7 +1663,9 @@ class JobAnalysisManager:
         """Save analysis results to normalized database tables"""
 
         # Import the normalized writer
-        from modules.ai_job_description_analysis.normalized_db_writer import NormalizedAnalysisWriter
+        from modules.ai_job_description_analysis.normalized_db_writer import (
+            NormalizedAnalysisWriter,
+        )
 
         # Create writer instance and save results
         writer = NormalizedAnalysisWriter(self.db_manager)
@@ -1171,8 +1675,7 @@ class JobAnalysisManager:
         logger.info(f"Saved AI analysis results: {save_stats}")
 
         # Return total successful saves (sum of all tables except errors)
-        total_saved = sum(count for key, count in save_stats.items()
-                          if key != "errors")
+        total_saved = sum(count for key, count in save_stats.items() if key != "errors")
         return total_saved
 
     def _load_usage_stats_legacy(self) -> Dict:
@@ -1184,8 +1687,9 @@ class JobAnalysisManager:
 
             # Get today's usage using proper dictionary access
             today = datetime.now().date()
-            result = db.reader.get_setting_by_key("gemini_usage_" + str(today),
-                                                  as_dict=True)
+            result = db.reader.get_setting_by_key(
+                "gemini_usage_" + str(today), as_dict=True
+            )
 
             if result:
                 setting_value = result.get("setting_value")
@@ -1256,8 +1760,7 @@ class JobAnalysisManager:
             "model_switches": self.model_switches,
             "usage_percentage": usage_percentage,
             # Model information
-            "current_model_info":
-            self.available_models.get(self.current_model, {}),
+            "current_model_info": self.available_models.get(self.current_model, {}),
             "tier": "free",
             "billing_type": "request-based",
         }
@@ -1266,13 +1769,15 @@ class JobAnalysisManager:
         """Check if we're within usage limits"""
         estimated_tokens = len(jobs) * 1000  # Rough estimate
 
-        if (self.current_usage.get("daily_tokens", 0) +
-                estimated_tokens) > self.daily_token_limit:
+        if (
+            self.current_usage.get("daily_tokens", 0) + estimated_tokens
+        ) > self.daily_token_limit:
             logger.warning("Daily token limit would be exceeded")
             return False
 
-        if (self.current_usage.get("monthly_tokens", 0) +
-                estimated_tokens) > self.monthly_token_limit:
+        if (
+            self.current_usage.get("monthly_tokens", 0) + estimated_tokens
+        ) > self.monthly_token_limit:
             logger.warning("Monthly token limit would be exceeded")
             return False
 
@@ -1281,30 +1786,36 @@ class JobAnalysisManager:
     def _update_usage_stats(self, usage_data: Dict):
         """Update usage statistics with new API call data"""
         try:
-            tokens_used = usage_data.get("totalTokens", 0)
+            # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
+            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
             if tokens_used == 0:
                 # Fallback estimation if no usage data
                 tokens_used = 1000  # Conservative estimate
 
             cost = (tokens_used / 1000) * self.cost_per_1k_tokens.get(
-                self.current_model, 0.00075)
+                self.current_model, 0.00075
+            )
 
-            self.current_usage["daily_tokens"] = self.current_usage.get(
-                "daily_tokens", 0) + tokens_used
-            self.current_usage["monthly_tokens"] = self.current_usage.get(
-                "monthly_tokens", 0) + tokens_used
-            self.current_usage["daily_cost"] = self.current_usage.get(
-                "daily_cost", 0.0) + cost
-            self.current_usage["monthly_cost"] = self.current_usage.get(
-                "monthly_cost", 0.0) + cost
-            self.current_usage["requests_today"] = self.current_usage.get(
-                "requests_today", 0) + 1
+            self.current_usage["daily_tokens"] = (
+                self.current_usage.get("daily_tokens", 0) + tokens_used
+            )
+            self.current_usage["monthly_tokens"] = (
+                self.current_usage.get("monthly_tokens", 0) + tokens_used
+            )
+            self.current_usage["daily_cost"] = (
+                self.current_usage.get("daily_cost", 0.0) + cost
+            )
+            self.current_usage["monthly_cost"] = (
+                self.current_usage.get("monthly_cost", 0.0) + cost
+            )
+            self.current_usage["requests_today"] = (
+                self.current_usage.get("requests_today", 0) + 1
+            )
 
             self._save_usage_stats(self.current_usage)
 
             # Check if we should switch to lite model
-            if self.current_usage["daily_tokens"] > (self.daily_token_limit *
-                                                     0.75):
+            if self.current_usage["daily_tokens"] > (self.daily_token_limit * 0.75):
                 self._switch_to_lite_model()
 
         except Exception as e:
@@ -1334,27 +1845,28 @@ class JobAnalysisManager:
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.1,
-                    max_output_tokens=8192),
+                    max_output_tokens=8192,
+                ),
             )
 
             # Extract response text and usage data
             response_text = response.text if response.text else ""
             usage_data = {
-                "totalTokens":
-                getattr(response, "usage_metadata",
-                        {}).get("total_token_count", 0),
-                "promptTokens":
-                getattr(response, "usage_metadata",
-                        {}).get("prompt_token_count", 0),
-                "responseTokens":
-                getattr(response, "usage_metadata",
-                        {}).get("candidates_token_count", 0),
+                "totalTokens": getattr(response, "usage_metadata", {}).get(
+                    "total_token_count", 0
+                ),
+                "promptTokens": getattr(response, "usage_metadata", {}).get(
+                    "prompt_token_count", 0
+                ),
+                "responseTokens": getattr(response, "usage_metadata", {}).get(
+                    "candidates_token_count", 0
+                ),
             }
 
             return {
                 "response": response_text,
                 "usage": usage_data,
-                "model": self.current_model
+                "model": self.current_model,
             }
 
         except Exception as e:

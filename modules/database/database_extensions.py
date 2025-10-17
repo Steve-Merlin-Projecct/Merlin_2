@@ -245,7 +245,19 @@ class ScraperDatabaseExtensions:
 # Add methods to DatabaseReader for backward compatibility
 def extend_database_reader():
     """
-    Extend the DatabaseReader class with scraper-specific methods
+    Extend the DatabaseReader class with scraper-specific methods.
+
+    IMPORTANT: This function should NOT be called at module import time.
+    It must be called within the Flask application context after app initialization.
+
+    This prevents database connections from being established during import,
+    which would cause app startup failures.
+
+    Usage:
+        # In app_modular.py, after app creation:
+        with app.app_context():
+            from modules.database.database_extensions import extend_database_reader
+            extend_database_reader()
     """
     from modules.database.database_reader import DatabaseReader
 
@@ -259,6 +271,9 @@ def extend_database_reader():
     DatabaseReader.get_recent_scrape_activity = lambda self, days=7: extensions.get_recent_scrape_activity(days)
     DatabaseReader.get_table_count = lambda self, table_name: extensions.get_table_count(table_name)
 
+    logger.info("DatabaseReader extensions registered successfully")
 
-# Auto-extend on import
-extend_database_reader()
+
+# NOTE: Module-level call REMOVED for lazy initialization!
+# The extend_database_reader() function must now be called explicitly
+# from app_modular.py within the Flask application context.

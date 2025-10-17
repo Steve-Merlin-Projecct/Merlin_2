@@ -1,5 +1,5 @@
 # Automated Job Application System
-Version 4.3.0
+Version 4.3.2
 Python 3.11 | Flask | PostgreSQL | Docker
 
 ## Project Overview
@@ -13,7 +13,16 @@ AI-driven job application automation system that scrapes job postings, analyzes 
 - API Documentation: `docs/api/`
 <!-- critical: do not change anything below this line -->
 ## Communication & Implementation Guide
+  ## CRITICAL: Question Detection Protocol
 
+  Before ANY tool use, I must ask myself:
+  1. Does the user's message contain: "What/How/Why/Which/Should/Can you explain"?
+  2. Is the user asking for options, recommendations, or evaluation?
+  3. Is the user asking about trade-offs or best practices?
+
+  If YES to any: STOP. Provide analysis only. End with explicit ask for permission to implement.
+
+  If NO: Proceed with implementation.
 ### Core Principles
 
 Before implementing changes, explain what you're going to do and why.
@@ -375,16 +384,3 @@ The application employs a modular Flask microservice architecture with a strong 
 - **Google Gemini AI:** AI model for job analysis and content generation.
 - **PostgreSQL:** Primary database for job tracking and application history.
 
-
-# Changelog
-input changes in docs/changelogs/master-changelog.md
-Use this formating:
-```
-Historical Changelog:
-- June 30, 2025. Initial setup
-- July 01, 2025. Fixed empty attachment issue in email integration
-  * Updated download endpoint to use direct Response mechanism instead of send_file with BytesIO
-  * Added explicit Content-Length header to ensure proper file transfer
-  * Reinstated API authentication with WEBHOOK_API_KEY
-  * Optimized cloud-first storage approach with no local file retention
-- July 01, 2025. **MILESTONE**: Service fully operational for production use
