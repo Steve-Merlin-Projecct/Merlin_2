@@ -1371,68 +1371,30 @@ generate_and_run_vscode_tasks() {
         return 0
     fi
 
-    # Detect VS Code environment
-    if [ -z "$VSCODE_IPC_HOOK_CLI" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
-        print_info "VS Code not detected - terminals not auto-created"
-        print_info "Run terminals manually: cd <worktree-path> && bash .claude-init.sh"
-        return 0
-    fi
+    # Count worktrees
+    local worktree_count=$(wc -l < "$pending_file")
 
-    mkdir -p "$WORKSPACE_ROOT/.vscode"
-    local tasks_file="$WORKSPACE_ROOT/.vscode/worktree-tasks.json"
+    print_info "Terminal initialization instructions:"
+    echo ""
+    echo "To launch Claude in each worktree, you can either:"
+    echo ""
+    echo "Option 1 - Manual launch (recommended for control):"
+    echo "  • Open terminal for each worktree"
+    echo "  • Run: cd <worktree-path> && bash .claude-init.sh"
+    echo ""
+    echo "Option 2 - Automatic launch:"
 
-    # Generate tasks.json
-    echo '{' > "$tasks_file"
-    echo '  "version": "2.0.0",' >> "$tasks_file"
-    echo '  "tasks": [' >> "$tasks_file"
-
-    local first=true
     local terminal_num=1
     while IFS= read -r worktree_path; do
         local wt_name=$(basename "$worktree_path")
-
-        [ "$first" = false ] && echo "," >> "$tasks_file"
-        first=false
-
-        cat >> "$tasks_file" << TASKEOF
-    {
-      "label": "🌳 $terminal_num: $wt_name",
-      "type": "shell",
-      "command": "bash $worktree_path/.claude-init.sh",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false
-      }
-    }
-TASKEOF
+        echo "  • Worktree $terminal_num: $wt_name"
+        echo "    cd $worktree_path && bash .claude-init.sh"
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
 
-    echo '  ]' >> "$tasks_file"
-    echo '}' >> "$tasks_file"
-
-    # Auto-execute all tasks with staggered launch
-    print_info "Launching $((terminal_num - 1)) terminals with Claude..."
-    terminal_num=1
-    while IFS= read -r worktree_path; do
-        local wt_name=$(basename "$worktree_path")
-        local task_label="🌳 $terminal_num: $wt_name"
-
-        if code --command "workbench.action.tasks.runTask" "$task_label" 2>/dev/null; then
-            print_success "  Terminal $terminal_num: $wt_name"
-        else
-            print_warning "  Failed: $wt_name (run manually)"
-        fi
-
-        # Staggered launch - 2s delay with random jitter (0-500ms)
-        # This prevents concurrent git operations during terminal initialization
-        local jitter=$(( RANDOM % 500 ))
-        sleep 2.$(printf "%03d" $jitter)
-        terminal_num=$((terminal_num + 1))
-    done < "$pending_file"
+    echo ""
+    print_warning "Note: Automated terminal launch disabled to prevent unwanted editor tabs"
+    print_info "The .claude-init.sh script in each worktree will launch Claude with task context"
 
     rm -f "$pending_file"
 }
@@ -1833,25 +1795,29 @@ EOF
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
 
-    # Create integrated terminals with Claude auto-launch
+    # Provide terminal launch instructions
     if [ $success_count -gt 0 ]; then
         echo ""
-        print_header "Auto-Launching Terminals with Claude"
+        print_header "Terminal Launch Instructions"
 
         generate_and_run_vscode_tasks
 
-        print_success "All worktrees ready! Claude instances launched with task context."
         echo ""
-        print_info "Each terminal has:"
-        echo "  • Claude Code running with task context loaded"
+        print_success "All worktrees ready!"
+        echo ""
+        print_info "Each worktree includes:"
+        echo "  • .claude-init.sh - Script to launch Claude with task context"
+        echo "  • .claude-task-context.md - Full task description"
         echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo "  • Full task description in .claude-task-context.md"
+        echo "  • .worktree-scope.json - Automatic file boundary detection"
         echo ""
         print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
+        echo "  1. Open terminal for each worktree you want to work on"
+        echo "  2. Navigate: cd <worktree-path>"
+        echo "  3. Launch Claude: bash .claude-init.sh"
+        echo "  4. Answer Claude's clarifying questions"
+        echo "  5. When done: /tree close (from within worktree)"
+        echo "  6. Merge all: /tree closedone (from main workspace)"
 
         # Run scope conflict detection
         echo ""
