@@ -26,6 +26,12 @@ if [[ -f "$HOOKS_DIR/modules/workflow_reminders.sh" ]]; then
     WORKFLOW=$(echo "$HOOK_INPUT" | "$HOOKS_DIR/modules/workflow_reminders.sh" 2>/dev/null || echo "")
 fi
 
+# Call estimation guidance module
+ESTIMATION=""
+if [[ -f "$HOOKS_DIR/modules/estimation_guidance.sh" ]]; then
+    ESTIMATION=$(echo "$HOOK_INPUT" | "$HOOKS_DIR/modules/estimation_guidance.sh" 2>/dev/null || echo "")
+fi
+
 # Combine messages
 COMBINED=""
 if [[ -n "$GUIDANCE" ]]; then
@@ -39,6 +45,16 @@ if [[ -n "$WORKFLOW" ]]; then
 $WORKFLOW"
     else
         COMBINED="$WORKFLOW"
+    fi
+fi
+
+if [[ -n "$ESTIMATION" ]]; then
+    if [[ -n "$COMBINED" ]]; then
+        COMBINED="$COMBINED
+
+$ESTIMATION"
+    else
+        COMBINED="$ESTIMATION"
     fi
 fi
 

@@ -108,7 +108,8 @@
     "DATABASE_PORT": "5432",
     "DATABASE_NAME": "local_Merlin_3",
     "DATABASE_USER": "postgres",
-    "DATABASE_PASSWORD": "goldmember"
+    "DATABASE_PASSWORD": "goldmember",
+    "TZ": "America/Denver"
   },
 
   // Run arguments for additional security

@@ -112,16 +112,78 @@ echo '{"userPrompt":"Please commit these changes"}' | .claude/hooks/user-prompt-
 
 ## Current Hooks
 
-- `user-prompt-submit.sh` - Main orchestrator hook
-- `modules/communication_guidance.sh` - Question detection
-- `modules/implementation_guidance.sh` - Workflow reminders
-- `post_python_edit.py` - Syntax validation after Python edits
+### Active Hooks
+- `user-prompt-submit-unified.sh` - Main behavioral guidance orchestrator (UserPromptSubmit event)
+- `session-start.sh` - Worktree context injection (SessionStart event)
+- `post_python_edit.py` - Syntax validation after Python edits (PostToolUse event)
+
+### Hook Modules
+- `modules/behavioral_guidance.sh` - Unified behavioral rules (analysis vs implementation)
+- `modules/communication_guidance.sh` - Question detection patterns
+- `modules/implementation_guidance.sh` - Implementation workflow reminders
+- `modules/workflow_reminders.sh` - Optional git/database workflow nudges
+- `modules/estimation_guidance.sh` - Token-based estimation enforcement (NEW)
+
+## Worktree Context Injection
+
+The `session-start.sh` hook automatically detects when Claude Code starts inside a git worktree and injects the task context.
+
+**How it works:**
+1. Detects if CWD is inside `/workspace/.trees/*/`
+2. Reads `.claude-task-context.md` (created by `/tree build`)
+3. Reads `PURPOSE.md` for additional context
+4. Injects full context as a system message on session start
+5. Provides worktree-specific commands (/tree close, /tree status, etc.)
+
+**Benefits:**
+- Agent immediately knows the focused task
+- No manual context loading needed
+- Enforces worktree isolation and focus
+- Only activates in worktrees (silent in main workspace)
+
+**Testing:**
+```bash
+# Inside worktree - shows context
+cd /workspace/.trees/my-feature
+.claude/hooks/session-start.sh
+
+# Outside worktree - returns {}
+cd /workspace
+.claude/hooks/session-start.sh
+```
+
+## Token-Based Estimation
+
+The `estimation_guidance.sh` module enforces token-based work estimates instead of time-based estimates.
+
+**Triggers on:**
+- "how long", "how much time", "estimate", "duration"
+- "timeline", "timeframe", "effort", "scope"
+- Any estimation-related keywords
+
+**Enforces:**
+- ✓ Estimate ONLY in Claude Sonnet 4.5 tokens
+- ✓ Provide ranges (e.g., "40k-60k tokens")
+- ✓ Wide estimates acceptable
+- ✗ NO time-based estimates (hours, days, weeks)
+
+**Example:**
+```bash
+User: "How long will this feature take?"
+Hook: "📊 ESTIMATION GUIDANCE ACTIVATED
+       Estimate ONLY in Claude Sonnet 4.5 tokens..."
+Agent: "This feature will require approximately 50,000-75,000 tokens to complete."
+```
+
+**Testing:**
+```bash
+echo '{"userPrompt":"How long will this take?"}' | ./.claude/hooks/modules/estimation_guidance.sh
+```
 
 ## Future Extensions
 
 Potential additional modules:
 - File protection (block changes to specific files/lines)
 - Security pattern detection
-- Documentation requirement checks
 - Test coverage reminders
 - Performance pattern validation

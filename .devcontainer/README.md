@@ -191,9 +191,15 @@ Set in `.devcontainer/devcontainer.json`:
   "DATABASE_PORT": "5432",
   "DATABASE_NAME": "local_Merlin_3",
   "DATABASE_USER": "postgres",
-  "DATABASE_PASSWORD": "goldmember"
+  "DATABASE_PASSWORD": "goldmember",
+  "TZ": "America/Denver"
 }
 ```
+
+**Timezone Configuration:**
+- `TZ="America/Denver"` sets the container timezone to Mountain Time (MDT/MST)
+- This affects all date/time displays including the `/usage` command in Claude Code
+- Claude Code will now show reset times in your local timezone instead of UTC
 
 To add secrets (API keys, etc.), create `.env` file in project root and add to `.gitignore`.
 
