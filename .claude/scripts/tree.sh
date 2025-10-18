@@ -5,6 +5,10 @@
 
 set -e  # Exit on error
 
+# Source scope detection utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/scope-detector.sh"
+
 # Colors and formatting
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -1330,6 +1334,35 @@ copy_slash_commands_to_worktree() {
     fi
 }
 
+# Install scope enforcement pre-commit hook in worktree
+install_scope_hook() {
+    local worktree_path=$1
+
+    # Create git hooks directory in worktree
+    local hooks_dir="$worktree_path/.git/hooks"
+    mkdir -p "$hooks_dir"
+
+    # Create pre-commit hook that calls our scope enforcement script
+    cat > "$hooks_dir/pre-commit" << 'EOF'
+#!/bin/bash
+
+# Pre-commit hook: Scope enforcement
+# Validates that committed files match worktree scope
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+HOOK_SCRIPT="$SCRIPT_DIR/.claude/scripts/scope-enforcement-hook.sh"
+
+if [ -f "$HOOK_SCRIPT" ]; then
+    bash "$HOOK_SCRIPT"
+else
+    # Hook script not found, skip validation
+    exit 0
+fi
+EOF
+
+    chmod +x "$hooks_dir/pre-commit"
+}
+
 # Generate VS Code tasks and auto-execute them
 generate_and_run_vscode_tasks() {
     local pending_file="$TREES_DIR/.pending-terminals.txt"
@@ -1619,6 +1652,14 @@ tree_build() {
             continue
         fi
 
+        # Generate scope manifest for this worktree (before PURPOSE.md so we can reference it)
+        local scope_manifest=$(detect_scope_from_description "$desc" "$name")
+        local scope_json_path="$worktree_path/.worktree-scope.json"
+        echo "$scope_manifest" > "$scope_json_path"
+
+        # Extract scope patterns for PURPOSE.md
+        local scope_patterns=$(echo "$scope_manifest" | python3 -c "import sys, json; data=json.load(sys.stdin); print('\n'.join(['- ' + p for p in data['scope']['include'][:5]]))")
+
         # Create PURPOSE.md in worktree
         cat > "$worktree_path/PURPOSE.md" << EOF
 # Purpose: ${name//-/ }
@@ -1634,11 +1675,18 @@ $desc
 
 ## Scope
 
-[Define what's in scope for this worktree]
+**Automatically detected scope patterns:**
+
+$scope_patterns
+
+**Full scope details:** See \`.worktree-scope.json\`
+
+**Enforcement:** Soft (warnings only)
 
 ## Out of Scope
 
-[Define what's explicitly NOT in scope]
+Files outside the detected patterns will generate warnings but are not blocked.
+For hard enforcement, see \`.worktree-scope.json\` and modify \`enforcement\` setting.
 
 ## Success Criteria
 
@@ -1659,6 +1707,9 @@ EOF
         # Copy slash commands and scripts to worktree
         copy_slash_commands_to_worktree "$worktree_path"
 
+        # Install scope enforcement pre-commit hook
+        install_scope_hook "$worktree_path"
+
         # Generate .claude-init.sh script with Claude auto-launch
         generate_init_script "$name" "$desc" "$worktree_path"
 
@@ -1671,6 +1722,95 @@ EOF
         # Store worktree info for terminal creation after all worktrees are built
         echo "$worktree_path" >> "$TREES_DIR/.pending-terminals.txt"
     done
+
+    # Create librarian worktree with inverse scope
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "📚 Creating Librarian Worktree"
+
+        local librarian_name="librarian"
+        local librarian_branch="task/00-librarian"
+        local librarian_path="$TREES_DIR/$librarian_name"
+        local librarian_start=$(date +%s)
+
+        # Create librarian worktree
+        wait_for_git_lock || true
+        if safe_git worktree add -b "$librarian_branch" "$librarian_path" "$dev_branch" &>/dev/null; then
+            # Collect all feature scope files
+            local scope_files=()
+            for worktree_dir in "$TREES_DIR"/*; do
+                if [ -d "$worktree_dir" ] && [ -f "$worktree_dir/.worktree-scope.json" ]; then
+                    scope_files+=("$worktree_dir/.worktree-scope.json")
+                fi
+            done
+
+            # Generate librarian scope (inverse of all feature scopes)
+            local librarian_scope=$(calculate_librarian_scope "${scope_files[@]}")
+            echo "$librarian_scope" > "$librarian_path/.worktree-scope.json"
+
+            # Create PURPOSE.md for librarian
+            cat > "$librarian_path/PURPOSE.md" << EOF
+# Purpose: Librarian - Documentation & Tooling
+
+**Worktree:** $librarian_name
+**Branch:** $librarian_branch
+**Base Branch:** $dev_branch
+**Created:** $(date +"%Y-%m-%d %H:%M:%S")
+**Type:** Meta-worktree (Documentation, tooling, project organization)
+
+## Objective
+
+Manage documentation, tooling, and project organization files that are not specific to any feature worktree. This worktree has "inverse scope" - it works on everything that other worktrees don't touch.
+
+## Scope
+
+**Automatically calculated inverse scope:**
+
+This worktree can work on files that are NOT claimed by any feature worktree, including:
+- Documentation files (docs/**, *.md)
+- Tooling and scripts (.claude/**, tools/**, scripts/**)
+- Configuration files (*.toml, *.yaml, *.json)
+- GitHub workflows (.github/**)
+- Task templates (tasks/**)
+
+**Full scope details:** See \`.worktree-scope.json\`
+
+**Enforcement:** Soft (warnings only)
+
+## Out of Scope
+
+All files that are claimed by feature worktrees are out of scope for librarian.
+
+## Success Criteria
+
+- [ ] Documentation updated and consistent
+- [ ] Tooling improvements implemented
+- [ ] Project organization enhanced
+- [ ] Configuration files maintained
+- [ ] Ready to merge
+
+## Notes
+
+The librarian worktree is special - it automatically excludes all files that feature worktrees are working on, preventing conflicts and ensuring clear boundaries.
+EOF
+
+            # Copy commands and install hook
+            copy_slash_commands_to_worktree "$librarian_path"
+            install_scope_hook "$librarian_path"
+            generate_task_context "$librarian_name" "Documentation, tooling, and project organization" "$librarian_branch" "$dev_branch" "$librarian_path"
+            generate_init_script "$librarian_name" "Manage documentation and tooling" "$librarian_path"
+
+            local librarian_end=$(date +%s)
+            local librarian_duration=$((librarian_end - librarian_start))
+            print_success "  ✓ Created in ${librarian_duration}s"
+
+            # Add to pending terminals
+            echo "$librarian_path" >> "$TREES_DIR/.pending-terminals.txt"
+            success_count=$((success_count + 1))
+        else
+            print_warning "  ⚠ Failed to create librarian worktree (non-critical)"
+        fi
+    fi
 
     local build_end=$(date +%s)
     local total_duration=$((build_end - build_start))
@@ -1712,12 +1852,58 @@ EOF
         echo "  2. Start working on your features"
         echo "  3. When done: /tree close (from within worktree)"
         echo "  4. Merge all: /tree closedone (from main workspace)"
+
+        # Run scope conflict detection
+        echo ""
+        tree_scope_conflicts
     fi
 }
 
 #==============================================================================
 # /tree conflict - Analyze conflicts and suggest merges
 #==============================================================================
+
+tree_scope_conflicts() {
+    # Detect scope conflicts across all active worktrees
+    print_header "🔍 Scope Conflict Detection"
+
+    local scope_files=()
+    local worktree_count=0
+
+    # Find all worktrees with scope files
+    for worktree_dir in "$TREES_DIR"/*; do
+        if [ -d "$worktree_dir" ] && [ ! "$worktree_dir" = *"/.completed"* ] && [ ! "$worktree_dir" = *"/.incomplete"* ] && [ ! "$worktree_dir" = *"/.archived"* ]; then
+            local scope_file="$worktree_dir/.worktree-scope.json"
+            if [ -f "$scope_file" ]; then
+                scope_files+=("$scope_file")
+                worktree_count=$((worktree_count + 1))
+            fi
+        fi
+    done
+
+    if [ $worktree_count -eq 0 ]; then
+        print_info "No active worktrees with scope files found"
+        return 0
+    fi
+
+    echo "Analyzing scope conflicts across $worktree_count worktree(s)..."
+    echo ""
+
+    # Call scope detection utility
+    if detect_scope_conflicts "${scope_files[@]}"; then
+        print_success "✓ No scope conflicts detected"
+        echo ""
+        print_info "All worktrees have non-overlapping scopes"
+    else
+        print_warning "⚠ Scope conflicts detected - see above for details"
+        echo ""
+        print_info "Resolution options:"
+        echo "  1. Adjust scope patterns in .worktree-scope.json files"
+        echo "  2. Merge related worktrees"
+        echo "  3. Use enforcement: 'hard' to block conflicting commits"
+        return 1
+    fi
+}
 
 tree_conflict() {
     if [ ! -f "$STAGED_FEATURES_FILE" ]; then
@@ -2242,6 +2428,7 @@ Available commands:
   list                   - Show staged features ✅
   clear                  - Clear all staged features ✅
   conflict               - Analyze conflicts and suggest merges ✅
+  scope-conflicts        - Detect scope conflicts across worktrees ✅
   build                  - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
   close [incomplete]     - Complete work and generate synopsis ✅
@@ -2310,6 +2497,9 @@ case "$COMMAND" in
         ;;
     conflict)
         tree_conflict "$@"
+        ;;
+    scope-conflicts)
+        tree_scope_conflicts "$@"
         ;;
     build)
         tree_build "$@"
