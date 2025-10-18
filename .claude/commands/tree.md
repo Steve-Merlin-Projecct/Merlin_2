@@ -68,8 +68,7 @@ The `--full-cycle` flag automates the complete development lifecycle:
 7. Archives synopses and generates report
 
 **Options:**
-- `--bump [type]` - Version bump type: patch (default), minor, medium,or major
-- `--dry-run` - Preview actions without executing
+- `--bump [type]` - Version bump type: patch (default), minor, or major
 - `--yes` - Skip confirmation prompts
 
 **Example workflow:**

@@ -285,7 +285,6 @@ validate_all_worktrees_closed() {
 #==============================================================================
 
 closedone_main() {
-    local dry_run=false
     local skip_confirmation=false
     local force_merge=false
 
@@ -300,10 +299,6 @@ closedone_main() {
     # Parse options for regular closedone
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --dry-run)
-                dry_run=true
-                shift
-                ;;
             --yes|-y)
                 skip_confirmation=true
                 shift
@@ -314,7 +309,7 @@ closedone_main() {
                 ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone [--dry-run] [--yes] [--force] [--full-cycle]"
+                echo "Usage: /tree closedone [--yes] [--force] [--full-cycle]"
                 return 1
                 ;;
         esac
@@ -421,10 +416,6 @@ closedone_main() {
         fi
     fi
 
-    if [ "$dry_run" = true ]; then
-        print_warning "DRY RUN - No changes will be made"
-    fi
-
     echo ""
     print_info "Processing worktrees..."
     echo ""
@@ -456,15 +447,12 @@ closedone_main() {
 
         if [ "$commit_count" -eq 0 ]; then
             print_info "  No commits to merge (cleanup only)"
-
-            if [ "$dry_run" = false ]; then
-                # Phase 1.4: Cleanup only
-                closedone_cleanup "$worktree" "$branch"
-                cleanup_only_count=$((cleanup_only_count + 1))
-            fi
+            # Phase 1.4: Cleanup only
+            closedone_cleanup "$worktree" "$branch"
+            cleanup_only_count=$((cleanup_only_count + 1))
         else
             # Phase 1.4: Merge execution
-            if closedone_merge "$worktree" "$branch" "$base" "$dry_run"; then
+            if closedone_merge "$worktree" "$branch" "$base"; then
                 success_count=$((success_count + 1))
             else
                 failed_count=$((failed_count + 1))
@@ -496,14 +484,6 @@ closedone_merge() {
     local worktree=$1
     local branch=$2
     local base=$3
-    local dry_run=$4
-
-    if [ "$dry_run" = true ]; then
-        print_info "  [DRY RUN] Would switch to $base"
-        print_info "  [DRY RUN] Would merge $branch"
-        print_info "  [DRY RUN] Would cleanup worktree"
-        return 0
-    fi
 
     # Switch to base branch
     wait_for_git_lock || return 1
@@ -983,7 +963,7 @@ rollback_full_cycle() {
     print_info "Manual Recovery Steps:"
     echo "  1. Review git log to see partial changes"
     echo "  2. Fix any issues that caused the failure"
-    echo "  3. Run: /tree closedone --full-cycle --dry-run (to preview)"
+    echo "  3. Run: /tree closedone --full-cycle (execute full cycle)"
     echo "  4. Retry when ready"
     echo ""
 
@@ -992,17 +972,12 @@ rollback_full_cycle() {
 
 # Full-Cycle Orchestrator
 closedone_full_cycle() {
-    local dry_run=false
     local skip_confirmation=false
     local bump_type="patch"
 
     # Parse options
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --dry-run)
-                dry_run=true
-                shift
-                ;;
             --yes|-y)
                 skip_confirmation=true
                 shift
@@ -1013,18 +988,13 @@ closedone_full_cycle() {
                 ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone --full-cycle [--dry-run] [--yes] [--bump patch|minor|major]"
+                echo "Usage: /tree closedone --full-cycle [--yes] [--bump patch|minor|major]"
                 return 1
                 ;;
         esac
     done
 
     print_header "/tree closedone - Full Development Cycle"
-
-    if [ "$dry_run" = true ]; then
-        print_warning "DRY RUN MODE - No changes will be made"
-        echo ""
-    fi
 
     # Preview what will happen
     echo "This will execute the complete development cycle:"
@@ -1058,17 +1028,6 @@ closedone_full_cycle() {
             return 0
         fi
         echo ""
-    fi
-
-    if [ "$dry_run" = true ]; then
-        print_info "[DRY RUN] Would execute all 6 phases"
-        print_info "[DRY RUN] Phase 1: Validation & Checkpoint"
-        print_info "[DRY RUN] Phase 2: Merge completed features"
-        print_info "[DRY RUN] Phase 3: Promote to main"
-        print_info "[DRY RUN] Phase 4: Version bump ($bump_type)"
-        print_info "[DRY RUN] Phase 5: New dev branch + stage incomplete"
-        print_info "[DRY RUN] Phase 6: Archive and report"
-        return 0
     fi
 
     # Execute phases
@@ -2299,7 +2258,6 @@ Available commands:
   /tree closedone [options]
 
 Options:
-  --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
   --force                Merge all worktrees even if not closed (NEW)
   --full-cycle           Complete entire development cycle (NEW)
