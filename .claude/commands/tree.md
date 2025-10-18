@@ -13,6 +13,7 @@ This command provides comprehensive worktree management with full development cy
 - `/tree list` - Show staged features
 - `/tree clear` - Clear all staged features
 - `/tree conflict` - Analyze conflicts and suggest merges
+- `/tree scope-conflicts` - Detect scope conflicts across worktrees (NEW)
 - `/tree build` - Create worktrees from staged features (auto-launches Claude)
 - `/tree restore` - Restore terminals for existing worktrees
 - `/tree status` - Show worktree environment status
@@ -105,9 +106,44 @@ cd /workspace/.trees/my-feature
 /tree closedone --full-cycle
 ```
 
+## Worktree Scope Detection (NEW)
+
+Each worktree automatically gets file boundary detection based on its feature description:
+
+**How it works:**
+1. `/tree build` analyzes feature descriptions for keywords (email, database, dashboard, etc.)
+2. Generates `.worktree-scope.json` with file patterns for each worktree
+3. Installs pre-commit hook to warn about out-of-scope changes
+4. Creates special "librarian" worktree for documentation/tooling (inverse scope)
+
+**Example:**
+```bash
+/tree stage Email OAuth refresh token implementation
+/tree build
+
+# Generated scope includes:
+# - modules/email_integration/**
+# - modules/email_integration/*oauth*.py
+# - tests/test_*email_oauth_refresh*.py
+```
+
+**Enforcement modes:**
+- **Soft (default)**: Warns but allows out-of-scope commits
+- **Hard**: Blocks out-of-scope commits (edit `.worktree-scope.json`)
+- **None**: Disables scope checking
+
+**Librarian worktree:**
+- Automatically created with inverse scope
+- Works on docs, tooling, config files
+- Excludes all files claimed by feature worktrees
+
+For detailed documentation, see: `docs/worktree-scope-detection.md`
+
 **Note:** If `/tree` commands show "Unknown slash command" in worktrees:
 - Run: `bash /workspace/.claude/scripts/tree.sh refresh` for diagnostics
 - Workaround: Use direct script calls (e.g., `bash /workspace/.claude/scripts/tree.sh status`)
 - Permanent fix: Restart Claude Code CLI session from the worktree directory
 
-For full documentation, see: tasks/tree-workflow-full-cycle/prd.md
+For full documentation, see:
+- Full-cycle workflow: `tasks/tree-workflow-full-cycle/prd.md`
+- Scope detection: `docs/worktree-scope-detection.md`
