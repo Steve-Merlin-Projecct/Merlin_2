@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Access Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #00ff00; }
+        .test { margin: 20px 0; padding: 10px; border: 1px solid #00ff00; }
+        .success { background: #003300; }
+        .error { background: #330000; color: #ff0000; }
+        pre { white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Access Diagnostic</h1>
+
+    <div class="test">
+        <h2>Test 1: Direct Fetch to /dashboard</h2>
+        <pre id="test1"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 2: Fetch with Credentials</h2>
+        <pre id="test2"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 3: XHR Request</h2>
+        <pre id="test3"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 4: Current Origin</h2>
+        <pre id="test4"></pre>
+    </div>
+
+    <script>
+        // Test 1: Basic fetch
+        fetch('/dashboard', { method: 'GET' })
+            .then(response => {
+                document.getElementById('test1').textContent =
+                    `Status: ${response.status} ${response.statusText}\n` +
+                    `Type: ${response.type}\n` +
+                    `URL: ${response.url}\n` +
+                    `Headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}`;
+                if (response.status === 403) {
+                    document.getElementById('test1').parentElement.classList.add('error');
+                    return response.text();
+                }
+                document.getElementById('test1').parentElement.classList.add('success');
+            })
+            .then(text => {
+                if (text) {
+                    document.getElementById('test1').textContent += `\n\nResponse Body (first 500 chars):\n${text.substring(0, 500)}`;
+                }
+            })
+            .catch(err => {
+                document.getElementById('test1').textContent = `Error: ${err}`;
+                document.getElementById('test1').parentElement.classList.add('error');
+            });
+
+        // Test 2: With credentials
+        fetch('/dashboard', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'text/html,application/xhtml+xml'
+            }
+        })
+            .then(response => {
+                document.getElementById('test2').textContent =
+                    `Status: ${response.status} ${response.statusText}\n` +
+                    `Credentials included: yes`;
+            })
+            .catch(err => {
+                document.getElementById('test2').textContent = `Error: ${err}`;
+            });
+
+        // Test 3: XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/dashboard', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                document.getElementById('test3').textContent =
+                    `Status: ${xhr.status} ${xhr.statusText}\n` +
+                    `Response Headers:\n${xhr.getAllResponseHeaders()}`;
+                if (xhr.status === 403) {
+                    document.getElementById('test3').parentElement.classList.add('error');
+                }
+            }
+        };
+        xhr.send();
+
+        // Test 4: Show current origin
+        document.getElementById('test4').textContent =
+            `Current Origin: ${window.location.origin}\n` +
+            `Current Host: ${window.location.host}\n` +
+            `Current Protocol: ${window.location.protocol}\n` +
+            `Full URL: ${window.location.href}`;
+    </script>
+</body>
+</html>
