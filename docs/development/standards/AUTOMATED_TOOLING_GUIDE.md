@@ -461,8 +461,24 @@ def webhook_callback(data):
 
 ---
 
-**Document Maintained By:** Development Team  
-**Last Updated:** July 30, 2025  
-**Tool Versions:** Black 23.3.0, Flake8 6.0.0, Vulture 2.7  
-**Review Frequency:** Monthly  
-**Version:** 1.0  
+## Related Documentation
+
+### Code Quality Stack (This Guide)
+This guide covers Python code quality tools: Black, Flake8, and Vulture.
+
+### Documentation Quality Stack
+For documentation organization, metadata validation, and file placement standards, see:
+- **Librarian Usage Guide:** `docs/librarian-usage-guide.md`
+- **Quality Validation Coordination:** `docs/development/quality-validation-coordination.md`
+- **Librarian Agent:** `.claude/agents/librarian.md`
+
+### Integration Point
+Both code quality and documentation quality validation systems integrate at the **`/tree close`** slash command for comprehensive worktree validation before closure.
+
+---
+
+**Document Maintained By:** Development Team
+**Last Updated:** October 17, 2025
+**Tool Versions:** Black 23.3.0, Flake8 6.0.0, Vulture 2.7
+**Review Frequency:** Monthly
+**Version:** 1.1  
