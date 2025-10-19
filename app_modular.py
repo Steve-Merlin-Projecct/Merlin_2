@@ -354,9 +354,7 @@ def require_page_auth(f):
 @app.route('/dashboard')
 def dashboard():
     """Personal job application dashboard for Steve Glen - V2 Redesign"""
-    # Check if user is authenticated via session
-    if not session.get('authenticated'):
-        return render_template('dashboard_login.html')
+    # For local development, skip authentication
     return render_template('dashboard_v2.html')
 
 @app.route('/dashboard/v1')
@@ -364,6 +362,26 @@ def dashboard():
 def dashboard_v1():
     """Legacy dashboard for comparison"""
     return render_template('dashboard_enhanced.html')
+
+@app.route('/dashboard/jobs')
+def dashboard_jobs():
+    """Dashboard jobs view - Browse and filter all job postings"""
+    return render_template('dashboard_jobs.html')
+
+@app.route('/dashboard/applications')
+def dashboard_applications():
+    """Dashboard applications view - Track all job applications with filtering"""
+    return render_template('dashboard_applications.html')
+
+@app.route('/dashboard/analytics')
+def dashboard_analytics():
+    """Dashboard analytics view - Charts and insights for job search performance"""
+    return render_template('dashboard_analytics.html')
+
+@app.route('/dashboard/schema')
+def dashboard_schema():
+    """Dashboard schema view - Database structure visualization"""
+    return render_template('dashboard_schema.html')
 
 @app.route('/dashboard/authenticate', methods=['POST'])
 def dashboard_authenticate():

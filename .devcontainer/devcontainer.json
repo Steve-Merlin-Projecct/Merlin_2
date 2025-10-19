@@ -52,10 +52,10 @@
   },
 
   // Forward PostgreSQL port for database access
-  "forwardPorts": [5000, 5432],
+  "forwardPorts": [5001, 5432],
   "portsAttributes": {
-    "5000": {
-      "label": "Flask App",
+    "5001": {
+      "label": "Flask App (port 5001 - avoids macOS AirPlay conflict)",
       "onAutoForward": "notify"
     },
     "5432": {

@@ -26,16 +26,75 @@
                 <a href="/dashboard/analytics" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
                     📈 Analytics
                 </a>
+                <a href="/dashboard/schema" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    🗄️ Schema
+                </a>
             </div>
         </nav>
 
-        <!-- Header -->
-        <header class="dashboard-header">
+        <!-- Header with Filters -->
+        <header class="dashboard-header" style="margin-bottom: 1.5rem;">
             <div>
                 <h1 class="dashboard-title">Job Applications</h1>
-                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;" x-text="`${applications.length} applications tracked`"></p>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;" x-text="`${pagination.total || 0} applications tracked`"></p>
             </div>
+            <button @click="refresh()" class="btn btn-secondary" :disabled="loading">
+                <span x-show="!loading">Refresh</span>
+                <span x-show="loading">Loading...</span>
+            </button>
         </header>
+
+        <!-- Filters Bar -->
+        <div class="glass-card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <!-- Status Filter -->
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Status</label>
+                    <select x-model="filters.status" @change="applyFilters()" style="width: 100%; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--color-text-primary);">
+                        <option value="all">All Applications</option>
+                        <option value="sent">Sent</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                </div>
+
+                <!-- Company Filter -->
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Company</label>
+                    <input
+                        type="text"
+                        x-model="filters.company"
+                        @input.debounce.500ms="applyFilters()"
+                        placeholder="Search company..."
+                        style="width: 100%; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--color-text-primary);">
+                </div>
+
+                <!-- Date From -->
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Date From</label>
+                    <input
+                        type="date"
+                        x-model="filters.dateFrom"
+                        @change="applyFilters()"
+                        style="width: 100%; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--color-text-primary);">
+                </div>
+
+                <!-- Date To -->
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Date To</label>
+                    <input
+                        type="date"
+                        x-model="filters.dateTo"
+                        @change="applyFilters()"
+                        style="width: 100%; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--color-text-primary);">
+                </div>
+            </div>
+
+            <!-- Clear Filters -->
+            <button @click="clearFilters()" class="btn btn-secondary" style="margin-top: 1rem;">
+                Clear Filters
+            </button>
+        </div>
 
         <!-- Loading Spinner -->
         <div x-show="loading" class="glass-card" style="text-align: center; padding: 2rem;">
@@ -51,30 +110,108 @@
             <button @click="loadApplications()" class="btn btn-primary">Retry</button>
         </div>
 
-        <!-- Applications List -->
+        <!-- Applications Table -->
         <div x-show="!loading && !error && applications.length > 0" class="glass-card">
+            <!-- Table Header with Sorting -->
+            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-weight: 600; color: var(--color-text-secondary);">
+                <div @click="toggleSort('date')" style="cursor: pointer; user-select: none;">
+                    Date
+                    <span x-show="sort.by === 'date'">
+                        <span x-show="sort.dir === 'desc'">↓</span>
+                        <span x-show="sort.dir === 'asc'">↑</span>
+                    </span>
+                </div>
+                <div @click="toggleSort('company')" style="cursor: pointer; user-select: none;">
+                    Company
+                    <span x-show="sort.by === 'company'">
+                        <span x-show="sort.dir === 'desc'">↓</span>
+                        <span x-show="sort.dir === 'asc'">↑</span>
+                    </span>
+                </div>
+                <div @click="toggleSort('status')" style="cursor: pointer; user-select: none;">
+                    Status
+                    <span x-show="sort.by === 'status'">
+                        <span x-show="sort.dir === 'desc'">↓</span>
+                        <span x-show="sort.dir === 'asc'">↑</span>
+                    </span>
+                </div>
+                <div>Documents</div>
+                <div>Score</div>
+            </div>
+
+            <!-- Table Rows -->
             <template x-for="app in applications" :key="app.id">
-                <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); last-of-type:border-bottom: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                        <div>
-                            <h3 style="color: var(--color-cyan); margin-bottom: 0.25rem;" x-text="app.job_title"></h3>
-                            <p style="color: var(--color-text-secondary); font-size: 0.9rem;" x-text="app.company_name"></p>
-                        </div>
-                        <span class="badge" :class="{'badge-success': app.status === 'sent', 'badge-warning': app.status === 'pending'}" x-text="app.status"></span>
+                <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); align-items: center;">
+                    <!-- Date & Title -->
+                    <div>
+                        <h3 style="color: var(--color-cyan); margin-bottom: 0.25rem; font-size: 0.95rem;" x-text="app.job_title"></h3>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem;" x-text="new Date(app.created_at).toLocaleDateString()"></p>
                     </div>
-                    <div style="display: flex; gap: 1.5rem; color: var(--color-text-secondary); font-size: 0.85rem; margin-top: 1rem;">
-                        <span>📅 <span x-text="new Date(app.created_at).toLocaleDateString()"></span></span>
-                        <span x-show="app.email_sent_at">✉️ Sent: <span x-text="new Date(app.email_sent_at).toLocaleDateString()"></span></span>
+
+                    <!-- Company -->
+                    <div>
+                        <p style="color: var(--color-text-primary); font-weight: 500;" x-text="app.company_name"></p>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem;" x-text="app.location || 'Remote'"></p>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div>
+                        <span
+                            class="badge"
+                            :class="{
+                                'badge-success': app.status === 'sent',
+                                'badge-warning': app.status === 'pending',
+                                'badge-error': app.status === 'failed'
+                            }"
+                            x-text="app.status.toUpperCase()">
+                        </span>
+                    </div>
+
+                    <!-- Documents -->
+                    <div>
+                        <span style="color: var(--color-text-secondary); font-size: 0.85rem;" x-text="app.documents_sent.length || 0"></span>
+                    </div>
+
+                    <!-- Coherence Score -->
+                    <div>
+                        <span
+                            style="font-weight: 600;"
+                            :style="{color: app.coherence_score >= 7 ? 'var(--color-green)' : app.coherence_score >= 5 ? 'var(--color-yellow)' : 'var(--color-red)'}"
+                            x-text="app.coherence_score ? app.coherence_score.toFixed(1) : 'N/A'">
+                        </span>
                     </div>
                 </div>
             </template>
         </div>
 
+        <!-- Pagination -->
+        <div x-show="!loading && !error && pagination.pages > 1" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+            <button
+                @click="goToPage(pagination.page - 1)"
+                :disabled="pagination.page === 1"
+                class="btn btn-secondary"
+                style="padding: 0.5rem 1rem;">
+                Previous
+            </button>
+
+            <span style="color: var(--color-text-secondary);">
+                Page <span x-text="pagination.page"></span> of <span x-text="pagination.pages"></span>
+            </span>
+
+            <button
+                @click="goToPage(pagination.page + 1)"
+                :disabled="pagination.page === pagination.pages"
+                class="btn btn-secondary"
+                style="padding: 0.5rem 1rem;">
+                Next
+            </button>
+        </div>
+
         <!-- Empty State -->
         <div x-show="!loading && !error && applications.length === 0" class="glass-card" style="text-align: center; padding: 3rem;">
             <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-            <h3 style="color: var(--color-text-secondary); margin-bottom: 0.5rem;">No Applications Yet</h3>
-            <p style="color: var(--color-text-muted);">Applications will appear here once you start applying to jobs.</p>
+            <h3 style="color: var(--color-text-secondary); margin-bottom: 0.5rem;">No Applications Found</h3>
+            <p style="color: var(--color-text-muted);">Try adjusting your filters or check back later.</p>
         </div>
 
     </div>
@@ -85,6 +222,22 @@
                 applications: [],
                 loading: true,
                 error: null,
+                filters: {
+                    status: 'all',
+                    company: '',
+                    dateFrom: '',
+                    dateTo: ''
+                },
+                sort: {
+                    by: 'date',
+                    dir: 'desc'
+                },
+                pagination: {
+                    page: 1,
+                    perPage: 20,
+                    total: 0,
+                    pages: 0
+                },
 
                 init() {
                     this.loadApplications();
@@ -95,20 +248,79 @@
                     this.error = null;
 
                     try {
-                        const response = await fetch('/api/dashboard/applications');
+                        // Build query parameters
+                        const params = new URLSearchParams({
+                            filter: this.filters.status,
+                            sort_by: this.sort.by,
+                            sort_dir: this.sort.dir,
+                            page: this.pagination.page,
+                            per_page: this.pagination.perPage
+                        });
+
+                        // Add optional filters
+                        if (this.filters.company) params.append('company', this.filters.company);
+                        if (this.filters.dateFrom) params.append('date_from', this.filters.dateFrom);
+                        if (this.filters.dateTo) params.append('date_to', this.filters.dateTo);
+
+                        const response = await fetch(`/api/v2/dashboard/applications?${params}`);
 
                         if (!response.ok) {
                             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                         }
 
                         const data = await response.json();
+
+                        if (!data.success) {
+                            throw new Error(data.error || 'Failed to load applications');
+                        }
+
                         this.applications = data.applications || [];
+                        this.pagination = data.pagination;
                     } catch (err) {
                         console.error('Error loading applications:', err);
                         this.error = err.message;
                     } finally {
                         this.loading = false;
                     }
+                },
+
+                applyFilters() {
+                    this.pagination.page = 1; // Reset to first page when filtering
+                    this.loadApplications();
+                },
+
+                clearFilters() {
+                    this.filters = {
+                        status: 'all',
+                        company: '',
+                        dateFrom: '',
+                        dateTo: ''
+                    };
+                    this.pagination.page = 1;
+                    this.loadApplications();
+                },
+
+                toggleSort(field) {
+                    if (this.sort.by === field) {
+                        // Toggle direction if same field
+                        this.sort.dir = this.sort.dir === 'desc' ? 'asc' : 'desc';
+                    } else {
+                        // Set new field with default desc
+                        this.sort.by = field;
+                        this.sort.dir = 'desc';
+                    }
+                    this.loadApplications();
+                },
+
+                goToPage(page) {
+                    if (page >= 1 && page <= this.pagination.pages) {
+                        this.pagination.page = page;
+                        this.loadApplications();
+                    }
+                },
+
+                refresh() {
+                    this.loadApplications();
                 }
             };
         }
