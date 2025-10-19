@@ -115,3 +115,8 @@ database_tools/__pycache__/
 # database_tools/generated/
 # database_tools/docs/
 .trees/
+
+# Worktree metadata files (should only exist in worktrees, not main workspace)
+.claude-init.sh
+.claude-task-context.md
+PURPOSE.md
