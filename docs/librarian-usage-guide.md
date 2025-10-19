@@ -551,16 +551,30 @@ python tools/build_index.py --rebuild
 
 ## Reference
 
-### File Organization Standards
+### Documentation Quality Stack (This Guide)
+This guide covers documentation organization, metadata validation, and librarian tools.
+
+### Code Quality Stack
+For Python code quality tools (Black, Flake8, Vulture), see:
+- **Automated Tooling Guide:** `docs/development/standards/AUTOMATED_TOOLING_GUIDE.md`
+- **Quality Validation Coordination:** `docs/development/quality-validation-coordination.md`
+- **Code Reviewer Agent:** `.claude/agents/code-reviewer.md`
+
+### Integration Point
+Both code quality and documentation quality validation systems integrate at the **`/tree close`** slash command for comprehensive worktree validation before closure.
+
+### Additional Resources
+
+**File Organization Standards**
 See: `/docs/FILE_ORGANIZATION_STANDARDS.md`
 
-### Librarian Agent Definition
+**Librarian Agent Definition**
 See: `/.claude/agents/librarian.md`
 
-### Tool README
+**Tool README**
 See: `/tools/README.md`
 
-### PRD & Implementation
+**PRD & Implementation**
 See: `/tasks/librarian-enhancements/`
 
 ---
