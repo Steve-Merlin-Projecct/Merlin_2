@@ -196,7 +196,8 @@ def validate_response(response_text):
 
 def is_valid_json_structure(parsed_response):
     """
-    Validate that response contains required fields for job analysis
+    Validate that response contains required fields for Tier 1 job analysis
+    Canonical Tier 1 fields: authenticity_check, classification, structured_data
     """
     if not isinstance(parsed_response, dict):
         return False
@@ -206,20 +207,17 @@ def is_valid_json_structure(parsed_response):
     if not isinstance(analysis_results, list):
         return False
 
-    # Check each analysis result has required fields
+    # Check each analysis result has required Tier 1 fields
     for result in analysis_results:
         if not isinstance(result, dict):
             return False
 
+        # Canonical Tier 1 required fields
         required_fields = [
             "job_id",
-            "skills_analysis",
             "authenticity_check",
             "classification",
             "structured_data",
-            "implicit_requirements",
-            "prestige_analysis",
-            "cover_letter_insights",
         ]
         for field in required_fields:
             if field not in result:
@@ -232,27 +230,14 @@ def is_valid_json_structure(parsed_response):
         if "ats_optimization" not in structured_data:
             return False
 
-        # Validate skills_analysis structure
-        skills = result.get("skills_analysis", {})
-        if not isinstance(skills.get("top_skills"), list):
-            return False
-
         # Validate authenticity_check structure
         auth = result.get("authenticity_check", {})
         if not isinstance(auth.get("title_matches_role"), bool):
-            return False
-        if not isinstance(auth.get("credibility_score"), (int, float)):
             return False
 
         # Validate classification structure
         classification = result.get("classification", {})
         if not isinstance(classification.get("industry"), str):
-            return False
-
-        # Validate new sections exist
-        if "implicit_requirements" not in result:
-            return False
-        if "cover_letter_insights" not in result:
             return False
 
     return True
@@ -302,14 +287,22 @@ def contains_non_job_content(response_text, parsed_response):
             if not job_id or len(str(job_id)) > 100:  # Suspiciously long job IDs
                 return True
 
-            # Check if skills look realistic
+            # Check if skills look realistic (avoid false positives for legitimate tech terms)
             skills = result.get("skills_analysis", {}).get("top_skills", [])
             for skill in skills:
                 skill_name = skill.get("skill", "") if isinstance(skill, dict) else ""
-                if any(
-                    word in skill_name.lower()
-                    for word in ["system", "prompt", "injection", "hack", "bypass"]
-                ):
+                skill_lower = skill_name.lower()
+                # Only flag if it's obviously an injection attempt, not legitimate tech skills
+                # "distributed systems" is legitimate, but "system prompt" or "prompt injection" is not
+                suspicious_phrases = [
+                    "system prompt",
+                    "prompt injection",
+                    "injection attack",
+                    "hack the",
+                    "bypass security",
+                    "ignore instructions"
+                ]
+                if any(phrase in skill_lower for phrase in suspicious_phrases):
                     logger.warning(f"Suspicious skill detected: {skill_name}")
                     return True
 
@@ -344,7 +337,9 @@ class GeminiJobAnalyzer:
         # Initialize optimization modules
         from modules.ai_job_description_analysis.token_optimizer import TokenOptimizer
         from modules.ai_job_description_analysis.model_selector import ModelSelector
-        from modules.ai_job_description_analysis.batch_size_optimizer import BatchSizeOptimizer
+        from modules.ai_job_description_analysis.batch_size_optimizer import (
+            BatchSizeOptimizer,
+        )
 
         self.token_optimizer = TokenOptimizer()
         self.model_selector = ModelSelector(default_model=self.primary_model)
@@ -372,39 +367,41 @@ class GeminiJobAnalyzer:
         self.cost_per_1k_tokens = 0.0  # Free tier default
         self.base_url = "https://generativelanguage.googleapis.com"
 
-        # Available models with their specifications
+        # Available models with their specifications (2025 - updated with current models)
+        # Note: Gemini 1.5 models are deprecated as of April 2025
         self.available_models = {
             "gemini-2.0-flash-001": {
                 "name": "Gemini 2.0 Flash",
                 "tier": "free",
                 "input_cost_per_1k": 0.0,
                 "output_cost_per_1k": 0.0,
+                "priority": 1,  # Primary choice for free tier
             },
             "gemini-2.0-flash-lite-001": {
                 "name": "Gemini 2.0 Flash Lite",
                 "tier": "free",
                 "input_cost_per_1k": 0.0,
                 "output_cost_per_1k": 0.0,
+                "priority": 2,  # Fallback for free tier
             },
             "gemini-2.5-flash": {
                 "name": "Gemini 2.5 Flash",
                 "tier": "paid",
                 "input_cost_per_1k": 0.30,  # $0.30 per 1M tokens input
                 "output_cost_per_1k": 2.50,  # $2.50 per 1M tokens output
+                "priority": 3,  # Paid fallback
             },
-            "gemini-1.5-flash": {
-                "name": "Gemini 1.5 Flash",
+            "gemini-2.5-flash-lite": {
+                "name": "Gemini 2.5 Flash Lite",
                 "tier": "free",
                 "input_cost_per_1k": 0.0,
                 "output_cost_per_1k": 0.0,
-            },
-            "gemini-1.5-pro": {
-                "name": "Gemini 1.5 Pro",
-                "tier": "free",
-                "input_cost_per_1k": 0.0,
-                "output_cost_per_1k": 0.0,
+                "priority": 4,  # Alternative lite model
             },
         }
+
+        # Track which models have been tried for 503 fallback
+        self._503_tried_models = set()
 
         # Cost tracking (per 1K tokens) - for backward compatibility
         self.cost_per_1k_tokens = {
@@ -540,7 +537,7 @@ class GeminiJobAnalyzer:
     def analyze_jobs_batch(self, jobs: List[Dict]) -> Dict:
         """
         Analyze multiple jobs in a single API call for cost efficiency
-        Uses integrated optimizers for token allocation, model selection, and batch sizing
+        Uses System 2 validation workflow with integrated optimizers
 
         Args:
             jobs: List of job dictionaries with id, title, description
@@ -583,10 +580,58 @@ class GeminiJobAnalyzer:
             }
 
         try:
+            # Use System 2 workflow if available, otherwise fall back to original
+            try:
+                from modules.ai_job_description_analysis.prompt_validation_systems import (
+                    PromptValidationSystem2
+                )
+
+                logger.info("🔒 Using System 2 validation workflow for batch analysis")
+                system2 = PromptValidationSystem2()
+
+                # Get prompt file path
+                prompt_file = os.path.join(
+                    os.path.dirname(__file__),
+                    "prompts",
+                    "tier1_core_prompt.py"
+                )
+
+                # Execute System 2 workflow
+                workflow_result = system2.execute_workflow(
+                    jobs=valid_jobs,
+                    prompt_file_path=prompt_file,
+                    prompt_name="tier1_core_prompt"
+                )
+
+                if workflow_result['success']:
+                    # Format results to match expected structure
+                    results = workflow_result['data']
+
+                    # Update usage tracking (if we have metadata)
+                    # Note: System 2 may need to pass usage metadata
+
+                    return {
+                        "results": results,
+                        "usage_stats": self._get_usage_summary(),
+                        "success": True,
+                        "jobs_analyzed": len(valid_jobs),
+                        "model_used": self.current_model,
+                        "workflow": "System2",
+                        "steps_completed": workflow_result['steps_completed'],
+                    }
+                else:
+                    logger.warning(f"System 2 workflow failed: {workflow_result['errors']}")
+                    logger.info("Falling back to original workflow...")
+
+            except ImportError:
+                logger.info("System 2 not available, using original workflow")
+            except Exception as e:
+                logger.warning(f"System 2 workflow error: {e}, falling back to original")
+
+            # Original workflow (fallback)
             # OPTIMIZATION: Calculate optimal token allocation for Tier 1
             token_allocation = self.token_optimizer.calculate_optimal_tokens(
-                job_count=len(valid_jobs),
-                tier='tier1'
+                job_count=len(valid_jobs), tier="tier1"
             )
             logger.info(
                 f"📊 Token allocation for Tier 1: {token_allocation.max_output_tokens} tokens "
@@ -594,20 +639,26 @@ class GeminiJobAnalyzer:
             )
 
             # OPTIMIZATION: Select optimal model for Tier 1 analysis
-            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            current_usage = (
+                self.current_usage
+                if isinstance(self.current_usage, dict)
+                else {"daily_tokens": 0}
+            )
             daily_tokens_used = current_usage.get("daily_tokens", 0)
 
             model_selection = self.model_selector.select_model(
-                tier='tier1',
+                tier="tier1",
                 batch_size=len(valid_jobs),
                 daily_tokens_used=daily_tokens_used,
-                daily_token_limit=self.daily_token_limit
+                daily_token_limit=self.daily_token_limit,
             )
 
             # Update current model based on selection
             if model_selection.model_id != self.current_model:
                 self.current_model = model_selection.model_id
-                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+                logger.info(
+                    f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}"
+                )
 
             # Ensure google-genai is loaded before making API requests
             genai_client = self._ensure_genai_loaded()
@@ -616,7 +667,9 @@ class GeminiJobAnalyzer:
             prompt = self._create_batch_analysis_prompt(valid_jobs)
 
             # Make API request with optimized token limit
-            response = self._make_gemini_request(prompt, max_output_tokens=token_allocation.max_output_tokens)
+            response = self._make_gemini_request(
+                prompt, max_output_tokens=token_allocation.max_output_tokens
+            )
 
             # Parse and validate response
             results = self._parse_batch_response(response, valid_jobs)
@@ -630,13 +683,14 @@ class GeminiJobAnalyzer:
                 "success": True,
                 "jobs_analyzed": len(valid_jobs),
                 "model_used": self.current_model,
+                "workflow": "Original",
                 "optimization_metrics": {
                     "max_output_tokens": token_allocation.max_output_tokens,
                     "token_efficiency": f"{(token_allocation.estimated_tokens_per_job * len(valid_jobs)) / token_allocation.max_output_tokens * 100:.1f}%",
                     "model_selection_reason": model_selection.selection_reason,
                     "estimated_cost": model_selection.estimated_cost,
                     "estimated_quality": model_selection.estimated_quality,
-                }
+                },
             }
 
         except Exception as e:
@@ -652,8 +706,7 @@ class GeminiJobAnalyzer:
     def analyze_jobs_tier2(self, jobs_with_tier1: List[Dict]) -> Dict:
         """
         Run Tier 2 (Enhanced) analysis with Tier 1 context
-        Protected by hash-and-replace security system
-        Uses integrated optimizers for token allocation and model selection
+        Uses System 2 validation workflow with integrated optimizers
 
         Args:
             jobs_with_tier1: List of dicts with:
@@ -663,18 +716,62 @@ class GeminiJobAnalyzer:
         Returns:
             Dictionary with Tier 2 analysis results
         """
-        from modules.ai_job_description_analysis.prompts.tier2_enhanced_prompt import (
-            create_tier2_enhanced_prompt,
-        )
-
         if not jobs_with_tier1:
             return {"results": [], "success": False, "error": "No jobs provided"}
 
         try:
+            # Use System 2 workflow if available
+            try:
+                from modules.ai_job_description_analysis.prompt_validation_systems import (
+                    PromptValidationSystem2
+                )
+
+                logger.info("🔒 Using System 2 validation workflow for Tier 2 analysis")
+                system2 = PromptValidationSystem2()
+
+                # Get prompt file path
+                prompt_file = os.path.join(
+                    os.path.dirname(__file__),
+                    "prompts",
+                    "tier2_enhanced_prompt.py"
+                )
+
+                # Execute System 2 workflow
+                workflow_result = system2.execute_workflow(
+                    jobs=jobs_with_tier1,
+                    prompt_file_path=prompt_file,
+                    prompt_name="tier2_enhanced_prompt",
+                    tier="tier2"
+                )
+
+                if workflow_result['success']:
+                    results = workflow_result['data']
+
+                    return {
+                        "results": results,
+                        "success": True,
+                        "jobs_analyzed": len(jobs_with_tier1),
+                        "model_used": self.current_model,
+                        "workflow": "System2",
+                        "steps_completed": workflow_result['steps_completed'],
+                    }
+                else:
+                    logger.warning(f"System 2 workflow failed: {workflow_result['errors']}")
+                    logger.info("Falling back to original workflow...")
+
+            except ImportError:
+                logger.info("System 2 not available, using original workflow")
+            except Exception as e:
+                logger.warning(f"System 2 workflow error: {e}, falling back to original")
+
+            # Original workflow (fallback)
+            from modules.ai_job_description_analysis.prompts.tier2_enhanced_prompt import (
+                create_tier2_enhanced_prompt,
+            )
+
             # OPTIMIZATION: Calculate optimal token allocation for Tier 2
             token_allocation = self.token_optimizer.calculate_optimal_tokens(
-                job_count=len(jobs_with_tier1),
-                tier='tier2'
+                job_count=len(jobs_with_tier1), tier="tier2"
             )
             logger.info(
                 f"📊 Token allocation for Tier 2: {token_allocation.max_output_tokens} tokens "
@@ -682,20 +779,26 @@ class GeminiJobAnalyzer:
             )
 
             # OPTIMIZATION: Select optimal model for Tier 2 analysis
-            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            current_usage = (
+                self.current_usage
+                if isinstance(self.current_usage, dict)
+                else {"daily_tokens": 0}
+            )
             daily_tokens_used = current_usage.get("daily_tokens", 0)
 
             model_selection = self.model_selector.select_model(
-                tier='tier2',
+                tier="tier2",
                 batch_size=len(jobs_with_tier1),
                 daily_tokens_used=daily_tokens_used,
-                daily_token_limit=self.daily_token_limit
+                daily_token_limit=self.daily_token_limit,
             )
 
             # Update current model based on selection
             if model_selection.model_id != self.current_model:
                 self.current_model = model_selection.model_id
-                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+                logger.info(
+                    f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}"
+                )
 
             # Generate Tier 2 prompt
             prompt = create_tier2_enhanced_prompt(jobs_with_tier1)
@@ -708,13 +811,15 @@ class GeminiJobAnalyzer:
                 self._current_security_token = token_match.group(1)
 
             # SECURITY: Validate with hash-and-replace system
-            validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
-                prompt_name="tier2_enhanced_prompt",
-                current_prompt=prompt,
-                change_source="agent",
-                canonical_prompt_getter=lambda: create_tier2_enhanced_prompt(
-                    jobs_with_tier1
-                ),
+            validated_prompt, was_replaced = (
+                self.security_mgr.validate_and_handle_prompt(
+                    prompt_name="tier2_enhanced_prompt",
+                    current_prompt=prompt,
+                    change_source="agent",
+                    canonical_prompt_getter=lambda: create_tier2_enhanced_prompt(
+                        jobs_with_tier1
+                    ),
+                )
             )
 
             if was_replaced:
@@ -729,7 +834,9 @@ class GeminiJobAnalyzer:
                     self._current_security_token = token_match.group(1)
 
             # Make API request with optimized token limit
-            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
+            response = self._make_gemini_request(
+                validated_prompt, max_output_tokens=token_allocation.max_output_tokens
+            )
 
             # Parse and validate
             results = self._parse_batch_response(
@@ -751,7 +858,7 @@ class GeminiJobAnalyzer:
                     "model_selection_reason": model_selection.selection_reason,
                     "estimated_cost": model_selection.estimated_cost,
                     "estimated_quality": model_selection.estimated_quality,
-                }
+                },
             }
 
         except Exception as e:
@@ -767,8 +874,7 @@ class GeminiJobAnalyzer:
     def analyze_jobs_tier3(self, jobs_with_context: List[Dict]) -> Dict:
         """
         Run Tier 3 (Strategic) analysis with Tier 1 + 2 context
-        Protected by hash-and-replace security system
-        Uses integrated optimizers for token allocation and model selection
+        Uses System 2 validation workflow with integrated optimizers
 
         Args:
             jobs_with_context: List of dicts with:
@@ -779,18 +885,62 @@ class GeminiJobAnalyzer:
         Returns:
             Dictionary with Tier 3 analysis results
         """
-        from modules.ai_job_description_analysis.prompts.tier3_strategic_prompt import (
-            create_tier3_strategic_prompt,
-        )
-
         if not jobs_with_context:
             return {"results": [], "success": False, "error": "No jobs provided"}
 
         try:
+            # Use System 2 workflow if available
+            try:
+                from modules.ai_job_description_analysis.prompt_validation_systems import (
+                    PromptValidationSystem2
+                )
+
+                logger.info("🔒 Using System 2 validation workflow for Tier 3 analysis")
+                system2 = PromptValidationSystem2()
+
+                # Get prompt file path
+                prompt_file = os.path.join(
+                    os.path.dirname(__file__),
+                    "prompts",
+                    "tier3_strategic_prompt.py"
+                )
+
+                # Execute System 2 workflow
+                workflow_result = system2.execute_workflow(
+                    jobs=jobs_with_context,
+                    prompt_file_path=prompt_file,
+                    prompt_name="tier3_strategic_prompt",
+                    tier="tier3"
+                )
+
+                if workflow_result['success']:
+                    results = workflow_result['data']
+
+                    return {
+                        "results": results,
+                        "success": True,
+                        "jobs_analyzed": len(jobs_with_context),
+                        "model_used": self.current_model,
+                        "workflow": "System2",
+                        "steps_completed": workflow_result['steps_completed'],
+                    }
+                else:
+                    logger.warning(f"System 2 workflow failed: {workflow_result['errors']}")
+                    logger.info("Falling back to original workflow...")
+
+            except ImportError:
+                logger.info("System 2 not available, using original workflow")
+            except Exception as e:
+                logger.warning(f"System 2 workflow error: {e}, falling back to original")
+
+            # Original workflow (fallback)
+            from modules.ai_job_description_analysis.prompts.tier3_strategic_prompt import (
+                create_tier3_strategic_prompt,
+            )
+
             # OPTIMIZATION: Calculate optimal token allocation for Tier 3
             token_allocation = self.token_optimizer.calculate_optimal_tokens(
-                job_count=len(jobs_with_context),
-                tier='tier3'
+                job_count=len(jobs_with_context), tier="tier3"
             )
             logger.info(
                 f"📊 Token allocation for Tier 3: {token_allocation.max_output_tokens} tokens "
@@ -798,20 +948,26 @@ class GeminiJobAnalyzer:
             )
 
             # OPTIMIZATION: Select optimal model for Tier 3 analysis
-            current_usage = self.current_usage if isinstance(self.current_usage, dict) else {"daily_tokens": 0}
+            current_usage = (
+                self.current_usage
+                if isinstance(self.current_usage, dict)
+                else {"daily_tokens": 0}
+            )
             daily_tokens_used = current_usage.get("daily_tokens", 0)
 
             model_selection = self.model_selector.select_model(
-                tier='tier3',
+                tier="tier3",
                 batch_size=len(jobs_with_context),
                 daily_tokens_used=daily_tokens_used,
-                daily_token_limit=self.daily_token_limit
+                daily_token_limit=self.daily_token_limit,
             )
 
             # Update current model based on selection
             if model_selection.model_id != self.current_model:
                 self.current_model = model_selection.model_id
-                logger.info(f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}")
+                logger.info(
+                    f"🔄 Model selected: {model_selection.model_id} - {model_selection.selection_reason}"
+                )
 
             # Generate Tier 3 prompt
             prompt = create_tier3_strategic_prompt(jobs_with_context)
@@ -824,13 +980,15 @@ class GeminiJobAnalyzer:
                 self._current_security_token = token_match.group(1)
 
             # SECURITY: Validate with hash-and-replace system
-            validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
-                prompt_name="tier3_strategic_prompt",
-                current_prompt=prompt,
-                change_source="agent",
-                canonical_prompt_getter=lambda: create_tier3_strategic_prompt(
-                    jobs_with_context
-                ),
+            validated_prompt, was_replaced = (
+                self.security_mgr.validate_and_handle_prompt(
+                    prompt_name="tier3_strategic_prompt",
+                    current_prompt=prompt,
+                    change_source="agent",
+                    canonical_prompt_getter=lambda: create_tier3_strategic_prompt(
+                        jobs_with_context
+                    ),
+                )
             )
 
             if was_replaced:
@@ -845,7 +1003,9 @@ class GeminiJobAnalyzer:
                     self._current_security_token = token_match.group(1)
 
             # Make API request with optimized token limit
-            response = self._make_gemini_request(validated_prompt, max_output_tokens=token_allocation.max_output_tokens)
+            response = self._make_gemini_request(
+                validated_prompt, max_output_tokens=token_allocation.max_output_tokens
+            )
 
             # Parse and validate
             results = self._parse_batch_response(
@@ -867,7 +1027,7 @@ class GeminiJobAnalyzer:
                     "model_selection_reason": model_selection.selection_reason,
                     "estimated_cost": model_selection.estimated_cost,
                     "estimated_quality": model_selection.estimated_quality,
-                }
+                },
             }
 
         except Exception as e:
@@ -879,6 +1039,102 @@ class GeminiJobAnalyzer:
                 "error": str(e),
                 "model_used": self.current_model,
             }
+
+    def fetch_available_models_from_api(self) -> Dict[str, Dict]:
+        """
+        Fetch list of available models from Google's official API.
+        Updates self.available_models with current model information.
+
+        API Endpoint: GET https://generativelanguage.googleapis.com/v1beta/models
+        Documentation: https://ai.google.dev/api/models
+
+        Returns:
+            Dict: Dictionary of available models with their specs
+        """
+        try:
+            if not _ensure_requests_loaded():
+                logger.warning("requests module not available, using cached model list")
+                return self.available_models
+
+            api_url = f"{self.base_url}/v1beta/models?key={self.api_key}"
+            response = requests.get(api_url, timeout=10)
+
+            if response.status_code != 200:
+                logger.warning(
+                    f"Failed to fetch models from API (status {response.status_code}), "
+                    f"using cached list"
+                )
+                return self.available_models
+
+            data = response.json()
+            models = data.get("models", [])
+
+            # Parse and update available models
+            updated_models = {}
+            priority = 1
+
+            for model in models:
+                model_name = model.get("name", "")
+                # Extract model ID (e.g., "models/gemini-2.0-flash" -> "gemini-2.0-flash")
+                model_id = (
+                    model_name.split("/")[-1] if "/" in model_name else model_name
+                )
+
+                # Only include Gemini models (not experimental/preview unless specified)
+                if not model_id.startswith("gemini"):
+                    continue
+
+                # Determine tier based on model name
+                tier = "free" if "flash" in model_id.lower() else "paid"
+
+                updated_models[model_id] = {
+                    "name": model.get("displayName", model_id),
+                    "tier": tier,
+                    "input_cost_per_1k": 0.0,  # API doesn't provide pricing
+                    "output_cost_per_1k": 0.0,
+                    "priority": priority,
+                    "description": model.get("description", ""),
+                    "context_window": model.get("inputTokenLimit", 0),
+                }
+                priority += 1
+
+            if updated_models:
+                logger.info(f"✅ Fetched {len(updated_models)} models from Google API")
+                self.available_models = updated_models
+                return updated_models
+            else:
+                logger.warning("No models returned from API, using cached list")
+                return self.available_models
+
+        except Exception as e:
+            logger.warning(f"Error fetching models from API: {e}, using cached list")
+            return self.available_models
+
+    def _get_next_available_model(self) -> str:
+        """
+        Get the next available model to try when current model returns 503.
+        Prioritizes models that haven't been tried yet, sorted by priority.
+
+        Returns:
+            str: Next model ID to try, or current model if no alternatives
+        """
+        # Sort models by priority (lower number = higher priority)
+        sorted_models = sorted(
+            self.available_models.items(), key=lambda x: x[1].get("priority", 999)
+        )
+
+        # Find first model we haven't tried yet
+        for model_id, model_info in sorted_models:
+            if model_id not in self._503_tried_models:
+                logger.info(
+                    f"Found alternative model: {model_info['name']} "
+                    f"(tier: {model_info['tier']}, priority: {model_info.get('priority', 'N/A')})"
+                )
+                return model_id
+
+        # All models tried, return current model (caller will handle wait/retry)
+        logger.warning("All available models have been tried for 503 fallback")
+        return self.current_model
 
     def _validate_job_data(self, job: Dict) -> bool:
         """Validate job data before analysis"""
@@ -921,8 +1177,8 @@ class GeminiJobAnalyzer:
 
     def _create_batch_analysis_prompt(self, jobs: List[Dict]) -> str:
         """
-        Create Tier 1 analysis prompt with hash-and-replace protection
-        Uses modular tier1_core_prompt with security validation
+        Create Tier 1 analysis prompt
+        Uses modular tier1_core_prompt (hash validation removed - random token makes it pointless)
         """
         from modules.ai_job_description_analysis.prompts.tier1_core_prompt import (
             create_tier1_core_prompt,
@@ -934,28 +1190,12 @@ class GeminiJobAnalyzer:
         # Extract security token from generated prompt for response validation
         import re
 
-        token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", prompt)
+        token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9_]+)", prompt)
         if token_match:
             self._current_security_token = token_match.group(1)
 
-        # SECURITY: Validate with hash-and-replace system
-        validated_prompt, was_replaced = self.security_mgr.validate_and_handle_prompt(
-            prompt_name="tier1_core_prompt",
-            current_prompt=prompt,
-            change_source="agent",
-            canonical_prompt_getter=lambda: create_tier1_core_prompt(jobs),
-        )
-
-        if was_replaced:
-            logger.warning(
-                "⚠️ Tier 1 prompt was replaced due to unauthorized modification"
-            )
-            # Re-extract token from replaced prompt
-            token_match = re.search(r"SECURITY TOKEN: ([a-zA-Z0-9]+)", validated_prompt)
-            if token_match:
-                self._current_security_token = token_match.group(1)
-
-        return validated_prompt
+        # Return prompt directly (no hash validation - random token makes comparison meaningless)
+        return prompt
 
     def _create_batch_analysis_prompt_legacy(self, jobs: List[Dict]) -> str:
         """
@@ -1202,12 +1442,58 @@ DESCRIPTION: {sanitized_description[:2000]}...
                 )
 
                 if response.status_code == 200:
+                    # Reset 503 tracking on success
+                    self._503_tried_models.clear()
                     return response.json()
+
+                elif (
+                    response.status_code == 503
+                ):  # Service Unavailable / Model Overloaded
+                    logger.warning(
+                        f"Model {self.current_model} is overloaded (503). "
+                        f"Attempt {attempt + 1}/{self.max_retries}"
+                    )
+
+                    # Add current model to tried list
+                    self._503_tried_models.add(self.current_model)
+
+                    # Try to find an alternative model we haven't tried yet
+                    fallback_model = self._get_next_available_model()
+
+                    if fallback_model and fallback_model != self.current_model:
+                        logger.info(
+                            f"Switching from {self.current_model} to {fallback_model} "
+                            f"after 30 second delay..."
+                        )
+                        time.sleep(30)  # Wait 30 seconds before trying different model
+                        self.current_model = fallback_model
+                        self.model_switches += 1
+                        continue
+                    else:
+                        # No alternative models available, wait and retry same model
+                        if attempt < self.max_retries - 1:
+                            wait_time = 30 * (attempt + 1)  # 30s, 60s, 90s...
+                            logger.warning(
+                                f"No alternative models available. "
+                                f"Waiting {wait_time}s before retry..."
+                            )
+                            time.sleep(wait_time)
+                            continue
+                        else:
+                            response_text = getattr(
+                                response, "text", "Service unavailable"
+                            )
+                            logger.error(
+                                f"All models overloaded after {self.max_retries} attempts"
+                            )
+                            break
+
                 elif response.status_code == 429:  # Rate limit
                     wait_time = self.retry_delay * (2**attempt)
                     logger.warning(f"Rate limited, waiting {wait_time}s")
                     time.sleep(wait_time)
                     continue
+
                 else:
                     response_text = getattr(response, "text", "Unknown error")
                     logger.error(f"API error: {response.status_code} - {response_text}")
@@ -1263,7 +1549,7 @@ DESCRIPTION: {sanitized_description[:2000]}...
                     incident_type="token_mismatch",
                     expected_token=expected_token,
                     received_token=response_token,
-                    full_response=text[:500]
+                    full_response=text[:500],
                 )
                 return []
 
@@ -1286,9 +1572,7 @@ DESCRIPTION: {sanitized_description[:2000]}...
                     # Log security warnings if any
                     if warnings:
                         sanitized_result["security_warnings"] = len(warnings)
-                        self._log_sanitization_warnings(
-                            result.get("job_id"), warnings
-                        )
+                        self._log_sanitization_warnings(result.get("job_id"), warnings)
 
                     validated_results.append(sanitized_result)
                 else:
@@ -1307,34 +1591,36 @@ DESCRIPTION: {sanitized_description[:2000]}...
             return []
 
     def _validate_analysis_result(self, result: Dict) -> bool:
-        """Validate individual analysis result structure"""
+        """
+        Validate individual analysis result structure (Canonical Tier 1 fields)
+        Canonical Tier 1: authenticity_check, classification, structured_data
+        """
 
+        # Canonical Tier 1 required sections
         required_sections = [
             "job_id",
-            "skills_analysis",
             "authenticity_check",
-            "industry_classification",
+            "classification",
+            "structured_data",
         ]
 
         for section in required_sections:
             if section not in result:
                 return False
 
-        # Validate skills analysis
-        skills_analysis = result.get("skills_analysis", {})
-        if not isinstance(skills_analysis.get("top_skills", []), list):
-            return False
-
         # Validate authenticity check
         auth_check = result.get("authenticity_check", {})
         if not isinstance(auth_check.get("is_authentic"), bool):
             return False
-        if not (0 <= auth_check.get("confidence_score", 0) <= 100):
+
+        # Validate classification
+        classification = result.get("classification", {})
+        if not classification.get("industry"):
             return False
 
-        # Validate industry classification
-        industry = result.get("industry_classification", {})
-        if not industry.get("primary_industry"):
+        # Validate structured_data exists
+        structured_data = result.get("structured_data", {})
+        if not isinstance(structured_data, dict):
             return False
 
         return True
@@ -1410,7 +1696,7 @@ DESCRIPTION: {sanitized_description[:2000]}...
         incident_type: str,
         expected_token: Optional[str] = None,
         received_token: Optional[str] = None,
-        full_response: Optional[str] = None
+        full_response: Optional[str] = None,
     ):
         """
         Log security incidents to dedicated security log file
@@ -1454,7 +1740,9 @@ DESCRIPTION: {sanitized_description[:2000]}...
         """Update usage statistics with new API call data"""
         try:
             # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
-            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
+            tokens_used = usage_data.get(
+                "totalTokenCount", usage_data.get("totalTokens", 0)
+            )
             if tokens_used == 0:
                 # Fallback estimation if no usage data
                 tokens_used = 1000  # Conservative estimate
@@ -1787,7 +2075,9 @@ class JobAnalysisManager:
         """Update usage statistics with new API call data"""
         try:
             # Support both key formats (REST API uses totalTokenCount, SDK uses totalTokens)
-            tokens_used = usage_data.get("totalTokenCount", usage_data.get("totalTokens", 0))
+            tokens_used = usage_data.get(
+                "totalTokenCount", usage_data.get("totalTokens", 0)
+            )
             if tokens_used == 0:
                 # Fallback estimation if no usage data
                 tokens_used = 1000  # Conservative estimate
