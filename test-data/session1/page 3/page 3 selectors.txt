@@ -1,0 +1,111 @@
+Cover letter upload
+select a file
+#q_1 > fieldset > button
+
+or 
+
+//*[@id="q_1"]/fieldset/button
+
+or 
+
+<button type="button" data-testid="input-q_446451869d12afe04743e13f503b0355-upload-button" class="mosaic-provider-module-apply-questions-1yjehkx e8ju0x50"><span class="mosaic-provider-module-apply-questions-v9bgly e37uo190"><span class="mosaic-provider-module-apply-questions-16xs851 e37uo190"><span role="presentation" aria-hidden="true" data-testid="input-q_446451869d12afe04743e13f503b0355-upload-button-header-icon-upload" class="mosaic-provider-module-apply-questions-odge08 eu4oa1w0"></span></span><span class="mosaic-provider-module-apply-questions-4z93oh e37uo190"><span data-testid="input-q_446451869d12afe04743e13f503b0355-upload-button-header-title" class="mosaic-provider-module-apply-questions-2ccxg0 e1wnkr790">Upload a file</span><span data-testid="input-q_446451869d12afe04743e13f503b0355-upload-button-header-subtitle" class="mosaic-provider-module-apply-questions-qnotp3 e1wnkr790">Accepted file types are PDF, DOCX, DOC, JPG, PNG, TXT, RTF, JPEG, JPE, JIF, JFIF, GIF, TIF and TIFF.</span></span></span></button>
+
+----------
+Select an option
+(Question: How many years of manager/team lead experience do you have? *)
+
+-Select an option
+-Less than a year
+-1 year
+-2 years
+-3 years
+-4 years
+-5 years
+-6 - 10 years
+-11 - 15 years
+-16+ years
+
+
+
+#q_3 > div > div.mosaic-provider-module-apply-questions-mbpqlo.eh9h2791
+
+or 
+
+<div class="mosaic-provider-module-apply-questions-mbpqlo eh9h2791"><select id="single-select-question-:r4:" name="q_cd32749f0ec8513ed3643181e60c5296" aria-describedby="single-select-question-error-text-single-select-question-:r4: single-select-question-helper-text-single-select-question-:r4:" aria-labelledby="single-select-question-label-single-select-question-:r4:" data-testid="input-q_cd32749f0ec8513ed3643181e60c5296-select" class="mosaic-provider-module-apply-questions-l5afal eh9h2790" aria-invalid="false"><option value="">Select an option</option><option label="Less than 1 year" value="75b58778-f809-4337-9d5e-cd032cc28379" id="single-select-question-:r4:-0">Less than 1 year</option><option label="1 year" value="62917229-9838-4791-981c-d2cf58ebb788" id="single-select-question-:r4:-1">1 year</option><option label="2 years" value="d75563e8-a7a8-4757-8b04-5bae3d2e8929" id="single-select-question-:r4:-2">2 years</option><option label="3 years" value="ec4d6fb6-9928-4998-9777-f14c7c7ebb9c" id="single-select-question-:r4:-3">3 years</option><option label="4 years" value="7a8a541c-5279-424d-987a-98d86a50cbe7" id="single-select-question-:r4:-4">4 years</option><option label="5 years" value="32b091ee-6219-4f33-90e7-38ae18054ef9" id="single-select-question-:r4:-5">5 years</option><option label="6-10 years" value="ae44df3a-c754-41a0-bdcb-423b11b11efb" id="single-select-question-:r4:-6">6-10 years</option><option label="11-15 years" value="277b5a4b-a3f3-4d17-b4f0-d3618644b099" id="single-select-question-:r4:-7">11-15 years</option><option label="16+ years" value="7cac3de2-0f60-454f-aad9-4d0afd04050b" id="single-select-question-:r4:-8">16+ years</option></select><svg xmlns="http://www.w3.org/2000/svg" focusable="false" role="img" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="mosaic-provider-module-apply-questions-655fty eac13zx0"><path d="M11.7125 15.825a1.1998 1.1998 0 01-.4287-.0775c-.1367-.0517-.2611-.1334-.3731-.2452l-4.594-4.594C6.1056 10.6969 6 10.4317 6 10.1125c0-.3192.1056-.5844.3167-.7957C6.5282 9.1056 6.7934 9 7.1125 9c.3192 0 .5844.1056.7957.3168l3.8043 3.8045 3.8042-3.8045c.2114-.2112.4766-.3168.7958-.3168.3192 0 .5844.1056.7958.3168.2111.2113.3167.4765.3167.7957s-.1056.5844-.3167.7958l-4.594 4.594c-.112.1118-.2364.1935-.373.2452a1.2007 1.2007 0 01-.4288.0775z"></path></svg></div>
+
+or 
+
+//*[@id="q_3"]/div/div[1]
+
+
+-----------
+
+Radio buttons
+(Question: This is an in-person position based out of our Sherwood Park, Alberta, office. Are you able to work in-person in our Sherwood Park office? *)
+
+Radio button: "Yes, I'm able to work in-person" :
+<input id="single-select-question-:r7:-0" type="radio" name="q_131f5a77f88055c90dc13d6714ecc17a" aria-describedby="single-select-question-error-text-single-select-question-:r7: single-select-question-helper-text-single-select-question-:r7:" data-testid="input-q_131f5a77f88055c90dc13d6714ecc17a-single-select-question-:r7:-0" class="mosaic-provider-module-apply-questions-1spuf4i e1rw0n9c0" value="315f1f4b-5478-47c2-8b50-5680d12e5ed2" aria-invalid="false">
+
+or
+
+#single-select-question-\:r7\:-0
+
+or 
+
+//*[@id="single-select-question-:r7:-0"]
+
+--
+Radio butoon: "No, I'm not able to work in-person"
+
+//*[@id="single-select-question-:r7:-1"]
+
+or
+
+#single-select-question-\:r7\:-1
+
+or
+
+<input id="single-select-question-:r7:-1" type="radio" name="q_131f5a77f88055c90dc13d6714ecc17a" aria-describedby="single-select-question-error-text-single-select-question-:r7: single-select-question-helper-text-single-select-question-:r7:" data-testid="input-q_131f5a77f88055c90dc13d6714ecc17a-single-select-question-:r7:-1" class="mosaic-provider-module-apply-questions-1spuf4i e1rw0n9c0" value="1d347df9-1ec8-4353-8e06-43b6d6b8c930" aria-invalid="false">
+
+-----
+Text box (question: Please include a link to your online portfolio of your work)
+#rich-text-question-input-\:rc\:
+
+or
+
+<textarea rows="3" aria-describedby="rich-text-question-helper-text-:rc: rich-text-question-error-text-:rc:" id="rich-text-question-input-:rc:" name="q_e0e4975700c2e2fc4ba7c0f412a40325" class="mosaic-provider-module-apply-questions-1wktjp3 e1jgz0i2"></textarea>
+
+or 
+
+//*[@id="rich-text-question-input-:rc:"]
+
+-------
+
+file upload dialog prompt 
+#q_8 > fieldset > button > span
+
+or 
+
+<span class="mosaic-provider-module-apply-questions-v9bgly e37uo190"><span class="mosaic-provider-module-apply-questions-16xs851 e37uo190"><span role="presentation" aria-hidden="true" data-testid="input-q_077efc8c7bff69bc0d61d688e304903a-upload-button-header-icon-upload" class="mosaic-provider-module-apply-questions-odge08 eu4oa1w0"></span></span><span class="mosaic-provider-module-apply-questions-4z93oh e37uo190"><span data-testid="input-q_077efc8c7bff69bc0d61d688e304903a-upload-button-header-title" class="mosaic-provider-module-apply-questions-2ccxg0 e1wnkr790">Upload a file</span><span data-testid="input-q_077efc8c7bff69bc0d61d688e304903a-upload-button-header-subtitle" class="mosaic-provider-module-apply-questions-qnotp3 e1wnkr790">Accepted file types are PDF, DOCX, DOC, JPG, PNG, TXT, RTF, JPEG, JPE, JIF, JFIF, GIF, TIF and TIFF.</span></span></span>
+
+or
+
+//*[@id="q_8"]/fieldset/button/span
+
+
+---------
+
+Continue button
+
+#mosaic-provider-module-apply-questions > div > div > button > span
+
+or
+
+<span>Continue</span>
+
+or 
+
+//*[@id="mosaic-provider-module-apply-questions"]/div/div/button/span
+
+
+

@@ -1,8 +1,8 @@
 {
   "platform": "indeed",
-  "version": "1.0",
-  "description": "Pre-mapped selectors for Indeed application forms - MVP version",
-  "last_updated": "2025-10-14",
+  "version": "1.1.0",
+  "description": "Pre-mapped selectors for Indeed application forms with multi-page support",
+  "last_updated": "2025-10-17",
   "form_types": {
     "standard_indeed_apply": {
       "description": "Standard Indeed application form with common fields",
@@ -117,6 +117,8 @@
       },
       "submit_button": {
         "selectors": [
+          "#indeedApplyButton > div",
+          "#indeedApplyButton span:has-text('Apply now')",
           "button[type='submit']",
           "button[id*='submit' i]",
           "button[class*='submit' i]",
@@ -176,19 +178,212 @@
     "priority_order": ["indeed_quick_apply", "standard_indeed_apply"],
     "detection_timeout_ms": 5000
   },
+  "multipage_support": {
+    "description": "Multi-page form navigation patterns for Indeed applications",
+    "version": "1.2.0",
+    "last_updated": "2025-10-19",
+    "detection": {
+      "indicators": [
+        "Presence of pagination dots (.pagination-dot, .step-indicator)",
+        "Step counter text (e.g., 'Step 2 of 3', 'Page 2/3')",
+        "Progress bar with aria-label containing 'of'",
+        "Next/Continue button without Submit button"
+      ],
+      "step_counter_patterns": [
+        "Step (\\d+) of (\\d+)",
+        "Page (\\d+) of (\\d+)",
+        "(\\d+)/(\\d+)",
+        "Question (\\d+) of (\\d+)"
+      ]
+    },
+    "navigation_buttons": {
+      "next": {
+        "description": "Next button for multi-page forms",
+        "selectors": [
+          "button:has-text('Next')",
+          "button:has-text('next')",
+          "button[id*='next' i]",
+          "button[class*='next' i]",
+          "a:has-text('Next')",
+          "input[type='submit'][value*='Next' i]",
+          "button[aria-label*='next' i]"
+        ],
+        "wait_after_click_ms": 2000
+      },
+      "continue": {
+        "description": "Continue or Save & Continue button",
+        "selectors": [
+          "button:has-text('Continue')",
+          "button:has-text('continue')",
+          "button[id*='continue' i]",
+          "button[class*='continue' i]",
+          "button.ia-continueButton",
+          "button:has-text('Save & Continue')",
+          "button:has-text('Save and Continue')",
+          "a:has-text('Continue')"
+        ],
+        "wait_after_click_ms": 2000
+      },
+      "submit": {
+        "description": "Final submission button",
+        "selectors": [
+          "button:has-text('Submit application')",
+          "button:has-text('Submit your application')",
+          "button[type='submit']:has-text('Apply')",
+          "button:has-text('Apply now')",
+          "button.ia-continueButton:has-text('Submit')",
+          "input[type='submit'][value*='Submit' i]"
+        ],
+        "wait_after_click_ms": 3000
+      }
+    },
+    "validation_errors": {
+      "description": "Patterns for detecting form validation errors",
+      "error_container_selectors": [
+        ".error-message",
+        ".field-error",
+        "[role='alert']",
+        ".ia-FieldError",
+        ".alert-danger",
+        ".form-error",
+        "[class*='error' i][class*='message' i]",
+        ".validation-error"
+      ],
+      "field_error_selectors": [
+        "input.error",
+        "input[aria-invalid='true']",
+        "input[class*='error' i]",
+        "select.error",
+        "textarea.error",
+        "input.error + .error-message",
+        ".field-error-text"
+      ],
+      "common_error_messages": {
+        "required": ["This field is required", "Required field", "Please fill out this field"],
+        "email": ["Invalid email address", "Please enter a valid email"],
+        "phone": ["Invalid phone number", "Please enter a valid phone number"],
+        "url": ["Invalid URL", "Please enter a valid URL"]
+      }
+    },
+    "page_indicators": {
+      "description": "Elements that indicate current page and total pages",
+      "pagination_dots": [
+        ".pagination-dot",
+        ".step-indicator",
+        "[class*='page-indicator']",
+        ".progress-dot"
+      ],
+      "progress_bars": [
+        "[role='progressbar']",
+        ".progress-bar",
+        "[class*='progress' i]"
+      ],
+      "step_counters": [
+        ".step-counter",
+        "[class*='step' i][class*='counter' i]",
+        ".page-counter"
+      ]
+    },
+    "page_groups": {
+      "description": "Typical field groupings by page in multi-page forms",
+      "note": "These are flexible patterns, not strict requirements",
+      "page_1_basic_info": {
+        "description": "Basic contact information",
+        "typical_fields": [
+          "full_name",
+          "email",
+          "phone",
+          "location"
+        ]
+      },
+      "page_2_experience": {
+        "description": "Experience and documents",
+        "typical_fields": [
+          "resume",
+          "cover_letter",
+          "years_experience",
+          "linkedin_url",
+          "website"
+        ]
+      },
+      "page_3_screening": {
+        "description": "Screening questions and additional info",
+        "typical_fields": [
+          "work_authorization",
+          "salary_expectations",
+          "start_date",
+          "willingness_to_relocate",
+          "screening_questions"
+        ]
+      },
+      "page_4_review": {
+        "description": "Review and confirmation page",
+        "typical_fields": [
+          "review_confirmation",
+          "terms_agreement"
+        ]
+      }
+    },
+    "loading_indicators": {
+      "description": "Elements that indicate page is loading after navigation",
+      "selectors": [
+        ".loading",
+        ".spinner",
+        "[class*='loading']",
+        "[aria-busy='true']",
+        ".page-transition"
+      ]
+    },
+    "final_page_indicators": {
+      "description": "Patterns that indicate we're on the final submission page",
+      "url_patterns": [
+        "**/review**",
+        "**/submit**",
+        "**/confirm**",
+        "**/final**"
+      ],
+      "page_content_patterns": [
+        "review.*application",
+        "confirm.*details",
+        "final.*step",
+        "submit.*application",
+        "ready.*to.*submit"
+      ]
+    },
+    "real_selectors_from_test_data": {
+      "description": "Actual selectors collected from Indeed application pages (2025-10-19)",
+      "page_1_job_listing": {
+        "apply_button": "#indeedApplyButton > div",
+        "apply_button_text": ".jobsearch-IndeedApplyButton-newDesign"
+      },
+      "page_2_resume_selection": {
+        "resume_options_button": "button[data-testid='ResumeOptionsMenu']",
+        "upload_different_file": "button[data-testid='ResumeOptionsMenu-upload']",
+        "hidden_file_input": "input[data-testid='resume-selection-file-resume-upload-button-file-input']",
+        "dynamic_popup_id": "#\\:r3\\:",
+        "note": "DO NOT make hidden input visible - triggers bot detection"
+      },
+      "page_3_screening_questions": {
+        "cover_letter_upload": "button[data-testid*='upload-button']",
+        "experience_dropdown": "select[name^='q_']",
+        "radio_yes_no": "input[type='radio'][id^='single-select-question']",
+        "text_area_portfolio": "textarea[id^='rich-text-question-input']",
+        "continue_button": "#mosaic-provider-module-apply-questions button span:has-text('Continue')",
+        "dynamic_ids_pattern": "Elements use React IDs with colons (:r4:, :r7:, :rc:)"
+      }
+    }
+  },
   "notes": [
-    "TODO: Implement hybrid approach (pre-mapped + AI fallback) in next development cycle",
-    "TODO: Add support for multi-page application forms",
-    "TODO: Add support for custom questions and screening questions",
+    "Multi-page support added in v1.1.0 (2025-10-17)",
     "Selectors are checked in order - first matching selector is used",
     "Form detection uses priority order - checks for Quick Apply first",
-    "This is MVP version - focused on common Indeed application patterns"
+    "Page navigation waits for network idle and loading indicators to disappear",
+    "Validation errors are detected using multiple strategies for robustness"
   ],
   "future_enhancements": [
     "AI-powered form field detection using GPT-4 Vision",
     "Dynamic selector learning from successful applications",
-    "Support for custom screening questions",
-    "Multi-step form navigation",
-    "Support for additional platforms (Greenhouse, Lever, Workday)"
+    "Support for custom screening questions (AI-generated answers)",
+    "Support for additional platforms (Workday, custom ATS)"
   ]
 }

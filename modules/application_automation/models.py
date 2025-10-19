@@ -97,6 +97,14 @@ class ApplicationSubmission(Base):
     reviewed_by = Column(String(255), nullable=True)  # User ID who reviewed
     review_notes = Column(Text, nullable=True)  # User notes from review
 
+    # Multi-page form navigation support (Migration 002)
+    checkpoint_data = Column(JSON, nullable=True, default=dict)  # Form state for resuming after failures
+    current_page = Column(Integer, nullable=False, default=1)  # Current page number (1-indexed)
+    total_pages = Column(Integer, nullable=True)  # Total pages detected (NULL if unknown)
+    pages_completed = Column(JSON, nullable=True, default=list)  # Array of completed page numbers
+    validation_errors = Column(JSON, nullable=True, default=list)  # Validation errors encountered
+    navigation_history = Column(JSON, nullable=True, default=list)  # Chronological navigation log
+
     def __repr__(self):
         return f"<ApplicationSubmission(submission_id={self.submission_id}, job_id={self.job_id}, status={self.status})>"
 
@@ -123,7 +131,42 @@ class ApplicationSubmission(Base):
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
             "reviewed_by": self.reviewed_by,
             "review_notes": self.review_notes,
+            # Multi-page navigation fields
+            "checkpoint_data": self.checkpoint_data,
+            "current_page": self.current_page,
+            "total_pages": self.total_pages,
+            "pages_completed": self.pages_completed,
+            "validation_errors": self.validation_errors,
+            "navigation_history": self.navigation_history,
         }
+
+    def has_checkpoint(self) -> bool:
+        """Check if submission has a valid checkpoint for resuming"""
+        if not self.checkpoint_data:
+            return False
+        # Check if checkpoint is not stale (within 1 hour)
+        if "timestamp" in self.checkpoint_data:
+            from datetime import datetime, timedelta
+
+            checkpoint_time = datetime.fromisoformat(self.checkpoint_data["timestamp"])
+            if datetime.utcnow() - checkpoint_time > timedelta(hours=1):
+                return False  # Checkpoint is stale
+        return True
+
+    def is_multipage_form(self) -> bool:
+        """Check if this submission is for a multi-page form"""
+        return self.total_pages is not None and self.total_pages > 1
+
+    def get_next_page(self) -> int:
+        """Get the next page number to fill (current_page + 1)"""
+        return self.current_page + 1 if self.current_page else 2
+
+    def mark_page_completed(self, page_num: int):
+        """Mark a page as completed"""
+        if self.pages_completed is None:
+            self.pages_completed = []
+        if page_num not in self.pages_completed:
+            self.pages_completed.append(page_num)
 
 
 # SQL migration for creating the table

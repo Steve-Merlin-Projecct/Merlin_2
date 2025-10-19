@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)https://m5.apply.indeed.com/beta/indeedapply/pingback -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Indeed Apply</title>
+</head>
+<body>
+<script>
+    (function () {
+        window.addEventListener('message', ({ data, origin }) => {
+            if (origin.replace(/.*\.(?=.*\.)/g, '') === 'indeed.com') {
+                if (data) {
+                    var job;
+                    var pingbackJobs = [];
+
+                    try {
+                        job = JSON.parse(data);
+                    } catch (error) {
+                        return;
+                    }
+
+                    try {
+                        pingbackJobs = JSON.parse(localStorage.getItem('pingbackJobs') || '[]');
+                    } catch (error) {
+                        return;
+                    }
+
+                    localStorage.setItem('pingbackJobs', JSON.stringify(pingbackJobs.concat(job)));
+                }
+            }
+        });
+    })();
+</script>
+
+
+</body></html>
