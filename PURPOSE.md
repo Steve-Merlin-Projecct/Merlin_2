@@ -1,23 +1,36 @@
-# Purpose: Job Application System Development Branch
+# Purpose: gemini prompt optimization phase 2   implement pro
 
-**Branch:** develop/v4.3.2-worktrees-20251012-044136
-**Created:** 2025-10-12
-**Updated:** 2025-10-14
+**Worktree:** gemini-prompt-optimization-phase-2---implement-pro
+**Branch:** task/05-gemini-prompt-optimization-phase-2---implement-pro
+**Base Branch:** develop/v4.3.3-worktrees-20251017-044814
+**Created:** 2025-10-17 04:48:38
 
 ## Objective
 
-This development branch consolidates work from multiple parallel development worktrees focused on system improvements, features, and infrastructure enhancements.
+Ensure that the process of sending data to Gemini to analyze returns satisfactory data.
 
 ## Scope
 
-Main development integration branch for:
-- Git orchestration improvements
-- User preferences system
-- Librarian agent enhancements
-- Dashboard completion
-- Task workflow refinements
-- Calendly integration
+- Validate Gemini API integration and data flow
+- Test prompt structure and response quality
+- Verify data transformation and parsing
+- Ensure returned data meets system requirements
 
 ## Out of Scope
 
-Production deployments - use main branch for releases.
+- Cost optimization strategies
+- Security token consolidation
+- JSON schema optimization
+- A/B testing implementation
+
+## Success Criteria
+
+- [ ] Gemini API successfully receives job data
+- [ ] Analysis responses are complete and well-structured
+- [ ] Returned data is correctly parsed and stored
+- [ ] Response quality meets application requirements
+- [ ] Documentation updated
+
+## Notes
+
+Focus on data quality and reliability rather than cost optimization.
