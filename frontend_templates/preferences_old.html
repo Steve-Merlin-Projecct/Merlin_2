@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Preferences - Merlin Job System</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="/static/css/unified-theme.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/salary-formatter.js"></script>
+    <style>
+        /* Unified light theme */
+        body {
+            background: #f8f9fa !important;
+        }
+        
+        .scenario-tab {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            background: #b8b8b8;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+        .preference-group {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+        }
+        .formula-display {
+            background: #b8b8b8;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #1a1a1a;
+        }
+        .solo-factor {
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            border: 1px solid #ffeaa7;
+        }
+        .disabled-notice {
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #ffeaa7;
+        }
+        .commute-info {
+            background: #cff4fc;
+            color: #055160;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            border: 1px solid #b8daff;
+        }
+        .range-input {
+            width: 100%;
+        }
+        .trend-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .trend-button {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.25rem;
+            background: var(--bs-gray-700);
+            color: var(--bs-light);
+            cursor: pointer;
+        }
+        .trend-button.active {
+            background: var(--bs-primary);
+            color: white;
+        }
+        .visualization-panel {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        {% include 'shared_navigation.html' %}
+
+        <!-- Header -->
+        <div class="enhanced-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-cog me-3"></i>Job Preferences
+                    </h1>
+                    <p class="mb-0 text-muted">
+                        8-scenario preference configuration with real-time visualization
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="mb-2">
+                        <span class="status-available">
+                            <i class="fas fa-sliders-h me-1"></i>Config: Ready
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Preferences Configuration -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Job Preferences Configuration</h1>
+                    <div>
+                        <button class="btn btn-success" onclick="savePreferences()">Save Preferences</button>
+                        <button class="btn btn-secondary" onclick="loadDefaults()">Load Defaults</button>
+                    </div>
+                </div>
+
+                <div class="disabled-notice">
+                    <strong>⚠️ Calculations Temporarily Disabled</strong><br>
+                    Preference calculations are disabled until scraping and application package conversion is completed.
+                </div>
+
+                <!-- Scenario Tabs -->
+                <div class="mb-4">
+                    <ul class="nav nav-tabs" id="scenarioTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="scenario-1-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-1" type="button" role="tab">
+                                Scenario 1
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-2-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-2" type="button" role="tab">
+                                Scenario 2
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-3-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-3" type="button" role="tab">
+                                Scenario 3
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-4-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-4" type="button" role="tab">
+                                Scenario 4
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-5-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-5" type="button" role="tab">
+                                Scenario 5
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-6-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-6" type="button" role="tab">
+                                Scenario 6
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-7-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-7" type="button" role="tab">
+                                Scenario 7
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="scenario-8-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#scenario-8" type="button" role="tab">
+                                Scenario 8
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="custom-scenario-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#custom-scenario" type="button" role="tab">
+                                + Custom
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tab-content" id="scenarioTabsContent">
+                    <!-- Scenario 1 -->
+                    <div class="tab-pane fade show active" id="scenario-1" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-header">
+                                <h4>Scenario 1: Local Edmonton Focus</h4>
+                                <input type="text" class="form-control mt-2" placeholder="Scenario Name" value="Local Edmonton Focus">
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Salary Preferences -->
+                                    <div class="col-md-6">
+                                        <div class="preference-group">
+                                            <h5>Salary Preferences</h5>
+                                            <div class="mb-3">
+                                                <label class="form-label">Currency</label>
+                                                <select class="form-select" id="currencySelect" onchange="updateCurrency()">
+                                                    <option value="CAD" selected>CAD - Canadian Dollar</option>
+                                                    <option value="USD">USD - US Dollar</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" id="minSalaryLabel">Minimum Salary (CAD)</label>
+                                                <input type="number" class="form-control" id="minSalary" value="65000" onchange="updateFormula()">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" id="maxSalaryLabel">Maximum Salary (CAD)</label>
+                                                <input type="number" class="form-control" id="maxSalary" value="85000" onchange="updateFormula()">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Salary Trend</label>
+                                                <div class="trend-selector">
+                                                    <button class="trend-button active" onclick="setTrend(this, 'linear')">Linear</button>
+                                                    <button class="trend-button" onclick="setTrend(this, 'exponential')">Exponential</button>
+                                                    <button class="trend-button" onclick="setTrend(this, 'polynomial')">Polynomial</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Location Preferences -->
+                                    <div class="col-md-6">
+                                        <div class="preference-group">
+                                            <h5>Location Preferences</h5>
+                                            <div class="mb-3">
+                                                <label class="form-label">Work Arrangement</label>
+                                                <select class="form-select" onchange="updateFormula()">
+                                                    <option value="hybrid" selected>Hybrid</option>
+                                                    <option value="remote">Remote</option>
+                                                    <option value="on-site">On-site</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Maximum Commute (km)</label>
+                                                <input type="range" class="range-input" min="0" max="100" value="15" onchange="updateCommute(this)">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>0 km</span>
+                                                    <span id="commuteDisplay">15 km</span>
+                                                    <span>100 km</span>
+                                                </div>
+                                            </div>
+                                            <div class="commute-info" id="commuteInfo">
+                                                <div>Monthly driving: <span id="monthlyKm">300 km</span></div>
+                                                <div>Monthly time: <span id="monthlyTime">7.5 hours</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Work Schedule -->
+                                    <div class="col-md-6">
+                                        <div class="preference-group">
+                                            <h5>Work Schedule</h5>
+                                            <div class="mb-3">
+                                                <label class="form-label">Hours per Week</label>
+                                                <input type="range" class="range-input" min="20" max="60" value="40" onchange="updateHours(this)">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>20h</span>
+                                                    <span id="hoursDisplay">40h</span>
+                                                    <span>60h</span>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="flexibleSchedule" onchange="updateFormula()">
+                                                    <label class="form-check-label" for="flexibleSchedule">
+                                                        Flexible Schedule Required
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="overtimeAcceptable" onchange="updateFormula()">
+                                                    <label class="form-check-label" for="overtimeAcceptable">
+                                                        Overtime Acceptable
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Benefits -->
+                                    <div class="col-md-6">
+                                        <div class="preference-group">
+                                            <h5>Benefits</h5>
+
+                                            <div class="mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="dentalVision" onchange="updateFormula()">
+                                                    <label class="form-check-label" for="dentalVision">
+                                                        Dental/Vision Coverage
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Minimum Vacation Days</label>
+                                                <input type="number" class="form-control" value="15" min="0" max="30" onchange="updateFormula()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Solo Factors -->
+                                <div class="preference-group">
+                                    <h5>Solo Factors</h5>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="usdPenalty" onchange="updateFormula()">
+                                                <label class="form-check-label" for="usdPenalty">
+                                                    USD Payment Penalty
+                                                </label>
+                                            </div>
+                                            <div class="solo-factor mt-2" style="display: none;" id="usdPenaltySettings">
+                                                <label class="form-label">Multiplier</label>
+                                                <input type="number" class="form-control" value="1.5" step="0.1" onchange="updateFormula()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="industryBonus" onchange="updateFormula()">
+                                                <label class="form-check-label" for="industryBonus">
+                                                    Preferred Industry Bonus
+                                                </label>
+                                            </div>
+                                            <div class="solo-factor mt-2" style="display: none;" id="industryBonusSettings">
+                                                <label class="form-label">Multiplier</label>
+                                                <input type="number" class="form-control" value="0.9" step="0.1" onchange="updateFormula()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="companySize" onchange="updateFormula()">
+                                                <label class="form-check-label" for="companySize">
+                                                    Company Size Preference
+                                                </label>
+                                            </div>
+                                            <div class="solo-factor mt-2" style="display: none;" id="companySizeSettings">
+                                                <select class="form-select" onchange="updateFormula()">
+                                                    <option value="startup">Startup (1-50)</option>
+                                                    <option value="small">Small (51-200)</option>
+                                                    <option value="medium" selected>Medium (201-1000)</option>
+                                                    <option value="large">Large (1000+)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional scenarios would follow similar structure -->
+                    <div class="tab-pane fade" id="scenario-2" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-header">
+                                <h4>Scenario 2: Regional Alberta</h4>
+                                <input type="text" class="form-control mt-2" placeholder="Scenario Name" value="Regional Alberta">
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">Similar structure to Scenario 1 with different default values...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenarios 3-8 would follow similar pattern -->
+                    <div class="tab-pane fade" id="scenario-3" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-header">
+                                <h4>Scenario 3: Remote Canada</h4>
+                                <input type="text" class="form-control mt-2" placeholder="Scenario Name" value="Remote Canada">
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">Remote work scenario configuration...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder tabs 4-8 -->
+                    <div class="tab-pane fade" id="scenario-4" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-body">
+                                <p class="text-muted">Scenario 4 - Configure additional preferences...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="scenario-5" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-body">
+                                <p class="text-muted">Scenario 5 - Configure additional preferences...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="scenario-6" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-body">
+                                <p class="text-muted">Scenario 6 - Configure additional preferences...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="scenario-7" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-body">
+                                <p class="text-muted">Scenario 7 - Configure additional preferences...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="scenario-8" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-body">
+                                <p class="text-muted">Scenario 8 - Configure additional preferences...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Scenario -->
+                    <div class="tab-pane fade" id="custom-scenario" role="tabpanel">
+                        <div class="scenario-tab">
+                            <div class="card-header">
+                                <h4>Custom Scenario Creator</h4>
+                                <p class="text-muted">Create your own custom job preference scenarios with algorithmic bridging</p>
+                            </div>
+                            <div class="card-body">
+                                <!-- Custom Scenario Management -->
+                                <div class="row mb-4">
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" id="customScenarioName" 
+                                               placeholder="Enter custom scenario name..." 
+                                               value="My Custom Scenario">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-primary w-100" onclick="createCustomScenario()">
+                                            Create Scenario
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Existing Custom Scenarios -->
+                                <div class="mb-4">
+                                    <h5>Existing Custom Scenarios</h5>
+                                    <div id="customScenariosList" class="border rounded p-3" style="min-height: 100px; background: var(--bs-gray-900);">
+                                        <div class="custom-scenario-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                                            <span>Example Custom Scenario</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-secondary me-2" onclick="editCustomScenario('example')">Edit</button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteCustomScenario('example')">Delete</button>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted text-center mt-3">Create your first custom scenario above</p>
+                                    </div>
+                                </div>
+
+                                <!-- Algorithmic Bridging Configuration -->
+                                <div class="preference-group">
+                                    <h5>Algorithmic Bridging Between Scenarios</h5>
+                                    <p class="text-muted">Configure how salary requirements change across different scenarios using mathematical formulas</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Base Scenario</label>
+                                                <select class="form-select" id="baseScenario">
+                                                    <option value="scenario-1">Scenario 1 (Local Edmonton)</option>
+                                                    <option value="scenario-2">Scenario 2 (Regional Alberta)</option>
+                                                    <option value="scenario-3">Scenario 3 (Remote Canada)</option>
+                                                    <option value="custom">Custom Scenario</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Target Scenario</label>
+                                                <select class="form-select" id="targetScenario">
+                                                    <option value="scenario-1">Scenario 1 (Local Edmonton)</option>
+                                                    <option value="scenario-2">Scenario 2 (Regional Alberta)</option>
+                                                    <option value="scenario-3">Scenario 3 (Remote Canada)</option>
+                                                    <option value="custom">Custom Scenario</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Salary Bridging Formula</label>
+                                                <select class="form-select" id="salaryBridgeFormula" onchange="updateBridgePreview()">
+                                                    <option value="linear">Linear: y = mx + b</option>
+                                                    <option value="exponential">Exponential: y = a * e^(bx)</option>
+                                                    <option value="polynomial">Polynomial: y = ax² + bx + c</option>
+                                                    <option value="logarithmic">Logarithmic: y = a * ln(x) + b</option>
+                                                    <option value="stepwise">Stepwise: Different rates per range</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Distance Factor</label>
+                                                <input type="number" class="form-control" id="distanceFactor" 
+                                                       value="1.0" step="0.1" min="0.1" max="5.0" 
+                                                       onchange="updateBridgePreview()">
+                                                <div class="form-text">Multiplier based on distance/location difference</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Cost of Living Adjustment</label>
+                                                <input type="number" class="form-control" id="colAdjustment" 
+                                                       value="0" step="1000" 
+                                                       onchange="updateBridgePreview()">
+                                                <div class="form-text">Fixed amount adjustment (CAD)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formula Preview -->
+                                    <div class="formula-display mb-3">
+                                        <strong>Current Bridge Formula:</strong>
+                                        <div id="bridgeFormulaPreview" class="mt-2">
+                                            Target Salary = Base Salary × Distance Factor + COL Adjustment
+                                        </div>
+                                    </div>
+
+                                    <!-- Bridge Testing -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Test Base Salary (CAD)</label>
+                                                <input type="number" class="form-control" id="testBaseSalary" 
+                                                       value="75000" onchange="updateBridgePreview()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Calculated Target Salary</label>
+                                                <input type="text" class="form-control" id="calculatedTargetSalary" 
+                                                       readonly style="background: var(--bs-success); color: white;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-success" onclick="saveBridgeFormula()">
+                                        Save Bridge Formula
+                                    </button>
+                                </div>
+
+                                <!-- Global Scenario Relationships -->
+                                <div class="preference-group">
+                                    <h5>Global Scenario Relationships</h5>
+                                    <p class="text-muted">View and manage relationships between all scenarios</p>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>From Scenario</th>
+                                                    <th>To Scenario</th>
+                                                    <th>Formula Type</th>
+                                                    <th>Distance Factor</th>
+                                                    <th>COL Adjustment</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="scenarioRelationshipsTable">
+                                                <tr>
+                                                    <td>Local Edmonton</td>
+                                                    <td>Regional Alberta</td>
+                                                    <td>Linear</td>
+                                                    <td>1.2</td>
+                                                    <td>+$10,000</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary">Edit</button>
+                                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Regional Alberta</td>
+                                                    <td>Remote Canada</td>
+                                                    <td>Polynomial</td>
+                                                    <td>1.1</td>
+                                                    <td>+$5,000</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary">Edit</button>
+                                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Visualization -->
+            <div class="col-lg-4">
+                <div class="visualization-panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Preference Formula Visualization</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="preferenceChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Generated Formula</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="formula-display" id="formulaDisplay">
+                                <code>Score = (Salary_Score × 0.4) + (Location_Score × 0.3) + (Schedule_Score × 0.2) + (Benefits_Score × 0.1)</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Current Preferences</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Currency:</span>
+                                    <strong id="currentCurrency">CAD</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Salary Range:</span>
+                                    <strong id="currentSalaryRange" class="salary-display">$65,000 - $85,000 CAD</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Current Weights</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>Salary:</span>
+                                    <strong id="salaryWeight">40%</strong>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>Location:</span>
+                                    <strong id="locationWeight">30%</strong>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>Schedule:</span>
+                                    <strong id="scheduleWeight">20%</strong>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>Benefits:</span>
+                                    <strong id="benefitsWeight">10%</strong>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize preference chart
+        const ctx = document.getElementById('preferenceChart').getContext('2d');
+        const preferenceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Salary', 'Location', 'Schedule', 'Benefits', 'Overall'],
+                datasets: [{
+                    label: 'Preference Score',
+                    data: [0.8, 0.7, 0.6, 0.5, 0.65],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                }
+            }
+        });
+
+        // Update functions
+        function updateFormula() {
+            // Collect current preference values including currency
+            const preferences = {
+                currency: document.getElementById('currencySelect').value,
+                minSalary: parseInt(document.getElementById('minSalary').value) || 0,
+                maxSalary: parseInt(document.getElementById('maxSalary').value) || 0,
+                workArrangement: document.querySelector('select[onchange="updateFormula()"]').value,
+                maxCommute: parseInt(document.getElementById('commuteDisplay').textContent) || 0,
+                hoursPerWeek: parseInt(document.getElementById('hoursDisplay').textContent) || 40,
+                flexibleSchedule: document.getElementById('flexibleSchedule').checked,
+                overtimeAcceptable: document.getElementById('overtimeAcceptable').checked
+            };
+            
+            // Store preferences for calculations (when enabled)
+            window.currentPreferences = preferences;
+            
+            // Update display elements with currency
+            updateSalaryDisplays();
+            
+            console.log('Preferences updated:', preferences);
+        }
+
+        function updateSalaryDisplays() {
+            const currency = document.getElementById('currencySelect').value;
+            const minSalary = parseInt(document.getElementById('minSalary').value) || 0;
+            const maxSalary = parseInt(document.getElementById('maxSalary').value) || 0;
+            
+            // Update any display elements that show salary ranges
+            const salaryDisplays = document.querySelectorAll('.salary-display');
+            salaryDisplays.forEach(element => {
+                if (minSalary && maxSalary) {
+                    element.textContent = `$${minSalary.toLocaleString()} - $${maxSalary.toLocaleString()} ${currency}`;
+                } else if (minSalary) {
+                    element.textContent = `$${minSalary.toLocaleString()}+ ${currency}`;
+                } else if (maxSalary) {
+                    element.textContent = `Up to $${maxSalary.toLocaleString()} ${currency}`;
+                }
+            });
+        }
+
+        function updateCommute(slider) {
+            const value = slider.value;
+            document.getElementById('commuteDisplay').textContent = value + ' km';
+            
+            // Calculate monthly driving (assuming 20 work days, hybrid 50% in office)
+            const monthlyKm = value * 2 * 20 * 0.5;
+            const monthlyTime = (monthlyKm / 40).toFixed(1);
+            
+            document.getElementById('monthlyKm').textContent = monthlyKm + ' km';
+            document.getElementById('monthlyTime').textContent = monthlyTime + ' hours';
+            
+            updateFormula();
+        }
+
+        function updateHours(slider) {
+            const value = slider.value;
+            document.getElementById('hoursDisplay').textContent = value + 'h';
+            updateFormula();
+        }
+
+        function setTrend(button, trend) {
+            // Remove active class from siblings
+            const siblings = button.parentElement.querySelectorAll('.trend-button');
+            siblings.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            updateFormula();
+        }
+
+        function savePreferences() {
+            // Collect all preferences including currency
+            const preferences = {
+                currency: document.getElementById('currencySelect').value,
+                minSalary: parseInt(document.getElementById('minSalary').value) || 0,
+                maxSalary: parseInt(document.getElementById('maxSalary').value) || 0,
+                workArrangement: document.querySelector('select[onchange="updateFormula()"]').value,
+                maxCommute: parseInt(document.getElementById('commuteDisplay').textContent) || 0,
+                hoursPerWeek: parseInt(document.getElementById('hoursDisplay').textContent) || 40,
+                flexibleSchedule: document.getElementById('flexibleSchedule').checked,
+                overtimeAcceptable: document.getElementById('overtimeAcceptable').checked,
+                dentalVision: document.getElementById('dentalVision').checked,
+                vacationDays: parseInt(document.querySelector('input[type="number"]').value) || 15
+            };
+            
+            // Save to local storage for now (can be enhanced to save to backend later)
+            localStorage.setItem('jobPreferences', JSON.stringify(preferences));
+            
+            alert(`Preferences saved successfully!\nCurrency: ${preferences.currency}\nSalary Range: $${preferences.minSalary.toLocaleString()} - $${preferences.maxSalary.toLocaleString()} ${preferences.currency}`);
+        }
+
+        function loadDefaults() {
+            // Load Steve Glen's default preferences with CAD currency
+            document.getElementById('currencySelect').value = 'CAD';
+            document.getElementById('minSalary').value = '65000';
+            document.getElementById('maxSalary').value = '85000';
+            
+            // Update labels and displays
+            updateCurrency();
+            updateFormula();
+            
+            alert('Default preferences loaded for Steve Glen\nCurrency: CAD\nSalary Range: $65,000 - $85,000 CAD');
+        }
+
+        // Initialize the page
+        function initializePage() {
+            // Set initial currency tracking
+            window.lastCurrency = 'CAD';
+            
+            // Load any saved preferences from localStorage
+            const savedPreferences = localStorage.getItem('jobPreferences');
+            if (savedPreferences) {
+                try {
+                    const prefs = JSON.parse(savedPreferences);
+                    if (prefs.currency) {
+                        document.getElementById('currencySelect').value = prefs.currency;
+                        window.lastCurrency = prefs.currency;
+                    }
+                    if (prefs.minSalary) {
+                        document.getElementById('minSalary').value = prefs.minSalary;
+                    }
+                    if (prefs.maxSalary) {
+                        document.getElementById('maxSalary').value = prefs.maxSalary;
+                    }
+                } catch (e) {
+                    console.log('Could not load saved preferences');
+                }
+            }
+            
+            // Update displays
+            updateCurrency();
+            updateFormula();
+        }
+
+        function updateCurrency() {
+            const selectedCurrency = document.getElementById('currencySelect').value;
+            const minSalaryLabel = document.getElementById('minSalaryLabel');
+            const maxSalaryLabel = document.getElementById('maxSalaryLabel');
+            const minSalaryInput = document.getElementById('minSalary');
+            const maxSalaryInput = document.getElementById('maxSalary');
+            
+            // Update labels
+            minSalaryLabel.textContent = `Minimum Salary (${selectedCurrency})`;
+            maxSalaryLabel.textContent = `Maximum Salary (${selectedCurrency})`;
+            
+            // Store previous currency to avoid unnecessary conversions
+            const previousCurrency = window.lastCurrency || 'CAD';
+            
+            // Convert salary values if currency actually changed
+            if (previousCurrency !== selectedCurrency) {
+                const currentMin = parseInt(minSalaryInput.value) || 0;
+                const currentMax = parseInt(maxSalaryInput.value) || 0;
+                
+                if (previousCurrency === 'CAD' && selectedCurrency === 'USD') {
+                    // Convert from CAD to USD (approximate rate: 1 CAD = 0.73 USD)
+                    if (currentMin > 0) minSalaryInput.value = Math.round(currentMin * 0.73);
+                    if (currentMax > 0) maxSalaryInput.value = Math.round(currentMax * 0.73);
+                } else if (previousCurrency === 'USD' && selectedCurrency === 'CAD') {
+                    // Convert from USD to CAD (approximate rate: 1 USD = 1.37 CAD)
+                    if (currentMin > 0) minSalaryInput.value = Math.round(currentMin * 1.37);
+                    if (currentMax > 0) maxSalaryInput.value = Math.round(currentMax * 1.37);
+                }
+                
+                // Store current currency for next comparison
+                window.lastCurrency = selectedCurrency;
+            }
+            
+            // Update visualization displays
+            document.getElementById('currentCurrency').textContent = selectedCurrency;
+            
+            // Update formula with new currency
+            updateFormula();
+        }
+
+        // Initialize solo factor toggles
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const settingsId = this.id + 'Settings';
+                const settings = document.getElementById(settingsId);
+                if (settings) {
+                    settings.style.display = this.checked ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Custom scenario functions
+        let customScenarios = [];
+
+        function createCustomScenario() {
+            const name = document.getElementById('customScenarioName').value.trim();
+            if (!name) {
+                alert('Please enter a scenario name');
+                return;
+            }
+
+            const scenario = {
+                id: 'custom_' + Date.now(),
+                name: name,
+                created: new Date().toLocaleDateString(),
+                preferences: {
+                    salaryMin: 60000,
+                    salaryMax: 100000,
+                    location: 'Canada',
+                    workArrangement: 'hybrid'
+                }
+            };
+
+            customScenarios.push(scenario);
+            updateCustomScenariosList();
+            
+            // Clear input
+            document.getElementById('customScenarioName').value = '';
+            
+            alert(`Custom scenario "${name}" created successfully!`);
+        }
+
+        function updateCustomScenariosList() {
+            const container = document.getElementById('customScenariosList');
+            
+            if (customScenarios.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center mt-3">Create your first custom scenario above</p>';
+                return;
+            }
+
+            let html = '';
+            customScenarios.forEach(scenario => {
+                html += `
+                    <div class="custom-scenario-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                        <div>
+                            <strong>${scenario.name}</strong>
+                            <small class="text-muted d-block">Created: ${scenario.created}</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-secondary me-2" onclick="editCustomScenario('${scenario.id}')">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCustomScenario('${scenario.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function editCustomScenario(scenarioId) {
+            const scenario = customScenarios.find(s => s.id === scenarioId);
+            if (!scenario) return;
+            
+            const newName = prompt('Edit scenario name:', scenario.name);
+            if (newName && newName.trim()) {
+                scenario.name = newName.trim();
+                updateCustomScenariosList();
+                alert('Scenario updated successfully!');
+            }
+        }
+
+        function deleteCustomScenario(scenarioId) {
+            if (confirm('Are you sure you want to delete this custom scenario?')) {
+                customScenarios = customScenarios.filter(s => s.id !== scenarioId);
+                updateCustomScenariosList();
+                alert('Custom scenario deleted successfully!');
+            }
+        }
+
+        function updateBridgePreview() {
+            const formulaType = document.getElementById('salaryBridgeFormula').value;
+            const distanceFactor = parseFloat(document.getElementById('distanceFactor').value) || 1.0;
+            const colAdjustment = parseFloat(document.getElementById('colAdjustment').value) || 0;
+            const testSalary = parseFloat(document.getElementById('testBaseSalary').value) || 75000;
+
+            let formulaText = '';
+            let calculatedSalary = 0;
+
+            switch (formulaType) {
+                case 'linear':
+                    formulaText = `Target Salary = Base Salary × ${distanceFactor} + ${colAdjustment}`;
+                    calculatedSalary = testSalary * distanceFactor + colAdjustment;
+                    break;
+                case 'exponential':
+                    formulaText = `Target Salary = Base Salary × e^(${(distanceFactor - 1).toFixed(2)}) + ${colAdjustment}`;
+                    calculatedSalary = testSalary * Math.exp(distanceFactor - 1) + colAdjustment;
+                    break;
+                case 'polynomial':
+                    const polyFactor = distanceFactor;
+                    formulaText = `Target Salary = Base Salary × (${polyFactor}x + ${(polyFactor * 0.1).toFixed(2)}x²) + ${colAdjustment}`;
+                    calculatedSalary = testSalary * (polyFactor + (polyFactor * 0.1)) + colAdjustment;
+                    break;
+                case 'logarithmic':
+                    formulaText = `Target Salary = Base Salary × (1 + ${(distanceFactor - 1).toFixed(2)} × ln(1.5)) + ${colAdjustment}`;
+                    calculatedSalary = testSalary * (1 + (distanceFactor - 1) * Math.log(1.5)) + colAdjustment;
+                    break;
+                case 'stepwise':
+                    formulaText = `Target Salary = Base Salary × Step(${distanceFactor}) + ${colAdjustment}`;
+                    const step = distanceFactor < 1.2 ? 1.1 : distanceFactor < 1.5 ? 1.3 : 1.5;
+                    calculatedSalary = testSalary * step + colAdjustment;
+                    break;
+            }
+
+            document.getElementById('bridgeFormulaPreview').innerHTML = formulaText;
+            document.getElementById('calculatedTargetSalary').value = `$${Math.round(calculatedSalary).toLocaleString()}`;
+        }
+
+        function saveBridgeFormula() {
+            const baseScenario = document.getElementById('baseScenario').value;
+            const targetScenario = document.getElementById('targetScenario').value;
+            const formulaType = document.getElementById('salaryBridgeFormula').value;
+            const distanceFactor = document.getElementById('distanceFactor').value;
+            const colAdjustment = document.getElementById('colAdjustment').value;
+
+            if (baseScenario === targetScenario) {
+                alert('Base and target scenarios must be different');
+                return;
+            }
+
+            // Add to the relationships table
+            const tableBody = document.getElementById('scenarioRelationshipsTable');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${baseScenario}</td>
+                <td>${targetScenario}</td>
+                <td>${formulaType}</td>
+                <td>${distanceFactor}</td>
+                <td>+$${Math.abs(colAdjustment).toLocaleString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-secondary">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+
+            alert('Bridge formula saved successfully!');
+        }
+
+        // Initialize page on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBridgePreview();
+            initializePage();
+        });
+    </script>
+</body>
+</html>
