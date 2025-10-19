@@ -6,6 +6,88 @@
     <title>Jobs - Dashboard V2</title>
     <link rel="stylesheet" href="/static/css/dashboard_v2.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .filter-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .filter-input, .filter-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            color: var(--color-text-primary);
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--color-cyan);
+            box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+        }
+        .filter-input::placeholder {
+            color: var(--color-text-tertiary);
+        }
+        .filter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--color-cyan);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .filter-badge-count {
+            background: var(--color-cyan);
+            color: var(--color-bg);
+            padding: 0.125rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+        }
+        .clear-filters-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--color-red);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .clear-filters-btn:hover {
+            background: rgba(255, 59, 48, 0.2);
+            border-color: var(--color-red);
+        }
+        .filter-toggle-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--color-cyan);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .filter-toggle-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: var(--color-cyan);
+        }
+    </style>
 </head>
 <body class="dashboard-bg" x-data="jobsPage()" x-init="init()">
 
@@ -26,6 +108,9 @@
                 <a href="/dashboard/analytics" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
                     📈 Analytics
                 </a>
+                <a href="/dashboard/schema" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    🗄️ Schema
+                </a>
             </div>
         </nav>
 
@@ -33,17 +118,139 @@
         <header class="dashboard-header">
             <div>
                 <h1 class="dashboard-title">Job Listings</h1>
-                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;" x-text="`${pagination.total} jobs found`"></p>
+                <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">
+                    <span x-text="`${pagination.total} jobs found`"></span>
+                    <span x-show="activeFiltersCount > 0" class="filter-badge" style="margin-left: 1rem;">
+                        <span x-text="`${activeFiltersCount} filter${activeFiltersCount > 1 ? 's' : ''} active`"></span>
+                    </span>
+                </p>
             </div>
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <select x-model="filter" @change="loadJobs()" class="btn btn-secondary">
-                    <option value="all">All Jobs</option>
-                    <option value="eligible">Eligible</option>
-                    <option value="not_eligible">Not Eligible</option>
-                    <option value="applied">Already Applied</option>
-                </select>
+                <button @click="showFilters = !showFilters" class="filter-toggle-btn">
+                    <span x-text="showFilters ? '🔽 Hide Filters' : '🔼 Show Filters'"></span>
+                    <span x-show="activeFiltersCount > 0" class="filter-badge-count" x-text="activeFiltersCount"></span>
+                </button>
             </div>
         </header>
+
+        <!-- Advanced Filters Panel -->
+        <div x-show="showFilters" x-collapse class="filter-panel">
+            <!-- Search Bar -->
+            <div style="margin-bottom: 1.5rem;">
+                <input type="text"
+                       x-model="filters.search"
+                       @input.debounce.300ms="applyFilters()"
+                       placeholder="🔍 Search jobs by title, company, or location..."
+                       class="filter-input"
+                       style="width: 100%; font-size: 1rem;">
+            </div>
+
+            <!-- Primary Filters -->
+            <div class="filter-row">
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Status Filter
+                    </label>
+                    <select x-model="filters.filter" @change="applyFilters()" class="filter-select" style="width: 100%;">
+                        <option value="all">All Jobs</option>
+                        <option value="eligible">✅ Eligible</option>
+                        <option value="not_eligible">❌ Not Eligible</option>
+                        <option value="applied">📝 Already Applied</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Remote Options
+                    </label>
+                    <select x-model="filters.remote_options" @change="applyFilters()" class="filter-select" style="width: 100%;">
+                        <option value="">All Types</option>
+                        <option value="remote">🏠 Remote</option>
+                        <option value="hybrid">🏢 Hybrid</option>
+                        <option value="on-site">🏙️ On-site</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Job Type
+                    </label>
+                    <select x-model="filters.job_type" @change="applyFilters()" class="filter-select" style="width: 100%;">
+                        <option value="">All Types</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="temporary">Temporary</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Seniority Level
+                    </label>
+                    <select x-model="filters.seniority_level" @change="applyFilters()" class="filter-select" style="width: 100%;">
+                        <option value="">All Levels</option>
+                        <option value="junior">Junior</option>
+                        <option value="mid-level">Mid-level</option>
+                        <option value="senior">Senior</option>
+                        <option value="lead">Lead</option>
+                        <option value="executive">Executive</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Salary Range -->
+            <div class="filter-row">
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Min Salary ($)
+                    </label>
+                    <input type="number"
+                           x-model="filters.salary_min"
+                           @change="applyFilters()"
+                           placeholder="e.g., 50000"
+                           class="filter-input"
+                           style="width: 100%;"
+                           min="0"
+                           step="5000">
+                </div>
+
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Max Salary ($)
+                    </label>
+                    <input type="number"
+                           x-model="filters.salary_max"
+                           @change="applyFilters()"
+                           placeholder="e.g., 150000"
+                           class="filter-input"
+                           style="width: 100%;"
+                           min="0"
+                           step="5000">
+                </div>
+
+                <div>
+                    <label style="display: block; color: var(--color-text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                        Posted Within
+                    </label>
+                    <select x-model="filters.posted_within" @change="applyFilters()" class="filter-select" style="width: 100%;">
+                        <option value="">Any Time</option>
+                        <option value="24h">Last 24 hours</option>
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d">Last 30 days</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: flex-end;">
+                    <button @click="clearFilters()"
+                            x-show="activeFiltersCount > 0"
+                            class="clear-filters-btn"
+                            style="width: 100%;">
+                        🗑️ Clear All Filters
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Loading Spinner -->
         <div x-show="loading" class="glass-card" style="text-align: center; padding: 2rem;">
@@ -109,6 +316,9 @@
             <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
             <h3 class="gradient-text-cyan" style="font-size: 1.5rem; margin-bottom: 0.5rem;">No jobs found</h3>
             <p style="color: var(--color-text-secondary);">Try adjusting your filters or wait for new jobs to be scraped</p>
+            <button @click="clearFilters()" x-show="activeFiltersCount > 0" class="btn btn-primary" style="margin-top: 1rem;">
+                Clear Filters
+            </button>
         </div>
 
         <!-- Pagination -->
@@ -136,9 +346,19 @@
         function jobsPage() {
             return {
                 jobs: [],
-                filter: 'all',
                 loading: false,
                 error: null,
+                showFilters: false,
+                filters: {
+                    filter: 'all',
+                    search: '',
+                    salary_min: '',
+                    salary_max: '',
+                    remote_options: '',
+                    job_type: '',
+                    seniority_level: '',
+                    posted_within: ''
+                },
                 pagination: {
                     page: 1,
                     per_page: 20,
@@ -146,8 +366,78 @@
                     pages: 0
                 },
 
+                get activeFiltersCount() {
+                    let count = 0;
+                    if (this.filters.search) count++;
+                    if (this.filters.filter !== 'all') count++;
+                    if (this.filters.salary_min) count++;
+                    if (this.filters.salary_max) count++;
+                    if (this.filters.remote_options) count++;
+                    if (this.filters.job_type) count++;
+                    if (this.filters.seniority_level) count++;
+                    if (this.filters.posted_within) count++;
+                    return count;
+                },
+
                 async init() {
+                    // Load filters from localStorage
+                    this.loadFiltersFromStorage();
                     await this.loadJobs();
+                },
+
+                loadFiltersFromStorage() {
+                    const stored = localStorage.getItem('dashboardJobFilters');
+                    if (stored) {
+                        try {
+                            const parsed = JSON.parse(stored);
+                            this.filters = { ...this.filters, ...parsed };
+                            this.showFilters = this.activeFiltersCount > 0;
+                        } catch (e) {
+                            console.warn('Failed to parse stored filters:', e);
+                        }
+                    }
+                },
+
+                saveFiltersToStorage() {
+                    localStorage.setItem('dashboardJobFilters', JSON.stringify(this.filters));
+                },
+
+                applyFilters() {
+                    this.pagination.page = 1; // Reset to first page when filters change
+                    this.saveFiltersToStorage();
+                    this.loadJobs();
+                },
+
+                clearFilters() {
+                    this.filters = {
+                        filter: 'all',
+                        search: '',
+                        salary_min: '',
+                        salary_max: '',
+                        remote_options: '',
+                        job_type: '',
+                        seniority_level: '',
+                        posted_within: ''
+                    };
+                    localStorage.removeItem('dashboardJobFilters');
+                    this.applyFilters();
+                },
+
+                buildQueryString() {
+                    const params = new URLSearchParams();
+                    params.append('page', this.pagination.page);
+                    params.append('per_page', this.pagination.per_page);
+
+                    if (this.filters.filter) params.append('filter', this.filters.filter);
+                    if (this.filters.search) params.append('search', this.filters.search);
+                    if (this.filters.salary_min) params.append('salary_min', this.filters.salary_min);
+                    if (this.filters.salary_max) params.append('salary_max', this.filters.salary_max);
+                    if (this.filters.remote_options) params.append('remote_options', this.filters.remote_options);
+                    if (this.filters.job_type) params.append('job_type', this.filters.job_type);
+                    if (this.filters.seniority_level) params.append('seniority_level', this.filters.seniority_level);
+                    if (this.filters.posted_within) params.append('posted_within', this.filters.posted_within);
+
+                    return params.toString();
                 },
 
                 async loadJobs() {
@@ -155,7 +445,7 @@
                     this.error = null;
 
                     try {
-                        const url = `/api/v2/dashboard/jobs?filter=${this.filter}&page=${this.pagination.page}&per_page=${this.pagination.per_page}`;
+                        const url = `/api/v2/dashboard/jobs?${this.buildQueryString()}`;
                         const response = await fetch(url);
 
                         if (!response.ok) {
