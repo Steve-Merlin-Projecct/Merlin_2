@@ -1,0 +1,174 @@
+{
+  "security_token": "SEC_TOKEN_GX3TeaQSTh0Kik1s9zQQ63trz7gbC7OE",
+  "analysis_results": [
+    {
+      "job_id": "test_job_001",
+      "authenticity_check": {
+        "title_matches_role": true,
+        "mismatch_explanation": null,
+        "is_authentic": true,
+        "reasoning": "The job description is clear, concise, and provides realistic expectations for a Senior Software Engineer role. The requirements and responsibilities align with the title."
+      },
+      "classification": {
+        "industry": "Software Development",
+        "sub_industry": "SaaS",
+        "job_function": "Software Engineering",
+        "seniority_level": "Senior",
+        "confidence": 95
+      },
+      "structured_data": {
+        "job_title": "Senior Software Engineer",
+        "company_name": "TechCorp Solutions",
+        "job_type": "Full-time",
+        "hiring_manager": null,
+        "department": null,
+        "reporting_to": null,
+        "skill_requirements": {
+          "skills": [
+            {
+              "skill_name": "Python",
+              "importance_rating": 95,
+              "reasoning": "Primary language for backend systems development."
+            },
+            {
+              "skill_name": "Go",
+              "importance_rating": 85,
+              "reasoning": "Used for building scalable backend systems."
+            },
+            {
+              "skill_name": "AWS",
+              "importance_rating": 90,
+              "reasoning": "Cloud infrastructure experience is essential."
+            },
+            {
+              "skill_name": "Software Engineering",
+              "importance_rating": 90,
+              "reasoning": "Overall experience in software development."
+            },
+            {
+              "skill_name": "Distributed Systems",
+              "importance_rating": 80,
+              "reasoning": "Experience with distributed systems is required."
+            },
+            {
+              "skill_name": "Microservices",
+              "importance_rating": 80,
+              "reasoning": "Experience with microservices architecture is required."
+            },
+            {
+              "skill_name": "Docker",
+              "importance_rating": 75,
+              "reasoning": "Experience with containerization technologies."
+            },
+            {
+              "skill_name": "Kubernetes",
+              "importance_rating": 75,
+              "reasoning": "Experience with container orchestration."
+            },
+            {
+              "skill_name": "CI/CD Pipelines",
+              "importance_rating": 70,
+              "reasoning": "Experience with continuous integration and continuous deployment."
+            },
+            {
+              "skill_name": "Code Review",
+              "importance_rating": 70,
+              "reasoning": "Ability to participate in code reviews and maintain high code quality."
+            },
+            {
+              "skill_name": "Agile Development",
+              "importance_rating": 65,
+              "reasoning": "Experience working in an agile environment."
+            },
+            {
+              "skill_name": "Mentoring",
+              "importance_rating": 60,
+              "reasoning": "Ability to mentor junior engineers."
+            },
+            {
+              "skill_name": "Java",
+              "importance_rating": 50,
+              "reasoning": "Alternative language proficiency."
+            },
+            {
+              "skill_name": "C++",
+              "importance_rating": 50,
+              "reasoning": "Alternative language proficiency."
+            }
+          ],
+          "education_requirements": [
+            {
+              "degree_level": "Bachelor's",
+              "field_of_study": "Computer Science",
+              "institution_type": "accredited university",
+              "years_required": 4,
+              "is_required": true,
+              "alternative_experience": "or related field"
+            }
+          ],
+          "certifications": []
+        },
+        "work_arrangement": {
+          "in_office_requirements": "Hybrid",
+          "office_location": null,
+          "working_hours_per_week": null,
+          "work_schedule": null,
+          "specific_schedule": "3 days in office, 2 days remote",
+          "travel_requirements": null
+        },
+        "compensation": {
+          "salary_low": "180000",
+          "salary_high": "220000",
+          "salary_mentioned": true,
+          "benefits": [
+            "Health insurance",
+            "Dental insurance",
+            "Vision insurance",
+            "401(k) matching",
+            "Unlimited PTO",
+            "Professional development budget",
+            "Catered lunches",
+            "Snacks"
+          ],
+          "equity_stock_options": true,
+          "commission_or_performance_incentive": null,
+          "est_total_compensation": null,
+          "compensation_currency": "USD"
+        },
+        "application_details": {
+          "posted_date": null,
+          "application_email": null,
+          "application_method": "website",
+          "application_link": null,
+          "special_instructions": "Apply with your resume and a brief cover letter explaining why you're interested!",
+          "required_documents": [
+            "resume",
+            "cover letter"
+          ],
+          "application_deadline": null
+        },
+        "ats_optimization": {
+          "primary_keywords": [
+            "Software Engineer",
+            "Python",
+            "AWS",
+            "Backend Systems",
+            "Distributed Systems"
+          ],
+          "industry_keywords": [
+            "SaaS",
+            "Cloud Infrastructure",
+            "Microservices"
+          ],
+          "must_have_phrases": [
+            "Senior Software Engineer",
+            "scalable backend systems",
+            "code reviews",
+            "agile environment",
+            "5+ years of software engineering experience"
+          ]
+        }
+      }
+    }
+  ]
+}
