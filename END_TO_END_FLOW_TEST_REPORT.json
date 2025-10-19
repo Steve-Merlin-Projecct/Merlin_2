@@ -1,0 +1,96 @@
+{
+  "test_metadata": {
+    "start_time": "2025-10-18T18:44:38.055599",
+    "test_type": "end_to_end_data_flow",
+    "stages": [
+      "database_read",
+      "script_process",
+      "api_call",
+      "script_parse",
+      "database_write"
+    ],
+    "end_time": "2025-10-18T18:44:39.986555",
+    "duration_seconds": 1.930956,
+    "total_stages": 6,
+    "successful_stages": 2,
+    "success_rate": 33.33333333333333
+  },
+  "stage_results": {
+    "database_connection": {
+      "stage": "database_connection",
+      "success": false,
+      "timestamp": "2025-10-18T18:44:38.055649",
+      "details": {
+        "error": "Database connection test failed",
+        "fallback": "using_mock_data"
+      }
+    },
+    "database_read": {
+      "stage": "database_read",
+      "success": true,
+      "timestamp": "2025-10-18T18:44:38.459951",
+      "jobs_fetched": 1,
+      "data_source": "mock_data",
+      "details": {}
+    },
+    "script_process": {
+      "stage": "script_process",
+      "success": true,
+      "timestamp": "2025-10-18T18:44:38.459987",
+      "input_jobs": 1,
+      "valid_jobs": 1,
+      "details": {},
+      "invalid_jobs": 0
+    },
+    "api_call": {
+      "stage": "api_call",
+      "success": false,
+      "timestamp": "2025-10-18T18:44:38.539787",
+      "api_response_received": true,
+      "details": {
+        "model_used": "gemini-2.0-flash-001",
+        "model_switches": 0,
+        "error": "unterminated string literal (detected at line 45) (tier1_core_prompt.py, line 45)"
+      }
+    },
+    "script_parse": {
+      "stage": "script_parse",
+      "success": false,
+      "timestamp": "2025-10-18T18:44:39.986527",
+      "parsed_jobs": 0,
+      "details": {
+        "warning": "empty_results"
+      }
+    },
+    "database_write": {
+      "stage": "database_write",
+      "success": false,
+      "timestamp": "2025-10-18T18:44:39.986546",
+      "records_written": 0,
+      "details": {
+        "skip_reason": "no_parsed_results"
+      }
+    }
+  },
+  "data_samples": {
+    "stage1_database_read": {
+      "id": "test_job_001",
+      "title": "Senior Software Engineer",
+      "description_length": 1547,
+      "has_company": true,
+      "has_location": true
+    },
+    "stage2_script_process": {
+      "id": "test_job_001",
+      "title": "Senior Software Engineer",
+      "description_length": 1547,
+      "validation_passed": true
+    }
+  },
+  "errors": [],
+  "warnings": [
+    "Database error: Database connection test failed - testing with mock data only",
+    "API call unsuccessful: unterminated string literal (detected at line 45) (tier1_core_prompt.py, line 45)",
+    "API returned empty results array"
+  ]
+}
