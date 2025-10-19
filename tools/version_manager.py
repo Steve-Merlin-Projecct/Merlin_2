@@ -7,8 +7,8 @@ and updates all references throughout the codebase.
 
 Usage:
     python tools/version_manager.py                    # Show current version
-    python tools/version_manager.py --bump patch       # Bump patch version (4.0.1 -> 4.0.2)
-    python tools/version_manager.py --bump minor       # Bump minor version (4.0.1 -> 4.1.0)
+    python tools/version_manager.py --bump minor       # Bump patch version (4.0.1 -> 4.0.2)
+    python tools/version_manager.py --bump mid         # Bump minor version (4.0.1 -> 4.1.0)
     python tools/version_manager.py --bump major       # Bump major version (4.0.1 -> 5.0.0)
     python tools/version_manager.py --set 4.1.0        # Set specific version
     python tools/version_manager.py --sync             # Sync version to all files
@@ -62,7 +62,7 @@ class VersionManager:
         Bump version number
 
         Args:
-            bump_type: 'major', 'minor', or 'patch'
+            bump_type: 'major' (+.0.0), 'mid' (x.+.0), or 'minor' (x.x.+)
 
         Returns:
             str: New version number
@@ -74,13 +74,13 @@ class VersionManager:
             major += 1
             minor = 0
             patch = 0
-        elif bump_type == 'minor':
+        elif bump_type == 'mid':
             minor += 1
             patch = 0
-        elif bump_type == 'patch':
+        elif bump_type == 'minor':
             patch += 1
         else:
-            raise ValueError(f"Invalid bump type: {bump_type}. Use 'major', 'minor', or 'patch'")
+            raise ValueError(f"Invalid bump type: {bump_type}. Use 'major', 'mid', or 'minor'")
 
         new_version = f"{major}.{minor}.{patch}"
         self.set_version(new_version)
