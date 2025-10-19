@@ -1,23 +1,30 @@
-# Purpose: Job Application System Development Branch
+# Purpose: git lock advanced features   per worktree locks lo
 
-**Branch:** develop/v4.3.2-worktrees-20251012-044136
-**Created:** 2025-10-12
-**Updated:** 2025-10-14
+**Worktree:** git-lock-advanced-features---per-worktree-locks-lo
+**Branch:** task/06-git-lock-advanced-features---per-worktree-locks-lo
+**Base Branch:** develop/v4.3.3-worktrees-20251017-044814
+**Created:** 2025-10-17 04:48:41
 
 ## Objective
 
-This development branch consolidates work from multiple parallel development worktrees focused on system improvements, features, and infrastructure enhancements.
+||git-lock-advanced-features---per-worktree-locks-lo Git Lock Advanced Features - Per-worktree locks, lock metrics dashboard, predictive lock management, queue-based system for concurrent git operations (OPTIONAL)
 
 ## Scope
 
-Main development integration branch for:
-- Git orchestration improvements
-- User preferences system
-- Librarian agent enhancements
-- Dashboard completion
-- Task workflow refinements
-- Calendly integration
+[Define what's in scope for this worktree]
 
 ## Out of Scope
 
-Production deployments - use main branch for releases.
+[Define what's explicitly NOT in scope]
+
+## Success Criteria
+
+- [ ] All functionality implemented
+- [ ] Tests written and passing
+- [ ] Documentation updated
+- [ ] Code reviewed
+- [ ] Ready to merge
+
+## Notes
+
+[Add implementation notes, decisions, or concerns here]
