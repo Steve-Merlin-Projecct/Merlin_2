@@ -115,6 +115,7 @@ echo '{"userPrompt":"Please commit these changes"}' | .claude/hooks/user-prompt-
 ### Active Hooks
 - `user-prompt-submit-unified.sh` - Main behavioral guidance orchestrator (UserPromptSubmit event)
 - `session-start.sh` - Worktree context injection (SessionStart event)
+- `pre-tool-use-file-protection.py` - Blocks Edit/Write to protected files (PreToolUse event)
 - `post_python_edit.py` - Syntax validation after Python edits (PostToolUse event)
 
 ### Hook Modules
@@ -122,7 +123,7 @@ echo '{"userPrompt":"Please commit these changes"}' | .claude/hooks/user-prompt-
 - `modules/communication_guidance.sh` - Question detection patterns
 - `modules/implementation_guidance.sh` - Implementation workflow reminders
 - `modules/workflow_reminders.sh` - Optional git/database workflow nudges
-- `modules/estimation_guidance.sh` - Token-based estimation enforcement (NEW)
+- `modules/estimation_guidance.sh` - Token-based estimation enforcement
 
 ## Worktree Context Injection
 
@@ -180,10 +181,59 @@ Agent: "This feature will require approximately 50,000-75,000 tokens to complete
 echo '{"userPrompt":"How long will this take?"}' | ./.claude/hooks/modules/estimation_guidance.sh
 ```
 
+## File Protection System (PreToolUse)
+
+The `pre-tool-use-file-protection.py` hook **blocks Edit/Write operations** on protected hook files BEFORE they execute.
+
+**Hook Event:** PreToolUse (runs before tool executes)
+**Protected Files:**
+- `.claude/hooks/user-prompt-submit-unified.sh` (main orchestrator)
+- All modules in `.claude/hooks/modules/`
+
+**How It Works:**
+1. Agent attempts to use Edit or Write tool on a file
+2. PreToolUse hook intercepts the operation
+3. Hook checks if file is in protected list
+4. If protected: **Blocks operation** with exit code 1
+5. If not protected: Allows operation (exit code 0)
+
+**Example:**
+```python
+# Agent tries: Edit(.claude/hooks/behavioral_guidance.sh)
+# Hook blocks with:
+{
+  "hookSpecificOutput": {
+    "message": "🚫 FILE PROTECTION: Edit Blocked\n\nPROTECTED FILE: .claude/hooks/modules/behavioral_guidance.sh\n\n❌ OPERATION BLOCKED"
+  },
+  "shouldProceed": false
+}
+# Exit code: 1 (prevents Edit from executing)
+```
+
+**Why Protected:**
+Hook files control agent behavior and must remain stable. Modifications could:
+- Break the hook orchestration system
+- Create inconsistent agent guidance
+- Introduce security vulnerabilities
+
+**Extending Protection:**
+To protect additional files, add them to the `PROTECTED_FILES` list in `pre-tool-use-file-protection.py`.
+
+**Testing:**
+```bash
+./test_pre_tool_use_protection.sh
+```
+
+**Benefits over UserPromptSubmit approach:**
+- ✅ Blocks at tool execution level (not just prompt detection)
+- ✅ Catches all edit attempts (even if user didn't explicitly request)
+- ✅ True prevention (not just a warning)
+- ✅ Works regardless of how agent decides to edit
+
 ## Future Extensions
 
 Potential additional modules:
-- File protection (block changes to specific files/lines)
+- Line-level protection (block changes to specific line ranges)
 - Security pattern detection
 - Test coverage reminders
 - Performance pattern validation
