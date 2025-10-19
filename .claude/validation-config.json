@@ -1,0 +1,34 @@
+{
+  "$schema": "validation-config-schema-v1",
+  "description": "Configuration for quality validation hooks (post-agent-work and post-task)",
+  "version": "1.0",
+  "created": "2025-10-17",
+  "related": [
+    "docs/development/quality-validation-coordination.md",
+    ".claude/hooks/post_agent_work.py",
+    ".claude/hooks/post_task.py"
+  ],
+  "post_agent_work": {
+    "enabled": true,
+    "description": "Quick validation after agent changes >= threshold files",
+    "threshold": {
+      "files_changed": 3,
+      "lines_changed": 50,
+      "session_minutes": 10
+    },
+    "validation": {
+      "mode": "warn_only",
+      "show_details": "on_failure",
+      "timeout_seconds": 10
+    }
+  },
+  "post_task": {
+    "enabled": true,
+    "description": "Comprehensive validation after /task completion",
+    "validation": {
+      "mode": "strict",
+      "show_details": "always",
+      "timeout_seconds": 60
+    }
+  }
+}

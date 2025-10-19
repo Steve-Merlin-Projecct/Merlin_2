@@ -5,6 +5,10 @@
 
 set -e  # Exit on error
 
+# Source scope detection utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/scope-detector.sh"
+
 # Colors and formatting
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -181,13 +185,112 @@ stash_changes() {
     return 1
 }
 
+# Validate that all active worktrees have been closed
+#
+# Checks all worktrees in .trees/ to see if they have synopsis files
+# in .completed/ directory. If any are missing, displays summary and exits.
+#
+# Returns:
+#   0 - All worktrees closed
+#   1 - Some worktrees not closed
+validate_all_worktrees_closed() {
+    # Get list of all active worktrees (excluding special directories)
+    local all_worktrees=()
+    if [ -d "$TREES_DIR" ]; then
+        while IFS= read -r dir; do
+            local name=$(basename "$dir")
+            # Skip special directories
+            if [[ "$name" != .* ]] && [ -d "$dir" ]; then
+                all_worktrees+=("$name")
+            fi
+        done < <(find "$TREES_DIR" -maxdepth 1 -type d)
+    fi
+
+    if [ ${#all_worktrees[@]} -eq 0 ]; then
+        # No worktrees at all
+        return 0
+    fi
+
+    # Get list of closed worktrees (have synopsis files)
+    local closed_worktrees=()
+    if [ -d "$COMPLETED_DIR" ]; then
+        while IFS= read -r file; do
+            if [ -f "$file" ]; then
+                local filename=$(basename "$file")
+                local worktree_name="${filename%%-synopsis-*}"
+                closed_worktrees+=("$worktree_name")
+            fi
+        done < <(find "$COMPLETED_DIR" -name "*-synopsis-*.md" 2>/dev/null)
+    fi
+
+    # Find unclosed worktrees (in .trees but no synopsis)
+    local unclosed=()
+    for worktree in "${all_worktrees[@]}"; do
+        local is_closed=false
+        for closed in "${closed_worktrees[@]}"; do
+            if [ "$worktree" = "$closed" ]; then
+                is_closed=true
+                break
+            fi
+        done
+
+        if [ "$is_closed" = false ]; then
+            unclosed+=("$worktree")
+        fi
+    done
+
+    # If all are closed, return success
+    if [ ${#unclosed[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    # Display summary of unclosed worktrees
+    echo ""
+    print_error "⚠️  Cannot proceed: ${#unclosed[@]} worktree(s) have not been closed"
+    echo ""
+    echo "The following worktrees need to be closed with '/tree close' before merging:"
+    echo ""
+
+    for worktree in "${unclosed[@]}"; do
+        # Get branch info if available
+        local worktree_path="$TREES_DIR/$worktree"
+        local branch=""
+
+        # Try to get branch from git worktree list first
+        branch=$(git worktree list --porcelain | grep -A 3 "$worktree_path" | grep "^branch " | sed 's/^branch //' | sed 's#refs/heads/##' || echo "")
+
+        # Fallback to checking inside worktree
+        if [ -z "$branch" ] && [ -d "$worktree_path" ]; then
+            branch=$(cd "$worktree_path" && git branch --show-current 2>/dev/null || echo "unknown")
+        fi
+
+        echo "  • $worktree"
+        if [ -n "$branch" ] && [ "$branch" != "unknown" ]; then
+            echo "    Branch: $branch"
+        fi
+        echo "    Path: $worktree_path"
+        echo ""
+    done
+
+    echo "Options:"
+    echo "  1. Close each worktree: cd $TREES_DIR/<worktree> && /tree close"
+    echo "  2. Use --force to merge all worktrees anyway: /tree closedone --force"
+    echo ""
+
+    print_info "💡 Tip: The --force flag will merge all worktrees, but you'll lose"
+    print_info "   the structured synopsis and work description for unclosed worktrees."
+    echo ""
+
+    return 1
+}
+
 #==============================================================================
 # /tree closedone - Phase 1 Core Functionality
 #==============================================================================
 
 closedone_main() {
-    local dry_run=false
     local skip_confirmation=false
+    local force_merge=false
 
     # Check for --full-cycle flag and delegate
     for arg in "$@"; do
@@ -200,23 +303,33 @@ closedone_main() {
     # Parse options for regular closedone
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --dry-run)
-                dry_run=true
-                shift
-                ;;
             --yes|-y)
                 skip_confirmation=true
                 shift
                 ;;
+            --force)
+                force_merge=true
+                shift
+                ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone [--dry-run] [--yes] [--full-cycle]"
+                echo "Usage: /tree closedone [--yes] [--force] [--full-cycle]"
                 return 1
                 ;;
         esac
     done
 
     print_header "/tree closedone - Batch Merge & Cleanup"
+
+    # Phase 0: Check for unclosed worktrees (unless --force)
+    if [ "$force_merge" = false ]; then
+        if ! validate_all_worktrees_closed; then
+            return 1
+        fi
+    else
+        print_warning "⚠️  --force flag used: merging all worktrees regardless of close status"
+        echo ""
+    fi
 
     # Phase 1.1: Discover completed worktrees
     print_info "Discovering completed worktrees..."
@@ -307,10 +420,6 @@ closedone_main() {
         fi
     fi
 
-    if [ "$dry_run" = true ]; then
-        print_warning "DRY RUN - No changes will be made"
-    fi
-
     echo ""
     print_info "Processing worktrees..."
     echo ""
@@ -342,15 +451,12 @@ closedone_main() {
 
         if [ "$commit_count" -eq 0 ]; then
             print_info "  No commits to merge (cleanup only)"
-
-            if [ "$dry_run" = false ]; then
-                # Phase 1.4: Cleanup only
-                closedone_cleanup "$worktree" "$branch"
-                cleanup_only_count=$((cleanup_only_count + 1))
-            fi
+            # Phase 1.4: Cleanup only
+            closedone_cleanup "$worktree" "$branch"
+            cleanup_only_count=$((cleanup_only_count + 1))
         else
             # Phase 1.4: Merge execution
-            if closedone_merge "$worktree" "$branch" "$base" "$dry_run"; then
+            if closedone_merge "$worktree" "$branch" "$base"; then
                 success_count=$((success_count + 1))
             else
                 failed_count=$((failed_count + 1))
@@ -382,14 +488,6 @@ closedone_merge() {
     local worktree=$1
     local branch=$2
     local base=$3
-    local dry_run=$4
-
-    if [ "$dry_run" = true ]; then
-        print_info "  [DRY RUN] Would switch to $base"
-        print_info "  [DRY RUN] Would merge $branch"
-        print_info "  [DRY RUN] Would cleanup worktree"
-        return 0
-    fi
 
     # Switch to base branch
     wait_for_git_lock || return 1
@@ -869,7 +967,7 @@ rollback_full_cycle() {
     print_info "Manual Recovery Steps:"
     echo "  1. Review git log to see partial changes"
     echo "  2. Fix any issues that caused the failure"
-    echo "  3. Run: /tree closedone --full-cycle --dry-run (to preview)"
+    echo "  3. Run: /tree closedone --full-cycle (execute full cycle)"
     echo "  4. Retry when ready"
     echo ""
 
@@ -878,17 +976,12 @@ rollback_full_cycle() {
 
 # Full-Cycle Orchestrator
 closedone_full_cycle() {
-    local dry_run=false
     local skip_confirmation=false
     local bump_type="patch"
 
     # Parse options
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --dry-run)
-                dry_run=true
-                shift
-                ;;
             --yes|-y)
                 skip_confirmation=true
                 shift
@@ -899,18 +992,13 @@ closedone_full_cycle() {
                 ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree closedone --full-cycle [--dry-run] [--yes] [--bump patch|minor|major]"
+                echo "Usage: /tree closedone --full-cycle [--yes] [--bump patch|minor|major]"
                 return 1
                 ;;
         esac
     done
 
     print_header "/tree closedone - Full Development Cycle"
-
-    if [ "$dry_run" = true ]; then
-        print_warning "DRY RUN MODE - No changes will be made"
-        echo ""
-    fi
 
     # Preview what will happen
     echo "This will execute the complete development cycle:"
@@ -944,17 +1032,6 @@ closedone_full_cycle() {
             return 0
         fi
         echo ""
-    fi
-
-    if [ "$dry_run" = true ]; then
-        print_info "[DRY RUN] Would execute all 6 phases"
-        print_info "[DRY RUN] Phase 1: Validation & Checkpoint"
-        print_info "[DRY RUN] Phase 2: Merge completed features"
-        print_info "[DRY RUN] Phase 3: Promote to main"
-        print_info "[DRY RUN] Phase 4: Version bump ($bump_type)"
-        print_info "[DRY RUN] Phase 5: New dev branch + stage incomplete"
-        print_info "[DRY RUN] Phase 6: Archive and report"
-        return 0
     fi
 
     # Execute phases
@@ -1257,6 +1334,35 @@ copy_slash_commands_to_worktree() {
     fi
 }
 
+# Install scope enforcement pre-commit hook in worktree
+install_scope_hook() {
+    local worktree_path=$1
+
+    # Create git hooks directory in worktree
+    local hooks_dir="$worktree_path/.git/hooks"
+    mkdir -p "$hooks_dir"
+
+    # Create pre-commit hook that calls our scope enforcement script
+    cat > "$hooks_dir/pre-commit" << 'EOF'
+#!/bin/bash
+
+# Pre-commit hook: Scope enforcement
+# Validates that committed files match worktree scope
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+HOOK_SCRIPT="$SCRIPT_DIR/.claude/scripts/scope-enforcement-hook.sh"
+
+if [ -f "$HOOK_SCRIPT" ]; then
+    bash "$HOOK_SCRIPT"
+else
+    # Hook script not found, skip validation
+    exit 0
+fi
+EOF
+
+    chmod +x "$hooks_dir/pre-commit"
+}
+
 # Generate VS Code tasks and auto-execute them
 generate_and_run_vscode_tasks() {
     local pending_file="$TREES_DIR/.pending-terminals.txt"
@@ -1265,68 +1371,30 @@ generate_and_run_vscode_tasks() {
         return 0
     fi
 
-    # Detect VS Code environment
-    if [ -z "$VSCODE_IPC_HOOK_CLI" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
-        print_info "VS Code not detected - terminals not auto-created"
-        print_info "Run terminals manually: cd <worktree-path> && bash .claude-init.sh"
-        return 0
-    fi
+    # Count worktrees
+    local worktree_count=$(wc -l < "$pending_file")
 
-    mkdir -p "$WORKSPACE_ROOT/.vscode"
-    local tasks_file="$WORKSPACE_ROOT/.vscode/worktree-tasks.json"
+    print_info "Terminal initialization instructions:"
+    echo ""
+    echo "To launch Claude in each worktree, you can either:"
+    echo ""
+    echo "Option 1 - Manual launch (recommended for control):"
+    echo "  • Open terminal for each worktree"
+    echo "  • Run: cd <worktree-path> && bash .claude-init.sh"
+    echo ""
+    echo "Option 2 - Automatic launch:"
 
-    # Generate tasks.json
-    echo '{' > "$tasks_file"
-    echo '  "version": "2.0.0",' >> "$tasks_file"
-    echo '  "tasks": [' >> "$tasks_file"
-
-    local first=true
     local terminal_num=1
     while IFS= read -r worktree_path; do
         local wt_name=$(basename "$worktree_path")
-
-        [ "$first" = false ] && echo "," >> "$tasks_file"
-        first=false
-
-        cat >> "$tasks_file" << TASKEOF
-    {
-      "label": "🌳 $terminal_num: $wt_name",
-      "type": "shell",
-      "command": "bash $worktree_path/.claude-init.sh",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false
-      }
-    }
-TASKEOF
+        echo "  • Worktree $terminal_num: $wt_name"
+        echo "    cd $worktree_path && bash .claude-init.sh"
         terminal_num=$((terminal_num + 1))
     done < "$pending_file"
 
-    echo '  ]' >> "$tasks_file"
-    echo '}' >> "$tasks_file"
-
-    # Auto-execute all tasks with staggered launch
-    print_info "Launching $((terminal_num - 1)) terminals with Claude..."
-    terminal_num=1
-    while IFS= read -r worktree_path; do
-        local wt_name=$(basename "$worktree_path")
-        local task_label="🌳 $terminal_num: $wt_name"
-
-        if code --command "workbench.action.tasks.runTask" "$task_label" 2>/dev/null; then
-            print_success "  Terminal $terminal_num: $wt_name"
-        else
-            print_warning "  Failed: $wt_name (run manually)"
-        fi
-
-        # Staggered launch - 2s delay with random jitter (0-500ms)
-        # This prevents concurrent git operations during terminal initialization
-        local jitter=$(( RANDOM % 500 ))
-        sleep 2.$(printf "%03d" $jitter)
-        terminal_num=$((terminal_num + 1))
-    done < "$pending_file"
+    echo ""
+    print_warning "Note: Automated terminal launch disabled to prevent unwanted editor tabs"
+    print_info "The .claude-init.sh script in each worktree will launch Claude with task context"
 
     rm -f "$pending_file"
 }
@@ -1546,6 +1614,14 @@ tree_build() {
             continue
         fi
 
+        # Generate scope manifest for this worktree (before PURPOSE.md so we can reference it)
+        local scope_manifest=$(detect_scope_from_description "$desc" "$name")
+        local scope_json_path="$worktree_path/.worktree-scope.json"
+        echo "$scope_manifest" > "$scope_json_path"
+
+        # Extract scope patterns for PURPOSE.md
+        local scope_patterns=$(echo "$scope_manifest" | python3 -c "import sys, json; data=json.load(sys.stdin); print('\n'.join(['- ' + p for p in data['scope']['include'][:5]]))")
+
         # Create PURPOSE.md in worktree
         cat > "$worktree_path/PURPOSE.md" << EOF
 # Purpose: ${name//-/ }
@@ -1561,11 +1637,18 @@ $desc
 
 ## Scope
 
-[Define what's in scope for this worktree]
+**Automatically detected scope patterns:**
+
+$scope_patterns
+
+**Full scope details:** See \`.worktree-scope.json\`
+
+**Enforcement:** Soft (warnings only)
 
 ## Out of Scope
 
-[Define what's explicitly NOT in scope]
+Files outside the detected patterns will generate warnings but are not blocked.
+For hard enforcement, see \`.worktree-scope.json\` and modify \`enforcement\` setting.
 
 ## Success Criteria
 
@@ -1586,6 +1669,9 @@ EOF
         # Copy slash commands and scripts to worktree
         copy_slash_commands_to_worktree "$worktree_path"
 
+        # Install scope enforcement pre-commit hook
+        install_scope_hook "$worktree_path"
+
         # Generate .claude-init.sh script with Claude auto-launch
         generate_init_script "$name" "$desc" "$worktree_path"
 
@@ -1598,6 +1684,95 @@ EOF
         # Store worktree info for terminal creation after all worktrees are built
         echo "$worktree_path" >> "$TREES_DIR/.pending-terminals.txt"
     done
+
+    # Create librarian worktree with inverse scope
+    if [ $success_count -gt 0 ]; then
+        echo ""
+        print_header "📚 Creating Librarian Worktree"
+
+        local librarian_name="librarian"
+        local librarian_branch="task/00-librarian"
+        local librarian_path="$TREES_DIR/$librarian_name"
+        local librarian_start=$(date +%s)
+
+        # Create librarian worktree
+        wait_for_git_lock || true
+        if safe_git worktree add -b "$librarian_branch" "$librarian_path" "$dev_branch" &>/dev/null; then
+            # Collect all feature scope files
+            local scope_files=()
+            for worktree_dir in "$TREES_DIR"/*; do
+                if [ -d "$worktree_dir" ] && [ -f "$worktree_dir/.worktree-scope.json" ]; then
+                    scope_files+=("$worktree_dir/.worktree-scope.json")
+                fi
+            done
+
+            # Generate librarian scope (inverse of all feature scopes)
+            local librarian_scope=$(calculate_librarian_scope "${scope_files[@]}")
+            echo "$librarian_scope" > "$librarian_path/.worktree-scope.json"
+
+            # Create PURPOSE.md for librarian
+            cat > "$librarian_path/PURPOSE.md" << EOF
+# Purpose: Librarian - Documentation & Tooling
+
+**Worktree:** $librarian_name
+**Branch:** $librarian_branch
+**Base Branch:** $dev_branch
+**Created:** $(date +"%Y-%m-%d %H:%M:%S")
+**Type:** Meta-worktree (Documentation, tooling, project organization)
+
+## Objective
+
+Manage documentation, tooling, and project organization files that are not specific to any feature worktree. This worktree has "inverse scope" - it works on everything that other worktrees don't touch.
+
+## Scope
+
+**Automatically calculated inverse scope:**
+
+This worktree can work on files that are NOT claimed by any feature worktree, including:
+- Documentation files (docs/**, *.md)
+- Tooling and scripts (.claude/**, tools/**, scripts/**)
+- Configuration files (*.toml, *.yaml, *.json)
+- GitHub workflows (.github/**)
+- Task templates (tasks/**)
+
+**Full scope details:** See \`.worktree-scope.json\`
+
+**Enforcement:** Soft (warnings only)
+
+## Out of Scope
+
+All files that are claimed by feature worktrees are out of scope for librarian.
+
+## Success Criteria
+
+- [ ] Documentation updated and consistent
+- [ ] Tooling improvements implemented
+- [ ] Project organization enhanced
+- [ ] Configuration files maintained
+- [ ] Ready to merge
+
+## Notes
+
+The librarian worktree is special - it automatically excludes all files that feature worktrees are working on, preventing conflicts and ensuring clear boundaries.
+EOF
+
+            # Copy commands and install hook
+            copy_slash_commands_to_worktree "$librarian_path"
+            install_scope_hook "$librarian_path"
+            generate_task_context "$librarian_name" "Documentation, tooling, and project organization" "$librarian_branch" "$dev_branch" "$librarian_path"
+            generate_init_script "$librarian_name" "Manage documentation and tooling" "$librarian_path"
+
+            local librarian_end=$(date +%s)
+            local librarian_duration=$((librarian_end - librarian_start))
+            print_success "  ✓ Created in ${librarian_duration}s"
+
+            # Add to pending terminals
+            echo "$librarian_path" >> "$TREES_DIR/.pending-terminals.txt"
+            success_count=$((success_count + 1))
+        else
+            print_warning "  ⚠ Failed to create librarian worktree (non-critical)"
+        fi
+    fi
 
     local build_end=$(date +%s)
     local total_duration=$((build_end - build_start))
@@ -1620,31 +1795,81 @@ EOF
     echo "Build History: $build_history_dir/${timestamp}.txt"
     echo "═══════════════════════════════════════════════════════════"
 
-    # Create integrated terminals with Claude auto-launch
+    # Provide terminal launch instructions
     if [ $success_count -gt 0 ]; then
         echo ""
-        print_header "Auto-Launching Terminals with Claude"
+        print_header "Terminal Launch Instructions"
 
         generate_and_run_vscode_tasks
 
-        print_success "All worktrees ready! Claude instances launched with task context."
         echo ""
-        print_info "Each terminal has:"
-        echo "  • Claude Code running with task context loaded"
+        print_success "All worktrees ready!"
+        echo ""
+        print_info "Each worktree includes:"
+        echo "  • .claude-init.sh - Script to launch Claude with task context"
+        echo "  • .claude-task-context.md - Full task description"
         echo "  • Slash commands (/tree close, /tree status, /tree restore)"
-        echo "  • Full task description in .claude-task-context.md"
+        echo "  • .worktree-scope.json - Automatic file boundary detection"
         echo ""
         print_info "Next Steps:"
-        echo "  1. Claude will ask clarifying questions - answer them"
-        echo "  2. Start working on your features"
-        echo "  3. When done: /tree close (from within worktree)"
-        echo "  4. Merge all: /tree closedone (from main workspace)"
+        echo "  1. Open terminal for each worktree you want to work on"
+        echo "  2. Navigate: cd <worktree-path>"
+        echo "  3. Launch Claude: bash .claude-init.sh"
+        echo "  4. Answer Claude's clarifying questions"
+        echo "  5. When done: /tree close (from within worktree)"
+        echo "  6. Merge all: /tree closedone (from main workspace)"
+
+        # Run scope conflict detection
+        echo ""
+        tree_scope_conflicts
     fi
 }
 
 #==============================================================================
 # /tree conflict - Analyze conflicts and suggest merges
 #==============================================================================
+
+tree_scope_conflicts() {
+    # Detect scope conflicts across all active worktrees
+    print_header "🔍 Scope Conflict Detection"
+
+    local scope_files=()
+    local worktree_count=0
+
+    # Find all worktrees with scope files
+    for worktree_dir in "$TREES_DIR"/*; do
+        if [ -d "$worktree_dir" ] && [ ! "$worktree_dir" = *"/.completed"* ] && [ ! "$worktree_dir" = *"/.incomplete"* ] && [ ! "$worktree_dir" = *"/.archived"* ]; then
+            local scope_file="$worktree_dir/.worktree-scope.json"
+            if [ -f "$scope_file" ]; then
+                scope_files+=("$scope_file")
+                worktree_count=$((worktree_count + 1))
+            fi
+        fi
+    done
+
+    if [ $worktree_count -eq 0 ]; then
+        print_info "No active worktrees with scope files found"
+        return 0
+    fi
+
+    echo "Analyzing scope conflicts across $worktree_count worktree(s)..."
+    echo ""
+
+    # Call scope detection utility
+    if detect_scope_conflicts "${scope_files[@]}"; then
+        print_success "✓ No scope conflicts detected"
+        echo ""
+        print_info "All worktrees have non-overlapping scopes"
+    else
+        print_warning "⚠ Scope conflicts detected - see above for details"
+        echo ""
+        print_info "Resolution options:"
+        echo "  1. Adjust scope patterns in .worktree-scope.json files"
+        echo "  2. Merge related worktrees"
+        echo "  3. Use enforcement: 'hard' to block conflicting commits"
+        return 1
+    fi
+}
 
 tree_conflict() {
     if [ ! -f "$STAGED_FEATURES_FILE" ]; then
@@ -2169,6 +2394,7 @@ Available commands:
   list                   - Show staged features ✅
   clear                  - Clear all staged features ✅
   conflict               - Analyze conflicts and suggest merges ✅
+  scope-conflicts        - Detect scope conflicts across worktrees ✅
   build                  - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
   close [incomplete]     - Complete work and generate synopsis ✅
@@ -2185,10 +2411,13 @@ Available commands:
   /tree closedone [options]
 
 Options:
-  --dry-run              Preview actions without executing
   --yes, -y              Skip confirmation prompts
+  --force                Merge all worktrees even if not closed (NEW)
   --full-cycle           Complete entire development cycle (NEW)
   --bump [type]          Version bump type: patch|minor|major (default: patch)
+
+⚠️  Important: /tree closedone now requires all worktrees to be closed with
+   '/tree close' before merging. Use --force to bypass this check.
 
 Typical Workflow:
   1. /tree stage [description]  # Stage multiple features
@@ -2234,6 +2463,9 @@ case "$COMMAND" in
         ;;
     conflict)
         tree_conflict "$@"
+        ;;
+    scope-conflicts)
+        tree_scope_conflicts "$@"
         ;;
     build)
         tree_build "$@"

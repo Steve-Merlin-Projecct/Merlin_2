@@ -11,5 +11,6 @@
     "type": "command",
     "command": "/workspace/.claude/statusline.sh",
     "padding": 0
-  }
+  },
+  "disableAllHooks": false
 }

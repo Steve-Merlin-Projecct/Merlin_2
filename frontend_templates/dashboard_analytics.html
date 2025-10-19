@@ -6,7 +6,7 @@
     <title>Analytics - Dashboard V2</title>
     <link rel="stylesheet" href="/static/css/dashboard_v2.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="dashboard-bg" x-data="analyticsPage()" x-init="init()">
 
@@ -14,7 +14,7 @@
 
         <!-- Navigation -->
         <nav style="margin-bottom: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); backdrop-filter: blur(10px);">
-            <div style="display: flex; gap: 1rem; align-items: center;">
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                 <a href="/dashboard" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
                     📊 Dashboard
                 </a>
@@ -27,14 +27,28 @@
                 <a href="/dashboard/analytics" style="color: var(--color-cyan); text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-sm); background: rgba(0, 217, 255, 0.1);">
                     📈 Analytics
                 </a>
+                <a href="/dashboard/schema" style="color: var(--color-text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: all 0.3s;">
+                    🗄️ Schema
+                </a>
             </div>
         </nav>
 
-        <!-- Header -->
-        <header class="dashboard-header">
+        <!-- Header with Time Range Selector -->
+        <header class="dashboard-header" style="margin-bottom: 1.5rem;">
             <div>
                 <h1 class="dashboard-title">Analytics & Insights</h1>
                 <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Track your job search performance and trends</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <select x-model="timeRange" @change="loadAnalytics()" style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--color-text-primary);">
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d" selected>Last 30 Days</option>
+                    <option value="90d">Last 90 Days</option>
+                </select>
+                <button @click="loadAnalytics()" class="btn btn-secondary" :disabled="loading">
+                    <span x-show="!loading">Refresh</span>
+                    <span x-show="loading">Loading...</span>
+                </button>
             </div>
         </header>
 
@@ -52,60 +66,66 @@
             <button @click="loadAnalytics()" class="btn btn-primary">Retry</button>
         </div>
 
-        <!-- Stats Cards -->
-        <div x-show="!loading && !error" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-            <div class="glass-card">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💼</div>
-                <h3 style="font-size: 1.8rem; color: var(--color-cyan); margin-bottom: 0.25rem;" x-text="stats.total_jobs || 0"></h3>
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Total Jobs Scraped</p>
+        <!-- Summary Stats -->
+        <div x-show="!loading && !error" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="metric-card">
+                <div class="metric-icon">🔍</div>
+                <div class="metric-value" x-text="summary.total_jobs_scraped || 0"></div>
+                <div class="metric-label">Total Jobs Scraped</div>
             </div>
 
-            <div class="glass-card">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
-                <h3 style="font-size: 1.8rem; color: var(--color-green); margin-bottom: 0.25rem;" x-text="stats.total_applications || 0"></h3>
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Applications Sent</p>
+            <div class="metric-card">
+                <div class="metric-icon">📧</div>
+                <div class="metric-value" x-text="summary.total_applications || 0"></div>
+                <div class="metric-label">Applications Sent</div>
             </div>
 
-            <div class="glass-card">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
-                <h3 style="font-size: 1.8rem; color: var(--color-purple); margin-bottom: 0.25rem;" x-text="stats.success_rate || '0%'"></h3>
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Success Rate</p>
+            <div class="metric-card">
+                <div class="metric-icon">✨</div>
+                <div class="metric-value" x-text="(summary.avg_success_rate || 0) + '%'"></div>
+                <div class="metric-label">Avg Success Rate</div>
             </div>
 
-            <div class="glass-card">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏱️</div>
-                <h3 style="font-size: 1.8rem; color: var(--color-yellow); margin-bottom: 0.25rem;" x-text="stats.avg_response_time || 'N/A'"></h3>
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem;">Avg. Response Time</p>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div x-show="!loading && !error" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
-            <div class="glass-card">
-                <h3 style="margin-bottom: 1rem; color: var(--color-cyan);">Applications Over Time</h3>
-                <canvas id="applicationsChart" height="200"></canvas>
+            <div class="metric-card">
+                <div class="metric-icon">🤖</div>
+                <div class="metric-value" x-text="summary.total_ai_requests || 0"></div>
+                <div class="metric-label">AI Requests</div>
             </div>
 
-            <div class="glass-card">
-                <h3 style="margin-bottom: 1rem; color: var(--color-cyan);">Application Status</h3>
-                <canvas id="statusChart" height="200"></canvas>
+            <div class="metric-card">
+                <div class="metric-icon">📊</div>
+                <div class="metric-value" x-text="(summary.overall_conversion_rate || 0) + '%'"></div>
+                <div class="metric-label">Conversion Rate</div>
             </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div x-show="!loading && !error" class="glass-card" style="margin-top: 2rem;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--color-cyan);">Recent Activity</h3>
-            <template x-for="activity in recentActivity" :key="activity.id">
-                <div style="padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); last-of-type:border-bottom: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <p style="color: var(--color-text); margin-bottom: 0.25rem;" x-text="activity.action"></p>
-                            <p style="color: var(--color-text-secondary); font-size: 0.85rem;" x-text="activity.description"></p>
-                        </div>
-                        <span style="color: var(--color-text-muted); font-size: 0.85rem;" x-text="new Date(activity.timestamp).toLocaleString()"></span>
-                    </div>
+        <!-- Charts Grid -->
+        <div x-show="!loading && !error">
+            <!-- Row 1: Scraping Velocity & Success Rate -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem; color: var(--color-cyan); font-size: 1.1rem;">Scraping Velocity</h3>
+                    <canvas id="scrapingChart" style="max-height: 300px;"></canvas>
                 </div>
-            </template>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem; color: var(--color-cyan); font-size: 1.1rem;">Application Success Rate</h3>
+                    <canvas id="successChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Row 2: Pipeline Funnel & AI Usage -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem; color: var(--color-cyan); font-size: 1.1rem;">Pipeline Conversion Funnel</h3>
+                    <canvas id="funnelChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem; color: var(--color-cyan); font-size: 1.1rem;">AI Usage Over Time</h3>
+                    <canvas id="aiUsageChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -113,10 +133,14 @@
     <script>
         function analyticsPage() {
             return {
-                stats: {},
-                recentActivity: [],
                 loading: true,
                 error: null,
+                timeRange: '30d',
+                summary: {},
+                scrapingData: [],
+                successData: [],
+                funnelData: [],
+                aiUsageData: [],
                 charts: {},
 
                 init() {
@@ -128,17 +152,25 @@
                     this.error = null;
 
                     try {
-                        const response = await fetch('/api/dashboard/stats');
+                        const response = await fetch(`/api/v2/dashboard/analytics/summary?range=${this.timeRange}`);
 
                         if (!response.ok) {
                             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                         }
 
                         const data = await response.json();
-                        this.stats = data.stats || {};
-                        this.recentActivity = data.recent_activity || [];
 
-                        // Initialize charts after loading data
+                        if (!data.success) {
+                            throw new Error(data.error || 'Failed to load analytics');
+                        }
+
+                        this.summary = data.summary;
+                        this.scrapingData = data.scraping_velocity;
+                        this.successData = data.success_rate;
+                        this.funnelData = data.pipeline_funnel;
+                        this.aiUsageData = data.ai_usage;
+
+                        // Initialize charts after data loads
                         this.$nextTick(() => {
                             this.initCharts();
                         });
@@ -151,54 +183,154 @@
                 },
 
                 initCharts() {
-                    // Applications Over Time Chart
-                    const applicationsCtx = document.getElementById('applicationsChart');
-                    if (applicationsCtx && !this.charts.applications) {
-                        this.charts.applications = new Chart(applicationsCtx, {
+                    // Destroy existing charts
+                    Object.values(this.charts).forEach(chart => chart?.destroy());
+                    this.charts = {};
+
+                    // Chart defaults for dark theme
+                    const chartDefaults = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#a0aec0'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#a0aec0' },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                            },
+                            y: {
+                                ticks: { color: '#a0aec0' },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                            }
+                        }
+                    };
+
+                    // 1. Scraping Velocity Chart (Line)
+                    const scrapingCtx = document.getElementById('scrapingChart');
+                    if (scrapingCtx) {
+                        this.charts.scraping = new Chart(scrapingCtx, {
                             type: 'line',
                             data: {
-                                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                                labels: this.scrapingData.map(d => new Date(d.date).toLocaleDateString()),
                                 datasets: [{
-                                    label: 'Applications',
-                                    data: [12, 19, 15, 25],
-                                    borderColor: 'rgb(0, 217, 255)',
+                                    label: 'Jobs Scraped',
+                                    data: this.scrapingData.map(d => d.count),
+                                    borderColor: '#00d9ff',
                                     backgroundColor: 'rgba(0, 217, 255, 0.1)',
-                                    tension: 0.4
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 3,
+                                    pointHoverRadius: 5
                                 }]
                             },
+                            options: chartDefaults
+                        });
+                    }
+
+                    // 2. Success Rate Chart (Line)
+                    const successCtx = document.getElementById('successChart');
+                    if (successCtx) {
+                        this.charts.success = new Chart(successCtx, {
+                            type: 'line',
+                            data: {
+                                labels: this.successData.map(d => new Date(d.date).toLocaleDateString()),
+                                datasets: [
+                                    {
+                                        label: 'Applications Sent',
+                                        data: this.successData.map(d => d.sent),
+                                        borderColor: '#4facfe',
+                                        backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                                        fill: true,
+                                        tension: 0.4,
+                                        yAxisID: 'y'
+                                    },
+                                    {
+                                        label: 'Success Rate (%)',
+                                        data: this.successData.map(d => d.rate),
+                                        borderColor: '#00f2fe',
+                                        backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                                        fill: true,
+                                        tension: 0.4,
+                                        yAxisID: 'y1'
+                                    }
+                                ]
+                            },
                             options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { display: false }
-                                },
+                                ...chartDefaults,
                                 scales: {
-                                    y: { beginAtZero: true }
+                                    x: chartDefaults.scales.x,
+                                    y: {
+                                        type: 'linear',
+                                        position: 'left',
+                                        ticks: { color: '#a0aec0' },
+                                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                                    },
+                                    y1: {
+                                        type: 'linear',
+                                        position: 'right',
+                                        ticks: { color: '#a0aec0' },
+                                        grid: { display: false }
+                                    }
                                 }
                             }
                         });
                     }
 
-                    // Status Chart
-                    const statusCtx = document.getElementById('statusChart');
-                    if (statusCtx && !this.charts.status) {
-                        this.charts.status = new Chart(statusCtx, {
-                            type: 'doughnut',
+                    // 3. Pipeline Funnel Chart (Bar)
+                    const funnelCtx = document.getElementById('funnelChart');
+                    if (funnelCtx) {
+                        this.charts.funnel = new Chart(funnelCtx, {
+                            type: 'bar',
                             data: {
-                                labels: ['Sent', 'Pending', 'Responded'],
+                                labels: this.funnelData.map(d => d.stage),
                                 datasets: [{
-                                    data: [30, 15, 5],
-                                    backgroundColor: [
-                                        'rgb(0, 217, 255)',
-                                        'rgb(255, 176, 25)',
-                                        'rgb(0, 255, 127)'
-                                    ]
+                                    label: 'Job Count',
+                                    data: this.funnelData.map(d => d.count),
+                                    backgroundColor: this.funnelData.map(d => d.color),
+                                    borderWidth: 0
                                 }]
                             },
                             options: {
-                                responsive: true,
-                                maintainAspectRatio: false
+                                ...chartDefaults,
+                                indexAxis: 'y',
+                                scales: {
+                                    x: {
+                                        ticks: { color: '#a0aec0' },
+                                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                                    },
+                                    y: {
+                                        ticks: { color: '#a0aec0' },
+                                        grid: { display: false }
+                                    }
+                                }
                             }
+                        });
+                    }
+
+                    // 4. AI Usage Chart (Area)
+                    const aiCtx = document.getElementById('aiUsageChart');
+                    if (aiCtx) {
+                        this.charts.aiUsage = new Chart(aiCtx, {
+                            type: 'line',
+                            data: {
+                                labels: this.aiUsageData.map(d => new Date(d.date).toLocaleDateString()),
+                                datasets: [{
+                                    label: 'AI Requests',
+                                    data: this.aiUsageData.map(d => d.requests),
+                                    borderColor: '#f093fb',
+                                    backgroundColor: 'rgba(240, 147, 251, 0.2)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 3,
+                                    pointHoverRadius: 5
+                                }]
+                            },
+                            options: chartDefaults
                         });
                     }
                 }

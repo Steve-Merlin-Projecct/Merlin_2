@@ -45,15 +45,14 @@ class TokenOptimizer:
     analysis tiers and job counts to minimize costs while ensuring complete responses.
     """
 
-    # Token allocation per job by tier (empirically determined)
+    # Token allocation per job by tier (empirically determined from actual responses)
     TOKENS_PER_JOB = {
         'tier1': {
             'base': 150,        # Base tokens for job metadata
-            'skills': 200,      # Skills analysis (5-35 skills)
-            'authenticity': 50, # Authenticity check
-            'classification': 50,  # Industry classification
-            'structured_data': 350,  # Work arrangement, compensation, etc.
-            'total': 800        # Total per job for Tier 1
+            'authenticity': 100, # Authenticity check with reasoning
+            'classification': 100,  # Industry classification
+            'structured_data': 1200,  # Work arrangement, compensation, skills, education, etc.
+            'total': 1550        # Total per job for Tier 1 (increased from 800 based on actual responses)
         },
         'tier2': {
             'base': 100,
@@ -77,8 +76,8 @@ class TokenOptimizer:
         'tier3': 1.2,  # 20% safety margin (strategic insights)
     }
 
-    # Gemini model limits
-    MAX_OUTPUT_TOKENS_LIMIT = 8192  # Gemini 2.0 Flash limit
+    # Gemini model limits (reduced to prevent JSON truncation)
+    MAX_OUTPUT_TOKENS_LIMIT = 3000  # Reduced from 8192 to prevent mid-JSON truncation
 
     # Cost per 1K tokens (for paid tier reference)
     COST_PER_1K_OUTPUT = 0.60  # $0.60 per 1M tokens = $0.0006 per 1K
