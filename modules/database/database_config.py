@@ -79,6 +79,8 @@ class DatabaseConfig:
         2. Individual components (DATABASE_HOST, DATABASE_PORT, etc.)
         3. Local fallback defaults
 
+        Supports SSL/TLS for managed databases (e.g., DigitalOcean, AWS RDS).
+
         Returns:
             str: PostgreSQL connection URL
 
@@ -117,8 +119,60 @@ class DatabaseConfig:
                 "in environment variables or .env file"
             )
 
-        # Construct PostgreSQL URL
-        return f"postgresql://{user}:{password}@{host}:{port}/{database}"
+        # Construct base PostgreSQL URL
+        base_url = f"postgresql://{user}:{password}@{host}:{port}/{database}"
+
+        # Add SSL parameters if configured (for managed databases)
+        ssl_params = self._build_ssl_parameters()
+        if ssl_params:
+            base_url += f"?{ssl_params}"
+            logging.info("SSL/TLS connection parameters added")
+
+        return base_url
+
+    def _build_ssl_parameters(self) -> str:
+        """
+        Build SSL/TLS connection parameters for managed databases.
+
+        Checks for SSL-related environment variables and constructs appropriate
+        connection parameters for services like DigitalOcean, AWS RDS, etc.
+
+        Environment Variables:
+            DATABASE_SSL_MODE: SSL mode (disable, allow, prefer, require, verify-ca, verify-full)
+            DATABASE_SSL_CERT: Path to client certificate file
+            DATABASE_SSL_KEY: Path to client key file
+            DATABASE_SSL_ROOT_CERT: Path to root CA certificate
+
+        Returns:
+            str: URL-encoded SSL parameters or empty string if SSL not configured
+        """
+        from urllib.parse import urlencode
+
+        ssl_config = {}
+
+        # SSL mode (default to 'prefer' for compatibility, 'require' for managed databases)
+        ssl_mode = os.environ.get('DATABASE_SSL_MODE')
+        if ssl_mode:
+            ssl_config['sslmode'] = ssl_mode
+            logging.info(f"SSL mode: {ssl_mode}")
+
+        # Client certificate (optional for mutual TLS)
+        ssl_cert = os.environ.get('DATABASE_SSL_CERT')
+        if ssl_cert:
+            ssl_config['sslcert'] = ssl_cert
+
+        # Client key (optional for mutual TLS)
+        ssl_key = os.environ.get('DATABASE_SSL_KEY')
+        if ssl_key:
+            ssl_config['sslkey'] = ssl_key
+
+        # Root CA certificate (for server verification)
+        ssl_root_cert = os.environ.get('DATABASE_SSL_ROOT_CERT')
+        if ssl_root_cert:
+            ssl_config['sslrootcert'] = ssl_root_cert
+            logging.info(f"Using CA certificate: {ssl_root_cert}")
+
+        return urlencode(ssl_config) if ssl_config else ""
 
     def _safe_url_log(self) -> str:
         """

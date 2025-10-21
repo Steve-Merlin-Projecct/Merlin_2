@@ -1,9 +1,14 @@
 import logging
 import uuid
 from datetime import datetime, timedelta
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from .database_client import DatabaseClient
 from .database_models import DocumentJob, JobLog, ApplicationSettings
+from .database_utils import (
+    retry_on_deadlock,
+    handle_duplicate_key,
+    log_query_performance
+)
 
 
 class DatabaseWriter(DatabaseClient):
@@ -31,9 +36,13 @@ class DatabaseWriter(DatabaseClient):
         super().__init__()
         logging.info("Database writer module initialized")
 
+    @retry_on_deadlock(max_retries=3)
+    @log_query_performance(slow_query_threshold=0.5)
     def create_job(self, document_type, webhook_data=None, title=None, author=None):
         """
-        Create a new document generation job
+        Create a new document generation job.
+
+        Includes automatic retry on deadlock and performance logging.
 
         Args:
             document_type (str): Type of document ('resume', 'cover_letter', etc.)
@@ -43,6 +52,10 @@ class DatabaseWriter(DatabaseClient):
 
         Returns:
             str: Job ID of created job
+
+        Raises:
+            SQLAlchemyError: On database errors
+            IntegrityError: On duplicate key violations
         """
         try:
             with self.get_session() as session:
@@ -66,9 +79,12 @@ class DatabaseWriter(DatabaseClient):
             logging.error(f"Error creating job: {e}")
             raise
 
+    @retry_on_deadlock(max_retries=3)
     def update_job_success(self, job_id, file_info):
         """
-        Update job with successful completion details
+        Update job with successful completion details.
+
+        Includes automatic retry on deadlock.
 
         Args:
             job_id (str): Job ID to update
@@ -101,9 +117,12 @@ class DatabaseWriter(DatabaseClient):
             logging.error(f"Error updating job success {job_id}: {e}")
             return False
 
+    @retry_on_deadlock(max_retries=3)
     def update_job_failure(self, job_id, error_code, error_message, error_details=None):
         """
-        Update job with failure details
+        Update job with failure details.
+
+        Includes automatic retry on deadlock.
 
         Args:
             job_id (str): Job ID to update
@@ -166,9 +185,13 @@ class DatabaseWriter(DatabaseClient):
             logging.error(f"Error adding job log: {e}")
             raise
 
+    @retry_on_deadlock(max_retries=3)
+    @handle_duplicate_key(skip_on_duplicate=False)
     def set_application_setting(self, setting_key, setting_value, setting_type="string", description=None):
         """
-        Set an application setting (create or update)
+        Set an application setting (create or update).
+
+        Includes automatic retry on deadlock and duplicate key handling.
 
         Args:
             setting_key (str): Setting key
@@ -356,9 +379,13 @@ class DatabaseWriter(DatabaseClient):
             logging.error(f"Error updating job metadata {job_id}: {e}")
             return False
 
+    @retry_on_deadlock(max_retries=3)
+    @log_query_performance(slow_query_threshold=1.0)
     def bulk_update_job_status(self, job_ids, new_status):
         """
-        Update status for multiple jobs at once
+        Update status for multiple jobs at once.
+
+        Includes automatic retry on deadlock and performance logging for bulk operations.
 
         Args:
             job_ids (list): List of job IDs to update
