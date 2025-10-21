@@ -1,5 +1,5 @@
 {
-  "security_token": "SEC_TOKEN_GX3TeaQSTh0Kik1s9zQQ63trz7gbC7OE",
+  "security_token": "SEC_TOKEN_BNUkvM6yte3FWgpRQfJdXRbAET8K0say",
   "analysis_results": [
     {
       "job_id": "test_job_001",
@@ -7,7 +7,7 @@
         "title_matches_role": true,
         "mismatch_explanation": null,
         "is_authentic": true,
-        "reasoning": "The job description is clear, concise, and provides realistic expectations for a Senior Software Engineer role. The requirements and responsibilities align with the title."
+        "reasoning": "The job description aligns with the title of Senior Software Engineer, outlining responsibilities and requirements expected for this role."
       },
       "classification": {
         "industry": "Software Development",
@@ -41,11 +41,6 @@
               "reasoning": "Cloud infrastructure experience is essential."
             },
             {
-              "skill_name": "Software Engineering",
-              "importance_rating": 90,
-              "reasoning": "Overall experience in software development."
-            },
-            {
               "skill_name": "Distributed Systems",
               "importance_rating": 80,
               "reasoning": "Experience with distributed systems is required."
@@ -53,37 +48,47 @@
             {
               "skill_name": "Microservices",
               "importance_rating": 80,
-              "reasoning": "Experience with microservices architecture is required."
+              "reasoning": "Experience with microservices is required."
             },
             {
-              "skill_name": "Docker",
+              "skill_name": "Software Engineering",
+              "importance_rating": 90,
+              "reasoning": "Overall software engineering experience is crucial."
+            },
+            {
+              "skill_name": "Backend Development",
+              "importance_rating": 85,
+              "reasoning": "Focus on backend systems development."
+            },
+            {
+              "skill_name": "Technical Leadership",
               "importance_rating": 75,
-              "reasoning": "Experience with containerization technologies."
-            },
-            {
-              "skill_name": "Kubernetes",
-              "importance_rating": 75,
-              "reasoning": "Experience with container orchestration."
-            },
-            {
-              "skill_name": "CI/CD Pipelines",
-              "importance_rating": 70,
-              "reasoning": "Experience with continuous integration and continuous deployment."
+              "reasoning": "Leading technical initiatives and mentoring junior engineers."
             },
             {
               "skill_name": "Code Review",
               "importance_rating": 70,
-              "reasoning": "Ability to participate in code reviews and maintain high code quality."
+              "reasoning": "Participating in code reviews and maintaining high code quality."
             },
             {
               "skill_name": "Agile Development",
               "importance_rating": 65,
-              "reasoning": "Experience working in an agile environment."
+              "reasoning": "Working in an agile environment with 2-week sprints."
             },
             {
-              "skill_name": "Mentoring",
+              "skill_name": "Docker",
               "importance_rating": 60,
-              "reasoning": "Ability to mentor junior engineers."
+              "reasoning": "Experience with Docker is a plus."
+            },
+            {
+              "skill_name": "Kubernetes",
+              "importance_rating": 60,
+              "reasoning": "Experience with Kubernetes is a plus."
+            },
+            {
+              "skill_name": "CI/CD Pipelines",
+              "importance_rating": 60,
+              "reasoning": "Experience with CI/CD pipelines is a plus."
             },
             {
               "skill_name": "Java",
@@ -111,7 +116,7 @@
         "work_arrangement": {
           "in_office_requirements": "Hybrid",
           "office_location": null,
-          "working_hours_per_week": null,
+          "working_hours_per_week": 40,
           "work_schedule": null,
           "specific_schedule": "3 days in office, 2 days remote",
           "travel_requirements": null
@@ -140,7 +145,7 @@
           "application_email": null,
           "application_method": "website",
           "application_link": null,
-          "special_instructions": "Apply with your resume and a brief cover letter explaining why you're interested!",
+          "special_instructions": null,
           "required_documents": [
             "resume",
             "cover letter"
@@ -161,11 +166,10 @@
             "Microservices"
           ],
           "must_have_phrases": [
-            "Senior Software Engineer",
             "scalable backend systems",
-            "code reviews",
             "agile environment",
-            "5+ years of software engineering experience"
+            "code reviews",
+            "high code quality standards"
           ]
         }
       }
