@@ -44,10 +44,43 @@ class DatabaseClient:
         if not self.database_url:
             raise ValueError("Database configuration could not be established")
 
-        # Create engine with connection pooling
-        self.engine = create_engine(
-            self.database_url, pool_pre_ping=True, pool_recycle=300, echo=False  # Set to True for SQL debugging
+        # Get connection pool configuration from environment (for managed databases)
+        pool_size = int(os.environ.get('DATABASE_POOL_SIZE', '10'))
+        max_overflow = int(os.environ.get('DATABASE_MAX_OVERFLOW', '20'))
+        pool_timeout = int(os.environ.get('DATABASE_POOL_TIMEOUT', '30'))
+        pool_recycle = int(os.environ.get('DATABASE_POOL_RECYCLE', '300'))
+
+        # Validate pool configuration
+        total_connections = pool_size + max_overflow
+        logging.info(
+            f"Connection pool configured: "
+            f"pool_size={pool_size}, max_overflow={max_overflow}, "
+            f"total={total_connections}, timeout={pool_timeout}s"
         )
+
+        # Create engine with connection pooling and resource limits
+        self.engine = create_engine(
+            self.database_url,
+            pool_pre_ping=True,  # Test connections before use
+            pool_recycle=pool_recycle,  # Recycle connections (default: 5 minutes)
+            pool_size=pool_size,  # Maximum permanent connections in pool
+            max_overflow=max_overflow,  # Additional connections if pool exhausted
+            pool_timeout=pool_timeout,  # Wait before raising error
+            echo=False  # Set to True for SQL debugging
+        )
+
+        # Configure query timeout at connection level
+        from sqlalchemy import event
+
+        @event.listens_for(self.engine, "connect")
+        def set_query_timeout(dbapi_conn, connection_record):
+            """Set statement timeout to prevent long-running queries from hanging."""
+            try:
+                cursor = dbapi_conn.cursor()
+                cursor.execute("SET statement_timeout = '30s'")  # 30 second query timeout
+                cursor.close()
+            except Exception as e:
+                logging.warning(f"Could not set query timeout: {e}")
 
         # Create session factory
         self.SessionLocal = sessionmaker(bind=self.engine)

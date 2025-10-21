@@ -1,7 +1,8 @@
 import os
 import logging
 from datetime import datetime, timedelta
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
+from sqlalchemy.exc import SQLAlchemyError, OperationalError, IntegrityError
 from .lazy_instances import get_database_manager
 from modules.security.rate_limit_manager import rate_limit_cheap, rate_limit_moderate
 
@@ -11,6 +12,50 @@ database_bp = Blueprint("database", __name__, url_prefix="/api/db")
 # NOTE: Database manager is now lazy-initialized on demand
 # No module-level instantiation to prevent import-time connections
 logging.info("Database API blueprint created (lazy initialization)")
+
+
+def create_error_response(error: Exception, error_code: str, status_code: int = 500) -> tuple:
+    """
+    Create a standardized error response with appropriate error codes.
+
+    Args:
+        error: The exception that occurred
+        error_code: Standardized error code
+        status_code: HTTP status code
+
+    Returns:
+        tuple: (JSON response, status code)
+    """
+    # Include detailed error info only in debug mode
+    debug_mode = current_app.debug if current_app else False
+
+    response = {
+        "status": "error",
+        "error_code": error_code,
+        "message": str(error) if debug_mode else _get_user_friendly_message(error_code),
+    }
+
+    if debug_mode:
+        response["debug_details"] = {
+            "exception_type": type(error).__name__,
+            "exception_message": str(error),
+        }
+
+    return jsonify(response), status_code
+
+
+def _get_user_friendly_message(error_code: str) -> str:
+    """Get user-friendly message for error code."""
+    messages = {
+        "DB_CONNECTION_ERROR": "Unable to connect to database. Please try again later.",
+        "DB_QUERY_ERROR": "Database query failed. Please check your request and try again.",
+        "DB_TIMEOUT_ERROR": "Database query took too long to execute. Please try again.",
+        "INVALID_PARAMS": "Invalid request parameters provided.",
+        "NOT_FOUND": "Requested resource not found.",
+        "DUPLICATE_ENTRY": "Resource already exists.",
+        "INTERNAL_ERROR": "An internal error occurred. Please contact support.",
+    }
+    return messages.get(error_code, "An error occurred while processing your request.")
 
 
 def validate_api_key():
@@ -33,23 +78,36 @@ def validate_api_key():
 @rate_limit_cheap  # Database reads: 200/min
 def get_jobs():
     """
-    Get jobs with optional filtering
+    Get jobs with optional filtering.
+
     Query parameters:
-    - limit: Number of jobs to return (default: 20)
+    - limit: Number of jobs to return (default: 20, max: 100)
     - status: Filter by status
     - document_type: Filter by document type
     - search: Search term for title/author/filename
+
+    Returns:
+        JSON response with jobs list or error details
     """
     if not validate_api_key():
-        return jsonify({"error": "Invalid or missing API key"}), 401
+        return jsonify({"error": "Invalid or missing API key", "error_code": "UNAUTHORIZED"}), 401
 
     try:
         db_manager = get_database_manager()  # Lazy initialization
-        limit = int(request.args.get("limit", 20))
+
+        # Validate and enforce pagination limits
+        try:
+            limit = int(request.args.get("limit", 20))
+            if limit <= 0 or limit > 100:
+                raise ValueError("Limit must be between 1 and 100")
+        except ValueError as e:
+            return create_error_response(e, "INVALID_PARAMS", 400)
+
         status = request.args.get("status")
         document_type = request.args.get("document_type")
         search = request.args.get("search")
 
+        # Execute appropriate query
         if search:
             jobs = db_manager.search_jobs(search, limit)
         elif status:
@@ -59,16 +117,32 @@ def get_jobs():
 
         return jsonify({"status": "success", "jobs": jobs, "count": len(jobs)})
 
+    except OperationalError as e:
+        logging.error(f"Database connection error in get_jobs: {e}")
+        return create_error_response(e, "DB_CONNECTION_ERROR", 503)
+
+    except SQLAlchemyError as e:
+        logging.error(f"Database query error in get_jobs: {e}")
+        return create_error_response(e, "DB_QUERY_ERROR", 500)
+
     except Exception as e:
-        logging.error(f"Error fetching jobs: {e}")
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Unexpected error in get_jobs: {e}")
+        return create_error_response(e, "INTERNAL_ERROR", 500)
 
 
 @database_bp.route("/jobs/<job_id>", methods=["GET"])
 def get_job(job_id):
-    """Get a specific job by ID"""
+    """
+    Get a specific job by ID.
+
+    Args:
+        job_id: Job identifier
+
+    Returns:
+        JSON response with job details or error
+    """
     if not validate_api_key():
-        return jsonify({"error": "Invalid or missing API key"}), 401
+        return jsonify({"error": "Invalid or missing API key", "error_code": "UNAUTHORIZED"}), 401
 
     try:
         db_manager = get_database_manager()  # Lazy initialization
@@ -77,11 +151,23 @@ def get_job(job_id):
         if job:
             return jsonify({"status": "success", "job": job})
         else:
-            return jsonify({"error": "Job not found"}), 404
+            return jsonify({
+                "status": "error",
+                "error_code": "NOT_FOUND",
+                "message": f"Job with ID '{job_id}' not found"
+            }), 404
+
+    except OperationalError as e:
+        logging.error(f"Database connection error fetching job {job_id}: {e}")
+        return create_error_response(e, "DB_CONNECTION_ERROR", 503)
+
+    except SQLAlchemyError as e:
+        logging.error(f"Database query error fetching job {job_id}: {e}")
+        return create_error_response(e, "DB_QUERY_ERROR", 500)
 
     except Exception as e:
-        logging.error(f"Error fetching job {job_id}: {e}")
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Unexpected error fetching job {job_id}: {e}")
+        return create_error_response(e, "INTERNAL_ERROR", 500)
 
 
 @database_bp.route("/statistics", methods=["GET"])
@@ -265,22 +351,83 @@ def test_database():
 
 @database_bp.route("/health", methods=["GET"])
 def database_health():
-    """Database health check endpoint"""
+    """
+    Comprehensive database health check endpoint.
+
+    Provides detailed information about:
+    - Connection pool status
+    - Database connectivity
+    - Query performance metrics
+    - System statistics
+
+    Returns:
+        JSON response with health status and metrics
+    """
     try:
         db_manager = get_database_manager()  # Lazy initialization
+
+        # Test database connectivity
         connection_test = db_manager.client.test_connection()
+
+        # Get connection pool statistics
+        pool = db_manager.client.engine.pool
+        pool_stats = {
+            "size": pool.size(),
+            "checked_in": pool.checkedin(),
+            "checked_out": pool.checkedout(),
+            "overflow": pool.overflow(),
+            "total_connections": pool.size() + pool.overflow(),
+        }
+
+        # Calculate pool utilization percentage
+        max_connections = pool.size() + (getattr(pool, '_max_overflow', 0))
+        pool_utilization = (pool_stats["checked_out"] / max_connections * 100) if max_connections > 0 else 0
+
+        # Get job statistics
         stats = db_manager.get_job_statistics()
 
-        return jsonify(
-            {
-                "status": "healthy" if connection_test else "unhealthy",
-                "database_connected": connection_test,
+        # Determine overall health status
+        is_healthy = connection_test and pool_utilization < 90
+
+        health_status = {
+            "status": "healthy" if is_healthy else "degraded" if connection_test else "unhealthy",
+            "database_connected": connection_test,
+            "timestamp": datetime.utcnow().isoformat(),
+            "connection_pool": {
+                "size": pool_stats["size"],
+                "checked_in": pool_stats["checked_in"],
+                "checked_out": pool_stats["checked_out"],
+                "overflow": pool_stats["overflow"],
+                "utilization_percent": round(pool_utilization, 2),
+                "status": "healthy" if pool_utilization < 75 else "warning" if pool_utilization < 90 else "critical"
+            },
+            "database_stats": {
                 "total_jobs": stats.get("total_jobs", 0),
                 "success_rate": stats.get("success_rate", 0),
-                "timestamp": datetime.utcnow().isoformat(),
+                "completed_jobs": stats.get("completed_jobs", 0),
+                "failed_jobs": stats.get("failed_jobs", 0),
             }
-        )
+        }
+
+        # Add warnings if applicable
+        warnings = []
+        if pool_utilization > 75:
+            warnings.append(f"Connection pool utilization is high: {pool_utilization:.1f}%")
+        if not connection_test:
+            warnings.append("Database connection test failed")
+
+        if warnings:
+            health_status["warnings"] = warnings
+
+        status_code = 200 if is_healthy else 503
+        return jsonify(health_status), status_code
 
     except Exception as e:
         logging.error(f"Database health check error: {e}")
-        return jsonify({"status": "unhealthy", "database_connected": False, "error": str(e)}), 500
+        return jsonify({
+            "status": "unhealthy",
+            "database_connected": False,
+            "error_code": "HEALTH_CHECK_FAILED",
+            "message": "Health check failed",
+            "timestamp": datetime.utcnow().isoformat()
+        }), 503
