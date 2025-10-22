@@ -29,11 +29,46 @@ class DatabaseConfig:
 
     def __init__(self):
         """Initialize database configuration with environment detection."""
+        self.is_digitalocean = self._detect_digitalocean_environment()
         self.is_docker = self._detect_docker_environment()
         self.database_url = self._build_connection_string()
 
-        logging.info(f"Database config initialized - Environment: {'Docker' if self.is_docker else 'Local'}")
+        env_type = 'Digital Ocean' if self.is_digitalocean else ('Docker' if self.is_docker else 'Local')
+        logging.info(f"Database config initialized - Environment: {env_type}")
         logging.info(f"Database URL: {self._safe_url_log()}")
+
+    def _detect_digitalocean_environment(self) -> bool:
+        """
+        Detect if running on Digital Ocean App Platform.
+
+        Checks for Digital Ocean-specific environment variables and indicators:
+        - DEPLOYMENT_PLATFORM=digitalocean (explicit)
+        - DO_APP_NAME (App Platform auto-injects this)
+        - DATABASE_URL with digitalocean.com domain
+        - FLASK_ENV=production + DATABASE_URL with SSL requirement
+
+        Returns:
+            bool: True if running on Digital Ocean, False otherwise
+        """
+        # Priority 1: Explicit deployment platform designation
+        if os.environ.get('DEPLOYMENT_PLATFORM') == 'digitalocean':
+            return True
+
+        # Priority 2: Digital Ocean App Platform auto-injected variables
+        if os.environ.get('DO_APP_NAME'):
+            return True
+
+        # Priority 3: Check for Digital Ocean managed database URL pattern
+        db_url = os.environ.get('DATABASE_URL', '')
+        if 'digitalocean.com' in db_url or 'db.ondigitalocean.com' in db_url:
+            return True
+
+        # Priority 4: Production environment with SSL-required database
+        if (os.environ.get('FLASK_ENV') == 'production' and
+            db_url and 'sslmode=require' in db_url):
+            return True
+
+        return False
 
     def _detect_docker_environment(self) -> bool:
         """
@@ -71,7 +106,7 @@ class DatabaseConfig:
         Build PostgreSQL connection string based on environment.
 
         Priority order:
-        1. DATABASE_URL (if explicitly set)
+        1. DATABASE_URL (if explicitly set) - Digital Ocean uses this
         2. Individual components (DATABASE_HOST, DATABASE_PORT, etc.)
         3. Local fallback defaults
 
@@ -83,10 +118,20 @@ class DatabaseConfig:
         Raises:
             ValueError: If required credentials are missing
         """
-        # Priority 1: Use DATABASE_URL if explicitly set
+        # Priority 1: Use DATABASE_URL if explicitly set (Digital Ocean, Heroku, etc.)
         if os.environ.get('DATABASE_URL'):
+            db_url = os.environ.get('DATABASE_URL')
             logging.info("Using DATABASE_URL from environment")
-            return os.environ.get('DATABASE_URL')
+
+            # Digital Ocean managed databases require SSL
+            # Ensure sslmode is set for production databases
+            if self.is_digitalocean and 'sslmode' not in db_url:
+                # Add SSL requirement for Digital Ocean managed databases
+                separator = '&' if '?' in db_url else '?'
+                db_url = f"{db_url}{separator}sslmode=require"
+                logging.info("Added SSL requirement to Digital Ocean database URL")
+
+            return db_url
 
         # Priority 2: Build from individual components
         if self.is_docker:

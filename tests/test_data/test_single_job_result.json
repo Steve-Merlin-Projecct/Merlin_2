@@ -6,7 +6,7 @@
         "title_matches_role": true,
         "mismatch_explanation": null,
         "is_authentic": true,
-        "reasoning": "The job description aligns with the title and provides realistic expectations for a Senior Software Engineer role."
+        "reasoning": "The job description aligns with the title and provides realistic expectations."
       },
       "classification": {
         "industry": "Software Development",
@@ -41,7 +41,7 @@
             },
             {
               "skill_name": "Go",
-              "importance_rating": 80,
+              "importance_rating": 85,
               "reasoning": "Used for building scalable backend systems."
             },
             {
@@ -110,7 +110,7 @@
         "work_arrangement": {
           "in_office_requirements": "Hybrid",
           "office_location": null,
-          "working_hours_per_week": null,
+          "working_hours_per_week": 40,
           "work_schedule": null,
           "specific_schedule": "3 days in office, 2 days remote",
           "travel_requirements": null
@@ -139,7 +139,7 @@
           "application_email": null,
           "application_method": "website",
           "application_link": null,
-          "special_instructions": "Apply with your resume and a brief cover letter explaining why you're interested!",
+          "special_instructions": null,
           "required_documents": [
             "resume",
             "cover letter"
@@ -161,8 +161,9 @@
           "must_have_phrases": [
             "Senior Software Engineer",
             "scalable backend systems",
+            "agile environment",
             "code reviews",
-            "agile environment"
+            "high code quality standards"
           ]
         }
       },
