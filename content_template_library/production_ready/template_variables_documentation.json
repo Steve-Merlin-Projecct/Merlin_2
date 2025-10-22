@@ -1,0 +1,1213 @@
+{
+  "generation_date": "2025-10-21T05:07:52.948259",
+  "total_templates_processed": 3,
+  "templates": {
+    "restaurant_manager": {
+      "variables": {
+        "email": {
+          "original_text": "4567 Main Street, Buffalo, New York 98052 | (716) 555-0100 | m.riley@live.com | www.linkedin.com/in/m.riley",
+          "content_type": "contact",
+          "location": "paragraph",
+          "position": 0
+        },
+        "professional_summary_1": {
+          "original_text": "Profile",
+          "content_type": "summary",
+          "location": "paragraph",
+          "position": 1
+        },
+        "career_overview_1": {
+          "original_text": "Friendly and engaging team player and leader able to inspire staff to perform their best. Detail oriented and experienced restaurant manager passionate about food and beverages. A multi-tasker who excels at staff training and recruiting with a track record of inspiring great customer service and customer satisfaction. Regularly exceed sales goals. A master in the art of upselling.",
+          "content_type": "profile",
+          "location": "paragraph",
+          "position": 2
+        },
+        "job_1_company": {
+          "original_text": "Experience",
+          "content_type": "company",
+          "location": "paragraph",
+          "position": 3
+        },
+        "date_range_current": {
+          "original_text": "Restaurant Manager | Contoso Bar and Grill | September 20XX – Present",
+          "content_type": "date",
+          "location": "paragraph",
+          "position": 4
+        },
+        "job_1_responsibility_2": {
+          "original_text": "Recruit, hire, train, and coach over 30 staff members on customer service skills, food & beverage knowledge, sales, and health & safety standards.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 5
+        },
+        "job_1_achievement_2": {
+          "original_text": "Reduced costs by 7% through controls on overtime, operational efficiencies, and reduced waste.",
+          "content_type": "achievement",
+          "location": "paragraph",
+          "position": 6
+        },
+        "job_1_responsibility_3": {
+          "original_text": "Consistently exceed monthly sales goals by a minimum of 10% by training FOH staff on upselling techniques and by creating a featured food and beverage program.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 7
+        },
+        "date_range": {
+          "original_text": "A.A. in Hospitality Management | June 20XX | Bigtown College, Chicago, Illinois",
+          "content_type": "date",
+          "location": "paragraph",
+          "position": 16
+        },
+        "job_1_responsibility_4": {
+          "original_text": "Created a cross-training program ensuring FOH staff members were able to perform confidently and effectively in all positions.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 9
+        },
+        "job_1_achievement_3": {
+          "original_text": "Grew customer based and increased restaurant social media accounts by 19% through interactive promotions, engaging postings, and contests.",
+          "content_type": "achievement",
+          "location": "paragraph",
+          "position": 10
+        },
+        "job_1_responsibility_5": {
+          "original_text": "Created and implemented staff health and safety standards compliance training program, achieving a score of 99% from the Board of Health.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 11
+        },
+        "job_2_responsibility_1": {
+          "original_text": "Successfully redesigned existing inventory system, ordering and food storage practices, resulting in a 6% decrease in food waste and higher net profits.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 12
+        },
+        "job_2_company": {
+          "original_text": "Education",
+          "content_type": "company",
+          "location": "paragraph",
+          "position": 13
+        },
+        "job_3_company": {
+          "original_text": "Skills & Abilities",
+          "content_type": "company",
+          "location": "paragraph",
+          "position": 17
+        },
+        "content_1": {
+          "original_text": "Activities and Interests",
+          "content_type": "generic_content",
+          "location": "paragraph",
+          "position": 18
+        },
+        "content_2": {
+          "original_text": "Theater, environmental conservation, art, hiking, skiing, travel",
+          "content_type": "generic_content",
+          "location": "paragraph",
+          "position": 19
+        },
+        "full_name": {
+          "original_text": "May Riley",
+          "content_type": "personal_info",
+          "location": "table_0_row_0_cell_0",
+          "position": 0
+        },
+        "job_4_company": {
+          "original_text": "Accounting & Budgeting",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 0
+        },
+        "job_5_company": {
+          "original_text": "Proficient with POS systems",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 1
+        },
+        "skill_1": {
+          "original_text": "Excellent interpersonal and communication skills",
+          "content_type": "skills",
+          "location": "table_1_row_0_cell_0",
+          "position": 2
+        },
+        "job_6_company": {
+          "original_text": "Poised under pressure",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_1",
+          "position": 0
+        },
+        "career_overview_2": {
+          "original_text": "Experienced in most restaurant positions",
+          "content_type": "profile",
+          "location": "table_1_row_0_cell_1",
+          "position": 1
+        },
+        "content_3": {
+          "original_text": "Fun and energetic",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_1",
+          "position": 2
+        }
+      },
+      "statistics": {
+        "template_name": "restaurant_manager",
+        "total_paragraphs_processed": 19,
+        "total_tables_processed": 2,
+        "total_cells_processed": 7,
+        "total_variables_created": 26,
+        "conversion_date": "2025-10-21T05:07:52.782214"
+      }
+    },
+    "accountant": {
+      "variables": {
+        "full_name": {
+          "original_text": "Danielle Brasseur",
+          "content_type": "personal_info",
+          "location": "paragraph",
+          "position": 0
+        },
+        "email": {
+          "original_text": "4567 8th Avenue, Carson City, NV 10111 | (313) 555-0100 | danielle@example.com | www.linkedin.com",
+          "content_type": "contact",
+          "location": "paragraph",
+          "position": 1
+        },
+        "job_1_responsibility_2": {
+          "original_text": "Dynamic and detail-oriented accountant with expertise in GAAP and comprehensive public accounting experience. Known for delivering top-notch strategic solutions and fostering business growth through effective collaboration and ownership mentality.",
+          "content_type": "responsibility",
+          "location": "paragraph",
+          "position": 3
+        },
+        "job_1_company": {
+          "original_text": "Education",
+          "content_type": "company",
+          "location": "table_0_row_0_cell_0",
+          "position": 0
+        },
+        "education_1_institution": {
+          "original_text": "Bachelor of Science in Accounting, Minor in Business Administration | Bellows College",
+          "content_type": "education",
+          "location": "table_0_row_0_cell_0",
+          "position": 1
+        },
+        "date_range": {
+          "original_text": "December 20XX – April 20XX",
+          "content_type": "date",
+          "location": "table_0_row_1_cell_0",
+          "position": 12
+        },
+        "job_1_responsibility_3": {
+          "original_text": "Distinguished member of university’s Accounting Society, GPA: 3.8",
+          "content_type": "responsibility",
+          "location": "table_0_row_0_cell_0",
+          "position": 3
+        },
+        "content_1": {
+          "original_text": "Relevant coursework: Advanced Financial Accounting and Reporting",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_0",
+          "position": 4
+        },
+        "content_2": {
+          "original_text": "<<job_1_company>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 0
+        },
+        "content_3": {
+          "original_text": "<<education_1_institution>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 1
+        },
+        "content_4": {
+          "original_text": "<<date_range>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 2
+        },
+        "content_5": {
+          "original_text": "<<job_1_responsibility_3>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 3
+        },
+        "content_6": {
+          "original_text": "<<content_1>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 4
+        },
+        "job_2_company": {
+          "original_text": "Experience",
+          "content_type": "company",
+          "location": "table_0_row_1_cell_0",
+          "position": 0
+        },
+        "content_7": {
+          "original_text": "Accountant | Trey Research | San Francisco, CA",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 1
+        },
+        "date_range_current": {
+          "original_text": "March 20XX – Present",
+          "content_type": "date",
+          "location": "table_0_row_1_cell_0",
+          "position": 2
+        },
+        "content_8": {
+          "original_text": "Provide accounting services for individuals and businesses in a mid-sized firm",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 3
+        },
+        "content_9": {
+          "original_text": "Specialize in income tax preparation, audit support, and financial statement preparation",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 4
+        },
+        "content_10": {
+          "original_text": "Manage pro forma budgeting, general ledger accounting, and bank reconciliation",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 5
+        },
+        "content_11": {
+          "original_text": "Bookkeeper | Bandter Real Estate | Berkeley, CA",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 6
+        },
+        "content_12": {
+          "original_text": "In-house bookkeeper for a real estate development company",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 8
+        },
+        "job_3_company": {
+          "original_text": "Maintained financial books, tracked expenses",
+          "content_type": "company",
+          "location": "table_0_row_1_cell_0",
+          "position": 9
+        },
+        "content_13": {
+          "original_text": "Prepared and submitted invoices",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 10
+        },
+        "job_1_responsibility_4": {
+          "original_text": "Accounting intern | Olson Harris Ltd. | Vallejo, CA",
+          "content_type": "responsibility",
+          "location": "table_0_row_1_cell_0",
+          "position": 11
+        },
+        "content_14": {
+          "original_text": "Assisted with payroll and Pensions service management for 150+ employees",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 13
+        },
+        "content_15": {
+          "original_text": "Prepared invoices for more than 200 clients",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 14
+        },
+        "content_16": {
+          "original_text": "Assisted with bill payments, records organization and preparation, and other office duties",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_0",
+          "position": 15
+        },
+        "content_17": {
+          "original_text": "<<job_2_company>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 0
+        },
+        "content_18": {
+          "original_text": "<<content_7>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 1
+        },
+        "content_19": {
+          "original_text": "<<date_range_current>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 2
+        },
+        "content_20": {
+          "original_text": "<<content_8>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 3
+        },
+        "content_21": {
+          "original_text": "<<content_9>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 4
+        },
+        "content_22": {
+          "original_text": "<<content_10>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 5
+        },
+        "content_23": {
+          "original_text": "<<content_11>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 6
+        },
+        "content_24": {
+          "original_text": "<<date_range>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 7
+        },
+        "content_25": {
+          "original_text": "<<content_12>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 8
+        },
+        "content_26": {
+          "original_text": "<<job_3_company>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 9
+        },
+        "content_27": {
+          "original_text": "<<content_13>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 10
+        },
+        "content_28": {
+          "original_text": "<<job_1_responsibility_4>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 11
+        },
+        "content_29": {
+          "original_text": "<<date_range>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 12
+        },
+        "content_30": {
+          "original_text": "<<content_14>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 13
+        },
+        "content_31": {
+          "original_text": "<<content_15>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 14
+        },
+        "content_32": {
+          "original_text": "<<content_16>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_1_cell_1",
+          "position": 15
+        },
+        "job_4_company": {
+          "original_text": "Skills",
+          "content_type": "company",
+          "location": "table_0_row_2_cell_0",
+          "position": 0
+        },
+        "content_33": {
+          "original_text": "<<job_4_company>>",
+          "content_type": "generic_content",
+          "location": "table_0_row_2_cell_1",
+          "position": 0
+        },
+        "job_5_company": {
+          "original_text": "Microsoft NAV Dynamics",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_0",
+          "position": 0
+        },
+        "job_6_company": {
+          "original_text": "Cashflow planning & management",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_0",
+          "position": 1
+        },
+        "job_7_company": {
+          "original_text": "State & federal tax codes",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_0",
+          "position": 2
+        },
+        "job_8_company": {
+          "original_text": "Bookkeeping",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_1",
+          "position": 0
+        },
+        "job_9_company": {
+          "original_text": "Exceptional communication",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_1",
+          "position": 1
+        },
+        "job_10_company": {
+          "original_text": "Fluent in German",
+          "content_type": "company",
+          "location": "table_0_row_3_cell_1",
+          "position": 2
+        }
+      },
+      "statistics": {
+        "template_name": "accountant",
+        "total_paragraphs_processed": 3,
+        "total_tables_processed": 1,
+        "total_cells_processed": 50,
+        "total_variables_created": 53,
+        "conversion_date": "2025-10-21T05:07:52.810848"
+      }
+    },
+    "uiux_designer": {
+      "variables": {
+        "job_1_company": {
+          "original_text": "Angelica",
+          "content_type": "company",
+          "location": "paragraph",
+          "position": 0
+        },
+        "job_2_company": {
+          "original_text": "Astrom",
+          "content_type": "company",
+          "location": "paragraph",
+          "position": 1
+        },
+        "content_1": {
+          "original_text": "UI/UX Designer",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_0",
+          "position": 0
+        },
+        "career_overview_1": {
+          "original_text": "I am passionate about designing digital experiences that are both visually stunning and intuitive, and always strive to create designs that delight and engage users.",
+          "content_type": "profile",
+          "location": "table_0_row_0_cell_0",
+          "position": 2
+        },
+        "job_3_company": {
+          "original_text": "Contact",
+          "content_type": "company",
+          "location": "table_0_row_0_cell_1",
+          "position": 0
+        },
+        "email": {
+          "original_text": "angelica@example.com",
+          "content_type": "contact",
+          "location": "table_0_row_0_cell_1",
+          "position": 2
+        },
+        "content_2": {
+          "original_text": "www.interestingsite.com",
+          "content_type": "generic_content",
+          "location": "table_0_row_0_cell_1",
+          "position": 3
+        },
+        "date_range": {
+          "original_text": "(212) 555-0155",
+          "content_type": "date",
+          "location": "table_0_row_0_cell_1",
+          "position": 4
+        },
+        "job_4_company": {
+          "original_text": "New York City, NY",
+          "content_type": "company",
+          "location": "table_0_row_0_cell_1",
+          "position": 5
+        },
+        "job_5_company": {
+          "original_text": "Education",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 0
+        },
+        "job_6_company": {
+          "original_text": "SCHOOL OF FINE ART",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 2
+        },
+        "job_7_company": {
+          "original_text": "BFA, Graphic Design",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 3
+        },
+        "section_header_20xx": {
+          "original_text": "20XX",
+          "content_type": "section_header",
+          "location": "table_1_row_0_cell_0",
+          "position": 4
+        },
+        "job_8_company": {
+          "original_text": "Skills",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 9
+        },
+        "content_3": {
+          "original_text": "UI/UX design",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_0",
+          "position": 11
+        },
+        "job_9_company": {
+          "original_text": "User research",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 12
+        },
+        "job_10_company": {
+          "original_text": "Usability testing",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 13
+        },
+        "job_11_company": {
+          "original_text": "Project management",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_0",
+          "position": 14
+        },
+        "job_12_company": {
+          "original_text": "Experience",
+          "content_type": "company",
+          "location": "table_1_row_0_cell_2",
+          "position": 0
+        },
+        "content_4": {
+          "original_text": "Senior UI/UX Designer PROSEWARE, INC.",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_2",
+          "position": 2
+        },
+        "content_5": {
+          "original_text": "Jan 20XX - Dec 20XX",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_2",
+          "position": 3
+        },
+        "job_1_responsibility_2": {
+          "original_text": "Managed the design team and mentored junior designers to improve design quality and efficiency. Created wireframes, prototypes, and high-fidelity mockups for a variety of web and mobile projects. Worked closely with clients to understand their needs and goals and translate them into effective design solutions.",
+          "content_type": "responsibility",
+          "location": "table_1_row_0_cell_2",
+          "position": 4
+        },
+        "section_header_ui/ux_designer_proseware,_inc.": {
+          "original_text": "UI/UX DESIGNER PROSEWARE, INC.",
+          "content_type": "section_header",
+          "location": "table_1_row_0_cell_2",
+          "position": 6
+        },
+        "content_6": {
+          "original_text": "Oct 20XX - Jul 20XX",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_2",
+          "position": 7
+        },
+        "job_1_responsibility_3": {
+          "original_text": "Led the redesign of the company's e-commerce platform, resulting in a 25% increase in sales. Conducted user research and usability testing to inform design decisions and improve the user experience. Collaborated with development teams to ensure designs were implemented accurately and efficiently.",
+          "content_type": "responsibility",
+          "location": "table_1_row_0_cell_2",
+          "position": 8
+        },
+        "section_header_ui/ux_designer_relecloud": {
+          "original_text": "UI/UX DESIGNER RELECLOUD",
+          "content_type": "section_header",
+          "location": "table_1_row_0_cell_2",
+          "position": 10
+        },
+        "content_7": {
+          "original_text": "Feb 20XX - Oct 20XX",
+          "content_type": "generic_content",
+          "location": "table_1_row_0_cell_2",
+          "position": 11
+        },
+        "job_1_responsibility_4": {
+          "original_text": "Conducted user research and developed user personas to inform product design and development. Designed user flows, wireframes, and prototypes for a mobile app that won several industry awards. Worked closely with the development team to ensure designs were implemented accurately and efficiently.",
+          "content_type": "responsibility",
+          "location": "table_1_row_0_cell_2",
+          "position": 12
+        }
+      },
+      "statistics": {
+        "template_name": "uiux_designer",
+        "total_paragraphs_processed": 2,
+        "total_tables_processed": 2,
+        "total_cells_processed": 26,
+        "total_variables_created": 28,
+        "conversion_date": "2025-10-21T05:07:52.886617"
+      }
+    }
+  },
+  "variable_categories": {
+    "contact": [
+      {
+        "variable": "email",
+        "template": "restaurant_manager",
+        "original_text": "4567 Main Street, Buffalo, New York 98052 | (716) 555-0100 | m.riley@live.com | www.linkedin.com/in/"
+      },
+      {
+        "variable": "email",
+        "template": "accountant",
+        "original_text": "4567 8th Avenue, Carson City, NV 10111 | (313) 555-0100 | danielle@example.com | www.linkedin.com"
+      },
+      {
+        "variable": "email",
+        "template": "uiux_designer",
+        "original_text": "angelica@example.com"
+      }
+    ],
+    "summary": [
+      {
+        "variable": "professional_summary_1",
+        "template": "restaurant_manager",
+        "original_text": "Profile"
+      }
+    ],
+    "profile": [
+      {
+        "variable": "career_overview_1",
+        "template": "restaurant_manager",
+        "original_text": "Friendly and engaging team player and leader able to inspire staff to perform their best. Detail ori"
+      },
+      {
+        "variable": "career_overview_2",
+        "template": "restaurant_manager",
+        "original_text": "Experienced in most restaurant positions"
+      },
+      {
+        "variable": "career_overview_1",
+        "template": "uiux_designer",
+        "original_text": "I am passionate about designing digital experiences that are both visually stunning and intuitive, a"
+      }
+    ],
+    "company": [
+      {
+        "variable": "job_1_company",
+        "template": "restaurant_manager",
+        "original_text": "Experience"
+      },
+      {
+        "variable": "job_2_company",
+        "template": "restaurant_manager",
+        "original_text": "Education"
+      },
+      {
+        "variable": "job_3_company",
+        "template": "restaurant_manager",
+        "original_text": "Skills & Abilities"
+      },
+      {
+        "variable": "job_4_company",
+        "template": "restaurant_manager",
+        "original_text": "Accounting & Budgeting"
+      },
+      {
+        "variable": "job_5_company",
+        "template": "restaurant_manager",
+        "original_text": "Proficient with POS systems"
+      },
+      {
+        "variable": "job_6_company",
+        "template": "restaurant_manager",
+        "original_text": "Poised under pressure"
+      },
+      {
+        "variable": "job_1_company",
+        "template": "accountant",
+        "original_text": "Education"
+      },
+      {
+        "variable": "job_2_company",
+        "template": "accountant",
+        "original_text": "Experience"
+      },
+      {
+        "variable": "job_3_company",
+        "template": "accountant",
+        "original_text": "Maintained financial books, tracked expenses"
+      },
+      {
+        "variable": "job_4_company",
+        "template": "accountant",
+        "original_text": "Skills"
+      },
+      {
+        "variable": "job_5_company",
+        "template": "accountant",
+        "original_text": "Microsoft NAV Dynamics"
+      },
+      {
+        "variable": "job_6_company",
+        "template": "accountant",
+        "original_text": "Cashflow planning & management"
+      },
+      {
+        "variable": "job_7_company",
+        "template": "accountant",
+        "original_text": "State & federal tax codes"
+      },
+      {
+        "variable": "job_8_company",
+        "template": "accountant",
+        "original_text": "Bookkeeping"
+      },
+      {
+        "variable": "job_9_company",
+        "template": "accountant",
+        "original_text": "Exceptional communication"
+      },
+      {
+        "variable": "job_10_company",
+        "template": "accountant",
+        "original_text": "Fluent in German"
+      },
+      {
+        "variable": "job_1_company",
+        "template": "uiux_designer",
+        "original_text": "Angelica"
+      },
+      {
+        "variable": "job_2_company",
+        "template": "uiux_designer",
+        "original_text": "Astrom"
+      },
+      {
+        "variable": "job_3_company",
+        "template": "uiux_designer",
+        "original_text": "Contact"
+      },
+      {
+        "variable": "job_4_company",
+        "template": "uiux_designer",
+        "original_text": "New York City, NY"
+      },
+      {
+        "variable": "job_5_company",
+        "template": "uiux_designer",
+        "original_text": "Education"
+      },
+      {
+        "variable": "job_6_company",
+        "template": "uiux_designer",
+        "original_text": "SCHOOL OF FINE ART"
+      },
+      {
+        "variable": "job_7_company",
+        "template": "uiux_designer",
+        "original_text": "BFA, Graphic Design"
+      },
+      {
+        "variable": "job_8_company",
+        "template": "uiux_designer",
+        "original_text": "Skills"
+      },
+      {
+        "variable": "job_9_company",
+        "template": "uiux_designer",
+        "original_text": "User research"
+      },
+      {
+        "variable": "job_10_company",
+        "template": "uiux_designer",
+        "original_text": "Usability testing"
+      },
+      {
+        "variable": "job_11_company",
+        "template": "uiux_designer",
+        "original_text": "Project management"
+      },
+      {
+        "variable": "job_12_company",
+        "template": "uiux_designer",
+        "original_text": "Experience"
+      }
+    ],
+    "date": [
+      {
+        "variable": "date_range_current",
+        "template": "restaurant_manager",
+        "original_text": "Restaurant Manager | Contoso Bar and Grill | September 20XX – Present"
+      },
+      {
+        "variable": "date_range",
+        "template": "restaurant_manager",
+        "original_text": "A.A. in Hospitality Management | June 20XX | Bigtown College, Chicago, Illinois"
+      },
+      {
+        "variable": "date_range",
+        "template": "accountant",
+        "original_text": "December 20XX – April 20XX"
+      },
+      {
+        "variable": "date_range_current",
+        "template": "accountant",
+        "original_text": "March 20XX – Present"
+      },
+      {
+        "variable": "date_range",
+        "template": "uiux_designer",
+        "original_text": "(212) 555-0155"
+      }
+    ],
+    "responsibility": [
+      {
+        "variable": "job_1_responsibility_2",
+        "template": "restaurant_manager",
+        "original_text": "Recruit, hire, train, and coach over 30 staff members on customer service skills, food & beverage kn"
+      },
+      {
+        "variable": "job_1_responsibility_3",
+        "template": "restaurant_manager",
+        "original_text": "Consistently exceed monthly sales goals by a minimum of 10% by training FOH staff on upselling techn"
+      },
+      {
+        "variable": "job_1_responsibility_4",
+        "template": "restaurant_manager",
+        "original_text": "Created a cross-training program ensuring FOH staff members were able to perform confidently and eff"
+      },
+      {
+        "variable": "job_1_responsibility_5",
+        "template": "restaurant_manager",
+        "original_text": "Created and implemented staff health and safety standards compliance training program, achieving a s"
+      },
+      {
+        "variable": "job_2_responsibility_1",
+        "template": "restaurant_manager",
+        "original_text": "Successfully redesigned existing inventory system, ordering and food storage practices, resulting in"
+      },
+      {
+        "variable": "job_1_responsibility_2",
+        "template": "accountant",
+        "original_text": "Dynamic and detail-oriented accountant with expertise in GAAP and comprehensive public accounting ex"
+      },
+      {
+        "variable": "job_1_responsibility_3",
+        "template": "accountant",
+        "original_text": "Distinguished member of university’s Accounting Society, GPA: 3.8"
+      },
+      {
+        "variable": "job_1_responsibility_4",
+        "template": "accountant",
+        "original_text": "Accounting intern | Olson Harris Ltd. | Vallejo, CA"
+      },
+      {
+        "variable": "job_1_responsibility_2",
+        "template": "uiux_designer",
+        "original_text": "Managed the design team and mentored junior designers to improve design quality and efficiency. Crea"
+      },
+      {
+        "variable": "job_1_responsibility_3",
+        "template": "uiux_designer",
+        "original_text": "Led the redesign of the company's e-commerce platform, resulting in a 25% increase in sales. Conduct"
+      },
+      {
+        "variable": "job_1_responsibility_4",
+        "template": "uiux_designer",
+        "original_text": "Conducted user research and developed user personas to inform product design and development. Design"
+      }
+    ],
+    "achievement": [
+      {
+        "variable": "job_1_achievement_2",
+        "template": "restaurant_manager",
+        "original_text": "Reduced costs by 7% through controls on overtime, operational efficiencies, and reduced waste."
+      },
+      {
+        "variable": "job_1_achievement_3",
+        "template": "restaurant_manager",
+        "original_text": "Grew customer based and increased restaurant social media accounts by 19% through interactive promot"
+      }
+    ],
+    "generic_content": [
+      {
+        "variable": "content_1",
+        "template": "restaurant_manager",
+        "original_text": "Activities and Interests"
+      },
+      {
+        "variable": "content_2",
+        "template": "restaurant_manager",
+        "original_text": "Theater, environmental conservation, art, hiking, skiing, travel"
+      },
+      {
+        "variable": "content_3",
+        "template": "restaurant_manager",
+        "original_text": "Fun and energetic"
+      },
+      {
+        "variable": "content_1",
+        "template": "accountant",
+        "original_text": "Relevant coursework: Advanced Financial Accounting and Reporting"
+      },
+      {
+        "variable": "content_2",
+        "template": "accountant",
+        "original_text": "<<job_1_company>>"
+      },
+      {
+        "variable": "content_3",
+        "template": "accountant",
+        "original_text": "<<education_1_institution>>"
+      },
+      {
+        "variable": "content_4",
+        "template": "accountant",
+        "original_text": "<<date_range>>"
+      },
+      {
+        "variable": "content_5",
+        "template": "accountant",
+        "original_text": "<<job_1_responsibility_3>>"
+      },
+      {
+        "variable": "content_6",
+        "template": "accountant",
+        "original_text": "<<content_1>>"
+      },
+      {
+        "variable": "content_7",
+        "template": "accountant",
+        "original_text": "Accountant | Trey Research | San Francisco, CA"
+      },
+      {
+        "variable": "content_8",
+        "template": "accountant",
+        "original_text": "Provide accounting services for individuals and businesses in a mid-sized firm"
+      },
+      {
+        "variable": "content_9",
+        "template": "accountant",
+        "original_text": "Specialize in income tax preparation, audit support, and financial statement preparation"
+      },
+      {
+        "variable": "content_10",
+        "template": "accountant",
+        "original_text": "Manage pro forma budgeting, general ledger accounting, and bank reconciliation"
+      },
+      {
+        "variable": "content_11",
+        "template": "accountant",
+        "original_text": "Bookkeeper | Bandter Real Estate | Berkeley, CA"
+      },
+      {
+        "variable": "content_12",
+        "template": "accountant",
+        "original_text": "In-house bookkeeper for a real estate development company"
+      },
+      {
+        "variable": "content_13",
+        "template": "accountant",
+        "original_text": "Prepared and submitted invoices"
+      },
+      {
+        "variable": "content_14",
+        "template": "accountant",
+        "original_text": "Assisted with payroll and Pensions service management for 150+ employees"
+      },
+      {
+        "variable": "content_15",
+        "template": "accountant",
+        "original_text": "Prepared invoices for more than 200 clients"
+      },
+      {
+        "variable": "content_16",
+        "template": "accountant",
+        "original_text": "Assisted with bill payments, records organization and preparation, and other office duties"
+      },
+      {
+        "variable": "content_17",
+        "template": "accountant",
+        "original_text": "<<job_2_company>>"
+      },
+      {
+        "variable": "content_18",
+        "template": "accountant",
+        "original_text": "<<content_7>>"
+      },
+      {
+        "variable": "content_19",
+        "template": "accountant",
+        "original_text": "<<date_range_current>>"
+      },
+      {
+        "variable": "content_20",
+        "template": "accountant",
+        "original_text": "<<content_8>>"
+      },
+      {
+        "variable": "content_21",
+        "template": "accountant",
+        "original_text": "<<content_9>>"
+      },
+      {
+        "variable": "content_22",
+        "template": "accountant",
+        "original_text": "<<content_10>>"
+      },
+      {
+        "variable": "content_23",
+        "template": "accountant",
+        "original_text": "<<content_11>>"
+      },
+      {
+        "variable": "content_24",
+        "template": "accountant",
+        "original_text": "<<date_range>>"
+      },
+      {
+        "variable": "content_25",
+        "template": "accountant",
+        "original_text": "<<content_12>>"
+      },
+      {
+        "variable": "content_26",
+        "template": "accountant",
+        "original_text": "<<job_3_company>>"
+      },
+      {
+        "variable": "content_27",
+        "template": "accountant",
+        "original_text": "<<content_13>>"
+      },
+      {
+        "variable": "content_28",
+        "template": "accountant",
+        "original_text": "<<job_1_responsibility_4>>"
+      },
+      {
+        "variable": "content_29",
+        "template": "accountant",
+        "original_text": "<<date_range>>"
+      },
+      {
+        "variable": "content_30",
+        "template": "accountant",
+        "original_text": "<<content_14>>"
+      },
+      {
+        "variable": "content_31",
+        "template": "accountant",
+        "original_text": "<<content_15>>"
+      },
+      {
+        "variable": "content_32",
+        "template": "accountant",
+        "original_text": "<<content_16>>"
+      },
+      {
+        "variable": "content_33",
+        "template": "accountant",
+        "original_text": "<<job_4_company>>"
+      },
+      {
+        "variable": "content_1",
+        "template": "uiux_designer",
+        "original_text": "UI/UX Designer"
+      },
+      {
+        "variable": "content_2",
+        "template": "uiux_designer",
+        "original_text": "www.interestingsite.com"
+      },
+      {
+        "variable": "content_3",
+        "template": "uiux_designer",
+        "original_text": "UI/UX design"
+      },
+      {
+        "variable": "content_4",
+        "template": "uiux_designer",
+        "original_text": "Senior UI/UX Designer PROSEWARE, INC."
+      },
+      {
+        "variable": "content_5",
+        "template": "uiux_designer",
+        "original_text": "Jan 20XX - Dec 20XX"
+      },
+      {
+        "variable": "content_6",
+        "template": "uiux_designer",
+        "original_text": "Oct 20XX - Jul 20XX"
+      },
+      {
+        "variable": "content_7",
+        "template": "uiux_designer",
+        "original_text": "Feb 20XX - Oct 20XX"
+      }
+    ],
+    "personal_info": [
+      {
+        "variable": "full_name",
+        "template": "restaurant_manager",
+        "original_text": "May Riley"
+      },
+      {
+        "variable": "full_name",
+        "template": "accountant",
+        "original_text": "Danielle Brasseur"
+      }
+    ],
+    "skills": [
+      {
+        "variable": "skill_1",
+        "template": "restaurant_manager",
+        "original_text": "Excellent interpersonal and communication skills"
+      }
+    ],
+    "education": [
+      {
+        "variable": "education_1_institution",
+        "template": "accountant",
+        "original_text": "Bachelor of Science in Accounting, Minor in Business Administration | Bellows College"
+      }
+    ],
+    "section_header": [
+      {
+        "variable": "section_header_20xx",
+        "template": "uiux_designer",
+        "original_text": "20XX"
+      },
+      {
+        "variable": "section_header_ui/ux_designer_proseware,_inc.",
+        "template": "uiux_designer",
+        "original_text": "UI/UX DESIGNER PROSEWARE, INC."
+      },
+      {
+        "variable": "section_header_ui/ux_designer_relecloud",
+        "template": "uiux_designer",
+        "original_text": "UI/UX DESIGNER RELECLOUD"
+      }
+    ]
+  },
+  "usage_guide": {
+    "description": "This file documents all variables created during template conversion",
+    "variable_format": "<<variable_name>>",
+    "naming_convention": {
+      "profile": "career_overview_N or professional_summary_N",
+      "work_experience": "job_N_title, job_N_company, job_N_responsibility_N, job_N_achievement_N",
+      "education": "education_N_institution, education_N_degree",
+      "skills": "skill_N",
+      "contact": "email, phone_number, linkedin_url, calendly_url, portfolio_url",
+      "dates": "date_range, date_range_current"
+    }
+  }
+}
