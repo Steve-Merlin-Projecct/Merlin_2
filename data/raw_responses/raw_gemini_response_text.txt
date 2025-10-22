@@ -10,7 +10,7 @@
         "reasoning": "The job description aligns with the title and provides realistic expectations for a Senior Software Engineer."
       },
       "classification": {
-        "industry": "Software Development",
+        "industry": "Technology",
         "sub_industry": "SaaS",
         "job_function": "Software Engineering",
         "seniority_level": "Senior",
@@ -101,7 +101,7 @@
         "work_arrangement": {
           "in_office_requirements": "Hybrid",
           "office_location": null,
-          "working_hours_per_week": 40,
+          "working_hours_per_week": null,
           "work_schedule": null,
           "specific_schedule": null,
           "travel_requirements": null
