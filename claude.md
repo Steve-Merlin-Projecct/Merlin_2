@@ -8,7 +8,7 @@ related: README.md, docs/DOCUMENTATION_INDEX.md
 ---
 
 # Automated Job Application System
-Version 4.3.3
+Version 4.4.1
 Python 3.11 | Flask | PostgreSQL | Docker
 Last Updated: 2025-10-21
 
@@ -317,18 +317,4 @@ The application employs a modular Flask microservice architecture with a strong 
 - **Gmail Integration (`modules/email_integration/`):** Official Gmail OAuth 2.0, robust email sending with attachments, enhanced error handling, and RFC-compliant validation.
 - **AI Job Description Analysis (`modules/ai_job_description_analysis/`):** Google Gemini integration for job analysis, secure REST API, LLM injection protection, usage tracking, and batch processing.
 - **Job Scraping (`modules/scraping/`):** Core scraping logic, context-aware scraping, data processing pipeline for cleaning and deduplication, and cost-effective usage tracking.
-- **Database Layer (`modules/database/`):** PostgreSQL connection management with SQLAlchemy, 32 normalized tables, comprehensive read/write operations, RESTful API, session handling, and API key authentication.
-- **Database Schema Automation (`database_tools/`):** Generates HTML visualizations, extracts schema information, auto-generates SQLAlchemy models, Pydantic schemas, CRUD operations, and Flask API routes from the live schema with change detection.
-- **Code Quality & Security Systems:** Security-first architecture, parameterized queries, automated code quality tools (Black, Flake8, Vulture), comprehensive inline documentation, and LSP diagnostic monitoring.
-
-## External Dependencies
-
-- **Flask:** Web framework.
-- **python-docx:** Library for creating and manipulating Word documents.
-- **Werkzeug:** WSGI utilities.
-- **Flask-SQLAlchemy:** ORM for database operations.
-- **psycopg2-binary:** PostgreSQL adapter for Python.
-- **Apify:** Third-party service for job scraping (specifically misceres/indeed-scraper).
-- **Google Gemini AI:** AI model for job analysis and content generation.
-- **PostgreSQL:** Primary database for job tracking and application history.
-
+- **Database Layer (`modules/database/`):** PostgreSQL connection management with SQLAlchemy, 32 normalized tables, comprehensive read/write operations, RESTful API, session handling, and API key authenticatio
