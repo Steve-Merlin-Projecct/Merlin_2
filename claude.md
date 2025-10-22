@@ -89,6 +89,32 @@ TREE_VERBOSE=true /tree build  # Verbose via env var
 
 See: `tasks/worktree-error-prevention/` for full documentation
 
+**Slash Command Loading in Worktrees (Known Limitation - v4.5.1):**
+Claude Code CLI only scans `.claude/commands/` on session initialization, not when changing directories with `cd`.
+
+**Symptoms:**
+- `/tree` or `/task` show "Unknown slash command" error in worktrees
+- Command files exist and are copied correctly to worktrees
+- Only affects mid-session directory changes
+
+**Workarounds:**
+1. **Quick Fix:** Use direct script execution
+   ```bash
+   bash /workspace/.claude/scripts/tree.sh <command>
+   ```
+2. **Permanent Fix:** Restart CLI session from worktree directory
+   ```bash
+   exit
+   cd /workspace/.trees/<worktree-name>
+   claude code
+   ```
+
+**Diagnostics:** Run `/tree refresh` or `bash /workspace/.claude/scripts/tree.sh refresh`
+
+**Auto-Documentation:** All new worktrees automatically include workaround instructions in PURPOSE.md
+
+See: `tasks/slash-command-worktree-loading/` for full investigation report
+
 
 
 ### Documentation Standards
