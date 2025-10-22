@@ -1,11 +1,11 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "librarian-operations-and-worktree-improvements",
+  "description": "||librarian operations and worktree improvements",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/librarian_operations_and_worktree_improvements/** tests/test_librarian_operations_and_worktree_improvements*.py",
+      "tests/test_*librarian_operations_and_worktree_improvements*.py",
+      "docs/*librarian-operations-and-worktree-improvements*.md"
 
     ],
     "exclude": [
@@ -16,6 +16,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:54+00:00",
   "out_of_scope_policy": "warn"
 }
