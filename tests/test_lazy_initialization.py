@@ -1,8 +1,14 @@
 """
-Test Lazy Database Initialization
-
-Verifies that database connections are not established at import time,
-and that lazy initialization works correctly.
+Module: test_lazy_initialization.py
+Purpose: Unit tests for lazy database initialization and singleton patterns
+Created: 2024-09-18
+Modified: 2025-10-21
+Dependencies: pytest, modules.database.lazy_instances
+Related: modules/database/lazy_instances.py, conftest.py, test_database_*.py
+Description: Verifies database connections are not established at import time,
+             validates lazy initialization works correctly, tests singleton pattern
+             for DatabaseManager and DatabaseClient, and verifies reset functionality.
+             Ensures import-time connection prevention for performance.
 """
 
 import pytest

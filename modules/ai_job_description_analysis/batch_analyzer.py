@@ -1,13 +1,14 @@
 """
-Batch AI Job Analysis System - Step 1.2 Implementation
-Automated job analysis workflow with queue management and scheduling
-
-This module implements the BatchAIAnalyzer class that processes jobs from the
-job_analysis_queue table using Google Gemini AI. It includes comprehensive
-scheduling, error handling, and results storage in normalized database tables.
-
-Author: Automated Job Application System v2.16
-Date: July 24, 2025
+Module: batch_analyzer.py
+Purpose: Automated batch processing system for AI job analysis
+Created: 2024-07-24
+Modified: 2025-10-21
+Dependencies: database_manager, ai_analyzer, normalized_analysis_writer
+Related: ai_analyzer.py, sequential_batch_scheduler.py, batch_integration_api.py
+Description: Processes jobs from job_analysis_queue using Google Gemini AI with
+             queue management, scheduled processing (2am-6am configurable), retry
+             logic, results storage in normalized tables, and usage tracking.
+             Implements comprehensive error handling and rate limiting.
 """
 
 import logging

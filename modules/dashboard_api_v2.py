@@ -1,13 +1,14 @@
 """
-Dashboard API V2 - Optimized Endpoints
-Replaces dashboard_api.py with performance-optimized queries
-
-Key improvements:
-- Single consolidated endpoint instead of 8+ separate calls
-- Uses materialized views and aggregation tables
-- CTEs for efficient query planning
-- Caching layer integration
-- 80%+ performance improvement
+Module: dashboard_api_v2.py
+Purpose: Performance-optimized dashboard API with materialized views
+Created: 2024-10-12
+Modified: 2025-10-21
+Dependencies: Flask, SQLAlchemy, modules.database
+Related: dashboard_api.py, database_migrations/, frontend_templates/dashboard_v2.html
+Description: Optimized version of dashboard_api.py using materialized views,
+             aggregation tables, and CTEs for efficient query planning. Single
+             consolidated endpoint replaces 8+ separate API calls. Delivers 80%+
+             performance improvement with caching layer integration.
 """
 
 import logging

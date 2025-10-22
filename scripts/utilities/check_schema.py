@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Check database schema for migration issues"""
+"""
+Module: check_schema.py
+Purpose: Check database schema for migration issues and inconsistencies
+Created: 2024-09-15
+Modified: 2025-10-21
+Dependencies: psycopg2
+Related: database_tools/, verify_migrations.py
+Description: Validates database schema matches expected structure, detects
+             migration issues, and reports inconsistencies
+"""
 
 import os
 import psycopg2

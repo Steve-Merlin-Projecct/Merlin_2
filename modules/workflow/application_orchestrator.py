@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-Application Orchestrator for End-to-End Workflow Management
-
-This module implements Step 2.2 of the Implementation Plan V2.16:
-End-to-End Workflow Orchestration for automated job applications.
-
-The orchestrator manages the complete workflow:
-1. Job Discovery from analyzed_jobs table
-2. User Preference Matching using Steve Glen's profile
-3. Eligibility Determination with rejection reasoning
-4. Document Generation for eligible jobs
-5. Email Composition and Sending
-6. Application Status Tracking and Monitoring
+Module: application_orchestrator.py
+Purpose: End-to-end workflow orchestration for automated job applications
+Created: 2024-08-26
+Modified: 2025-10-21
+Dependencies: user_profile_loader, database_manager, document_generator, resilience
+Related: workflow_api.py, email_application_sender.py, modules/resilience/
+Description: Manages complete application workflow: job discovery from analyzed_jobs,
+             user preference matching with Steve Glen's profile, eligibility determination
+             with rejection reasoning, document generation for eligible jobs, email
+             composition/sending, application status tracking. Integrates failure
+             recovery, retry strategies, and data consistency validation.
 """
 
 import logging

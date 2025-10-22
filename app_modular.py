@@ -1,3 +1,14 @@
+"""
+Module: app_modular.py
+Purpose: Main Flask application with modular blueprint architecture
+Created: 2024-08-15
+Modified: 2025-10-21
+Dependencies: Flask, SQLAlchemy, modules/*
+Related: main.py, modules/database/, modules/dashboard_api.py
+Description: Initializes Flask app with security middleware, registers blueprints
+             for database, dashboard, AI integration, email, scraping, and workflows
+"""
+
 import os
 import logging
 from datetime import datetime

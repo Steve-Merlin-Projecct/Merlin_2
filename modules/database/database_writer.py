@@ -1,3 +1,16 @@
+"""
+Module: database_writer.py
+Purpose: Database write operations for jobs, applications, and settings
+Created: 2024-08-18
+Modified: 2025-10-21
+Dependencies: SQLAlchemy, database_client, database_models
+Related: database_reader.py, database_manager.py, database_client.py
+Description: Handles all write operations including creates, updates, deletes for
+             job application system. Organized by function: job creation/updates,
+             status management, settings management, logging, and data cleanup.
+             Inherits from DatabaseClient for connection management.
+"""
+
 import logging
 import uuid
 from datetime import datetime, timedelta
