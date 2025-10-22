@@ -52,7 +52,7 @@ from modules.security.security_patch import apply_security_headers, validate_env
 from modules.security.rate_limit_manager import init_rate_limiter, before_request_handler, after_request_handler
 
 # Application version
-__version__ = "4.5.0"
+__version__ = "4.5.1"
 
 # Configure centralized logging
 # Development: human-readable format with colors
