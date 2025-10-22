@@ -1,0 +1,128 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+.github
+
+# Development containers
+.devcontainer
+docker-compose.yml
+.devcontainer/
+
+# Python cache and build artifacts
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+eggs
+.eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+*.cover
+
+# Documentation (not needed in production)
+docs/
+*.md
+README.md
+CHANGELOG.md
+LICENSE
+
+# Local environment files (use environment variables instead)
+.env
+.env.local
+.env.development
+.env.test
+*.env
+
+# Storage (documents should be in cloud storage or volumes)
+storage/generated_documents/
+storage/google_drive_token.json
+storage/gmail_token.json
+storage/*.json
+
+# Logs
+*.log
+logs/
+storage/logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database files (use managed database)
+*.db
+*.sqlite
+*.sqlite3
+
+# Worktrees (development only)
+.trees/
+.worktree-scope.json
+
+# Task files (development only)
+tasks/
+.tasks/
+
+# Claude Code (development only)
+.claude/
+
+# Test files
+tests/
+test_*.py
+*_test.py
+
+# Scripts that are development-only
+scripts/
+utils/dev_tools/
+
+# Large binary files
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar.gz
+*.rar
+
+# Node modules (if any)
+node_modules/
+
+# Database backup files
+*.sql
+*.dump
+
+# Frontend development (if applicable)
+frontend_templates/node_modules/
+frontend_templates/dist/
