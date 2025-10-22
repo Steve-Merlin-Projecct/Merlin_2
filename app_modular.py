@@ -10,6 +10,7 @@ Description: Initializes Flask app with security middleware, registers blueprint
 """
 
 import os
+import sys
 import logging
 from datetime import datetime
 from functools import wraps
@@ -21,8 +22,12 @@ from modules.observability import (
     configure_logging,
     get_logger,
     ObservabilityMiddleware,
-    MetricsCollector
+    MetricsCollector,
+    monitoring_api,
+    validate_configuration,
+    ConfigurationError
 )
+from modules.observability.rate_limiter import init_rate_limiter as init_monitoring_rate_limiter
 
 # Webhook handlers moved to archived_files/ - no longer using Make.com integration
 # from modules.webhook_handler import webhook_bp
@@ -56,11 +61,20 @@ log_level = os.environ.get('LOG_LEVEL', 'INFO')
 log_format = os.environ.get('LOG_FORMAT', 'human')  # 'human' or 'json'
 log_file = os.environ.get('LOG_FILE')  # Optional log file path
 
+# Validate configuration before setting up logging
+try:
+    validate_configuration(require_api_key=False, check_disk_space=True)
+except ConfigurationError as e:
+    print(f"Configuration validation failed: {e}", file=sys.stderr)
+    sys.exit(1)
+
 configure_logging(
     level=log_level,
     format_type=log_format,
     log_file=log_file,
-    enable_console=True
+    enable_console=True,
+    enable_async_logging=True,
+    enable_pii_scrubbing=True
 )
 
 logger = get_logger(__name__)
@@ -93,6 +107,9 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 # Initialize metrics collector
 metrics_collector = MetricsCollector(retention_hours=24)
 
+# Store metrics collector in app context for monitoring API
+app.metrics_collector = metrics_collector
+
 # Add observability middleware for automatic request tracing and metrics
 ObservabilityMiddleware(
     app,
@@ -103,6 +120,10 @@ ObservabilityMiddleware(
 )
 
 logger.info(f"Observability system initialized - Log Level: {log_level}, Format: {log_format}")
+
+# Initialize rate limiter for monitoring API
+monitoring_rate_limiter = init_monitoring_rate_limiter(app, 60)  # 60 requests/minute
+logger.info("Rate limiter initialized for monitoring API - 60 requests/minute")
 
 # Initialize and register AI prompts for security protection
 try:
@@ -238,6 +259,10 @@ try:
     logger.info("Sentence Variation API registered successfully")
 except ImportError as e:
     logger.warning(f"Could not register Sentence Variation API: {e}")
+
+# Register Monitoring API for observability
+app.register_blueprint(monitoring_api)
+logger.info("Monitoring API registered successfully")
 
 # Document Generation API is already registered above via document_bp from modules.document_routes
 logger.info("Document Generation API already registered via document_bp")
