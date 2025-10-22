@@ -8,9 +8,9 @@ related: README.md, docs/DOCUMENTATION_INDEX.md
 ---
 
 # Automated Job Application System
-Version 4.4.1
+Version 4.5.1
 Python 3.11 | Flask | PostgreSQL | Docker
-Last Updated: 2025-10-21
+Last Updated: 2025-10-22
 
 ## Project Overview
 
