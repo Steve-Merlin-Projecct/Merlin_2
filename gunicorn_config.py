@@ -49,6 +49,25 @@ if os.environ.get('LOG_FORMAT') == 'json':
                 'class': 'logging.StreamHandler',
                 'formatter': 'json',
                 'stream': 'ext://sys.stdout'
+            },
+            'error_console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'json',
+                'stream': 'ext://sys.stderr'
+            }
+        },
+        'loggers': {
+            'gunicorn.error': {
+                'level': loglevel.upper(),
+                'handlers': ['error_console'],
+                'propagate': False,
+                'qualname': 'gunicorn.error'
+            },
+            'gunicorn.access': {
+                'level': loglevel.upper(),
+                'handlers': ['console'],
+                'propagate': False,
+                'qualname': 'gunicorn.access'
             }
         },
         'root': {
