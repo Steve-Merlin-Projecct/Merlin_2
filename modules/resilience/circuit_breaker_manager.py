@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 """
-Circuit Breaker Manager - Prevents cascading failures in distributed systems
-
-Implements the Circuit Breaker pattern to protect services from cascading failures.
-When a service fails repeatedly, the circuit "opens" to prevent additional requests,
-giving the failing service time to recover.
-
-Circuit States:
-- CLOSED: Normal operation, requests pass through
-- OPEN: Service failing, requests blocked immediately
-- HALF_OPEN: Testing if service recovered, limited requests allowed
-
-Features:
-- Automatic state transitions based on failure thresholds
-- Per-service circuit breaker configuration
-- Manual circuit breaker control
-- Circuit state monitoring and metrics
-- Graceful degradation support
+Module: circuit_breaker_manager.py
+Purpose: Circuit breaker pattern to prevent cascading failures
+Created: 2024-08-28
+Modified: 2025-10-21
+Dependencies: threading, datetime, typing, enum, dataclasses, functools
+Related: failure_recovery.py, retry_strategy_manager.py, timeout_manager.py
+Description: Implements circuit breaker pattern with three states (CLOSED, OPEN,
+             HALF_OPEN). Automatic state transitions based on failure thresholds,
+             per-service configuration, manual control, state monitoring, metrics,
+             and graceful degradation support. Protects services from cascading
+             failures by opening circuit when service fails repeatedly.
 """
 
 import logging

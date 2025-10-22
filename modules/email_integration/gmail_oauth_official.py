@@ -1,11 +1,14 @@
 """
-Gmail OAuth Integration for Automated Job Application System
-Official Google Workspace implementation using recommended libraries
-
-This module follows Google's official documentation:
-- google-auth-oauthlib for OAuth 2.0 flow
-- google-api-python-client for Gmail API service
-- Official patterns from developers.google.com/workspace/gmail
+Module: gmail_oauth_official.py
+Purpose: Official Gmail OAuth 2.0 integration for sending job application emails
+Created: 2024-09-15
+Modified: 2025-10-21
+Dependencies: google-auth-oauthlib, google-api-python-client
+Related: email_api.py, gmail_setup_guide.py, email_content_builder.py
+Description: Implements OAuth 2.0 flow using official Google Workspace libraries.
+             Handles authentication, token refresh, email sending with attachments,
+             and RFC-compliant MIME message formatting. Follows Google's official
+             documentation patterns from developers.google.com/workspace/gmail.
 """
 
 import os

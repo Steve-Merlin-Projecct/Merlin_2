@@ -1,18 +1,14 @@
 """
-Database Configuration Module
-
-Provides environment-aware database connection configuration that automatically
-detects whether the application is running in a Docker container or locally,
-and constructs the appropriate PostgreSQL connection string.
-
-Environment Detection:
-    - Docker: Uses DATABASE_HOST (host.docker.internal or localhost) from container env
-    - Local: Falls back to localhost connection
-
-Connection Priority:
-    1. Use DATABASE_URL if explicitly set (highest priority)
-    2. Build from individual components (DATABASE_HOST, DATABASE_PORT, etc.)
-    3. Fall back to localhost defaults
+Module: database_config.py
+Purpose: Environment-aware database connection configuration with Docker detection
+Created: 2024-09-12
+Modified: 2025-10-21
+Dependencies: None (standard library only)
+Related: database_client.py, database_manager.py, docs/database-connection-guide.md
+Description: Provides automatic Docker vs local environment detection and constructs
+             appropriate PostgreSQL connection strings. Connection priority: DATABASE_URL
+             (explicit) > individual components > localhost defaults. Detects Docker via
+             DATABASE_HOST value, environment variables, or /.dockerenv file.
 """
 
 import os

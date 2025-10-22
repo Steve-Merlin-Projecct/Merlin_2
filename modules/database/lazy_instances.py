@@ -1,23 +1,18 @@
 """
-Lazy Database Instance Management
-
-Provides singleton instances that only connect when first accessed.
-This prevents database connections from being established at module import time.
-
-Key Benefits:
-- No connections during import
-- Thread-safe singleton pattern
-- Efficient reuse of database instances
-- Graceful degradation on connection failures
+Module: lazy_instances.py
+Purpose: Lazy-initialized singleton database instances to prevent import-time connections
+Created: 2024-09-18
+Modified: 2025-10-21
+Dependencies: database_manager, database_client, functools
+Related: database_manager.py, database_client.py, app_modular.py
+Description: Provides singleton instances with lazy initialization using @lru_cache
+             decorator. Prevents database connections during module import, enables
+             thread-safe singleton pattern, efficient instance reuse, and graceful
+             degradation on connection failures.
 
 Usage:
     from modules.database.lazy_instances import get_database_manager, get_database_client
-
-    # In route handlers:
-    @app.route('/some-endpoint')
-    def my_route():
-        db_manager = get_database_manager()  # Lazy! Only connects on first call
-        return db_manager.get_recent_jobs()
+    db_manager = get_database_manager()  # Only connects on first call
 """
 
 import logging

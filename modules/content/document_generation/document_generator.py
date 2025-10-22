@@ -1,3 +1,16 @@
+"""
+Module: document_generator.py
+Purpose: Template-based Word document generation with dynamic content replacement
+Created: 2024-09-08
+Modified: 2025-10-21
+Dependencies: python-docx, modules.storage, template_engine
+Related: template_engine.py, template_converter.py, modules/storage/
+Description: Handles Word document generation using template system. Loads .docx
+             templates, replaces variable placeholders with JSON data, maintains
+             formatting, adds professional metadata, and integrates with cloud
+             storage. Supports resumes, cover letters, and other document types.
+"""
+
 import os
 import logging
 import uuid

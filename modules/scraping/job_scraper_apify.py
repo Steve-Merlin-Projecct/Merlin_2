@@ -1,11 +1,14 @@
 """
-APify Indeed Job Scraper Integration
-Handles job scraping using the misceres/indeed-scraper actor on Apify platform
-
-EDUCATIONAL PURPOSE ONLY:
-This scraper is designed for educational and research purposes only.
-Users must comply with Indeed's Terms of Service and applicable laws.
-Respect rate limits and use responsibly for learning automation concepts.
+Module: job_scraper_apify.py
+Purpose: Apify platform integration for Indeed job scraping (EDUCATIONAL ONLY)
+Created: 2024-08-20
+Modified: 2025-10-21
+Dependencies: apify_client, requests, database_manager, scrape_pipeline, security_manager
+Related: scraper_api.py, scrape_pipeline.py, intelligent_scraper.py
+Description: Handles job scraping using Apify's misceres/indeed-scraper actor with
+             search URL construction, actor run management, result processing, data
+             pipeline integration, and usage tracking. Includes API token validation
+             and security checks. EDUCATIONAL PURPOSE ONLY - respect rate limits.
 """
 
 import os

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
-Fix and apply database migrations for dashboard optimization
+Module: fix_migrations.py
+Purpose: Fix and apply database migrations for dashboard optimization
+Created: 2024-10-12
+Modified: 2025-10-21
+Dependencies: psycopg2
+Related: database_migrations/, verify_migrations.py
+Description: Applies database migration scripts to fix schema issues and
+             optimize dashboard performance. Includes rollback capabilities.
 """
 
 import os

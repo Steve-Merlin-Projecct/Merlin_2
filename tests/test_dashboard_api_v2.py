@@ -1,14 +1,14 @@
 """
-Comprehensive Unit Tests for Dashboard API V2
-Tests all endpoints, filters, pagination, error handling, and edge cases
-
-Test Coverage:
-- /api/v2/dashboard/overview - Main dashboard endpoint
-- /api/v2/dashboard/jobs - Jobs listing with filters
-- /api/v2/dashboard/applications - Applications listing with filters
-- /api/v2/dashboard/analytics/summary - Analytics data
-- /api/v2/dashboard/metrics/timeseries - Time series metrics
-- /api/v2/dashboard/pipeline/status - Pipeline status
+Module: test_dashboard_api_v2.py
+Purpose: Comprehensive unit tests for optimized Dashboard API V2 endpoints
+Created: 2024-10-13
+Modified: 2025-10-21
+Dependencies: pytest, Flask, unittest.mock, modules.dashboard_api_v2
+Related: modules/dashboard_api_v2.py, test_dashboard_integration.py, conftest.py
+Description: Tests all Dashboard API V2 endpoints with filters, pagination, error
+             handling, and edge cases. Coverage: overview, jobs listing, applications,
+             analytics summary, time series metrics, pipeline status. Verifies
+             materialized view queries, authentication, and performance optimization.
 """
 
 import pytest
