@@ -1,0 +1,31 @@
+{
+  "processing_summary": {
+    "total_seeds": 300,
+    "seeds_inserted": 0,
+    "resume_sentences": 28,
+    "cover_letter_sentences": 272,
+    "stage_1_approved": 0,
+    "stage_1_rejected": 0,
+    "stage_2_approved": 0,
+    "stage_2_rejected": 0,
+    "stage_3_completed": 0,
+    "stage_4_completed": 0,
+    "stage_5_completed": 0,
+    "production_ready": 0,
+    "errors": []
+  },
+  "timestamp": "2025-10-22T02:57:09.210470",
+  "table_statistics": {
+    "sentence_bank_resume": {
+      "error": "0"
+    },
+    "sentence_bank_cover_letter": {
+      "error": "0"
+    }
+  },
+  "sample_queries": {
+    "check_recent_seeds": "\n                SELECT id, content_text, status, body_section, tone\n                FROM sentence_bank_resume\n                WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '1 day'\n                ORDER BY created_at DESC\n                LIMIT 10;\n            ",
+    "check_production_ready": "\n                SELECT COUNT(*) as production_ready_count\n                FROM sentence_bank_resume\n                WHERE keyword_filter_status = 'approved'\n                  AND truthfulness_status = 'approved'\n                  AND canadian_spelling_status = 'completed'\n                  AND tone_analysis_status = 'completed'\n                  AND skill_analysis_status = 'completed';\n            ",
+    "check_stage_distribution": "\n                SELECT\n                    keyword_filter_status,\n                    truthfulness_status,\n                    COUNT(*) as count\n                FROM sentence_bank_resume\n                WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '1 day'\n                GROUP BY keyword_filter_status, truthfulness_status\n                ORDER BY count DESC;\n            "
+  }
+}

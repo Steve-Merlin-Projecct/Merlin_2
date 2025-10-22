@@ -1,0 +1,66 @@
+MARKETING AUTOMATION ATOMIC TRUTH STATEMENTS FOR STEVE GLEN
+Simple, Factual Statements of Actions Performed
+
+=================================================================
+CORE ACTIONS TAKEN
+=================================================================
+
+[Odvod Media] Created cascading spreadsheet systems for data transformation.
+[Odvod Media] Attended 70 farmers markets to conduct customer research.
+[Odvod Media] Sent 2.3 million emails through Mailchimp.
+[Odvod Media] Wrote 120+ long-form articles for digital publication.
+[Odvod Media] Built custom ad impression tracking systems.
+[Odvod Media] Implemented Google Analytics 4 on company properties.
+[Odvod Media] Created Looker Studio dashboards for reporting.
+[Odvod Media] Designed content taxonomy frameworks.
+[Odvod Media] Conducted A/B tests on email campaigns.
+[Odvod Media] Analyzed customer feedback from research sessions.
+[Odvod Media] Configured email automation workflows.
+[Odvod Media] Set up tracking pixels on websites.
+[Odvod Media] Created email templates in Mailchimp.
+[Odvod Media] Built UTM parameter naming conventions.
+[Odvod Media] Extracted data using SQL queries.
+[Odvod Media] Connected multiple data sources in reporting tools.
+[Odvod Media] Monitored campaign performance metrics daily.
+[Odvod Media] Created customer segments based on behavior.
+[Odvod Media] Documented marketing processes and workflows.
+[Odvod Media] Trained team members on analytics tools.
+
+[Rona] Created promotional calendars for retail locations.
+[Rona] Analyzed seasonal sales data.
+[Rona] Coordinated marketing materials across stores.
+[Rona] Tracked inventory levels for promotional planning.
+[Rona] Built reports for store managers.
+
+[Mr. Mike's Steakhouse] Collected customer feedback at point of service.
+[Mr. Mike's Steakhouse] Created promotional materials for menu items.
+[Mr. Mike's Steakhouse] Scheduled social media posts.
+[Mr. Mike's Steakhouse] Analyzed reservation patterns.
+[Mr. Mike's Steakhouse] Coordinated marketing across restaurant locations.
+
+[The Pint off Whyte] Created event promotional materials.
+[The Pint off Whyte] Tracked event attendance numbers.
+[The Pint off Whyte] Built email lists for event promotion.
+[The Pint off Whyte] Analyzed sports schedule impact on traffic.
+
+[Xmas Market] Coordinated communications with 50+ vendors.
+[Xmas Market] Created vendor information packages.
+[Xmas Market] Distributed marketing materials to participants.
+
+[Hudson's Bay Company] Analyzed department sales performance.
+[Hudson's Bay Company] Created cross-promotional strategies.
+[Hudson's Bay Company] Tracked customer shopping patterns.
+
+[Deluxe Burger Bar] Managed social media accounts.
+[Deluxe Burger Bar] Created limited-time offer campaigns.
+[Deluxe Burger Bar] Tracked promotional campaign results.
+
+[University of Alberta] Studied strategic management principles.
+[University of Alberta] Completed marketing coursework.
+[University of Alberta] Analyzed business case studies.
+[University of Alberta] Learned statistical analysis methods.
+[University of Alberta] Studied consumer behavior theories.
+
+[Odvod Media] Distributed 350,000 flyers for mayoral campaign.
+[Odvod Media] Set up email authentication protocols.
+[Odvod Media] Created data validation rules.

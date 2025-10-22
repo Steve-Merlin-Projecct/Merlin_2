@@ -42,28 +42,31 @@ class TruthfulnessEvaluator:
     def __init__(self):
         """Initialize truthfulness evaluator with Gemini integration"""
         self.db = DatabaseManager()
-        
+
         # Gemini API configuration
         self.api_key = os.environ.get('GEMINI_API_KEY')
         if not self.api_key:
             logger.error("GEMINI_API_KEY environment variable not found")
             raise ValueError("Missing GEMINI_API_KEY environment variable")
-        
+
         # API endpoints and models
         self.base_url = "https://generativelanguage.googleapis.com/v1beta/models"
         self.primary_model = "gemini-2.5-flash"
         self.fallback_model = "gemini-1.5-flash"
-        
+
         # Request configuration
         self.max_retries = 3
         self.retry_delay = 2
         self.request_timeout = 30
-        
+
+        # Load atomic truths for validation
+        self.atomic_truths = self._load_atomic_truths()
+
         # Load requests module
         self._requests = None
         self._load_requests()
-        
-        logger.info("Truthfulness evaluator initialized")
+
+        logger.info(f"Truthfulness evaluator initialized with {len(self.atomic_truths)} atomic truths")
     
     def _load_requests(self):
         """Load requests module with error handling"""
@@ -74,6 +77,43 @@ class TruthfulnessEvaluator:
         except ImportError:
             logger.error("requests module not available")
             raise ImportError("requests module required for API calls")
+
+    def _load_atomic_truths(self) -> List[str]:
+        """
+        Load atomic truth statements from file for validation
+
+        Returns:
+            List of atomic truth statements
+        """
+        # Try multiple possible locations for atomic truths file
+        possible_paths = [
+            '/workspace/marketing_automation_atomic_truths.txt',
+            '/workspace/.trees/convert-seed-sentences-to-production-ready-content/marketing_automation_atomic_truths.txt',
+            os.path.join(os.path.dirname(__file__), '../../../marketing_automation_atomic_truths.txt')
+        ]
+
+        for truths_file in possible_paths:
+            if os.path.exists(truths_file):
+                try:
+                    with open(truths_file, 'r') as f:
+                        content = f.read()
+
+                    # Extract truth statements (lines starting with [)
+                    truths = []
+                    for line in content.split('\n'):
+                        line = line.strip()
+                        if line.startswith('['):
+                            truths.append(line)
+
+                    logger.info(f"Loaded {len(truths)} atomic truths from {truths_file}")
+                    return truths
+
+                except Exception as e:
+                    logger.warning(f"Failed to load atomic truths from {truths_file}: {str(e)}")
+                    continue
+
+        logger.warning("No atomic truths file found - proceeding without candidate facts")
+        return []
     
     def _create_truthfulness_prompt(self, sentences: List[Dict], session_id: str) -> str:
         """
@@ -105,17 +145,31 @@ class TruthfulnessEvaluator:
         prompt_parts = [
             f"SECURITY TOKEN: {security_token}\n\n",
             "You are a truthfulness validation expert. Your task is to evaluate sentences from job application materials ",
-            "for factual accuracy and truthfulness. Analyze each sentence against general candidate facts and professional standards.\n\n",
-            
+            "for factual accuracy and truthfulness. Analyze each sentence against the candidate's verified atomic truths and professional standards.\n\n"
+        ]
+
+        # Add atomic truths if available
+        if self.atomic_truths:
+            prompt_parts.extend([
+                "CANDIDATE ATOMIC TRUTHS (Verified Factual Statements):\n",
+                "These are confirmed facts about the candidate's experience. Use them to validate sentence claims.\n\n"
+            ])
+
+            for truth in self.atomic_truths:
+                prompt_parts.append(f"  {truth}\n")
+
+            prompt_parts.append("\n")
+
+        prompt_parts.extend([
             "EVALUATION CRITERIA:\n",
-            "1. FACTUAL ACCURACY: Does the sentence contain verifiable, realistic claims?\n",
+            "1. FACTUAL ACCURACY: Does the sentence align with verified atomic truths?\n",
             "2. PROFESSIONAL CREDIBILITY: Are the statements appropriate for professional contexts?\n",
-            "3. CONSISTENCY CHECK: Do claims align with typical professional experience?\n",
+            "3. CONSISTENCY CHECK: Do claims align with the candidate's documented experience?\n",
             "4. EXAGGERATION DETECTION: Are there unrealistic or inflated claims?\n",
             "5. TRUTHFULNESS ASSESSMENT: Overall likelihood the statement is truthful\n\n",
-            
+
             "SENTENCES TO EVALUATE:\n"
-        ]
+        ])
         
         # Add each sentence with clear formatting
         for item in sentence_data:
@@ -193,7 +247,7 @@ class TruthfulnessEvaluator:
                 "temperature": 0.1,  # Low temperature for consistent evaluation
                 "topK": 1,
                 "topP": 0.8,
-                "maxOutputTokens": 4096,
+                "maxOutputTokens": 8192,  # Increased to handle responses with all 51 atomic truths
                 "responseMimeType": "application/json",
             },
         }

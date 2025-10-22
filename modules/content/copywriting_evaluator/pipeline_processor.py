@@ -486,17 +486,11 @@ class CopywritingEvaluatorPipeline:
             params.append(1000)  # Reasonable limit
             
             results = self.db.execute_query(query, tuple(params))
-            
-            # Convert to dictionaries with table info
+
+            # Add table info to each sentence
+            # Note: execute_query already returns dicts, no need to convert
             for row in results:
-                sentence = dict(zip([
-                    'id', 'content_text', 'status',
-                    'keyword_filter_status', 'keyword_filter_date',
-                    'truthfulness_status', 'truthfulness_date', 'truthfulness_model',
-                    'canadian_spelling_status', 'canadian_spelling_date',
-                    'tone_analysis_status', 'tone_analysis_date', 'tone_analysis_model',
-                    'skill_analysis_status', 'skill_analysis_date', 'skill_analysis_model'
-                ], row))
+                sentence = dict(row)  # Create a copy of the dict
                 sentence['table_name'] = table
                 all_sentences.append(sentence)
         
@@ -523,9 +517,19 @@ class CopywritingEvaluatorPipeline:
             # Filter sentences that need processing for this stage
             stage_column = f"{stage.value}_status"
             sentences_to_process = [s for s in sentences if s.get(stage_column) in ['pending', 'error', 'testing']]
-            
+
+            # DEBUG: Log filtering details
+            if len(sentences) > 0:
+                sample_sentence = sentences[0]
+                logger.info(f"Stage {stage.value} filtering debug:")
+                logger.info(f"  Total input sentences: {len(sentences)}")
+                logger.info(f"  Looking for column: {stage_column}")
+                logger.info(f"  Sample sentence keys: {list(sample_sentence.keys())}")
+                logger.info(f"  Sample {stage_column} value: {sample_sentence.get(stage_column, 'KEY_NOT_FOUND')}")
+                logger.info(f"  Sentences to process: {len(sentences_to_process)}")
+
             if not sentences_to_process:
-                logger.info(f"No sentences need {stage.value} processing")
+                logger.info(f"No sentences need {stage.value} processing (filtered {len(sentences)} sentences)")
                 return stage_stats
             
             # Process in batches
@@ -539,10 +543,21 @@ class CopywritingEvaluatorPipeline:
                 try:
                     # Process batch through stage processor
                     results = await processor.process_batch(batch, session_id)
-                    
+
                     # Update database with results
                     await self._update_stage_results(stage, results)
-                    
+
+                    # Update in-memory sentence dictionaries with new status
+                    # This is CRITICAL - without this, subsequent stages won't see updated statuses
+                    stage_column = f"{stage.value}_status"
+                    for result in results:
+                        sentence_id = result['id']
+                        # Find matching sentence in the original list and update its status
+                        for sentence in sentences:
+                            if sentence['id'] == sentence_id:
+                                sentence[stage_column] = result['status']
+                                break
+
                     # Update statistics
                     for result in results:
                         stage_stats['processed'] += 1
@@ -550,7 +565,7 @@ class CopywritingEvaluatorPipeline:
                             stage_stats['approved'] += 1
                         elif result.get('status') == 'rejected':
                             stage_stats['rejected'] += 1
-                    
+
                     # Reset consecutive errors on successful batch
                     if self.config.mode == ProcessingMode.PRODUCTION:
                         self.consecutive_errors = 0
