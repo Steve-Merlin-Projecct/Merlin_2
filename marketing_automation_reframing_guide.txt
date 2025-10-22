@@ -1,0 +1,179 @@
+MARKETING AUTOMATION SPECIALIST REFRAMING GUIDE FOR STEVE GLEN
+
+PURPOSE
+This guide transforms Steve Glen's 14+ years of marketing experience into compelling narratives for Marketing Automation Specialist and Manager roles. Each section demonstrates how his achievements directly translate to core automation competencies.
+
+=================================================================
+SECTION 1: DATA AUTOMATION EXPERTISE AS PLATFORM MASTERY
+=================================================================
+
+Current Experience:
+- Reduced reporting time from 2 hours to 15 minutes through cascading spreadsheet architecture
+- Built custom ad impression tracking systems from scratch
+- Automated monthly and quarterly reporting workflows
+
+Reframed for Marketing Automation:
+Steve's proven ability to architect data automation solutions translates directly to marketing automation platforms. His cascading spreadsheet systems demonstrate the same logical thinking required for complex workflow design in HubSpot, Marketo, or Pardot. The 87.5% time reduction he achieved shows his capacity to identify inefficiencies and implement scalable solutions—core to any marketing automation role. His custom tracking systems prove he can work beyond platform limitations, creating integrations and workarounds that extend platform capabilities.
+
+Key Talking Points:
+- Quantifiable automation success (87.5% efficiency gain)
+- Systems thinking approach to workflow design
+- Platform-agnostic problem-solving skills
+- Proven ability to scale manual processes
+
+=================================================================
+SECTION 2: CONTENT ARCHITECTURE AS JOURNEY MAPPING
+=================================================================
+
+Current Experience:
+- Designed content taxonomy system still operational after 4+ years
+- Managed 120+ long-form articles with consistent formatting
+- Developed brand consistency frameworks across multiple channels
+
+Reframed for Marketing Automation:
+Steve's content taxonomy work mirrors the customer journey mapping essential to marketing automation. His ability to create lasting architectural frameworks shows he understands how to build scalable systems that guide users through logical progressions—exactly what's needed for nurture campaigns and lead scoring models. The 4+ year longevity of his system demonstrates his capacity for building robust, future-proof automation strategies.
+
+Key Talking Points:
+- Strategic framework development
+- Long-term system sustainability
+- User experience optimization
+- Cross-channel consistency management
+
+=================================================================
+SECTION 3: MARKET RESEARCH AS SEGMENTATION STRATEGY
+=================================================================
+
+Current Experience:
+- Conducted 70+ farmers market research sessions
+- Analyzed customer feedback to inform content strategy
+- Developed audience insights from direct interaction
+
+Reframed for Marketing Automation:
+Steve's hands-on market research experience provides the deep customer understanding essential for effective segmentation and personalization. His 70+ research sessions demonstrate commitment to data-driven decision making. This primary research experience gives him advantages over automation specialists who rely solely on digital metrics—he understands the "why" behind customer behavior, enabling more sophisticated segmentation strategies and trigger campaign development.
+
+Key Talking Points:
+- Primary research methodology
+- Customer behavior analysis
+- Segmentation strategy development
+- Persona-based campaign design
+
+=================================================================
+SECTION 4: EMAIL EXCELLENCE AS LIFECYCLE MARKETING
+=================================================================
+
+Current Experience:
+- 2.3 million emails delivered with 53% open rate and 18% CTR
+- Grew newsletter audience by 2.2x
+- Managed Mailchimp campaigns and automation
+
+Reframed for Marketing Automation:
+Steve's email metrics significantly exceed industry benchmarks (21% open rate average), demonstrating mastery of engagement principles crucial for automation success. His 2.2x audience growth shows understanding of acquisition and retention strategies. These results prove his ability to craft compelling content, optimize send times, segment audiences, and iterate based on performance data—all fundamental to marketing automation excellence.
+
+Key Talking Points:
+- Above-benchmark performance (2.5x industry open rate)
+- Proven growth strategies (120% audience increase)
+- Full-funnel email expertise
+- Data-driven optimization approach
+
+=================================================================
+SECTION 5: CROSS-FUNCTIONAL COORDINATION AS STAKEHOLDER MANAGEMENT
+=================================================================
+
+Current Experience:
+- Coordinated 350,000 flyer mayoral campaign
+- Managed relationships across multiple restaurant locations
+- Collaborated with diverse teams from restaurants to retail
+
+Reframed for Marketing Automation:
+Steve's experience coordinating large-scale campaigns demonstrates the stakeholder management skills critical for automation roles. Marketing automation specialists must align sales, marketing, and IT teams—his proven ability to manage complex campaigns across multiple stakeholders shows this capability. The 350,000 flyer campaign particularly demonstrates project management at scale, similar to enterprise-level automation rollouts.
+
+Key Talking Points:
+- Large-scale project management
+- Cross-departmental collaboration
+- Change management experience
+- Multi-stakeholder alignment
+
+=================================================================
+SECTION 6: TECHNICAL ANALYTICS AS AUTOMATION INTELLIGENCE
+=================================================================
+
+Current Experience:
+- Google Analytics 4 implementation and management
+- Looker Studio dashboard creation
+- Custom tracking and attribution modeling
+- 70% organic search traffic achievement
+
+Reframed for Marketing Automation:
+Steve's analytics expertise provides the technical foundation essential for marketing automation success. His GA4 and Looker Studio skills demonstrate ability to work with complex data structures and create actionable insights—directly applicable to automation reporting and optimization. The 70% organic achievement shows his ability to measure and optimize long-term strategies, crucial for nurture campaign success.
+
+Key Talking Points:
+- Advanced analytics implementation
+- Custom dashboard development
+- Attribution modeling expertise
+- ROI measurement and optimization
+
+=================================================================
+POSITIONING STRATEGY
+=================================================================
+
+Primary Narrative:
+"Marketing strategist with 14+ years driving measurable growth through data automation and customer-centric campaigns. Proven track record reducing operational overhead by 87.5% while achieving 2.5x industry-standard email engagement rates."
+
+Supporting Themes:
+1. Automation Pioneer: Built automation before platforms were mainstream
+2. Data-Driven Marketer: Combines analytics with customer research
+3. Systems Architect: Creates scalable frameworks that last years
+4. Growth Catalyst: Consistent record of audience and engagement growth
+5. Technical Translator: Bridges marketing strategy with technical execution
+
+Interview Preparation:
+- Lead with quantifiable automation wins
+- Connect manual experience to platform capabilities
+- Emphasize customer-centricity in all automation discussion
+- Demonstrate platform-agnostic thinking
+- Show progression from tactical to strategic automation
+
+Addressing Potential Concerns:
+
+Concern: "No enterprise platform experience"
+Response: "My custom automation solutions required deeper understanding than platform usage. I've built what these platforms do from scratch, giving me unique insight into their architecture and optimization."
+
+Concern: "No formal automation certification"
+Response: "My 87.5% efficiency gain and 2.5x industry benchmarks demonstrate practical mastery. I combine this proven experience with continuous learning in emerging platforms."
+
+Concern: "Restaurant/retail focus"
+Response: "Consumer marketing requires sophisticated segmentation and personalization—the same skills that drive B2B automation success. My 2.3 million email sends with exceptional metrics prove scalable execution."
+
+=================================================================
+KEY DIFFERENTIATORS
+=================================================================
+
+1. Unique Combination: Technical automation skills + creative content expertise + direct customer research
+2. Proven Results: Metrics that exceed industry standards by 2-3x
+3. Building vs. Using: Created automation systems from scratch, providing deeper understanding
+4. Longevity: Systems still operational 4+ years later demonstrate sustainable thinking
+5. Scale: From startup to enterprise-level campaign management
+
+=================================================================
+ACTION STEPS
+=================================================================
+
+Immediate:
+1. Quantify all automation-related achievements
+2. Create platform-agnostic automation portfolio
+3. Document workflow diagrams from past projects
+4. Compile metrics dashboard showing performance
+
+Short-term:
+1. Complete free certifications (HubSpot, Google, Mailchimp)
+2. Create case studies translating past work to automation context
+3. Build demonstration automation workflows
+4. Network with marketing automation professionals
+
+Long-term:
+1. Pursue advanced platform certifications
+2. Contribute to automation communities
+3. Develop thought leadership content
+4. Build public automation project portfolio
+
+This guide positions Steve Glen as a marketing automation specialist who brings unique value through his combination of technical capability, strategic thinking, and deep customer understanding. His proven ability to build automation from scratch, achieve exceptional results, and create lasting systems makes him an ideal candidate for organizations seeking innovation in their marketing automation efforts.

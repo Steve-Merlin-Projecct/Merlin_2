@@ -60,17 +60,18 @@ class KeywordFilter:
             # Fetch active keywords from database
             query = "SELECT keyword FROM keyword_filters WHERE status = 'active'"
             results = self.db.execute_query(query, ())
-            
+
             # Convert to lowercase set for case-insensitive matching
-            keywords = {row[0].lower().strip() for row in results if row[0] and row[0].strip()}
-            
+            # Note: execute_query returns list of dicts, not tuples
+            keywords = {row['keyword'].lower().strip() for row in results if row.get('keyword') and row.get('keyword').strip()}
+
             # Update cache
             self._cached_keywords = keywords
             self._cache_updated = datetime.now()
-            
+
             logger.info(f"Loaded {len(keywords)} active keywords: {sorted(keywords)}")
             return keywords
-            
+
         except Exception as e:
             logger.error(f"Failed to load keywords from database: {str(e)}")
             # Return empty set on error to avoid blocking processing
@@ -135,20 +136,23 @@ class KeywordFilter:
             
             # Check for keyword matches
             has_keywords, found_keywords = self._contains_keyword(content_text, keywords)
-            
+
             # Determine status based on keyword presence
+            # Keywords in keyword_filters are FORBIDDEN WORDS - reject if found
             if has_keywords:
-                status = 'approved'
-                logger.debug(f"Sentence {sentence_id} APPROVED - found keywords: {found_keywords}")
-            else:
                 status = 'rejected'
-                logger.debug(f"Sentence {sentence_id} REJECTED - no brand alignment keywords found")
-            
+                rejection_reason = f"Contains forbidden words: {', '.join(found_keywords)}"
+                logger.debug(f"Sentence {sentence_id} REJECTED - contains forbidden keywords: {found_keywords}")
+            else:
+                status = 'approved'
+                rejection_reason = None
+                logger.debug(f"Sentence {sentence_id} APPROVED - no forbidden keywords found")
+
             return {
                 'id': sentence_id,
                 'table_name': table_name,
                 'status': status,
-                'rejection_reason': 'no_brand_keywords' if status == 'rejected' else None,
+                'rejection_reason': rejection_reason,
                 'processing_stage': 'keyword_filter',
                 'keywords_found': found_keywords,
                 'content_length': len(content_text),

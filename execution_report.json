@@ -1,0 +1,75 @@
+{
+  "start_time": "2025-10-22T03:55:10.806547",
+  "step_1_fix": {
+    "issue_identified": "Pipeline queries pending sentences correctly at line 470",
+    "fix_applied": "No fix needed - logic is correct",
+    "verification": "Confirmed 711 sentences with pending status ready for processing",
+    "initial_counts": {
+      "resume_pending": 120,
+      "cover_letter_pending": 591
+    }
+  },
+  "step_2_resume_processing": {
+    "total_sentences": 120,
+    "processed_sentences": 0,
+    "filtered_sentences": 120,
+    "production_ready": 0,
+    "stage_stats": {
+      "keyword_filter": {
+        "stage": "keyword_filter",
+        "total_sentences": 120,
+        "processed": 120,
+        "approved": 0,
+        "rejected": 120,
+        "errors": 0,
+        "start_time": "2025-10-22 03:55:11.342895",
+        "end_time": "2025-10-22 03:55:12.334644",
+        "duration_seconds": 0.991749
+      }
+    },
+    "errors": [],
+    "duration_seconds": 1.042434
+  },
+  "step_3_cover_letter_processing": {
+    "total_sentences": 591,
+    "processed_sentences": 0,
+    "filtered_sentences": 591,
+    "production_ready": 0,
+    "stage_stats": {
+      "keyword_filter": {
+        "stage": "keyword_filter",
+        "total_sentences": 591,
+        "processed": 591,
+        "approved": 0,
+        "rejected": 591,
+        "errors": 0,
+        "start_time": "2025-10-22 03:55:12.353805",
+        "end_time": "2025-10-22 03:55:18.804854",
+        "duration_seconds": 6.451049
+      }
+    },
+    "errors": [],
+    "duration_seconds": 6.461537
+  },
+  "step_4_atomic_truths_verification": {
+    "truths_loaded": 51,
+    "included_in_prompts": true,
+    "sample_verification": [
+      "[Odvod Media] Created cascading spreadsheet systems for data transformation.",
+      "[Odvod Media] Attended 70 farmers markets to conduct customer research.",
+      "[Odvod Media] Sent 2.3 million emails through Mailchimp.",
+      "[Odvod Media] Wrote 120+ long-form articles for digital publication.",
+      "[Odvod Media] Built custom ad impression tracking systems."
+    ],
+    "truths_file_path": "/workspace/.trees/convert-seed-sentences-to-production-ready-content/marketing_automation_atomic_truths.txt"
+  },
+  "final_database_state": {
+    "total_resume_sentences": 120,
+    "total_cover_letter_sentences": 591,
+    "production_ready_resume": 0,
+    "production_ready_cover_letter": 0,
+    "production_ready_total": 0
+  },
+  "errors": [],
+  "end_time": "2025-10-22T03:55:18.816280"
+}
