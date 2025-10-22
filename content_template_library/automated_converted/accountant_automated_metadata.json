@@ -1,0 +1,23 @@
+{
+  "document_type": "resume",
+  "conversion_date": "2025-10-21T03:42:32.115683",
+  "conversion_stats": {
+    "total_paragraphs": 6,
+    "paragraphs_modified": 2,
+    "patterns_matched": {
+      "full_name": 1,
+      "email": 1
+    },
+    "variables_created": [],
+    "unmatched_content": []
+  },
+  "template_version": "1.0",
+  "variable_format": "double_angle_brackets",
+  "notes": [
+    "Template created by automated conversion process",
+    "Variables use <<variable_name>> format",
+    "Original formatting and structure preserved",
+    "Pattern recognition used for common fields",
+    "Generic fields created for unmatched content"
+  ]
+}

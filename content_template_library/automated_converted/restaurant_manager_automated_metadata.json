@@ -1,0 +1,36 @@
+{
+  "document_type": "resume",
+  "conversion_date": "2025-10-21T03:42:32.058772",
+  "conversion_stats": {
+    "total_paragraphs": 20,
+    "paragraphs_modified": 1,
+    "patterns_matched": {
+      "email": 1
+    },
+    "variables_created": [
+      {
+        "original": "Activities and Interests",
+        "variable": "<<field_1>>",
+        "type": "generic"
+      },
+      {
+        "original": "Theater, environmental conservation, art, hiking, skiing, travel",
+        "variable": "<<field_2>>",
+        "type": "generic"
+      }
+    ],
+    "unmatched_content": [
+      "Activities and Interests",
+      "Theater, environmental conservation, art, hiking, skiing, travel"
+    ]
+  },
+  "template_version": "1.0",
+  "variable_format": "double_angle_brackets",
+  "notes": [
+    "Template created by automated conversion process",
+    "Variables use <<variable_name>> format",
+    "Original formatting and structure preserved",
+    "Pattern recognition used for common fields",
+    "Generic fields created for unmatched content"
+  ]
+}
