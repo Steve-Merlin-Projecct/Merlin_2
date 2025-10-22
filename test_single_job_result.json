@@ -18,7 +18,7 @@
       "structured_data": {
         "job_title": "Senior Software Engineer",
         "company_name": "TechCorp Solutions",
-        "job_type": "full-time",
+        "job_type": "Full-time",
         "hiring_manager": null,
         "department": null,
         "reporting_to": null,
@@ -30,14 +30,14 @@
               "reasoning": "Primary language for backend systems development."
             },
             {
-              "skill_name": "Backend Systems Development",
+              "skill_name": "Backend Systems Design",
               "importance_rating": 90,
-              "reasoning": "Core responsibility of the role."
+              "reasoning": "Designing scalable and robust backend systems is crucial."
             },
             {
               "skill_name": "AWS",
               "importance_rating": 85,
-              "reasoning": "Cloud infrastructure experience is essential."
+              "reasoning": "Experience with AWS cloud infrastructure is required."
             },
             {
               "skill_name": "Go",
@@ -45,44 +45,54 @@
               "reasoning": "Used for building scalable backend systems."
             },
             {
-              "skill_name": "Distributed Systems",
+              "skill_name": "Microservices",
               "importance_rating": 75,
-              "reasoning": "Experience with distributed systems is required."
+              "reasoning": "Experience with microservices architecture is important."
             },
             {
-              "skill_name": "Microservices",
+              "skill_name": "Distributed Systems",
               "importance_rating": 70,
-              "reasoning": "Experience with microservices architecture is required."
+              "reasoning": "Experience with distributed systems is required."
             },
             {
               "skill_name": "Docker",
               "importance_rating": 65,
-              "reasoning": "Containerization experience is beneficial."
+              "reasoning": "Experience with Docker is required."
             },
             {
               "skill_name": "Kubernetes",
               "importance_rating": 60,
-              "reasoning": "Orchestration experience is beneficial."
+              "reasoning": "Experience with Kubernetes is required."
             },
             {
               "skill_name": "CI/CD Pipelines",
               "importance_rating": 55,
-              "reasoning": "Experience with CI/CD pipelines is beneficial."
+              "reasoning": "Experience with CI/CD pipelines is required."
             },
             {
-              "skill_name": "Code Review",
+              "skill_name": "Code Reviews",
               "importance_rating": 50,
-              "reasoning": "Participating in code reviews is a key responsibility."
-            },
-            {
-              "skill_name": "Mentoring",
-              "importance_rating": 45,
-              "reasoning": "Mentoring junior engineers is part of the role."
+              "reasoning": "Participating in code reviews is essential for maintaining code quality."
             },
             {
               "skill_name": "Agile Development",
-              "importance_rating": 40,
+              "importance_rating": 45,
               "reasoning": "Working in an agile environment is required."
+            },
+            {
+              "skill_name": "Mentoring",
+              "importance_rating": 40,
+              "reasoning": "Mentoring junior engineers is part of the role."
+            },
+            {
+              "skill_name": "Java",
+              "importance_rating": 35,
+              "reasoning": "Alternative language proficiency."
+            },
+            {
+              "skill_name": "C++",
+              "importance_rating": 30,
+              "reasoning": "Alternative language proficiency."
             }
           ],
           "education_requirements": [
@@ -98,7 +108,7 @@
           "certifications": []
         },
         "work_arrangement": {
-          "in_office_requirements": "hybrid",
+          "in_office_requirements": "Hybrid",
           "office_location": null,
           "working_hours_per_week": null,
           "work_schedule": null,
@@ -140,7 +150,8 @@
           "primary_keywords": [
             "Software Engineer",
             "Python",
-            "AWS"
+            "AWS",
+            "Backend Systems"
           ],
           "industry_keywords": [
             "SaaS",
@@ -148,13 +159,14 @@
             "Microservices"
           ],
           "must_have_phrases": [
+            "Senior Software Engineer",
             "scalable backend systems",
             "code reviews",
             "agile environment"
           ]
         }
       },
-      "analysis_timestamp": "2025-10-18T18:01:08.891357",
+      "analysis_timestamp": "2025-10-22T04:46:27.363317",
       "model_used": "gemini-1.5-flash-latest",
       "analysis_version": "1.0",
       "security_warnings": 1
@@ -163,13 +175,13 @@
   "usage_stats": {
     "daily_requests": 0,
     "monthly_requests": 0,
-    "daily_tokens": 3556,
-    "monthly_tokens": 3556,
+    "daily_tokens": 3548,
+    "monthly_tokens": 3548,
     "daily_request_limit": 1500,
     "monthly_request_limit": 45000,
     "daily_token_limit": 3000000,
     "monthly_token_limit": 50000000,
-    "last_reset": "2025-10-18T18:00:59.331374",
+    "last_reset": "2025-10-22T04:46:11.107558",
     "model_switches": 0,
     "primary_model": "gemini-2.0-flash-001",
     "available_models": {
@@ -206,6 +218,7 @@
   "success": true,
   "jobs_analyzed": 1,
   "model_used": "gemini-2.0-flash-001",
+  "workflow": "Original",
   "optimization_metrics": {
     "max_output_tokens": 2115,
     "token_efficiency": "73.3%",

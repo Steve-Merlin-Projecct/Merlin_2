@@ -1,0 +1,138 @@
+{
+  "summary": {
+    "total_manual_variables": 46,
+    "total_automated_variables": 6,
+    "difference": 40,
+    "manual_advantage_percentage": 666.7
+  },
+  "templates": [
+    {
+      "template": "Restaurant Manager Resume",
+      "manual": {
+        "total_variables": 23,
+        "unique_variables": [
+          "city",
+          "company_name",
+          "degree",
+          "education_institution",
+          "email",
+          "end_date",
+          "first_name",
+          "graduation_date",
+          "interests",
+          "last_name",
+          "linkedin",
+          "phone",
+          "position_title",
+          "skill_1",
+          "skill_2",
+          "skill_3",
+          "skill_4",
+          "skill_5",
+          "skill_6",
+          "start_date",
+          "state",
+          "street_address",
+          "zip_code"
+        ],
+        "personal_vars": 10,
+        "professional_vars": 2,
+        "education_vars": 3,
+        "skill_vars": 6,
+        "date_vars": 3,
+        "generic_vars": 0,
+        "placeholder_count": 34,
+        "sample_text": [
+          "<<street_address>>, <<city>>, <<state>> <<zip_code>> | <<phone>> | <<email>> | <<linkedin>>",
+          "Profile",
+          "Friendly and engaging team player and leader able to inspire staff to perform their best. Detail oriented and experienced restaurant manager passionate about food and beverages. A multi-tasker who excels at staff training and recruiting with a track record of inspiring great customer service and customer satisfaction. Regularly exceed sales goals. A master in the art of upselling."
+        ]
+      },
+      "automated": {
+        "total_variables": 3,
+        "unique_variables": [
+          "email",
+          "field_1",
+          "field_2"
+        ],
+        "personal_vars": 1,
+        "professional_vars": 0,
+        "education_vars": 0,
+        "skill_vars": 0,
+        "date_vars": 0,
+        "generic_vars": 2,
+        "placeholder_count": 3,
+        "sample_text": [
+          "4567 Main Street, Buffalo, New York 98052 | (716) 555-0100 | <<email>> | www.linkedin.com/in/m.riley",
+          "Profile",
+          "Friendly and engaging team player and leader able to inspire staff to perform their best. Detail oriented and experienced restaurant manager passionate about food and beverages. A multi-tasker who excels at staff training and recruiting with a track record of inspiring great customer service and customer satisfaction. Regularly exceed sales goals. A master in the art of upselling."
+        ]
+      },
+      "coverage_difference": 20
+    },
+    {
+      "template": "Accountant Resume",
+      "manual": {
+        "total_variables": 23,
+        "unique_variables": [
+          "city",
+          "company_name",
+          "degree",
+          "education_institution",
+          "email",
+          "end_date",
+          "first_name",
+          "graduation_date",
+          "last_name",
+          "linkedin",
+          "minor",
+          "phone",
+          "position_title",
+          "skill_1",
+          "skill_2",
+          "skill_3",
+          "skill_4",
+          "skill_5",
+          "skill_6",
+          "start_date",
+          "state",
+          "street_address",
+          "zip_code"
+        ],
+        "personal_vars": 10,
+        "professional_vars": 2,
+        "education_vars": 3,
+        "skill_vars": 6,
+        "date_vars": 3,
+        "generic_vars": 0,
+        "placeholder_count": 35,
+        "sample_text": [
+          "<<first_name>> <<last_name>>",
+          "<<street_address>>, <<city>>, <<state>> <<zip_code>> | <<phone>> | <<email>> | <<linkedin>> ",
+          ""
+        ]
+      },
+      "automated": {
+        "total_variables": 3,
+        "unique_variables": [
+          "email",
+          "first_name",
+          "last_name"
+        ],
+        "personal_vars": 3,
+        "professional_vars": 0,
+        "education_vars": 0,
+        "skill_vars": 0,
+        "date_vars": 0,
+        "generic_vars": 0,
+        "placeholder_count": 3,
+        "sample_text": [
+          "<<first_name>> <<last_name>>",
+          "4567 8th Avenue, Carson City, NV 10111 | (313) 555-0100 | <<email>> | www.linkedin.com",
+          ""
+        ]
+      },
+      "coverage_difference": 20
+    }
+  ]
+}

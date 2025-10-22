@@ -1,5 +1,5 @@
 {
-  "security_token": "SEC_TOKEN_BNUkvM6yte3FWgpRQfJdXRbAET8K0say",
+  "security_token": "SEC_TOKEN_vND8PvPhHXFk8VsWWiOFuxrMSdZAnd6D",
   "analysis_results": [
     {
       "job_id": "test_job_001",
@@ -7,7 +7,7 @@
         "title_matches_role": true,
         "mismatch_explanation": null,
         "is_authentic": true,
-        "reasoning": "The job description aligns with the title of Senior Software Engineer, outlining responsibilities and requirements expected for this role."
+        "reasoning": "The job description aligns with the title and provides realistic expectations for a Senior Software Engineer."
       },
       "classification": {
         "industry": "Software Development",
@@ -28,22 +28,22 @@
             {
               "skill_name": "Python",
               "importance_rating": 95,
-              "reasoning": "Primary language for backend systems development."
+              "reasoning": "Primary language for backend development as stated in the job description."
+            },
+            {
+              "skill_name": "Backend Systems Design",
+              "importance_rating": 90,
+              "reasoning": "Designing scalable backend systems is a core responsibility."
             },
             {
               "skill_name": "Go",
               "importance_rating": 85,
-              "reasoning": "Used for building scalable backend systems."
+              "reasoning": "Listed as a key language for backend development."
             },
             {
               "skill_name": "AWS",
-              "importance_rating": 90,
-              "reasoning": "Cloud infrastructure experience is essential."
-            },
-            {
-              "skill_name": "Distributed Systems",
-              "importance_rating": 80,
-              "reasoning": "Experience with distributed systems is required."
+              "importance_rating": 85,
+              "reasoning": "Experience with AWS is required for cloud infrastructure."
             },
             {
               "skill_name": "Microservices",
@@ -51,64 +51,49 @@
               "reasoning": "Experience with microservices is required."
             },
             {
-              "skill_name": "Software Engineering",
-              "importance_rating": 90,
-              "reasoning": "Overall software engineering experience is crucial."
+              "skill_name": "Distributed Systems",
+              "importance_rating": 80,
+              "reasoning": "Experience with distributed systems is required."
             },
             {
-              "skill_name": "Backend Development",
-              "importance_rating": 85,
-              "reasoning": "Focus on backend systems development."
-            },
-            {
-              "skill_name": "Technical Leadership",
+              "skill_name": "Docker",
               "importance_rating": 75,
-              "reasoning": "Leading technical initiatives and mentoring junior engineers."
+              "reasoning": "Experience with Docker is listed as a requirement."
+            },
+            {
+              "skill_name": "Kubernetes",
+              "importance_rating": 75,
+              "reasoning": "Experience with Kubernetes is listed as a requirement."
+            },
+            {
+              "skill_name": "CI/CD Pipelines",
+              "importance_rating": 70,
+              "reasoning": "Experience with CI/CD pipelines is listed as a requirement."
             },
             {
               "skill_name": "Code Review",
               "importance_rating": 70,
-              "reasoning": "Participating in code reviews and maintaining high code quality."
+              "reasoning": "Participating in code reviews is a key responsibility."
             },
             {
               "skill_name": "Agile Development",
               "importance_rating": 65,
-              "reasoning": "Working in an agile environment with 2-week sprints."
+              "reasoning": "Experience working in an agile environment is required."
             },
             {
-              "skill_name": "Docker",
+              "skill_name": "Mentoring",
               "importance_rating": 60,
-              "reasoning": "Experience with Docker is a plus."
-            },
-            {
-              "skill_name": "Kubernetes",
-              "importance_rating": 60,
-              "reasoning": "Experience with Kubernetes is a plus."
-            },
-            {
-              "skill_name": "CI/CD Pipelines",
-              "importance_rating": 60,
-              "reasoning": "Experience with CI/CD pipelines is a plus."
-            },
-            {
-              "skill_name": "Java",
-              "importance_rating": 50,
-              "reasoning": "Alternative language proficiency."
-            },
-            {
-              "skill_name": "C++",
-              "importance_rating": 50,
-              "reasoning": "Alternative language proficiency."
+              "reasoning": "Mentoring junior engineers is part of the role."
             }
           ],
           "education_requirements": [
             {
               "degree_level": "Bachelor's",
-              "field_of_study": "Computer Science",
+              "field_of_study": "Computer Science or related field",
               "institution_type": "accredited university",
               "years_required": 4,
               "is_required": true,
-              "alternative_experience": "or related field"
+              "alternative_experience": null
             }
           ],
           "certifications": []
@@ -118,7 +103,7 @@
           "office_location": null,
           "working_hours_per_week": 40,
           "work_schedule": null,
-          "specific_schedule": "3 days in office, 2 days remote",
+          "specific_schedule": null,
           "travel_requirements": null
         },
         "compensation": {
@@ -157,8 +142,7 @@
             "Software Engineer",
             "Python",
             "AWS",
-            "Backend Systems",
-            "Distributed Systems"
+            "Backend Systems"
           ],
           "industry_keywords": [
             "SaaS",
@@ -167,9 +151,9 @@
           ],
           "must_have_phrases": [
             "scalable backend systems",
-            "agile environment",
             "code reviews",
-            "high code quality standards"
+            "agile environment",
+            "CI/CD pipelines"
           ]
         }
       }
