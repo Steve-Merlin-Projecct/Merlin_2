@@ -283,10 +283,22 @@ os.makedirs("storage", exist_ok=True)
 
 @app.route('/')
 def index():
-    """Root endpoint with service information"""
+    """Root endpoint - minimal service information for security"""
     return jsonify({
-        'service': 'Document Generation Service',
-        'version': '2.1.3',
+        'service': 'Merlin Job Application System',
+        'version': __version__,
+        'status': 'running',
+        'health': '/health',
+        'documentation': '/api/docs'
+    })
+
+@app.route('/api/docs')
+@require_dashboard_auth
+def api_documentation():
+    """API documentation endpoint - requires authentication"""
+    return jsonify({
+        'service': 'Merlin Job Application System',
+        'version': __version__,
         'status': 'running',
         'modules': [
             'Resume Generator',
@@ -299,7 +311,6 @@ def index():
             'resume': '/resume - POST: Generate structured resume',
             'cover_letter': '/cover-letter - POST: Generate cover letter',
             'download': '/download/<filename> - GET: Download generated file',
-            'debug': '/debug/download/<filename> - GET: Debug file information',
             'test': '/test - GET/POST: Test endpoint',
             'health': '/health - GET: Health check'
         },
