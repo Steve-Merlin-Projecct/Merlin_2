@@ -1,0 +1,21 @@
+{
+  "worktree": "migration-to-digit-ocean",
+  "description": "||migration to digit ocean",
+  "scope": {
+    "include": [
+      "modules/database/migrations/**",
+      "tests/test_*migration_to_digit_ocean*.py",
+      "docs/*migration-to-digit-ocean*.md"
+
+    ],
+    "exclude": [
+      "**/__pycache__/**",
+      "**/*.pyc",
+      ".git/**",
+      "**/.DS_Store"
+    ]
+  },
+  "enforcement": "soft",
+  "created": "2025-10-21T02:55:47+00:00",
+  "out_of_scope_policy": "warn"
+}
