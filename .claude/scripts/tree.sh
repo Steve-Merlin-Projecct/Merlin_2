@@ -1604,8 +1604,22 @@ copy_slash_commands_to_worktree() {
 install_scope_hook() {
     local worktree_path=$1
 
-    # Create git hooks directory in worktree
-    local hooks_dir="$worktree_path/.git/hooks"
+    # CRITICAL FIX: In git worktrees, .git is a FILE (not a directory) that points to the actual git directory
+    # We must use 'git rev-parse --git-dir' to get the real git directory path for the worktree
+    # The .git file contains: "gitdir: /workspace/.git/worktrees/<name>"
+    # Attempting to mkdir inside this file causes: "mkdir: cannot create directory '.../.git': Not a directory"
+
+    # Get the actual git directory for this worktree (e.g., /workspace/.git/worktrees/<name>)
+    local git_dir
+    git_dir=$(cd "$worktree_path" && git rev-parse --git-dir 2>/dev/null)
+
+    if [ -z "$git_dir" ] || [ ! -d "$git_dir" ]; then
+        print_warning "  Could not determine git directory for hooks, skipping hook installation"
+        return 1
+    fi
+
+    # Create hooks directory in the worktree-specific git directory
+    local hooks_dir="$git_dir/hooks"
     mkdir -p "$hooks_dir"
 
     # Create pre-commit hook that calls our scope enforcement script
