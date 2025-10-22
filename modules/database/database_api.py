@@ -1,3 +1,16 @@
+"""
+Module: database_api.py
+Purpose: RESTful API endpoints for database CRUD operations
+Created: 2024-08-22
+Modified: 2025-10-21
+Dependencies: Flask, database_manager, security.rate_limit_manager
+Related: database_manager.py, lazy_instances.py, modules/security/
+Description: Provides REST API endpoints for jobs, companies, applications with
+             API key authentication, rate limiting (200/min reads, 60/min writes),
+             filtering, search, and pagination. Uses lazy-initialized database
+             manager to prevent import-time connections.
+"""
+
 import os
 import logging
 from datetime import datetime, timedelta

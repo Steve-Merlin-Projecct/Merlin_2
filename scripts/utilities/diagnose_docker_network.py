@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
-Diagnose Docker container networking and Flask accessibility
+Module: diagnose_docker_network.py
+Purpose: Diagnose Docker container networking and Flask accessibility
+Created: 2024-09-18
+Modified: 2025-10-21
+Dependencies: None (standard library only)
+Related: .devcontainer/, docker-compose.yml
+Description: Identifies network configuration issues in Docker containers,
+             checks Flask accessibility, and validates database connectivity.
 """
 
 import os

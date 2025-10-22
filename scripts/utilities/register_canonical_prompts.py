@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """
-Register Canonical Prompt Hashes
-=================================
+Module: register_canonical_prompts.py
+Purpose: Register canonical prompt hashes for AI prompt validation system
+Created: 2024-09-22
+Modified: 2025-10-21
+Dependencies: modules.ai_job_description_analysis.prompt_validation_systems
+Related: modules/ai_job_description_analysis/prompts/, analyze_prompt_and_response.py
+Description: Calculates and registers canonical hashes for all tier prompts
+             (tier1, tier2, tier3) in the hash registry for System 1 validation.
+             Ensures prompt integrity and detects unauthorized modifications.
 
-This script calculates and registers canonical hashes for all tier prompts
-in the hash registry for System 1 validation.
+Usage:
+    python register_canonical_prompts.py
 """
 
 import os

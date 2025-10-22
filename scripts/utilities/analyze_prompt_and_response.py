@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Analyze Prompt and Response Quality
-====================================
-
-Examines:
-1. The actual prompt being sent to Gemini
-2. The raw response received from Gemini
-3. JSON validation issues
-4. Differences between canonical and used prompts
+Module: analyze_prompt_and_response.py
+Purpose: Analyze Gemini API prompt and response quality for debugging
+Created: 2024-09-20
+Modified: 2025-10-21
+Dependencies: None (standard library only)
+Related: modules/ai_job_description_analysis/, register_canonical_prompts.py
+Description: Examines prompts sent to Gemini, raw responses received, JSON
+             validation issues, and differences between canonical/used prompts.
+             Useful for debugging AI integration issues.
 
 Usage:
     python analyze_prompt_and_response.py

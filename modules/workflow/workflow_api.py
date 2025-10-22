@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-Workflow API for End-to-End Application Orchestration
-
-This module provides REST API endpoints for Step 2.2 implementation:
-- Workflow execution endpoints
-- Status monitoring and tracking
-- Performance metrics and analytics
-- Workflow management operations
+Module: workflow_api.py
+Purpose: REST API endpoints for end-to-end application orchestration
+Created: 2024-08-26
+Modified: 2025-10-21
+Dependencies: Flask, application_orchestrator
+Related: application_orchestrator.py, email_application_api.py, modules/database/workflow_api.py
+Description: Provides REST API for workflow execution, status monitoring, performance
+             metrics, and workflow management operations. Includes authentication,
+             health checks, workflow execution triggers, and analytics endpoints.
 """
 
 from flask import Blueprint, request, jsonify, session

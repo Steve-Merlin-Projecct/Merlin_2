@@ -1,6 +1,13 @@
 """
-Dashboard API Module
-Provides endpoints for the job application dashboard
+Module: dashboard_api.py
+Purpose: Dashboard API with endpoints for job application analytics
+Created: 2024-08-20
+Modified: 2025-10-21
+Dependencies: Flask, SQLAlchemy, modules.database, modules.salary_formatter
+Related: dashboard_api_v2.py, frontend_templates/dashboard_v2.html
+Description: Provides REST API endpoints for dashboard statistics, recent applications,
+             scraping history, performance metrics, and analytics. Includes session-based
+             authentication and auto-authentication in debug mode.
 """
 
 from flask import Blueprint, jsonify, request, session

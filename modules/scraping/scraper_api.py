@@ -1,6 +1,14 @@
 """
-Scraper API Routes
-Provides REST API endpoints for job scraping operations with rate limiting
+Module: scraper_api.py
+Purpose: REST API endpoints for job scraping operations
+Created: 2024-08-24
+Modified: 2025-10-21
+Dependencies: Flask, job_scraper_apify, intelligent_scraper, scrape_pipeline, security
+Related: job_scraper_apify.py, scrape_pipeline.py, intelligent_scraper.py
+Description: Provides authenticated REST API endpoints for job scraping with rate
+             limiting (5/hour, 20/day), search parameter validation, scraping session
+             management, and integration with Apify, intelligent scraper, and data
+             pipeline. Includes security validation and session authentication.
 """
 
 import logging

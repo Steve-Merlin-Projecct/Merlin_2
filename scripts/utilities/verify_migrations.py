@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
-Comprehensive verification of migration fixes
+Module: verify_migrations.py
+Purpose: Comprehensive verification of database migration fixes
+Created: 2024-10-12
+Modified: 2025-10-21
+Dependencies: psycopg2
+Related: fix_migrations.py, database_migrations/, docs/database/
+Description: Runs 6 comprehensive tests to verify database migration success:
+             materialized views, performance indexes, aggregation tables, refresh
+             functions, performance benchmarks, and data integrity checks. Provides
+             actionable recommendations for setup and monitoring.
+
+Usage:
+    python verify_migrations.py
 """
 
 import os

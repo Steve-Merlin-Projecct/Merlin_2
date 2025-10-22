@@ -1,3 +1,16 @@
+"""
+Module: database_client.py
+Purpose: Base PostgreSQL database client with connection management
+Created: 2024-08-18
+Modified: 2025-10-21
+Dependencies: SQLAlchemy, database_config
+Related: database_manager.py, database_config.py, lazy_instances.py
+Description: Provides PostgreSQL connection management with SQLAlchemy ORM,
+             automatic Docker vs local environment detection, connection pooling,
+             session handling with context managers, and transaction management.
+             Base class for all database operations.
+"""
+
 import os
 import logging
 from datetime import datetime

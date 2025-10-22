@@ -1,6 +1,16 @@
+---
+title: System Instructions (CLAUDE.md)
+type: reference
+created: 2024-08-15
+modified: 2025-10-21
+status: current
+related: README.md, docs/DOCUMENTATION_INDEX.md
+---
+
 # Automated Job Application System
-Version 4.3.2
+Version 4.3.3
 Python 3.11 | Flask | PostgreSQL | Docker
+Last Updated: 2025-10-21
 
 ## Project Overview
 
@@ -58,6 +68,26 @@ Prohibited Actions:
 - Never use Bash tool for: `git add`, `git commit`, `git push`, `git merge`
 - Never manually create commits without validation
 - Never skip test runs before committing
+
+**Worktree Error Prevention System (NEW - v4.3.3):**
+The `/tree build` command now includes comprehensive error prevention:
+- Pre-flight validation detects and removes orphaned directories/branches
+- Automatic `git worktree prune` on every build
+- Stale lock detection and auto-removal (>60s old, 0 bytes)
+- Atomic rollback on build failures
+- Enhanced error messages showing actual git output
+- Verbose mode via `--verbose` flag or `TREE_VERBOSE=true`
+- Idempotent operations (safe to retry builds)
+- Uncommitted changes protection
+
+**Usage:**
+```bash
+/tree build                    # Standard with auto-cleanup
+/tree build --verbose          # Debug mode
+TREE_VERBOSE=true /tree build  # Verbose via env var
+```
+
+See: `tasks/worktree-error-prevention/` for full documentation
 
 
 

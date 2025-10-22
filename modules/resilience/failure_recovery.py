@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-Failure Recovery Manager - Step 2.3 Implementation
-
-Comprehensive error handling and recovery system for automated job applications.
-Implements intelligent retry logic, workflow checkpoints, and data consistency validation.
-
-Features:
-- Automatic recovery from transient failures
-- Workflow checkpoint and resume capabilities
-- Error categorization and specific handling strategies
-- Data consistency validation and correction
-- Comprehensive audit logging for troubleshooting
+Module: failure_recovery.py
+Purpose: Comprehensive error handling and recovery system
+Created: 2024-08-28
+Modified: 2025-10-21
+Dependencies: database_manager, psycopg2, typing, enum
+Related: circuit_breaker_manager.py, retry_strategy_manager.py, error_classifier.py
+Description: Implements intelligent retry logic, workflow checkpoints, resume
+             capabilities, error categorization (network, database, document),
+             specific handling strategies, data consistency validation, automatic
+             correction, and comprehensive audit logging for troubleshooting.
 """
 
 import logging

@@ -1,7 +1,14 @@
 #!/bin/bash
-
-# Tree Worktree Management Script
-# Phase 1: Core functionality for /tree closedone
+#
+# Script: tree.sh
+# Purpose: Worktree management system for parallel development
+# Created: 2024-10-09
+# Modified: 2025-10-21
+# Usage: /tree <command> [options]
+# Commands: stage, list, build, close, closedone, status, conflict, help
+# Related: .claude/commands/tree.md, docs/worktrees/WORKTREE_COMPLETE_GUIDE.md
+# Description: Complete worktree lifecycle management with error prevention,
+#              scope enforcement, and automated merge workflows
 
 set -e  # Exit on error
 

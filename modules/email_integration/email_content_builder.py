@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-Email Content Builder Module
-
-Builds complete email content from job application package data.
-Maps job data fields to email components (subject, body, metadata, attachments).
-
-Features:
-- Intelligent content mapping from job data
-- Dynamic subject line generation
-- Professional email body composition
-- Attachment metadata and filename generation
-- Email metadata enrichment (Message-ID, references, threading)
-- Support for both direct applications and fallback notifications
+Module: email_content_builder.py
+Purpose: Email content construction from job application data
+Created: 2024-09-16
+Modified: 2025-10-21
+Dependencies: signature_generator, pathlib, typing
+Related: email_api.py, gmail_oauth_official.py, signature_generator.py
+Description: Builds complete email content by mapping job data to email components:
+             dynamic subject lines, professional body composition, attachment metadata,
+             filename generation, email threading (Message-ID, references), support for
+             direct applications and fallback notifications. Integrates with signature
+             generator for personalized email signatures.
 """
 
 import os

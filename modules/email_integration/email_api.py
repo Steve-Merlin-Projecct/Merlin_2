@@ -1,6 +1,14 @@
 """
-Email API Routes for Gmail OAuth Integration
-Provides REST endpoints for Gmail authentication and email sending
+Module: email_api.py
+Purpose: REST API endpoints for Gmail OAuth authentication and email sending
+Created: 2024-09-15
+Modified: 2025-10-21
+Dependencies: Flask, gmail_oauth_official, gmail_setup_guide, dashboard_api
+Related: gmail_oauth_official.py, email_content_builder.py, gmail_setup_guide.py
+Description: Provides REST API for OAuth status checks, credential setup, authorization
+             flow, callback handling, email sending with attachments, and setup guide
+             retrieval. Includes session-based authentication and comprehensive error
+             handling for Gmail integration.
 """
 
 import logging

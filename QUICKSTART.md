@@ -1,3 +1,12 @@
+---
+title: Quick Start Guide
+type: guide
+created: 2024-10-15
+modified: 2025-10-21
+status: current
+related: README.md, CLAUDE.md
+---
+
 # User Preferences Dashboard - Quick Start Guide
 
 **5-Minute Setup and Testing Guide**
