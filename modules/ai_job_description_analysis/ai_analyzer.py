@@ -1,9 +1,14 @@
 """
-AI Job Analysis Module using Google Gemini
-Handles skills extraction, job authenticity, and industry classification
-
-This module uses google-genai for AI analysis and requests for HTTP operations.
-Both are loaded on-demand to avoid unnecessary startup overhead.
+Module: ai_analyzer.py
+Purpose: Google Gemini AI integration for job description analysis
+Created: 2024-08-25
+Modified: 2025-10-21
+Dependencies: google-genai, requests, modules.security.security_patch
+Related: batch_analyzer.py, prompt_security_manager.py, ai_integration_routes.py
+Description: Core AI analyzer using Google Gemini for skills extraction, job
+             authenticity validation, and industry classification. Implements
+             on-demand dependency loading, security token injection, LLM injection
+             protection, usage tracking, and comprehensive error handling.
 """
 
 import os

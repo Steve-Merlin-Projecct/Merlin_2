@@ -1,29 +1,23 @@
 """
-Storage Factory Module
-
-This module provides a factory function for creating storage backend instances
-based on configuration. It implements the Factory design pattern to allow
-runtime selection of storage providers without changing application code.
-
-Features:
-- Environment-based backend selection
-- Singleton pattern for storage instances
-- Configuration validation
-- Fallback to local storage
-- Comprehensive logging
+Module: storage_factory.py
+Purpose: Factory pattern for runtime storage backend selection
+Created: 2024-09-10
+Modified: 2025-10-21
+Dependencies: modules.storage.storage_backend, modules.storage.local_storage
+Related: local_storage.py, google_drive_storage.py, storage_backend.py
+Description: Provides factory function for creating storage backend instances
+             based on configuration. Implements Factory pattern with singleton
+             instances, environment-based selection, configuration validation,
+             and fallback to local storage. Supports local filesystem, S3, GCS.
 
 Configuration:
     Set environment variables to control storage backend:
     - STORAGE_BACKEND: Type of storage ('local', 's3', 'gcs', etc.)
     - LOCAL_STORAGE_PATH: Path for local filesystem storage
 
-Usage Example:
+Usage:
     from modules.storage import get_storage_backend
-
-    # Get configured storage backend
     storage = get_storage_backend()
-
-    # Use storage (works regardless of backend type)
     storage.save('file.docx', b'content')
 """
 

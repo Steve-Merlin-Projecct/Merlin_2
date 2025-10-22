@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 """
-System Verification Script
-Tests all major components of the Automated Job Application System
+Module: test_system_verification.py
+Purpose: Comprehensive system verification for all major components
+Created: 2024-08-30
+Modified: 2025-10-21
+Dependencies: requests, sys, json, datetime
+Related: test_end_to_end_workflow.py, conftest.py, tests/
+Description: Tests all major system components: basic connectivity, health checks,
+             database operations, API endpoints, dashboard functionality, email
+             integration, scraping system, AI analysis, and document generation.
+             Provides comprehensive verification report with pass/fail status.
 """
 
 import os

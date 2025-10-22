@@ -1,23 +1,15 @@
 """
-Prompt Security Manager - Hash-and-Replace System with User/Agent Detection
-===========================================================================
-
-This module implements a hash-based security system for LLM prompts that:
-1. Tracks who made changes (user vs agent/system)
-2. Only protects prompt string sections (not entire files)
-3. Auto-replaces ONLY if agent/system modified it
-4. Updates hash if user intentionally changed it
-
-Security Features:
-- SHA-256 hashing of prompt string sections
-- User vs agent change detection
-- Automatic replacement ONLY for agent modifications
-- User modifications update the hash (intentional changes allowed)
-- Audit logging of all prompt changes with source attribution
-- Protection against prompt injection attacks
-
-Author: Automated Job Application System v4.3.2
-Created: 2025-10-12
+Module: prompt_security_manager.py
+Purpose: Hash-based security system for LLM prompts with user/agent detection
+Created: 2024-10-12
+Modified: 2025-10-21
+Dependencies: hashlib, json, pathlib
+Related: prompt_validation_systems.py, ai_analyzer.py, register_canonical_prompts.py
+Description: Implements SHA-256 hash-based validation of prompt string sections
+             with change source detection (user vs agent). Auto-replaces agent
+             modifications while allowing user changes. Protects against prompt
+             injection, unintentional automation bugs, and agent modifications.
+             Includes audit logging and canonical prompt replacement.
 """
 
 import hashlib

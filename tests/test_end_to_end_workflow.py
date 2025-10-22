@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """
-End-to-End Workflow Testing for Automated Job Application System
-
-This script tests the complete workflow from job discovery through 
-application submission to verify all system components work together.
-
-Version: 2.16.5
-Date: July 28, 2025
+Module: test_end_to_end_workflow.py
+Purpose: End-to-end integration testing for complete application workflow
+Created: 2024-07-28
+Modified: 2025-10-21
+Dependencies: requests, modules.workflow, modules.database
+Related: test_system_verification.py, conftest.py, modules/workflow/
+Description: Tests complete workflow from job discovery through application submission:
+             dashboard authentication, job scraping, AI analysis, preference matching,
+             document generation, email sending, and status tracking. Verifies all system
+             components work together with comprehensive logging and test result tracking.
 """
 
 import os

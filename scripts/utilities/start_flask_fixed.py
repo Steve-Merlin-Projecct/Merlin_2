@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """
-Start Flask with proper database configuration for Docker environment
+Module: start_flask_fixed.py
+Purpose: Start Flask application with Docker-specific database configuration
+Created: 2024-09-18
+Modified: 2025-10-21
+Dependencies: app_modular, Flask
+Related: app_modular.py, main.py, docker-compose.yml
+Description: Configures environment variables for Docker container database
+             connectivity (host.docker.internal) and starts Flask on port 5001
+             to avoid macOS AirPlay conflicts. Sets debug mode and development keys.
+
+Usage:
+    python start_flask_fixed.py
 """
 
 import os

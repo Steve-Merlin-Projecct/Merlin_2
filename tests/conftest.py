@@ -1,8 +1,14 @@
 """
-Test configuration and shared fixtures for resilience system tests
-
-Provides common test fixtures for timeout manager, circuit breaker,
-error classifier, and mock dependencies.
+Module: conftest.py
+Purpose: Pytest configuration and shared fixtures for test suite
+Created: 2024-08-29
+Modified: 2025-10-21
+Dependencies: pytest, unittest.mock, modules.resilience
+Related: test_end_to_end_workflow.py, test_system_verification.py, tests/
+Description: Provides common test fixtures for resilience components (timeout manager,
+             circuit breaker, error classifier), mock dependencies, test configuration,
+             and project path setup. Handles conditional imports with availability flags
+             for resilience modules.
 """
 
 import pytest

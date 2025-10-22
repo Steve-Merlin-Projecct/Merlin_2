@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Debug 403 Forbidden Error for Dashboard Access
-Comprehensive environment and Flask app diagnostics
+Module: debug_403_issue.py
+Purpose: Debug 403 Forbidden errors for dashboard access
+Created: 2024-10-10
+Modified: 2025-10-21
+Dependencies: requests
+Related: modules/dashboard_api.py, docs/troubleshooting/DASHBOARD_ACCESS_FIXED.md
+Description: Comprehensive environment and Flask app diagnostics for debugging
+             403 errors. Checks authentication, network config, and permissions.
 """
 
 import os

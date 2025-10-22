@@ -1,3 +1,16 @@
+"""
+Module: database_manager.py
+Purpose: Unified database interface combining read and write operations
+Created: 2024-08-18
+Modified: 2025-10-21
+Dependencies: database_client, database_reader, database_writer
+Related: lazy_instances.py, database_api.py, database_client.py
+Description: Provides single interface for all database operations by combining
+             DatabaseReader and DatabaseWriter functionality. Handles table
+             initialization, connection testing, and default settings. For lazy
+             initialization, use lazy_instances.get_database_manager() instead.
+"""
+
 import logging
 from .database_client import DatabaseClient
 from .database_reader import DatabaseReader
