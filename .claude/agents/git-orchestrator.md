@@ -1,7 +1,7 @@
 ---
 name: git-orchestrator
 description: Autonomous git operations manager for development workflows. Handles checkpoints, section commits, and version control automation. Invoked explicitly by primary agent at task boundaries with context summary. Performs full validation (tests, schema, docs), error recovery, and structured response generation.
-model: haiku
+model: sonnet
 color: green
 tools: Bash, Read, Grep, Glob
 ---

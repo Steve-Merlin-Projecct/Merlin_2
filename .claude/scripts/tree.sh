@@ -128,22 +128,52 @@ log_git_operation() {
 }
 
 # Safe git wrapper with flock-based mutex for concurrent operation protection
+# Supports error capture and verbose mode via TREE_VERBOSE environment variable
 safe_git() {
     local git_cmd="$@"
     local operation_desc="${git_cmd%% *}"  # First word of command
+    local verbose="${TREE_VERBOSE:-false}"
 
     # Check if flock is available
     if ! command -v flock &> /dev/null; then
         print_warning "flock not available, falling back to wait_for_git_lock"
         wait_for_git_lock || return 1
-        git $git_cmd
+
+        # Run with or without output based on verbose mode
+        if [ "$verbose" = "true" ]; then
+            git $git_cmd
+        else
+            local git_output
+            git_output=$(git $git_cmd 2>&1)
+            local exit_code=$?
+
+            # Show errors even in non-verbose mode
+            if [ $exit_code -ne 0 ]; then
+                echo "$git_output" >&2
+            fi
+
+            return $exit_code
+        fi
         return $?
     fi
 
     # Create lock file if it doesn't exist
     touch "$GIT_OPERATION_LOCK" 2>/dev/null || {
         print_warning "Cannot create lock file, falling back to direct git"
-        git $git_cmd
+
+        if [ "$verbose" = "true" ]; then
+            git $git_cmd
+        else
+            local git_output
+            git_output=$(git $git_cmd 2>&1)
+            local exit_code=$?
+
+            if [ $exit_code -ne 0 ]; then
+                echo "$git_output" >&2
+            fi
+
+            return $exit_code
+        fi
         return $?
     }
 
@@ -159,9 +189,22 @@ safe_git() {
 
         log_git_operation "Lock acquired for: git $operation_desc"
 
-        # Run the git command
-        git $git_cmd
-        local exit_code=$?
+        # Run the git command with appropriate output handling
+        if [ "$verbose" = "true" ]; then
+            # Verbose mode: show all output
+            git $git_cmd
+            local exit_code=$?
+        else
+            # Normal mode: capture output, show only on error
+            local git_output
+            git_output=$(git $git_cmd 2>&1)
+            local exit_code=$?
+
+            # Display error output if command failed
+            if [ $exit_code -ne 0 ]; then
+                echo "$git_output" >&2
+            fi
+        fi
 
         log_git_operation "Lock released for: git $operation_desc (exit: $exit_code)"
 
@@ -1317,6 +1360,222 @@ tree_clear() {
 # Helper Functions for Worktree Build
 #==============================================================================
 
+#==============================================================================
+# Error Prevention Functions
+#==============================================================================
+
+# Validate that a path is safe to cleanup (prevent accidental data loss)
+validate_cleanup_safe() {
+    local target_path=$1
+
+    # Must be within .trees directory
+    if [[ "$target_path" != "$TREES_DIR"/* ]]; then
+        print_error "Refusing to cleanup path outside .trees/: $target_path"
+        return 1
+    fi
+
+    # Must not be a special directory
+    local basename=$(basename "$target_path")
+    if [[ "$basename" == .completed ]] || [[ "$basename" == .incomplete ]] || \
+       [[ "$basename" == .archived ]] || [[ "$basename" == .conflict-backup ]]; then
+        print_error "Refusing to cleanup special directory: $basename"
+        return 1
+    fi
+
+    # Check for uncommitted changes if it's a git worktree
+    if [ -d "$target_path" ] && ([ -f "$target_path/.git" ] || [ -d "$target_path/.git" ]); then
+        if ! (cd "$target_path" && git diff-index --quiet HEAD -- 2>/dev/null); then
+            print_warning "Path has uncommitted changes: $target_path"
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+# Validate and cleanup a worktree path before creation
+# Returns 0 if path is ready, 1 if blocked
+validate_and_cleanup_worktree_path() {
+    local worktree_path=$1
+    local branch=$2
+
+    # Check if path exists
+    if [ -e "$worktree_path" ]; then
+        print_warning "  Path already exists: $worktree_path"
+
+        # Check if it's a valid worktree registered with git
+        if git worktree list --porcelain 2>/dev/null | grep -q "^worktree $worktree_path$"; then
+            print_error "  Worktree already registered at this path"
+            print_info "  Run: git worktree remove $worktree_path"
+            return 1
+        fi
+
+        # It's an orphaned/corrupted directory - validate cleanup is safe
+        if ! validate_cleanup_safe "$worktree_path"; then
+            print_error "  Cannot safely cleanup path (has uncommitted work or outside .trees/)"
+            return 1
+        fi
+
+        # Safe to remove - it's an orphaned directory
+        print_warning "  Removing orphaned directory..."
+        rm -rf "$worktree_path"
+        print_success "  Orphaned directory removed"
+    fi
+
+    # Check if branch already exists
+    if git rev-parse --verify "$branch" &>/dev/null; then
+        print_warning "  Branch already exists: $branch"
+
+        # Check if it's orphaned (no worktree associated)
+        if ! git worktree list 2>/dev/null | grep -q "$branch"; then
+            print_warning "  Orphaned branch detected - deleting..."
+            if git branch -D "$branch" &>/dev/null; then
+                print_success "  Orphaned branch removed"
+            else
+                print_error "  Failed to remove orphaned branch"
+                return 1
+            fi
+        else
+            print_error "  Branch in use by another worktree"
+            local worktree_using=$(git worktree list | grep "$branch" | awk '{print $1}')
+            print_info "  Used by: $worktree_using"
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+# Cleanup orphaned worktree artifacts at build start
+cleanup_orphaned_worktrees() {
+    print_info "Checking for orphaned worktree artifacts..."
+
+    local cleanup_count=0
+    local skip_count=0
+
+    # Find directories in .trees/ that aren't registered worktrees
+    if [ -d "$TREES_DIR" ]; then
+        for dir in "$TREES_DIR"/*; do
+            [ -d "$dir" ] || continue
+            local basename=$(basename "$dir")
+
+            # Skip special directories
+            [[ "$basename" == .* ]] && continue
+
+            # Check if this is a registered worktree
+            if ! git worktree list 2>/dev/null | grep -q "$basename"; then
+                # Not registered - it's orphaned
+                print_warning "  Found orphaned directory: $basename"
+
+                # Validate cleanup is safe
+                if validate_cleanup_safe "$dir"; then
+                    rm -rf "$dir"
+                    print_success "  Removed orphaned directory: $basename"
+                    cleanup_count=$((cleanup_count + 1))
+                else
+                    print_warning "  Skipped (has uncommitted changes): $basename"
+                    skip_count=$((skip_count + 1))
+                fi
+            fi
+        done
+    fi
+
+    if [ $cleanup_count -gt 0 ]; then
+        print_success "Cleaned up $cleanup_count orphaned director(y/ies)"
+    fi
+
+    if [ $skip_count -gt 0 ]; then
+        print_warning "Skipped $skip_count director(y/ies) with uncommitted changes"
+        echo "  Review manually or commit/stash changes"
+    fi
+
+    if [ $cleanup_count -eq 0 ] && [ $skip_count -eq 0 ]; then
+        print_success "No orphaned artifacts found"
+    fi
+}
+
+# Check for stale git locks and cleanup if safe
+check_git_locks() {
+    local locks_found=false
+    local locks_removed=false
+
+    # Check for index.lock
+    local index_lock="$WORKSPACE_ROOT/.git/index.lock"
+    if [ -f "$index_lock" ]; then
+        print_warning "Found git index.lock"
+
+        if is_lock_stale "$index_lock"; then
+            rm -f "$index_lock" 2>/dev/null && {
+                print_success "Removed stale index.lock"
+                locks_removed=true
+            } || {
+                print_error "Failed to remove index.lock (check permissions)"
+                return 1
+            }
+        else
+            print_error "Git operation in progress (index.lock is active)"
+            print_info "Wait for operation to complete or remove manually: rm $index_lock"
+            return 1
+        fi
+    fi
+
+    # Check for worktree locks in .git/worktrees/*/locked
+    if [ -d "$WORKSPACE_ROOT/.git/worktrees" ]; then
+        for lock in "$WORKSPACE_ROOT/.git/worktrees"/*/locked; do
+            if [ -f "$lock" ]; then
+                local wt_name=$(basename $(dirname "$lock"))
+                print_warning "Found locked worktree: $wt_name"
+                locks_found=true
+            fi
+        done
+    fi
+
+    if [ "$locks_found" = true ]; then
+        print_warning "Locked worktrees detected - run 'git worktree prune' to clean up"
+    fi
+
+    if [ "$locks_removed" = false ] && [ "$locks_found" = false ]; then
+        print_success "No stale locks detected"
+    fi
+
+    return 0
+}
+
+# Rollback partially created worktrees on build failure
+rollback_build() {
+    local created_worktrees=("$@")
+
+    if [ ${#created_worktrees[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    print_warning "Rolling back ${#created_worktrees[@]} partially created worktree(s)..."
+
+    local rollback_count=0
+    for worktree_info in "${created_worktrees[@]}"; do
+        local worktree_path="${worktree_info%%|||*}"
+        local branch="${worktree_info#*|||}"
+
+        # Remove worktree
+        if git worktree remove "$worktree_path" --force &>/dev/null; then
+            print_success "  Removed worktree: $(basename "$worktree_path")"
+        elif [ -d "$worktree_path" ]; then
+            # Worktree not registered, remove directory
+            rm -rf "$worktree_path"
+            print_success "  Removed directory: $(basename "$worktree_path")"
+        fi
+
+        # Delete branch
+        if git branch -D "$branch" &>/dev/null; then
+            print_success "  Deleted branch: $branch"
+        fi
+
+        rollback_count=$((rollback_count + 1))
+    done
+
+    print_success "Rollback complete: $rollback_count worktree(s) cleaned up"
+}
+
 # Copy slash commands and scripts to worktree
 copy_slash_commands_to_worktree() {
     local worktree_path=$1
@@ -1533,15 +1792,22 @@ EOF
 tree_build() {
     # Parse options
     local confirm_mode=false
+    local verbose_mode="${TREE_VERBOSE:-false}"
+
     while [[ $# -gt 0 ]]; do
         case $1 in
             --confirm)
                 confirm_mode=true
                 shift
                 ;;
+            --verbose|-v)
+                export TREE_VERBOSE=true
+                verbose_mode=true
+                shift
+                ;;
             *)
                 print_error "Unknown option: $1"
-                echo "Usage: /tree build [--confirm]"
+                echo "Usage: /tree build [--confirm] [--verbose]"
                 return 1
                 ;;
         esac
@@ -1567,6 +1833,40 @@ tree_build() {
 
     print_header "🚀 Building ${#features[@]} Worktree(s)"
 
+    if [ "$verbose_mode" = "true" ]; then
+        print_info "Verbose mode enabled"
+        echo ""
+    fi
+
+    # PRE-FLIGHT VALIDATION
+    echo "═══════════════════════════════════════════════════════════"
+    echo "PRE-FLIGHT CHECKS"
+    echo "═══════════════════════════════════════════════════════════"
+    echo ""
+
+    # Check for stale locks
+    if ! check_git_locks; then
+        print_error "Pre-flight check failed: git locks detected"
+        return 1
+    fi
+    echo ""
+
+    # Prune stale worktree references
+    print_info "Pruning stale worktree references..."
+    if git worktree prune -v 2>&1 | grep -q "Removing"; then
+        print_success "Pruned stale worktree references"
+    else
+        print_success "No stale references to prune"
+    fi
+    echo ""
+
+    # Cleanup orphaned directories
+    cleanup_orphaned_worktrees
+    echo ""
+
+    echo "═══════════════════════════════════════════════════════════"
+    echo ""
+
     # Get current version and timestamp
     local version=$(cat /workspace/VERSION 2>/dev/null || echo "0.0.0")
     local timestamp=$(date +%Y%m%d-%H%M%S)
@@ -1582,14 +1882,22 @@ tree_build() {
     echo "Development Branch: $dev_branch"
     echo ""
 
-    # Create development branch if not exists
+    # Create development branch (idempotent)
     if ! git rev-parse --verify "$dev_branch" &>/dev/null; then
         wait_for_git_lock || return 1
-        safe_git checkout -b "$dev_branch" &>/dev/null
-        print_success "Created development branch: $dev_branch"
+        if safe_git checkout -b "$dev_branch" 2>&1 | grep -q "already exists"; then
+            print_info "Development branch already exists: $dev_branch (reusing)"
+            safe_git checkout "$dev_branch" &>/dev/null
+        else
+            print_success "Created development branch: $dev_branch"
+        fi
+    else
+        print_info "Development branch already exists: $dev_branch (reusing)"
+        safe_git checkout "$dev_branch" &>/dev/null
     fi
 
-    # Create each worktree
+    # Track created worktrees for rollback on failure
+    local created_worktrees=()
     local success_count=0
     local failed_count=0
     local build_start=$(date +%s)
@@ -1606,13 +1914,51 @@ tree_build() {
 
         echo "[$num/${#features[@]}] Creating: $name"
 
-        # Create worktree with new branch in one command
-        wait_for_git_lock || continue
-        if ! safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" &>/dev/null; then
-            print_error "  ✗ Failed to create worktree with branch: $branch"
+        # Pre-flight validation for this worktree
+        if ! validate_and_cleanup_worktree_path "$worktree_path" "$branch"; then
+            print_error "  ✗ Pre-flight validation failed"
             failed_count=$((failed_count + 1))
-            continue
+
+            # Rollback all created worktrees on failure
+            if [ ${#created_worktrees[@]} -gt 0 ]; then
+                echo ""
+                rollback_build "${created_worktrees[@]}"
+            fi
+            return 1
         fi
+
+        # Create worktree with new branch in one command
+        wait_for_git_lock || {
+            print_error "  ✗ Failed to acquire git lock"
+            failed_count=$((failed_count + 1))
+
+            # Rollback on failure
+            if [ ${#created_worktrees[@]} -gt 0 ]; then
+                echo ""
+                rollback_build "${created_worktrees[@]}"
+            fi
+            return 1
+        }
+
+        # Execute git worktree add (error output now shown via safe_git)
+        local git_output
+        if ! git_output=$(safe_git worktree add -b "$branch" "$worktree_path" "$dev_branch" 2>&1); then
+            print_error "  ✗ Failed to create worktree: $branch"
+            if [ -n "$git_output" ] && [ "$verbose_mode" != "true" ]; then
+                echo "     Git error: $git_output"
+            fi
+            failed_count=$((failed_count + 1))
+
+            # Rollback on failure
+            if [ ${#created_worktrees[@]} -gt 0 ]; then
+                echo ""
+                rollback_build "${created_worktrees[@]}"
+            fi
+            return 1
+        fi
+
+        # Track successful creation for potential rollback
+        created_worktrees+=("$worktree_path|||$branch")
 
         # Generate scope manifest for this worktree (before PURPOSE.md so we can reference it)
         local scope_manifest=$(detect_scope_from_description "$desc" "$name")
@@ -2395,13 +2741,17 @@ Available commands:
   clear                  - Clear all staged features ✅
   conflict               - Analyze conflicts and suggest merges ✅
   scope-conflicts        - Detect scope conflicts across worktrees ✅
-  build                  - Create worktrees from staged features (auto-launches Claude) ✅
+  build [options]        - Create worktrees from staged features (auto-launches Claude) ✅
   restore                - Restore terminals for existing worktrees ✅
   close [incomplete]     - Complete work and generate synopsis ✅
   closedone              - Batch merge and cleanup completed worktrees ✅
   status                 - Show worktree environment status ✅
   refresh                - Check slash command availability & session guidance ✅
   help                   - Show this help ✅
+
+/tree build options:
+  --verbose, -v          Show detailed git command output
+  --confirm              Prompt before each worktree creation
 
 /tree close usage:
   /tree close              Complete feature and mark ready to merge
@@ -2412,18 +2762,29 @@ Available commands:
 
 Options:
   --yes, -y              Skip confirmation prompts
-  --force                Merge all worktrees even if not closed (NEW)
-  --full-cycle           Complete entire development cycle (NEW)
+  --force                Merge all worktrees even if not closed
+  --full-cycle           Complete entire development cycle
   --bump [type]          Version bump type: patch|minor|major (default: patch)
 
 ⚠️  Important: /tree closedone now requires all worktrees to be closed with
    '/tree close' before merging. Use --force to bypass this check.
 
+🛡️  Error Prevention Features (NEW):
+   • Pre-flight validation detects and cleans orphaned directories
+   • Automatic git worktree prune on build start
+   • Stale lock detection and removal
+   • Atomic rollback on build failures
+   • Idempotent operations (safe to retry)
+   • Enhanced error messages with git output
+
+Environment Variables:
+  TREE_VERBOSE=true      Enable verbose mode globally (same as --verbose)
+
 Typical Workflow:
   1. /tree stage [description]  # Stage multiple features
   2. /tree list                 # Review staged features
   3. /tree conflict             # Analyze conflicts (optional)
-  4. /tree build                # Create all worktrees
+  4. /tree build                # Create all worktrees (with auto-cleanup)
   5. [work in worktrees]        # Implement features
   6. /tree close                # Complete work (or 'close incomplete')
   7. /tree closedone            # Merge all completed worktrees
@@ -2434,13 +2795,21 @@ Examples:
   /tree stage Dashboard analytics view
   /tree list
   /tree conflict
-  /tree build
+  /tree build                    # Standard build with auto-cleanup
+  /tree build --verbose          # Show all git commands
+  TREE_VERBOSE=true /tree build  # Same as --verbose
   # ... work in worktrees ...
   /tree close                    # Feature complete
   /tree close incomplete         # Need more work later
   /tree closedone                # Merge completed only
   /tree closedone --full-cycle   # Full cycle: merge → main → version bump → new cycle
   /tree status                   # Check environment status
+
+Troubleshooting:
+  • Build fails with "path exists": Run '/tree build' again (auto-cleanup)
+  • Build fails with "branch exists": Run '/tree build' again (auto-cleanup)
+  • Build fails with stale lock: Run '/tree build' again (auto-removed)
+  • See detailed errors: Use '/tree build --verbose'
 
 For full documentation, see: tasks/prd-tree-slash-command.md
 EOF
