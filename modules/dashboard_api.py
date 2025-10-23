@@ -28,17 +28,14 @@ dashboard_api = Blueprint("dashboard_api", __name__)
 def require_dashboard_auth(f):
     """
     Decorator to require dashboard authentication for API endpoints
+
+    Security: Authentication is always required regardless of debug mode.
+    This prevents unauthorized access to sensitive dashboard data.
     """
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Auto-authenticate in debug/development mode
-        from flask import current_app
-        if current_app.debug and not session.get("authenticated"):
-            session['authenticated'] = True
-            session['auth_time'] = datetime.now().timestamp()
-            logging.info("Auto-authenticated in debug mode (API endpoint)")
-
+        # Always require authentication - no auto-auth bypass
         if not session.get("authenticated"):
             return jsonify({"error": "Authentication required"}), 401
         return f(*args, **kwargs)
