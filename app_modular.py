@@ -110,6 +110,11 @@ metrics_collector = MetricsCollector(retention_hours=24)
 # Store metrics collector in app context for monitoring API
 app.metrics_collector = metrics_collector
 
+# Initialize rate limiter for API protection
+# This applies endpoint-specific rate limits from rate_limit_config.py
+rate_limiter = init_rate_limiter(app)
+logger.info("Rate limiter initialized with endpoint-specific limits")
+
 # Add observability middleware for automatic request tracing and metrics
 ObservabilityMiddleware(
     app,
@@ -432,20 +437,28 @@ def dashboard_schema():
 
 @app.route('/dashboard/authenticate', methods=['POST'])
 def dashboard_authenticate():
-    """Handle dashboard authentication"""
+    """
+    Handle dashboard authentication with rate limiting
+
+    Security: Limited to 5 requests per minute to prevent brute force attacks
+    Rate limiting is configured in modules/security/rate_limit_config.py
+    """
     import hashlib
-    
+    from flask_limiter.util import get_remote_address
+
     password = request.json.get('password', '')
     expected_hash = '008b6a04a1580494b58c1241e0b56ea683360c64f102160c17fbb8b013c07d8a'
-    
+
     # Hash the provided password with salt
     password_hash = hashlib.sha256((password + 'steve-salt-2025').encode()).hexdigest()
-    
+
     if password_hash == expected_hash:
         session['authenticated'] = True
         session['auth_time'] = datetime.now().timestamp()
+        logger.info(f"Successful authentication from {get_remote_address()}")
         return jsonify({'success': True, 'message': 'Authentication successful'})
     else:
+        logger.warning(f"Failed authentication attempt from {get_remote_address()}")
         return jsonify({'success': False, 'message': 'Invalid password'}), 401
 
 @app.route('/test-access')
