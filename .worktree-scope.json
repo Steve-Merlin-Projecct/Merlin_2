@@ -1,11 +1,11 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "work-estimates-should-be-performed-in-tokens-not-t",
+  "description": "||work estimates should be performed in tokens, not time for future development instructions to agent",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/work_estimates_should_be_performed_in_tokens_not_t/** tests/test_work_estimates_should_be_performed_in_tokens_not_t*.py",
+      "tests/test_*work_estimates_should_be_performed_in_tokens_not_t*.py",
+      "docs/*work-estimates-should-be-performed-in-tokens-not-t*.md"
 
     ],
     "exclude": [
@@ -16,6 +16,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:11+00:00",
   "out_of_scope_policy": "warn"
 }
