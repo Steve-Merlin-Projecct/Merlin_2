@@ -1,11 +1,11 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "verify-production-security-changes",
+  "description": "||verify production security changes",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/verify_production_security_changes/** tests/test_verify_production_security_changes*.py",
+      "tests/test_*verify_production_security_changes*.py",
+      "docs/*verify-production-security-changes*.md"
 
     ],
     "exclude": [
@@ -16,6 +16,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:28+00:00",
   "out_of_scope_policy": "warn"
 }
