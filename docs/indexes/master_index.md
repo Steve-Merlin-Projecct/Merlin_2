@@ -1,3 +1,11 @@
+---
+title: "Master Index"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Master Documentation Index
 
 **Last Updated**: 2025-08-07  

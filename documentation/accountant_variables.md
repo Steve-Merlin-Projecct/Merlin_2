@@ -1,3 +1,11 @@
+---
+title: "Accountant Variables"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Accountant Template Variables
 
 ## Complete Variable List

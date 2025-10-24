@@ -1,3 +1,11 @@
+---
+title: "Readme Rate Limiting"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # API Rate Limiting & Request Throttling System
 
 **Implementation Complete: 85%**

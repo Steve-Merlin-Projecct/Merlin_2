@@ -1,3 +1,11 @@
+---
+title: "Investigation Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Investigation Report: Repeated "Dashboard is Live" Notifications
 
 **Issue:** VS Code repeatedly shows "dashboard is live" notifications during development

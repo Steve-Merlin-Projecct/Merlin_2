@@ -1,3 +1,11 @@
+---
+title: "Git Orchestrator Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Git Orchestrator User Guide
 **Version:** 1.0
 **Date:** October 9, 2025

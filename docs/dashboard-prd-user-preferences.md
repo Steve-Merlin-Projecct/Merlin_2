@@ -1,3 +1,11 @@
+---
+title: "Dashboard Prd User Preferences"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # Product Requirements Document: User Preferences Dashboard
 
 **Version:** 1.0.0

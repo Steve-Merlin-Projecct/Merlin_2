@@ -1,3 +1,11 @@
+---
+title: "Readme Dashboard V2"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Complete Redesign 🚀
 
 > **Beautiful, fast, modern dashboard for the job application system**

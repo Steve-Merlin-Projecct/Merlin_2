@@ -1,3 +1,11 @@
+---
+title: "Single Branch Worktree Strategy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Single Branch Worktree Strategy
 
 **Development Branch:** `develop/v4.2.0`

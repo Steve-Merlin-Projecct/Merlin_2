@@ -1,3 +1,11 @@
+---
+title: "Email Refinement Prd"
+type: technical_doc
+component: email
+status: draft
+tags: []
+---
+
 # Email Refinement - Product Requirements Document (PRD)
 **Version:** 1.0 (Draft)
 **Branch:** task/11-email

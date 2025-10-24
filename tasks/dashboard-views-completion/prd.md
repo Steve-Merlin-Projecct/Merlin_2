@@ -1,3 +1,11 @@
+---
+title: "Prd"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Complete Dashboard Views (Applications, Analytics, Schema)
 
 ## Overview

@@ -1,3 +1,11 @@
+---
+title: "Dependency Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Feature Dependency Analysis
 
 **Date:** October 8, 2025

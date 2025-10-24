@@ -1,3 +1,11 @@
+---
+title: "Job Title  Marketing Automation Manager"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 ## **Job Title: Marketing Automation Manager**
 
 ### **Department: Marketing / Growth / Digital Strategy**

@@ -1,3 +1,11 @@
+---
+title: "Migration Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Replit to Claude Code Migration - Summary
 
 **Date**: October 6, 2025

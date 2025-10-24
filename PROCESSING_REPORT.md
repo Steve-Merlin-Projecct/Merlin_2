@@ -1,3 +1,11 @@
+---
+title: "Processing Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Seed Sentence Processing Pipeline - Comprehensive Report
 
 **Date:** October 21, 2025

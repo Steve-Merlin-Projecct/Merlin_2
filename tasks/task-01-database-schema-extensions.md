@@ -1,3 +1,11 @@
+---
+title: "Task 01 Database Schema Extensions"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Task 01: Database Schema Extensions for Link Analytics
 
 **Status:** Ready to Start

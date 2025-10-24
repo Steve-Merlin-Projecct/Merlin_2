@@ -1,3 +1,11 @@
+---
+title: "Tasklist"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: Search & Filters Implementation
 
 ## Parent Task 1: Backend - Jobs Search Enhancement ✅

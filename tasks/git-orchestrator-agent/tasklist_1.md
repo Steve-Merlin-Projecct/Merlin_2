@@ -1,3 +1,11 @@
+---
+title: "Tasklist 1"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tasks: Git Orchestrator Agent Implementation
 
 **PRD:** ./prd.md

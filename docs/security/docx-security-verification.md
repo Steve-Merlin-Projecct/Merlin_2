@@ -1,3 +1,11 @@
+---
+title: "Docx Security Verification"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # DOCX Security Verification System
 
 **Version:** 1.0.0

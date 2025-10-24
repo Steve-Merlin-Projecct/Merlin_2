@@ -1,3 +1,11 @@
+---
+title: "Pull Request Template"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 ## Changes
 <!-- Describe what changed and why -->
 

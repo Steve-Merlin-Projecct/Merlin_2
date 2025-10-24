@@ -1,3 +1,11 @@
+---
+title: "Email Address Decision Guide"
+type: guide
+component: email
+status: draft
+tags: []
+---
+
 # Email Address Decision Guide
 **Branch:** task/11-email
 **Date:** October 9, 2025

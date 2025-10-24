@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Librarian Tools
 
 **Purpose:** Validation scripts and automation tools for documentation management

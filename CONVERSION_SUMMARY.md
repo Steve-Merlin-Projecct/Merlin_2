@@ -1,3 +1,11 @@
+---
+title: "Conversion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Template Conversion Summary
 
 **Date Completed:** 2025-10-22

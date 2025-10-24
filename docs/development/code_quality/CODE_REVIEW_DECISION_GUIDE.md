@@ -1,3 +1,11 @@
+---
+title: "Code Review Decision Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Code Review Decision-Making Guide
 
 ## Purpose

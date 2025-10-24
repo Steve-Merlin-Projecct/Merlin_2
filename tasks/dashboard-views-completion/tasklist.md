@@ -1,3 +1,11 @@
+---
+title: "Tasklist"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: Complete Dashboard Views
 
 ## Parent Task 1: Applications View Backend ✅

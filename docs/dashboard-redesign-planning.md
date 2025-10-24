@@ -1,3 +1,11 @@
+---
+title: "Dashboard Redesign Planning"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Redesign - Planning Document
 **Date**: October 9, 2025
 **Branch**: task/07-dashboard

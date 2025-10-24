@@ -1,3 +1,11 @@
+---
+title: "Brand Strategist General Job Description "
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # **What a Brand Strategist Is (and isn’t)**
 
 * **Is:** The person who decides *what the brand must stand for* to win profitably, then architects how that meaning shows up in product, pricing, comms, design, and behavior. They align execs, brief creatives, and set the measurement model.

@@ -1,3 +1,11 @@
+---
+title: "Testing Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Testing Summary - Script Testing Branch
 
 **Date:** October 9, 2025

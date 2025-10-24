@@ -1,3 +1,11 @@
+---
+title: "Dashboard Startup Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Startup Guide
 
 Version: 4.3.2

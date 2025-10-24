@@ -1,3 +1,11 @@
+---
+title: "Terminal Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Terminal Setup for v4.2.0 Worktrees
 
 ## Quick Start

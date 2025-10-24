@@ -1,3 +1,11 @@
+---
+title: "503 Retry Implementation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # 503 Retry Logic with Model Fallback - Implementation
 
 **Date:** 2025-10-17

@@ -1,3 +1,11 @@
+---
+title: "Communications Specialist General Job Description"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # **What a strong Communications Specialist *must* be good at**
 
 1. **Message architecture & positioning**  

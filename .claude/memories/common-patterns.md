@@ -1,3 +1,11 @@
+---
+title: "Common Patterns"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Common Code Patterns Memory
 
 ## Code Style Standards

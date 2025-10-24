@@ -1,3 +1,11 @@
+---
+title: "Fixes Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Template Fixes Summary
 
 ## Issues Identified and Resolved

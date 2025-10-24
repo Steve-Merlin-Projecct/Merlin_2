@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Maintenance
 
 This directory contains documentation lifecycle management processes, ownership information, and maintenance schedules.

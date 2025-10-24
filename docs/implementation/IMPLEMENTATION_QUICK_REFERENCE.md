@@ -1,3 +1,11 @@
+---
+title: "Implementation Quick Reference"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Implementation - Quick Reference
 
 **Total Time:** 35-40 hours | **Priority Phases:** 1, 2, 7, 8

@@ -1,3 +1,11 @@
+---
+title: "File Organization Standards"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # File Organization Standards
 
 **Purpose:** Define clear standards for file placement, naming, and organization across the project

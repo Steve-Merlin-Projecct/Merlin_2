@@ -1,3 +1,11 @@
+---
+title: "Agent Activity Log"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Agent Activity Log
 
 **Purpose:** Track primary agent activities to identify opportunities for specialized sub-agent creation.

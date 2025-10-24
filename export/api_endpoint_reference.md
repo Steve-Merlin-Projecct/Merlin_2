@@ -1,3 +1,11 @@
+---
+title: "Api Endpoint Reference"
+type: api_spec
+component: general
+status: draft
+tags: []
+---
+
 # Link Tracking API Endpoint Reference
 
 **Version**: 2.16.5  

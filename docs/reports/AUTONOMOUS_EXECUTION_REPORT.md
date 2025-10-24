@@ -1,3 +1,11 @@
+---
+title: "Autonomous Execution Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Enhancements - Autonomous Execution Report
 
 **Execution Mode:** Autonomous `/task go` Workflow

@@ -1,3 +1,11 @@
+---
+title: "Gemini Optimization Implementation Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Gemini Optimization Implementation Guide
 **Version:** 1.0
 **Date:** 2025-10-12

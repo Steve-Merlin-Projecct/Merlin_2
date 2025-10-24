@@ -1,3 +1,11 @@
+---
+title: "System Requirements"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # System Requirements & Capabilities
 
 **Version**: 2.16.5  

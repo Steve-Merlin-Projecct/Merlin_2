@@ -1,3 +1,11 @@
+---
+title: "Readme Workflows"
+type: process
+component: general
+status: draft
+tags: []
+---
+
 # /task Command - Workflows & Templates
 
 Complete guide to the enhanced `/task` command system with workflows and templates.

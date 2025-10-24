@@ -1,3 +1,11 @@
+---
+title: "Quick Start Testing"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Testing - Quick Start Guide
 
 **Quick reference for running dashboard tests**

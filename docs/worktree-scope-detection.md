@@ -1,3 +1,11 @@
+---
+title: "Worktree Scope Detection"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Scope Detection System
 
 **Version:** 1.0

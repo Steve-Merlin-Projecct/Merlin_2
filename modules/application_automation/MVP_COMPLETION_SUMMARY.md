@@ -1,3 +1,11 @@
+---
+title: "Mvp Completion Summary"
+type: technical_doc
+component: application_automation
+status: draft
+tags: []
+---
+
 # MVP Completion Summary
 ## Application Automation Module - Indeed Form Filling
 

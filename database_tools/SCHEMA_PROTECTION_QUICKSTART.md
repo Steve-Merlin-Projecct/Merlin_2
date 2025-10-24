@@ -1,3 +1,11 @@
+---
+title: "Schema Protection Quickstart"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Database Schema Protection - Quick Start
 
 ## ✅ What's Implemented

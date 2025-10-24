@@ -1,3 +1,11 @@
+---
+title: "Worktree Template"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Worktree Template
 
 ## Configuration

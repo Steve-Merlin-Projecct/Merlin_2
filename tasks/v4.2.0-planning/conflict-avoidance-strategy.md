@@ -1,3 +1,11 @@
+---
+title: "Conflict Avoidance Strategy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Conflict Avoidance & Merge Strategy
 
 **Version:** 4.2.0

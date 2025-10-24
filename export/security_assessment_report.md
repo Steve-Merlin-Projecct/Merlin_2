@@ -1,3 +1,11 @@
+---
+title: "Security Assessment Report"
+type: status_report
+component: security
+status: draft
+tags: []
+---
+
 # End-to-End Security Assessment Report
 
 **System**: Automated Job Application System  

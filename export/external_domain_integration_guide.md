@@ -1,3 +1,11 @@
+---
+title: "External Domain Integration Guide"
+type: guide
+component: integration
+status: draft
+tags: []
+---
+
 # External Domain Link Tracking Integration Guide
 
 **Version**: 2.16.5  

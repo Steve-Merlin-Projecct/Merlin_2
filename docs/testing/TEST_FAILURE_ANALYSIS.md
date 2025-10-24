@@ -1,3 +1,11 @@
+---
+title: "Test Failure Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Test Failure Analysis - Gemini Prompt Optimization
 **Worktree:** gemini-prompt-optimization---reduce-costs-30-40-im
 **Date:** 2025-10-17

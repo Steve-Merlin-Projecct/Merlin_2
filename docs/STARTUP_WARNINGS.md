@@ -1,3 +1,11 @@
+---
+title: "Startup Warnings"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # System Startup Warnings - Script Testing Branch
 
 **Captured:** October 9, 2025

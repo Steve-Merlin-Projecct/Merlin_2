@@ -1,3 +1,11 @@
+---
+title: "Librarian Pre Commit Hook"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Librarian Pre-Commit Hook Documentation
 
 **Version:** 1.0

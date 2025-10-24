@@ -1,3 +1,11 @@
+---
+title: "Quick Start"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Observability Quick Start Guide
 
 ## 5-Minute Setup

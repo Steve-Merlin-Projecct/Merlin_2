@@ -1,3 +1,11 @@
+---
+title: "Completion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Lock Advanced Features - Completion Summary
 
 **Date:** 2025-10-17

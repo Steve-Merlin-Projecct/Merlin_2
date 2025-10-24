@@ -1,3 +1,11 @@
+---
+title: "Smart Schema Enforcement"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Smart Database Schema Enforcement
 
 **Updated**: July 21, 2025  

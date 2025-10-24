@@ -1,3 +1,11 @@
+---
+title: "Simplified Variables"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Simplified Template Variables
 
 All templates use unified, simplified variable naming.

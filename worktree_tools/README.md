@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Management Tools
 
 Streamlined tools for managing git worktrees and merging feature branches.

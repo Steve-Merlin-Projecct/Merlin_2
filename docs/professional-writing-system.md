@@ -1,3 +1,11 @@
+---
+title: "Professional Writing System"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Professional Writing System for Marketing Content
 
 **Version:** 1.0.0

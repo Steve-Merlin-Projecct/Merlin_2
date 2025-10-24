@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Process Documentation
 
 This directory contains operational processes and procedures for maintaining and deploying the Automated Job Application System.

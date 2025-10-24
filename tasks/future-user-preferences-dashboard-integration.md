@@ -1,3 +1,11 @@
+---
+title: "Future User Preferences Dashboard Integration"
+type: reference
+component: integration
+status: draft
+tags: []
+---
+
 # Future Task: User Preferences Dashboard Integration
 
 **Priority:** High

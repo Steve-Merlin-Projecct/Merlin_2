@@ -1,3 +1,11 @@
+---
+title: "Security Practices"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Best Practices - Production Deployment
 **Critical Security Guidelines for Digital Ocean Deployment**
 

@@ -1,3 +1,11 @@
+---
+title: "Database Connection Guide"
+type: guide
+component: database
+status: draft
+tags: []
+---
+
 # Database Connection Configuration Guide
 
 ## Overview

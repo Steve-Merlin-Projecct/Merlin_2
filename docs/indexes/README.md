@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Indexes
 
 This directory contains various indexes and navigation aids for the documentation system.

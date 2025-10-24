@@ -1,3 +1,11 @@
+---
+title: "Database Considerations"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 ▐▛███▜▌   Claude Code v2.0.8
 ▝▜█████▛▘  Sonnet 4.5 · Claude Max
   ▘▘ ▝▝    /workspace/.trees/database-viz

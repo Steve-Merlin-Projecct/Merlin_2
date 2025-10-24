@@ -1,3 +1,11 @@
+---
+title: "Tasks Complete Calendly Integration"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Tasks: Complete Calendly Integration
 
 Based on Product Requirements Document: `prd-complete-calendly-integration.md`

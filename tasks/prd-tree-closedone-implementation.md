@@ -1,3 +1,11 @@
+---
+title: "Prd Tree Closedone Implementation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Product Requirements Document: /tree closedone Implementation
 
 **Created:** 2025-10-09

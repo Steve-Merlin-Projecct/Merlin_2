@@ -1,3 +1,11 @@
+---
+title: "Template System Documentation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Template Conversion & Variable Insertion System
 ## Complete Documentation & Usage Guide
 

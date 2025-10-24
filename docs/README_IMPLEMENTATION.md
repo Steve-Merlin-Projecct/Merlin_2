@@ -1,3 +1,11 @@
+---
+title: "Readme Implementation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Enhancements - Implementation Guide
 
 **Welcome to the Dashboard Enhancements Implementation!**

@@ -1,3 +1,11 @@
+---
+title: "Prd Content Based Validation"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Product Requirements Document: Content-Based Validation
 
 **Version:** 1.0.0

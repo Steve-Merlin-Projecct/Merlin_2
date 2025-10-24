@@ -1,3 +1,11 @@
+---
+title: "Prd"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Product Requirements Document: Git Orchestrator Agent
 
 **Version:** 1.0

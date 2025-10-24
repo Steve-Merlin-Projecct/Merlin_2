@@ -1,3 +1,11 @@
+---
+title: "Documentation Organization Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Organization Summary
 
 ## Reorganization Completed - August 7, 2025

@@ -1,3 +1,11 @@
+---
+title: "Deployment Checklist"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Gemini Prompt Optimization - Deployment Checklist
 
 **System**: Three-Tier Sequential Batch Job Analysis

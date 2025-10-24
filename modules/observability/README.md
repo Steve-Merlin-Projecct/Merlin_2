@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: observability
+status: draft
+tags: []
+---
+
 # Observability Module
 
 Centralized logging, tracing, and monitoring for the Merlin Job Application System.

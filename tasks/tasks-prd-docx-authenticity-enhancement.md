@@ -1,3 +1,11 @@
+---
+title: "Tasks Prd Docx Authenticity Enhancement"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: DOCX Authenticity Enhancement System
 
 **Source PRD:** `prd-docx-authenticity-enhancement.md`

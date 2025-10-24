@@ -1,3 +1,11 @@
+---
+title: "Deployment Guide Prompt Protection"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Deployment Guide: Prompt Protection System
 **Production Deployment Checklist & Procedures**
 

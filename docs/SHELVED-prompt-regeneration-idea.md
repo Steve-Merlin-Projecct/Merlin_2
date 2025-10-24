@@ -1,3 +1,11 @@
+---
+title: "Shelved Prompt Regeneration Idea"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # SHELVED: Prompt Regeneration Idea
 **Status:** Deferred to next worktree cycle
 **Date Shelved:** 2025-10-12

@@ -1,3 +1,11 @@
+---
+title: "Email Configuration Guide"
+type: guide
+component: email
+status: draft
+tags: []
+---
+
 # Email Configuration Guide
 **Version:** 4.2.0
 **Last Updated:** October 9, 2025

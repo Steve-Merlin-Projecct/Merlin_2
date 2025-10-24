@@ -1,3 +1,11 @@
+---
+title: "Hash And Replace Verified"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Hash and Replace System - Verification Report
 
 ## Date: 2025-10-19

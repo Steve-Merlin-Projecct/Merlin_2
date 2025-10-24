@@ -1,3 +1,11 @@
+---
+title: "Quick Start"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Quick Start Guide - Seed Sentence Processing Pipeline
 
 ## TL;DR - Run the Pipeline

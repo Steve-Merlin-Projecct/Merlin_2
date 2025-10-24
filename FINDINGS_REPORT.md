@@ -1,3 +1,11 @@
+---
+title: "Findings Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Data Insertion Test - Findings Report
 
 ## Test Summary

@@ -1,3 +1,11 @@
+---
+title: "Prompt Validation Systems"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Prompt Validation Systems Documentation
 
 ## Overview

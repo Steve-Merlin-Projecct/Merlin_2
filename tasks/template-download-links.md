@@ -1,3 +1,11 @@
+---
+title: "Template Download Links"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Resume & Cover Letter Template Download Links
 
 **Purpose**: Download these verified enterprise templates for analysis and adaptation

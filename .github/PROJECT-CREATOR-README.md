@@ -1,3 +1,11 @@
+---
+title: "Project Creator Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Automated Project Creator
 
 Complete automation for creating new development projects with Docker DevContainers, VS Code integration, and Claude Code CLI auto-launch.

@@ -1,3 +1,11 @@
+---
+title: "Investigation Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Investigation Report: Slash Commands Not Loading in Worktrees
 
 **Task:** Investigate why worktrees sometimes don't load custom slash commands

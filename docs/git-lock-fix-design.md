@@ -1,3 +1,11 @@
+---
+title: "Git Lock Fix Design"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # Git Lock Fix Design Specification
 **Date:** 2025-10-12
 **Version:** 1.0

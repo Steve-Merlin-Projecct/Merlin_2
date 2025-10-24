@@ -1,3 +1,11 @@
+---
+title: "Tasklist 1"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: Tree Workflow Full-Cycle Automation
 
 **Feature:** Complete automation of worktree development cycle with incomplete feature support

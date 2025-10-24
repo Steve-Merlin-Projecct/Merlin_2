@@ -1,3 +1,11 @@
+---
+title: "Digitalocean Migration Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # DigitalOcean Managed PostgreSQL Migration Guide
 
 **Date:** 2025-10-21

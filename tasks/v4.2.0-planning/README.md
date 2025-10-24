@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Development Plan - Executive Summary
 
 **Version:** 4.2.0

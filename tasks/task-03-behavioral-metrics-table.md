@@ -1,3 +1,11 @@
+---
+title: "Task 03 Behavioral Metrics Table"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task 03: Behavioral Metrics Table & Batch Processor
 
 **Status:** Pending (Depends on Task 02)

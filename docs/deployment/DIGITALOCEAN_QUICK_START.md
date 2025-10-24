@@ -1,3 +1,11 @@
+---
+title: "Digitalocean Quick Start"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Digital Ocean Deployment - Quick Start Guide
 **TL;DR Checklist - Follow these steps in order**
 

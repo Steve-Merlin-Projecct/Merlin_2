@@ -1,3 +1,11 @@
+---
+title: "Monitoring Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # replit.md Change Monitoring System
 
 ## Overview

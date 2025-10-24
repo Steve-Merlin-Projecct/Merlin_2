@@ -1,3 +1,11 @@
+---
+title: "Rebuild Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Catalog Rebuild Summary
 
 **Task:** Rebuild librarian catalog with cleaned data

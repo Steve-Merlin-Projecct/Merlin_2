@@ -1,3 +1,11 @@
+---
+title: "Database Schema Reference"
+type: reference
+component: database
+status: draft
+tags: []
+---
+
 # Link Tracking Database Schema Reference
 
 **Version**: 2.16.5  

@@ -1,3 +1,11 @@
+---
+title: "Implementation Status"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Librarian Enhancements Implementation Status
 
 **Created:** 2025-10-12

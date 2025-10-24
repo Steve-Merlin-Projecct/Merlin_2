@@ -1,3 +1,11 @@
+---
+title: "Database Schema"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Database Schema Documentation
 **Automated Job Application System**
 

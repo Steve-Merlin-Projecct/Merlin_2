@@ -1,3 +1,11 @@
+---
+title: "Tasks Content Based Validation"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Task List: Content-Based Validation Implementation
 
 **Feature:** Content-Based Validation

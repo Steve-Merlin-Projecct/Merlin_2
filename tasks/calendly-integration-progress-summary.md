@@ -1,3 +1,11 @@
+---
+title: "Calendly Integration Progress Summary"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Calendly Integration - Progress Summary
 
 **Date**: October 12, 2025 (Updated)

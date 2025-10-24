@@ -1,3 +1,11 @@
+---
+title: "Prd Dashboard V2 Completion"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Dashboard V2 Completion - Database Integration & Jobs View
 **Version:** 1.0
 **Date:** October 11, 2025

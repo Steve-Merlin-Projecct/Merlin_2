@@ -1,3 +1,11 @@
+---
+title: "Template Library Expansion Prd"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Product Requirements Document: Resume & Cover Letter Template Library Expansion
 
 **Version**: 1.0

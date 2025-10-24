@@ -1,3 +1,11 @@
+---
+title: "Security Implementation Summary"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Link Tracking Security Implementation Summary
 
 **Date**: July 28, 2025  

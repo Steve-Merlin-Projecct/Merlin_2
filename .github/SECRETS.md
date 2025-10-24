@@ -1,3 +1,11 @@
+---
+title: "Secrets"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Secrets Management Guide
 
 This document outlines how to manage secrets for the Merlin job application system.

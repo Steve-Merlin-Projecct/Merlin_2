@@ -1,3 +1,11 @@
+---
+title: "Testing Status"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Resilience System Testing - Status Report
 
 **Date:** 2025-10-11

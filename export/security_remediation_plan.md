@@ -1,3 +1,11 @@
+---
+title: "Security Remediation Plan"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Remediation Plan
 
 **System**: Automated Job Application System  

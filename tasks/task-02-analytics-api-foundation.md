@@ -1,3 +1,11 @@
+---
+title: "Task 02 Analytics Api Foundation"
+type: api_spec
+component: general
+status: draft
+tags: []
+---
+
 # Task 02: Analytics API Foundation - Phase 1
 
 **Status:** Pending (Depends on Task 01)

@@ -1,3 +1,11 @@
+---
+title: "Git Orchestrator Error Logging"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Orchestrator Error Logging
 
 ## Overview

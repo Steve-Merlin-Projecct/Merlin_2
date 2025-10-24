@@ -1,3 +1,11 @@
+---
+title: "Security Setup Instructions"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Setup Instructions
 **Optional but Recommended Pre-Commit Hook**
 

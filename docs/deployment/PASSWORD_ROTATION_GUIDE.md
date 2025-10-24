@@ -1,3 +1,11 @@
+---
+title: "Password Rotation Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Database Password Rotation - Quick Reference Guide
 
 **Current Database:** `db-postgresql-merlin-tor1-52568`

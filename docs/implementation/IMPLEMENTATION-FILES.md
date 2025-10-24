@@ -1,3 +1,11 @@
+---
+title: "Implementation Files"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Scope Detection Implementation - Files Created/Modified
 
 **Date:** 2025-10-18

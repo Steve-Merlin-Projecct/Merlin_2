@@ -1,3 +1,11 @@
+---
+title: "Tree Build Error"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tree Build Error - Investigation & Fix
 
 ## ✅ Status: RESOLVED

@@ -1,3 +1,11 @@
+---
+title: "Architecture"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # System Architecture Memory
 
 ## Technology Stack

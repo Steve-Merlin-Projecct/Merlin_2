@@ -1,3 +1,11 @@
+---
+title: "Prd Tree Enhanced Automation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Enhanced /tree Slash Command with Claude Auto-Launch
 
 ## Introduction/Overview

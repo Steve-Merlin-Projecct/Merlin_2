@@ -1,3 +1,11 @@
+---
+title: "Dashboard Implementation Plan"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Enhancements - Detailed Implementation Plan
 
 **Worktree:** dashboard-enhancements---fix-blocked-migrations-co

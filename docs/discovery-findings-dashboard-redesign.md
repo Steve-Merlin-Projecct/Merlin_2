@@ -1,3 +1,11 @@
+---
+title: "Discovery Findings Dashboard Redesign"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Redesign - Discovery Findings
 **Date**: October 9, 2025
 **Branch**: task/07-dashboard

@@ -1,3 +1,11 @@
+---
+title: "Implementation Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Implementation Summary: Automated Archival Script
 
 **Task:** Create automated archival script for stale documentation

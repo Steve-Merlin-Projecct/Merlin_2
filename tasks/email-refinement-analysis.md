@@ -1,3 +1,11 @@
+---
+title: "Email Refinement Analysis"
+type: technical_doc
+component: email
+status: draft
+tags: []
+---
+
 # Email Refinement Analysis
 **Branch:** task/11-email
 **Date:** October 9, 2025

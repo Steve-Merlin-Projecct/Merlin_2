@@ -1,3 +1,11 @@
+---
+title: "Before After Comparison"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Before & After: Template Fixes Comparison
 
 ## Visual Comparison of Changes

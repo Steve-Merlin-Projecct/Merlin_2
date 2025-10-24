@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Structure - Automated Job Application System
 
 **Version**: 2.16.8  

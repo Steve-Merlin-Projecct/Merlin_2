@@ -1,3 +1,11 @@
+---
+title: "Implementation Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Implementation Summary: Librarian Pre-Commit Hook
 
 **Task:** Create and install pre-commit hook for librarian validation

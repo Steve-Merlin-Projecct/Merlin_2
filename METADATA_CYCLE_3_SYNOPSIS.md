@@ -1,3 +1,11 @@
+---
+title: "Metadata Cycle 3 Synopsis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Metadata Work Cycle #3 Synopsis
 
 **Date:** 2025-10-21

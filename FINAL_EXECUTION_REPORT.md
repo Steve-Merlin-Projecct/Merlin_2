@@ -1,3 +1,11 @@
+---
+title: "Final Execution Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Sentence Processing Pipeline - Final Execution Report
 
 **Date:** 2025-10-22

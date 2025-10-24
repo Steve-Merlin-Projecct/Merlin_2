@@ -1,3 +1,11 @@
+---
+title: "Librarian Ci Cd Workflow"
+type: process
+component: general
+status: draft
+tags: []
+---
+
 # Librarian CI/CD Workflow Documentation
 
 **Version:** 1.0

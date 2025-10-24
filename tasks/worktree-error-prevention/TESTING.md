@@ -1,3 +1,11 @@
+---
+title: "Testing"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Testing Plan: Worktree Error Prevention
 
 ## Test Scenarios

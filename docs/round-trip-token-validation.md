@@ -1,3 +1,11 @@
+---
+title: "Round Trip Token Validation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Round-Trip Security Token Validation
 **Defense Layer 3: Response Authentication**
 

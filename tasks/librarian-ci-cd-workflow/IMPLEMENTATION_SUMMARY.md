@@ -1,3 +1,11 @@
+---
+title: "Implementation Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Implementation Summary: Librarian CI/CD Workflow
 
 **Task:** Implement CI/CD GitHub Actions workflow for documentation checks

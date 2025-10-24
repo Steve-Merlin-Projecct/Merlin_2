@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Database Schema Automation Tools
 
 This directory contains automated tools for maintaining database schema documentation and generating code from the database structure.

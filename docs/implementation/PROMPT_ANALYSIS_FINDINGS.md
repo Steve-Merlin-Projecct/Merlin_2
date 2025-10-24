@@ -1,3 +1,11 @@
+---
+title: "Prompt Analysis Findings"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Prompt Analysis Findings - Canonical vs Used Script
 
 **Date:** 2025-10-17

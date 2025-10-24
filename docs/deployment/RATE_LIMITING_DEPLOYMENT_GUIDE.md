@@ -1,3 +1,11 @@
+---
+title: "Rate Limiting Deployment Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Rate Limiting Deployment Guide
 
 **Quick Start Guide for Deploying API Rate Limiting System**

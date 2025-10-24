@@ -1,3 +1,11 @@
+---
+title: "Phase 3 Resilience Storage Guide"
+type: guide
+component: storage
+status: draft
+tags: []
+---
+
 # Phase 3: Resilience & Storage Testing Guide
 **Timeline:** Week 4 (5-6 working days)
 **Goal:** Test failure recovery systems and storage backends

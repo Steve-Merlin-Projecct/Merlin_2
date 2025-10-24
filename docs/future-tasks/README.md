@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Future Tasks
 
 Tasks to be completed after the current worktree development cycle.

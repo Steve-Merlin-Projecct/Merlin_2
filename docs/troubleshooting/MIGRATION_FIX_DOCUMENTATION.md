@@ -1,3 +1,11 @@
+---
+title: "Migration Fix Documentation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Database Migration Fix Documentation
 
 ## Phase 1: Fix Blocked Migrations - COMPLETED ✓

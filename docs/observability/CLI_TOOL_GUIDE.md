@@ -1,3 +1,11 @@
+---
+title: "Cli Tool Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Production Monitor CLI Tool Guide
 
 ## Overview

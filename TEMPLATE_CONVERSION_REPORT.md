@@ -1,3 +1,11 @@
+---
+title: "Template Conversion Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Template Conversion Report
 
 **Date:** 2025-10-21

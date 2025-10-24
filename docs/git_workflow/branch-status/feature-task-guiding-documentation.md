@@ -1,3 +1,11 @@
+---
+title: "Feature Task Guiding Documentation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Branch Status: feature/task-guiding-documentation
 
 **Status:** READY FOR ARCHIVAL (Pending Review)

@@ -1,3 +1,11 @@
+---
+title: "Storage Architecture"
+type: architecture
+component: storage
+status: draft
+tags: []
+---
+
 # Storage Architecture Documentation
 
 **Version:** 1.0

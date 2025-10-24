@@ -1,3 +1,11 @@
+---
+title: "Tree Command Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # /tree Command Guide
 **Git Worktree Management System with Claude Auto-Launch**
 

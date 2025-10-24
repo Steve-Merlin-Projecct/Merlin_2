@@ -1,3 +1,11 @@
+---
+title: "Feature Development"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tasks Directory
 
 This directory contains Product Requirements Documents (PRDs) and task lists for feature development.

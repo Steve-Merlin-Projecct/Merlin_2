@@ -1,3 +1,11 @@
+---
+title: "Readme Production Testing"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Production Testing Guide
 
 This guide explains how to run production tests with real Gemini API calls and generate comprehensive reports.

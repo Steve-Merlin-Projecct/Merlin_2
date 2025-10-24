@@ -1,3 +1,11 @@
+---
+title: "Worktree Completion Package"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Completion Package
 # Regenerate 777 Seed Sentences - Using Copywriter Agent
 

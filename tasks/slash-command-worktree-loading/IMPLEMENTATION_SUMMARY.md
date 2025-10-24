@@ -1,3 +1,11 @@
+---
+title: "Implementation Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Implementation Summary: Slash Command Worktree Loading Fix
 
 **Task:** Fix slash commands not loading in worktrees

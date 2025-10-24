@@ -1,3 +1,11 @@
+---
+title: "Readme Archive Organization"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Archived Files Organization
 
 This directory contains historical code and documentation that is no longer actively used in the production system.

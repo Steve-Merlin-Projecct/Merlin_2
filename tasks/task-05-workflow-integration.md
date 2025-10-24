@@ -1,3 +1,11 @@
+---
+title: "Task 05 Workflow Integration"
+type: process
+component: integration
+status: draft
+tags: []
+---
+
 # Task 05: Workflow Integration & Automated Prioritization
 
 **Status:** Pending (Depends on Task 04)

@@ -1,3 +1,11 @@
+---
+title: "Tasks Prd Dashboard V2 Completion"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: Dashboard V2 Completion - Database Integration & Jobs View
 **PRD Reference:** `tasks/prd-dashboard-v2-completion.md`
 **Version:** 1.0

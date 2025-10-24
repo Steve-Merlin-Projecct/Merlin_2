@@ -1,3 +1,11 @@
+---
+title: "Variable Reference"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # UI/UX Designer Template - Variable Reference Guide
 
 **Template:** `uiux_designer_template_converted.docx`

@@ -1,3 +1,11 @@
+---
+title: "Security Architecture Complete"
+type: architecture
+component: security
+status: draft
+tags: []
+---
+
 # Complete Security Architecture
 **Defense-in-Depth: 6 Layers of Protection Against LLM Attacks**
 

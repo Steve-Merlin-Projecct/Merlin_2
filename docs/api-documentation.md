@@ -1,3 +1,11 @@
+---
+title: "Api Documentation"
+type: api_spec
+component: general
+status: draft
+tags: []
+---
+
 # API Documentation - Automated Job Application System
 
 **Version:** 4.2.0

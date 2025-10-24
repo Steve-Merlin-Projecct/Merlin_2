@@ -1,3 +1,11 @@
+---
+title: "Automated Archival System"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Automated Archival System
 
 **Version:** 1.0

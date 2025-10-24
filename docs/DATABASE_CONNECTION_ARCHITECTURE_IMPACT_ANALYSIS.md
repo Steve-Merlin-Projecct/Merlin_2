@@ -1,3 +1,11 @@
+---
+title: "Database Connection Architecture Impact Analysis"
+type: architecture
+component: database
+status: draft
+tags: []
+---
+
 # Database Connection Architecture - Deep Impact Analysis
 
 **Document Version:** 1.0

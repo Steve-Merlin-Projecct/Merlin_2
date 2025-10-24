@@ -1,3 +1,11 @@
+---
+title: "Monitoring Api Guide"
+type: api_spec
+component: general
+status: draft
+tags: []
+---
+
 # Monitoring API Guide
 
 ## Overview

@@ -1,3 +1,11 @@
+---
+title: "Librarian"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 Execute librarian system commands for documentation management
 
 ## Available Commands

@@ -1,3 +1,11 @@
+---
+title: "Task 01 Security Unpunctuated Text Detector"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Task 01: Implement Unpunctuated Text Stream Detection
 
 **Related PRD**: `prd-gemini-prompt-optimization.md`
