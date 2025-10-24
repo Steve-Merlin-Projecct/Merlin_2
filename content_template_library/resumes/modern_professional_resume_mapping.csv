@@ -1,23 +1,41 @@
 Original_Text,Is_Variable,Is_Static,Is_discarded,Variable_name,Variable_intention,Variable_category,Static_Text,Content_source
-FirstName LastName,TRUE,FALSE,FALSE,user_first_name user_last_name,Full name,User Profile,,user_profile
-"City, Province",TRUE,FALSE,FALSE,user_city_prov,Location,User Profile,,user_profile
-phone@email.com,TRUE,FALSE,FALSE,user_phone user_email user_linkedin,Contact info,User Profile,,user_profile
-Professional summary text,TRUE,FALSE,FALSE,professional_summary,Professional summary paragraph,Profile,,user_profile
-Technical skills list,TRUE,FALSE,FALSE,technical_summary,Technical skills,Skills,,user_skills
-Methodologies list,TRUE,FALSE,FALSE,methodology_summary,Methodologies,Skills,,user_skills
-Domain expertise list,TRUE,FALSE,FALSE,domain_summary,Domain expertise,Skills,,user_skills
-Job Position | Company Name | Dates,TRUE,FALSE,FALSE,work_experience_1_position work_experience_1_name work_experience_1_dates,"Job title, company, dates",Work Experience,,user_work_experience
-Location,TRUE,FALSE,FALSE,work_experience_1_location,Job location,Work Experience,,user_work_experience
-Achievement bullet 1,TRUE,FALSE,FALSE,work_experience_1_skill1,Job achievement 1,Work Experience,,sentence_bank_resume
-Achievement bullet 2,TRUE,FALSE,FALSE,work_experience_1_skill2,Job achievement 2,Work Experience,,sentence_bank_resume
-Achievement bullet 3,TRUE,FALSE,FALSE,work_experience_1_skill3,Job achievement 3,Work Experience,,sentence_bank_resume
-Achievement bullet 4,TRUE,FALSE,FALSE,work_experience_1_skill4,Job achievement 4,Work Experience,,sentence_bank_resume
-Achievement bullet 5,TRUE,FALSE,FALSE,work_experience_1_skill5,Job achievement 5,Work Experience,,sentence_bank_resume
-Achievement bullet 1,TRUE,FALSE,FALSE,work_experience_2_skill1,Job 2 achievement 1,Work Experience,,sentence_bank_resume
-Achievement bullet 2,TRUE,FALSE,FALSE,work_experience_2_skill2,Job 2 achievement 2,Work Experience,,sentence_bank_resume
-Achievement bullet 3,TRUE,FALSE,FALSE,work_experience_2_skill3,Job 2 achievement 3,Work Experience,,sentence_bank_resume
-Degree in Concentration,TRUE,FALSE,FALSE,edu_1_degree edu_1_concentration,Degree and field,Education,,user_education
-University Name,TRUE,FALSE,FALSE,edu_1_name,Institution name,Education,,user_education
-Certifications list,TRUE,FALSE,FALSE,certifications_list,Professional certifications,Certifications,,user_certifications
-Volunteer position,TRUE,FALSE,FALSE,volunteer_1_position volunteer_1_name volunteer_1_dates,Volunteer role details,Volunteer,,user_volunteer
-Volunteer description,TRUE,FALSE,FALSE,volunteer_1_description,Volunteer responsibilities,Volunteer,,user_volunteer
+Certifications List,TRUE,FALSE,FALSE,certifications_list,Professional certifications,Certifications,,user_certifications
+Domain Summary,TRUE,FALSE,FALSE,domain_summary,Domain expertise list,Skills,,user_skills
+Edu 1 Concentration,TRUE,FALSE,FALSE,edu_1_concentration,Field of study,Education,,user_education
+Edu 1 Degree,TRUE,FALSE,FALSE,edu_1_degree,Degree type,Education,,user_education
+Edu 1 Grad Date,TRUE,FALSE,FALSE,edu_1_grad_date,Graduation date,Education,,user_education
+Edu 1 Location,TRUE,FALSE,FALSE,edu_1_location,Institution location,Education,,user_education
+Edu 1 Name,TRUE,FALSE,FALSE,edu_1_name,Educational institution name,Education,,user_education
+Methodology Summary,TRUE,FALSE,FALSE,methodology_summary,Methodologies list,Skills,,user_skills
+Professional Summary,TRUE,FALSE,FALSE,professional_summary,Professional summary paragraph,Profile,,user_profile
+Professional Title,TRUE,FALSE,FALSE,professional_title,Professional title,User Profile,,user_profile
+Technical Summary,TRUE,FALSE,FALSE,technical_summary,Technical skills list,Skills,,user_skills
+User City Prov,TRUE,FALSE,FALSE,user_city_prov,City and province,User Profile,,user_profile
+User Email,TRUE,FALSE,FALSE,user_email,Email address,User Profile,,user_profile
+User First Name,TRUE,FALSE,FALSE,user_first_name,First name,User Profile,,user_profile
+User Last Name,TRUE,FALSE,FALSE,user_last_name,Last name,User Profile,,user_profile
+User Linkedin,TRUE,FALSE,FALSE,user_linkedin,LinkedIn URL,User Profile,,user_profile
+User Phone,TRUE,FALSE,FALSE,user_phone,Phone number,User Profile,,user_profile
+User Portfolio,TRUE,FALSE,FALSE,user_portfolio,Portfolio URL,User Profile,,user_profile
+Volunteer 1 Dates,TRUE,FALSE,FALSE,volunteer_1_dates,Volunteer dates,Volunteer,,user_volunteer
+Volunteer 1 Description,TRUE,FALSE,FALSE,volunteer_1_description,Volunteer description,Volunteer,,user_volunteer
+Volunteer 1 Location,TRUE,FALSE,FALSE,volunteer_1_location,Volunteer location,Volunteer,,user_volunteer
+Volunteer 1 Name,TRUE,FALSE,FALSE,volunteer_1_name,Volunteer organization,Volunteer,,user_volunteer
+Volunteer 1 Position,TRUE,FALSE,FALSE,volunteer_1_position,Volunteer position,Volunteer,,user_volunteer
+Work Experience 1 Dates,TRUE,FALSE,FALSE,work_experience_1_dates,Employment dates,Work Experience,,user_work_experience
+Work Experience 1 Location,TRUE,FALSE,FALSE,work_experience_1_location,Job location,Work Experience,,user_work_experience
+Work Experience 1 Name,TRUE,FALSE,FALSE,work_experience_1_name,Company name,Work Experience,,user_work_experience
+Work Experience 1 Position,TRUE,FALSE,FALSE,work_experience_1_position,Job position/title,Work Experience,,user_work_experience
+Work Experience 1 Skill1,TRUE,FALSE,FALSE,work_experience_1_skill1,Achievement 1,Work Experience,,sentence_bank_resume
+Work Experience 1 Skill2,TRUE,FALSE,FALSE,work_experience_1_skill2,Achievement 2,Work Experience,,sentence_bank_resume
+Work Experience 1 Skill3,TRUE,FALSE,FALSE,work_experience_1_skill3,Achievement 3,Work Experience,,sentence_bank_resume
+Work Experience 1 Skill4,TRUE,FALSE,FALSE,work_experience_1_skill4,Achievement 4,Work Experience,,sentence_bank_resume
+Work Experience 1 Skill5,TRUE,FALSE,FALSE,work_experience_1_skill5,Achievement 5,Work Experience,,sentence_bank_resume
+Work Experience 1 Skill6,TRUE,FALSE,FALSE,work_experience_1_skill6,Achievement 6,Work Experience,,sentence_bank_resume
+Work Experience 2 Dates,TRUE,FALSE,FALSE,work_experience_2_dates,Job 2 employment dates,Work Experience,,user_work_experience
+Work Experience 2 Location,TRUE,FALSE,FALSE,work_experience_2_location,Job 2 location,Work Experience,,user_work_experience
+Work Experience 2 Name,TRUE,FALSE,FALSE,work_experience_2_name,Job 2 company name,Work Experience,,user_work_experience
+Work Experience 2 Position,TRUE,FALSE,FALSE,work_experience_2_position,Job 2 position/title,Work Experience,,user_work_experience
+Work Experience 2 Skill1,TRUE,FALSE,FALSE,work_experience_2_skill1,Job 2 achievement 1,Work Experience,,sentence_bank_resume
+Work Experience 2 Skill2,TRUE,FALSE,FALSE,work_experience_2_skill2,Job 2 achievement 2,Work Experience,,sentence_bank_resume
+Work Experience 2 Skill3,TRUE,FALSE,FALSE,work_experience_2_skill3,Job 2 achievement 3,Work Experience,,sentence_bank_resume

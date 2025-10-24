@@ -1,11 +1,15 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "word-document-cover-letter-and-resume-template-var",
+  "description": "||word document cover letter and resume template variables",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "docs/**",
+      "modules/document_generation/*cover*.py",
+      "frontend_templates/**",
+      "modules/document_generation/*resume*.py",
+      "modules/document_generation/**",
+      "tests/test_*word_document_cover_letter_and_resume_template_var*.py",
+      "docs/*word-document-cover-letter-and-resume-template-var*.md"
 
     ],
     "exclude": [
@@ -16,6 +20,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:59+00:00",
   "out_of_scope_policy": "warn"
 }

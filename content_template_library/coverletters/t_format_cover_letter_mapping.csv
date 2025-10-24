@@ -1,10 +1,20 @@
 Original_Text,Is_Variable,Is_Static,Is_discarded,Variable_name,Variable_intention,Variable_category,Static_Text,Content_source
-FirstName LastName,TRUE,FALSE,FALSE,user_first_name user_last_name,Full name,User Profile,,user_profile
-Contact info,TRUE,FALSE,FALSE,user_email user_phone user_linkedin,Contact details,User Profile,,user_profile
-Current date,TRUE,FALSE,FALSE,current_date,Letter date,Metadata,,system_generated
-Company Name,TRUE,FALSE,FALSE,company_name,Target company (job variable),Job Data,,job_data
-Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Recipient name,Job Data,,job_data
-Opening paragraph,TRUE,FALSE,FALSE,cover_letter_opening,Introduction paragraph,Content,,sentence_bank_cover_letter
-Skills alignment paragraph,TRUE,FALSE,FALSE,cover_letter_skills_alignment,Skills match paragraph,Content,,sentence_bank_cover_letter
-Achievement paragraph,TRUE,FALSE,FALSE,cover_letter_achievement,Achievement example,Content,,sentence_bank_cover_letter
-Closing paragraph,TRUE,FALSE,FALSE,cover_letter_closing,Call to action,Content,,sentence_bank_cover_letter
+Cover Letter Closing,TRUE,FALSE,FALSE,cover_letter_closing,Closing paragraph,Content,,sentence_bank_cover_letter
+Cover Letter Intro,TRUE,FALSE,FALSE,cover_letter_intro,Introduction paragraph,Content,,sentence_bank_cover_letter
+Cover Letter Summary,TRUE,FALSE,FALSE,cover_letter_summary,Summary paragraph,Content,,sentence_bank_cover_letter
+Current Date,TRUE,FALSE,FALSE,current_date,Document generation date,Metadata,,system_generated
+Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Hiring manager full name,Job Data,,job_data
+Job Requirement 1,TRUE,FALSE,FALSE,job_requirement_1,Job requirement 1,Content,,job_data
+Job Requirement 2,TRUE,FALSE,FALSE,job_requirement_2,Job requirement 2,Content,,job_data
+Job Requirement 3,TRUE,FALSE,FALSE,job_requirement_3,Job requirement 3,Content,,job_data
+Job Requirement 4,TRUE,FALSE,FALSE,job_requirement_4,Job requirement 4,Content,,job_data
+Matching Qualification 1,TRUE,FALSE,FALSE,matching_qualification_1,Matching qualification 1,Content,,sentence_bank_cover_letter
+Matching Qualification 2,TRUE,FALSE,FALSE,matching_qualification_2,Matching qualification 2,Content,,sentence_bank_cover_letter
+Matching Qualification 3,TRUE,FALSE,FALSE,matching_qualification_3,Matching qualification 3,Content,,sentence_bank_cover_letter
+Matching Qualification 4,TRUE,FALSE,FALSE,matching_qualification_4,Matching qualification 4,Content,,sentence_bank_cover_letter
+User City Prov,TRUE,FALSE,FALSE,user_city_prov,City and province,User Profile,,user_profile
+User Email,TRUE,FALSE,FALSE,user_email,Email address,User Profile,,user_profile
+User First Name,TRUE,FALSE,FALSE,user_first_name,First name,User Profile,,user_profile
+User Last Name,TRUE,FALSE,FALSE,user_last_name,Last name,User Profile,,user_profile
+User Linkedin,TRUE,FALSE,FALSE,user_linkedin,LinkedIn URL,User Profile,,user_profile
+User Phone,TRUE,FALSE,FALSE,user_phone,Phone number,User Profile,,user_profile

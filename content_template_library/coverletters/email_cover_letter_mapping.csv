@@ -1,10 +1,11 @@
 Original_Text,Is_Variable,Is_Static,Is_discarded,Variable_name,Variable_intention,Variable_category,Static_Text,Content_source
-FirstName LastName,TRUE,FALSE,FALSE,user_first_name user_last_name,Full name,User Profile,,user_profile
-Contact info,TRUE,FALSE,FALSE,user_email user_phone user_linkedin,Contact details,User Profile,,user_profile
-Current date,TRUE,FALSE,FALSE,current_date,Letter date,Metadata,,system_generated
-Company Name,TRUE,FALSE,FALSE,company_name,Target company (job variable),Job Data,,job_data
-Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Recipient name,Job Data,,job_data
-Opening paragraph,TRUE,FALSE,FALSE,cover_letter_opening,Introduction paragraph,Content,,sentence_bank_cover_letter
-Skills alignment paragraph,TRUE,FALSE,FALSE,cover_letter_skills_alignment,Skills match paragraph,Content,,sentence_bank_cover_letter
-Achievement paragraph,TRUE,FALSE,FALSE,cover_letter_achievement,Achievement example,Content,,sentence_bank_cover_letter
-Closing paragraph,TRUE,FALSE,FALSE,cover_letter_closing,Call to action,Content,,sentence_bank_cover_letter
+Cover Letter Achievement Brief,TRUE,FALSE,FALSE,cover_letter_achievement_brief,Brief achievement,Content,,sentence_bank_cover_letter
+Cover Letter Cta,TRUE,FALSE,FALSE,cover_letter_cta,Call to action,Content,,sentence_bank_cover_letter
+Cover Letter Email Hook,TRUE,FALSE,FALSE,cover_letter_email_hook,Email opening hook,Content,,sentence_bank_cover_letter
+Cover Letter Value Prop Brief,TRUE,FALSE,FALSE,cover_letter_value_prop_brief,Brief value proposition,Content,,sentence_bank_cover_letter
+Hiring Manager First Name,TRUE,FALSE,FALSE,hiring_manager_first_name,Hiring manager first name,Job Data,,job_data
+User Email,TRUE,FALSE,FALSE,user_email,Email address,User Profile,,user_profile
+User First Name,TRUE,FALSE,FALSE,user_first_name,First name,User Profile,,user_profile
+User Last Name,TRUE,FALSE,FALSE,user_last_name,Last name,User Profile,,user_profile
+User Linkedin,TRUE,FALSE,FALSE,user_linkedin,LinkedIn URL,User Profile,,user_profile
+User Phone,TRUE,FALSE,FALSE,user_phone,Phone number,User Profile,,user_profile

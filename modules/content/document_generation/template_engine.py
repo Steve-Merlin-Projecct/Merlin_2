@@ -11,6 +11,14 @@ Key Features:
 - Preserve all document formatting, styles, and structure
 - Handle multiple template types (resume, cover letter, etc.)
 - Generate professional documents with proper metadata
+
+Variable Naming Standard:
+- Uses unified CSV naming convention (see VARIABLE_NAMING_REFERENCE.md)
+- Variables use <<variable_name>> format in templates
+- Standard names: user_first_name, work_experience_1_skill1, edu_1_degree
+- All 65 standard variables documented in project root
+
+For complete variable reference, see: VARIABLE_NAMING_REFERENCE.md
 """
 
 import os
@@ -483,6 +491,11 @@ class TemplateEngine:
         Returns:
             any: Value from dictionary or None if not found
         """
+        # First, try direct key lookup
+        if key in data:
+            return data[key]
+
+        # Try nested dot notation access
         keys = key.split(".")
         current = data
 

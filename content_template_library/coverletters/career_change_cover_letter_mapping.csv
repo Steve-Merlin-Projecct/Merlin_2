@@ -1,10 +1,13 @@
 Original_Text,Is_Variable,Is_Static,Is_discarded,Variable_name,Variable_intention,Variable_category,Static_Text,Content_source
-FirstName LastName,TRUE,FALSE,FALSE,user_first_name user_last_name,Full name,User Profile,,user_profile
-Contact info,TRUE,FALSE,FALSE,user_email user_phone user_linkedin,Contact details,User Profile,,user_profile
-Current date,TRUE,FALSE,FALSE,current_date,Letter date,Metadata,,system_generated
-Company Name,TRUE,FALSE,FALSE,company_name,Target company (job variable),Job Data,,job_data
-Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Recipient name,Job Data,,job_data
-Opening paragraph,TRUE,FALSE,FALSE,cover_letter_opening,Introduction paragraph,Content,,sentence_bank_cover_letter
-Skills alignment paragraph,TRUE,FALSE,FALSE,cover_letter_skills_alignment,Skills match paragraph,Content,,sentence_bank_cover_letter
-Achievement paragraph,TRUE,FALSE,FALSE,cover_letter_achievement,Achievement example,Content,,sentence_bank_cover_letter
-Closing paragraph,TRUE,FALSE,FALSE,cover_letter_closing,Call to action,Content,,sentence_bank_cover_letter
+Cover Letter Achievement,TRUE,FALSE,FALSE,cover_letter_achievement,Achievement paragraph,Content,,sentence_bank_cover_letter
+Cover Letter Enthusiasm,TRUE,FALSE,FALSE,cover_letter_enthusiasm,Enthusiasm statement,Content,,sentence_bank_cover_letter
+Cover Letter Preparation,TRUE,FALSE,FALSE,cover_letter_preparation,Preparation statement,Content,,sentence_bank_cover_letter
+Cover Letter Transferable Skills,TRUE,FALSE,FALSE,cover_letter_transferable_skills,Transferable skills paragraph,Content,,sentence_bank_cover_letter
+Cover Letter Transition Hook,TRUE,FALSE,FALSE,cover_letter_transition_hook,Career transition hook,Content,,sentence_bank_cover_letter
+Current Date,TRUE,FALSE,FALSE,current_date,Document generation date,Metadata,,system_generated
+Hiring Manager Name,TRUE,FALSE,FALSE,hiring_manager_name,Hiring manager full name,Job Data,,job_data
+User Email,TRUE,FALSE,FALSE,user_email,Email address,User Profile,,user_profile
+User First Name,TRUE,FALSE,FALSE,user_first_name,First name,User Profile,,user_profile
+User Last Name,TRUE,FALSE,FALSE,user_last_name,Last name,User Profile,,user_profile
+User Linkedin,TRUE,FALSE,FALSE,user_linkedin,LinkedIn URL,User Profile,,user_profile
+User Phone,TRUE,FALSE,FALSE,user_phone,Phone number,User Profile,,user_profile
