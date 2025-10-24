@@ -1,11 +1,11 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "production-dashboard-password-and-configuration",
+  "description": "||production dashboard password and configuration",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "frontend_templates/**",
+      "tests/test_*production_dashboard_password_and_configuration*.py",
+      "docs/*production-dashboard-password-and-configuration*.md"
 
     ],
     "exclude": [
@@ -16,6 +16,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:43+00:00",
   "out_of_scope_policy": "warn"
 }
