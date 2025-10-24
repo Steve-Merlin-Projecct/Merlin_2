@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "tracking_id": "dfsgzzpzpweeAFGJJEkdlfjoxbvnv",
+      "clicked_at": "2025-10-22T14:30:00Z",
+      "ip_address": "192.168.1.1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "click_source": "linkedin"
+    },
+    {
+      "tracking_id": "AdjoEJogidjwqpsljdkjlsdkx",
+      "clicked_at": "2025-10-22T14:35:00Z",
+      "ip_address": "203.0.113.42",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+      "click_source": "calendly"
+    }
+  ]
+}

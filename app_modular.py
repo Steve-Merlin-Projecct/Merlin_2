@@ -236,6 +236,14 @@ try:
 except ImportError as e:
     logger.warning(f"Could not register Link Tracking API: {e}")
 
+# Register Tracking Ingest API (receives data from steve-glen.com domain)
+try:
+    from modules.link_tracking.tracking_ingest_api import tracking_ingest_bp
+    app.register_blueprint(tracking_ingest_bp)
+    logger.info("Tracking Ingest API registered successfully")
+except ImportError as e:
+    logger.warning(f"Could not register Tracking Ingest API: {e}")
+
 # Register Copywriting Evaluator API
 try:
     from modules.content.copywriting_evaluator.copywriting_evaluator_api import copywriting_evaluator_bp

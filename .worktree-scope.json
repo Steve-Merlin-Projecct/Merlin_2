@@ -1,11 +1,12 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "create-api-connection-with-steve-glencom-domain-se",
+  "description": "||create api connection with steve-glen.com domain service for link tracking",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/ai_job_description_analysis/**",
+      "modules/api/**",
+      "tests/test_*create_api_connection_with_steve_glencom_domain_se*.py",
+      "docs/*create-api-connection-with-steve-glencom-domain-se*.md"
 
     ],
     "exclude": [
@@ -16,6 +17,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:22+00:00",
   "out_of_scope_policy": "warn"
 }
