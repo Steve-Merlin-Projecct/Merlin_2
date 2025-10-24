@@ -1,7 +1,7 @@
 # Database Schema Documentation
 **Automated Job Application System**
 
-*Last Updated: September 12, 2025*  
+*Last Updated: October 24, 2025*  
 *Auto-generated from PostgreSQL information_schema*
 
 ## Overview
@@ -9,9 +9,9 @@
 This database supports a comprehensive automated job application system that scrapes job postings, analyzes them with AI, manages user preferences, and tracks applications with sophisticated document generation and tone analysis.
 
 ### Architecture Summary
-- **Primary Tables**: 46 tables with UUID primary keys
-- **Database**: neondb
-- **Generated**: 2025-09-12T13:08:24.645397
+- **Primary Tables**: 51 tables with UUID primary keys
+- **Database**: unknown
+- **Generated**: 2025-10-24T02:33:14.910196
 
 ---
 
@@ -20,13 +20,16 @@ This database supports a comprehensive automated job application system that scr
 | Table Name | Purpose | Key Relationships |
 |------------|---------|-------------------|
 | analyzed_jobs | Database table | company_id → companies, job_id → jobs |
+| apify_application_submissions | Database table | Standalone |
 | application_documents | Database table | job_application_id → job_applications |
 | application_settings | System configuration and settings | Standalone |
 | canadian_spellings | Database table | Standalone |
-| cleaned_job_scrape_sources | Database table | cleaned_job_id → cleaned_job_scrapes, job_id → jobs |
+| cleaned_job_scrape_sources | Database table | job_id → jobs, cleaned_job_id → cleaned_job_scrapes |
 | cleaned_job_scrapes | Processed and deduplicated job data | Standalone |
 | companies | Company information and metadata | Standalone |
 | consistency_validation_logs | Database table | Standalone |
+| dashboard_metrics_daily | Database table | Standalone |
+| dashboard_metrics_hourly | Database table | Standalone |
 | data_corrections | Database table | Standalone |
 | document_jobs | Document generation tracking | Standalone |
 | document_sentences | Database table | document_job_id → document_jobs |
@@ -35,6 +38,7 @@ This database supports a comprehensive automated job application system that scr
 | error_log | Database table | Standalone |
 | failure_logs | Database table | Standalone |
 | job_analysis_queue | Database table | job_id → jobs |
+| job_analysis_tiers | Database table | job_id → jobs |
 | job_application_tracking | Database table | job_application_id → job_applications |
 | job_applications | Application tracking and status management | job_id → jobs |
 | job_ats_keywords | Database table | Standalone |
@@ -51,11 +55,12 @@ This database supports a comprehensive automated job application system that scr
 | jobs | Primary entity for job postings | company_id → companies |
 | keyword_filters | Database table | Standalone |
 | link_clicks | Database table | tracking_id → link_tracking |
-| link_tracking | Hyperlink click tracking | job_id → jobs, application_id → job_applications |
+| link_tracking | Hyperlink click tracking | application_id → job_applications, job_id → jobs |
 | performance_metrics | Database table | Standalone |
-| pre_analyzed_jobs | Database table | cleaned_scrape_id → cleaned_job_scrapes, company_id → companies |
+| pre_analyzed_jobs | Database table | company_id → companies, cleaned_scrape_id → cleaned_job_scrapes |
 | raw_job_scrapes | Raw scraped data before processing | Standalone |
 | recovery_statistics | Database table | Standalone |
+| security_detections | Database table | job_id → jobs |
 | security_test_table | Database table | Standalone |
 | sentence_bank_cover_letter | Cover letter content sentence bank | Standalone |
 | sentence_bank_resume | Resume content sentence bank | experience_id → job_applications |
@@ -135,6 +140,32 @@ This database supports a comprehensive automated job application system that scr
 | job_title_extracted | character varying(200) |  |  |
 | company_name_extracted | character varying(100) |  |  |
 | additional_insights | text |  |  |
+
+### apify_application_submissions
+**Database table**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| submission_id | uuid | NOT NULL, DEFAULT gen_random_uuid(), PK |  |
+| application_id | character varying(255) |  | Associated application reference |
+| job_id | character varying(255) | NOT NULL | Associated job reference |
+| actor_run_id | character varying(255) |  |  |
+| status | character varying(50) | NOT NULL, DEFAULT 'pending' |  |
+| form_platform | character varying(50) | NOT NULL |  |
+| form_type | character varying(100) |  |  |
+| fields_filled | jsonb |  |  |
+| submission_confirmed | boolean | DEFAULT false |  |
+| confirmation_message | text |  |  |
+| screenshot_urls | jsonb |  |  |
+| screenshot_metadata | jsonb |  |  |
+| error_message | text |  |  |
+| error_details | jsonb |  |  |
+| submitted_at | timestamp without time zone | NOT NULL, DEFAULT now() |  |
+| reviewed_at | timestamp without time zone |  |  |
+| created_at | timestamp without time zone | NOT NULL, DEFAULT now() | Record creation timestamp |
+| updated_at | timestamp without time zone | NOT NULL, DEFAULT now() | Last modification timestamp |
+| reviewed_by | character varying(255) |  |  |
+| review_notes | text |  |  |
 
 ### application_documents
 **Database table**
@@ -261,6 +292,68 @@ This database supports a comprehensive automated job application system that scr
 | correctable | boolean |  |  |
 | correction_applied | boolean | DEFAULT false |  |
 | created_at | timestamp without time zone | DEFAULT now() | Record creation timestamp |
+
+### dashboard_metrics_daily
+**Database table**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | uuid | NOT NULL, DEFAULT gen_random_uuid(), PK | Unique identifier |
+| metric_date | date | NOT NULL, UNIQUE |  |
+| jobs_scraped_count | integer(32) | DEFAULT 0 |  |
+| jobs_cleaned_count | integer(32) | DEFAULT 0 |  |
+| jobs_deduplicated_count | integer(32) | DEFAULT 0 |  |
+| scraping_errors_count | integer(32) | DEFAULT 0 |  |
+| scraping_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| scraping_peak_hour | integer(32) |  |  |
+| jobs_analyzed_count | integer(32) | DEFAULT 0 |  |
+| ai_requests_sent | integer(32) | DEFAULT 0 |  |
+| ai_tokens_input | integer(32) | DEFAULT 0 |  |
+| ai_tokens_output | integer(32) | DEFAULT 0 |  |
+| ai_cost_incurred | numeric(10,4) | DEFAULT 0.00 |  |
+| ai_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| ai_model_used | character varying(100) |  |  |
+| applications_sent_count | integer(32) | DEFAULT 0 |  |
+| applications_success_count | integer(32) | DEFAULT 0 |  |
+| applications_failed_count | integer(32) | DEFAULT 0 |  |
+| documents_generated_count | integer(32) | DEFAULT 0 |  |
+| application_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| success_rate | numeric(5,2) | DEFAULT 0.00 |  |
+| pipeline_conversion_rate | numeric(5,2) | DEFAULT 0.00 |  |
+| pipeline_bottleneck | character varying(50) |  |  |
+| total_pipeline_jobs | integer(32) | DEFAULT 0 |  |
+| jobs_trend_pct | numeric(5,2) | DEFAULT 0.00 |  |
+| applications_trend_pct | numeric(5,2) | DEFAULT 0.00 |  |
+| created_at | timestamp without time zone | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| updated_at | timestamp without time zone | DEFAULT CURRENT_TIMESTAMP | Last modification timestamp |
+
+### dashboard_metrics_hourly
+**Database table**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | uuid | NOT NULL, DEFAULT gen_random_uuid(), PK | Unique identifier |
+| metric_hour | timestamp without time zone | NOT NULL, UNIQUE |  |
+| jobs_scraped_count | integer(32) | DEFAULT 0 |  |
+| jobs_cleaned_count | integer(32) | DEFAULT 0 |  |
+| jobs_deduplicated_count | integer(32) | DEFAULT 0 |  |
+| scraping_errors_count | integer(32) | DEFAULT 0 |  |
+| scraping_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| jobs_analyzed_count | integer(32) | DEFAULT 0 |  |
+| ai_requests_sent | integer(32) | DEFAULT 0 |  |
+| ai_tokens_input | integer(32) | DEFAULT 0 |  |
+| ai_tokens_output | integer(32) | DEFAULT 0 |  |
+| ai_cost_incurred | numeric(10,4) | DEFAULT 0.00 |  |
+| ai_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| applications_sent_count | integer(32) | DEFAULT 0 |  |
+| applications_success_count | integer(32) | DEFAULT 0 |  |
+| applications_failed_count | integer(32) | DEFAULT 0 |  |
+| documents_generated_count | integer(32) | DEFAULT 0 |  |
+| application_avg_duration_ms | integer(32) | DEFAULT 0 |  |
+| pipeline_conversion_rate | numeric(5,2) | DEFAULT 0.00 |  |
+| pipeline_bottleneck | character varying(50) |  |  |
+| created_at | timestamp without time zone | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| updated_at | timestamp without time zone | DEFAULT CURRENT_TIMESTAMP | Last modification timestamp |
 
 ### data_corrections
 **Database table**
@@ -394,6 +487,31 @@ This database supports a comprehensive automated job application system that scr
 | error_message | text |  |  |
 | status | character varying(20) | DEFAULT 'pending' |  |
 | created_at | timestamp without time zone | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+
+### job_analysis_tiers
+**Database table**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | uuid | NOT NULL, DEFAULT gen_random_uuid(), PK | Unique identifier |
+| job_id | uuid | NOT NULL, FK → jobs(id), UNIQUE | Associated job reference |
+| tier_1_completed | boolean | DEFAULT false |  |
+| tier_1_timestamp | timestamp without time zone |  |  |
+| tier_1_tokens_used | integer(32) |  |  |
+| tier_1_model | character varying(50) |  |  |
+| tier_1_response_time_ms | integer(32) |  |  |
+| tier_2_completed | boolean | DEFAULT false |  |
+| tier_2_timestamp | timestamp without time zone |  |  |
+| tier_2_tokens_used | integer(32) |  |  |
+| tier_2_model | character varying(50) |  |  |
+| tier_2_response_time_ms | integer(32) |  |  |
+| tier_3_completed | boolean | DEFAULT false |  |
+| tier_3_timestamp | timestamp without time zone |  |  |
+| tier_3_tokens_used | integer(32) |  |  |
+| tier_3_model | character varying(50) |  |  |
+| tier_3_response_time_ms | integer(32) |  |  |
+| created_at | timestamp without time zone | DEFAULT now() | Record creation timestamp |
+| updated_at | timestamp without time zone | DEFAULT now() | Last modification timestamp |
 
 ### job_application_tracking
 **Database table**
@@ -765,6 +883,22 @@ This database supports a comprehensive automated job application system that scr
 | average_recovery_time | numeric(10,2) |  |  |
 | created_at | timestamp without time zone | DEFAULT now() | Record creation timestamp |
 
+### security_detections
+**Database table**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | uuid | NOT NULL, DEFAULT gen_random_uuid(), PK | Unique identifier |
+| job_id | uuid | FK → jobs(id) | Associated job reference |
+| detection_type | character varying(50) | NOT NULL |  |
+| severity | character varying(20) | NOT NULL |  |
+| pattern_matched | text |  |  |
+| text_sample | text |  |  |
+| metadata | jsonb |  |  |
+| detected_at | timestamp without time zone | DEFAULT now() |  |
+| handled | boolean | DEFAULT false |  |
+| action_taken | character varying(100) |  |  |
+
 ### security_test_table
 **Database table**
 
@@ -996,8 +1130,18 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 - `analyzed_jobs_deduplication_key_key`
 - `analyzed_jobs_pkey`
 - `idx_analyzed_jobs_department`
+- `idx_analyzed_jobs_eligible`
 - `idx_analyzed_jobs_hiring_manager`
 - `idx_analyzed_jobs_job_id`
+
+**apify_application_submissions:**
+- `apify_application_submissions_pkey`
+- `idx_apify_application_submissions_actor_run_id`
+- `idx_apify_application_submissions_application_id`
+- `idx_apify_application_submissions_job_id`
+- `idx_apify_application_submissions_platform`
+- `idx_apify_application_submissions_status`
+- `idx_apify_application_submissions_submitted_at`
 
 **application_documents:**
 - `idx_job_application_documents_app_id`
@@ -1006,6 +1150,12 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 
 **application_settings:**
 - `application_settings_pkey`
+
+**application_summary_mv:**
+- `idx_app_summary_application_id`
+- `idx_app_summary_company`
+- `idx_app_summary_created`
+- `idx_app_summary_status`
 
 **canadian_spellings:**
 - `canadian_spellings_pkey`
@@ -1031,9 +1181,22 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 - `companies_pkey`
 - `idx_companies_created_at`
 - `idx_companies_name_lower`
+- `idx_companies_name_trgm`
 
 **consistency_validation_logs:**
 - `consistency_validation_logs_pkey`
+
+**dashboard_metrics_daily:**
+- `dashboard_metrics_daily_metric_date_key`
+- `dashboard_metrics_daily_pkey`
+- `idx_metrics_daily_created`
+- `idx_metrics_daily_date`
+
+**dashboard_metrics_hourly:**
+- `dashboard_metrics_hourly_metric_hour_key`
+- `dashboard_metrics_hourly_pkey`
+- `idx_metrics_hourly_created`
+- `idx_metrics_hourly_hour`
 
 **data_corrections:**
 - `data_corrections_pkey`
@@ -1064,12 +1227,25 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 - `job_analysis_queue_job_id_key`
 - `job_analysis_queue_pkey`
 
+**job_analysis_tiers:**
+- `idx_job_analysis_tiers_created`
+- `idx_job_analysis_tiers_job_id`
+- `idx_job_analysis_tiers_tier1`
+- `idx_job_analysis_tiers_tier2`
+- `idx_job_analysis_tiers_tier3`
+- `job_analysis_tiers_job_id_key`
+- `job_analysis_tiers_pkey`
+
 **job_application_tracking:**
 - `idx_job_application_tracking_app_id`
 - `idx_job_application_tracking_type`
 - `job_application_tracking_pkey`
 
 **job_applications:**
+- `idx_applications_created_status`
+- `idx_job_apps_created_at`
+- `idx_job_apps_job_id`
+- `idx_job_apps_status`
 - `job_applications_pkey`
 
 **job_ats_keywords:**
@@ -1124,7 +1300,9 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 
 **jobs:**
 - `idx_jobs_company_analysis`
+- `idx_jobs_company_id`
 - `idx_jobs_created_at`
+- `idx_jobs_eligibility_status`
 - `idx_jobs_title_lower`
 - `jobs_pkey`
 
@@ -1148,6 +1326,7 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 - `performance_metrics_pkey`
 
 **pre_analyzed_jobs:**
+- `idx_pre_analyzed_queued`
 - `pre_analyzed_jobs_pkey`
 
 **raw_job_scrapes:**
@@ -1160,6 +1339,13 @@ raw_job_scrapes ──→ cleaned_job_scrapes (processing pipeline)
 **recovery_statistics:**
 - `recovery_statistics_date_failure_type_key`
 - `recovery_statistics_pkey`
+
+**security_detections:**
+- `idx_security_detections_detected_at`
+- `idx_security_detections_job_id`
+- `idx_security_detections_severity`
+- `idx_security_detections_type`
+- `security_detections_pkey`
 
 **sentence_bank_cover_letter:**
 - `sentence_bank_cover_letter_pkey`

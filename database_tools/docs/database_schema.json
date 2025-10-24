@@ -1,6 +1,6 @@
 {
-  "database": "neondb",
-  "generated_at": "2025-09-12T13:08:24.645397",
+  "database": "unknown",
+  "generated_at": "2025-10-24T02:33:14.910196",
   "tables": {
     "analyzed_jobs": {
       "description": "Database table",
@@ -441,6 +441,156 @@
       ],
       "indexes": []
     },
+    "apify_application_submissions": {
+      "description": "Database table",
+      "columns": {
+        "submission_id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "max_length": null,
+          "description": ""
+        },
+        "application_id": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 255,
+          "description": "Associated application reference"
+        },
+        "job_id": {
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 255,
+          "description": "Associated job reference"
+        },
+        "actor_run_id": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 255,
+          "description": ""
+        },
+        "status": {
+          "type": "character varying",
+          "nullable": false,
+          "default": "'pending'::character varying",
+          "max_length": 50,
+          "description": ""
+        },
+        "form_platform": {
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "form_type": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100,
+          "description": ""
+        },
+        "fields_filled": {
+          "type": "jsonb",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "submission_confirmed": {
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null,
+          "description": ""
+        },
+        "confirmation_message": {
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "screenshot_urls": {
+          "type": "jsonb",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "screenshot_metadata": {
+          "type": "jsonb",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "error_message": {
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "error_details": {
+          "type": "jsonb",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "submitted_at": {
+          "type": "timestamp without time zone",
+          "nullable": false,
+          "default": "now()",
+          "max_length": null,
+          "description": ""
+        },
+        "reviewed_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "created_at": {
+          "type": "timestamp without time zone",
+          "nullable": false,
+          "default": "now()",
+          "max_length": null,
+          "description": "Record creation timestamp"
+        },
+        "updated_at": {
+          "type": "timestamp without time zone",
+          "nullable": false,
+          "default": "now()",
+          "max_length": null,
+          "description": "Last modification timestamp"
+        },
+        "reviewed_by": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 255,
+          "description": ""
+        },
+        "review_notes": {
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        }
+      },
+      "primary_key": [
+        "submission_id"
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
     "application_documents": {
       "description": "Database table",
       "columns": {
@@ -667,12 +817,12 @@
       ],
       "foreign_keys": [
         {
-          "column": "cleaned_job_id",
-          "references": "cleaned_job_scrapes.cleaned_job_id"
-        },
-        {
           "column": "job_id",
           "references": "jobs.id"
+        },
+        {
+          "column": "cleaned_job_id",
+          "references": "cleaned_job_scrapes.cleaned_job_id"
         }
       ],
       "indexes": []
@@ -1105,6 +1255,376 @@
           "default": "now()",
           "max_length": null,
           "description": "Record creation timestamp"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
+    "dashboard_metrics_daily": {
+      "description": "Database table",
+      "columns": {
+        "id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "max_length": null,
+          "description": "Unique identifier"
+        },
+        "metric_date": {
+          "type": "date",
+          "nullable": false,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_scraped_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_cleaned_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_deduplicated_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "scraping_errors_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "scraping_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "scraping_peak_hour": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_analyzed_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_requests_sent": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_tokens_input": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_tokens_output": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_cost_incurred": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_model_used": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100,
+          "description": ""
+        },
+        "applications_sent_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_success_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_failed_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "documents_generated_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "application_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "success_rate": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "pipeline_conversion_rate": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "pipeline_bottleneck": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "total_pipeline_jobs": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_trend_pct": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_trend_pct": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "created_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "CURRENT_TIMESTAMP",
+          "max_length": null,
+          "description": "Record creation timestamp"
+        },
+        "updated_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "CURRENT_TIMESTAMP",
+          "max_length": null,
+          "description": "Last modification timestamp"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [],
+      "indexes": []
+    },
+    "dashboard_metrics_hourly": {
+      "description": "Database table",
+      "columns": {
+        "id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "max_length": null,
+          "description": "Unique identifier"
+        },
+        "metric_hour": {
+          "type": "timestamp without time zone",
+          "nullable": false,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_scraped_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_cleaned_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_deduplicated_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "scraping_errors_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "scraping_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "jobs_analyzed_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_requests_sent": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_tokens_input": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_tokens_output": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_cost_incurred": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "ai_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_sent_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_success_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "applications_failed_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "documents_generated_count": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "application_avg_duration_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": "0",
+          "max_length": null,
+          "description": ""
+        },
+        "pipeline_conversion_rate": {
+          "type": "numeric",
+          "nullable": true,
+          "default": "0.00",
+          "max_length": null,
+          "description": ""
+        },
+        "pipeline_bottleneck": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "created_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "CURRENT_TIMESTAMP",
+          "max_length": null,
+          "description": "Record creation timestamp"
+        },
+        "updated_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "CURRENT_TIMESTAMP",
+          "max_length": null,
+          "description": "Last modification timestamp"
         }
       },
       "primary_key": [
@@ -1785,6 +2305,154 @@
           "default": "CURRENT_TIMESTAMP",
           "max_length": null,
           "description": "Record creation timestamp"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [
+        {
+          "column": "job_id",
+          "references": "jobs.id"
+        }
+      ],
+      "indexes": []
+    },
+    "job_analysis_tiers": {
+      "description": "Database table",
+      "columns": {
+        "id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "max_length": null,
+          "description": "Unique identifier"
+        },
+        "job_id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "max_length": null,
+          "description": "Associated job reference"
+        },
+        "tier_1_completed": {
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null,
+          "description": ""
+        },
+        "tier_1_timestamp": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_1_tokens_used": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_1_model": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "tier_1_response_time_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_2_completed": {
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null,
+          "description": ""
+        },
+        "tier_2_timestamp": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_2_tokens_used": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_2_model": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "tier_2_response_time_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_3_completed": {
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null,
+          "description": ""
+        },
+        "tier_3_timestamp": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_3_tokens_used": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "tier_3_model": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "tier_3_response_time_ms": {
+          "type": "integer",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "created_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null,
+          "description": "Record creation timestamp"
+        },
+        "updated_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null,
+          "description": "Last modification timestamp"
         }
       },
       "primary_key": [
@@ -3210,12 +3878,12 @@
       ],
       "foreign_keys": [
         {
-          "column": "job_id",
-          "references": "jobs.id"
-        },
-        {
           "column": "application_id",
           "references": "job_applications.id"
+        },
+        {
+          "column": "job_id",
+          "references": "jobs.id"
         }
       ],
       "indexes": []
@@ -3547,12 +4215,12 @@
       ],
       "foreign_keys": [
         {
-          "column": "cleaned_scrape_id",
-          "references": "cleaned_job_scrapes.cleaned_job_id"
-        },
-        {
           "column": "company_id",
           "references": "companies.id"
+        },
+        {
+          "column": "cleaned_scrape_id",
+          "references": "cleaned_job_scrapes.cleaned_job_id"
         }
       ],
       "indexes": []
@@ -3729,6 +4397,91 @@
         "id"
       ],
       "foreign_keys": [],
+      "indexes": []
+    },
+    "security_detections": {
+      "description": "Database table",
+      "columns": {
+        "id": {
+          "type": "uuid",
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "max_length": null,
+          "description": "Unique identifier"
+        },
+        "job_id": {
+          "type": "uuid",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": "Associated job reference"
+        },
+        "detection_type": {
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 50,
+          "description": ""
+        },
+        "severity": {
+          "type": "character varying",
+          "nullable": false,
+          "default": null,
+          "max_length": 20,
+          "description": ""
+        },
+        "pattern_matched": {
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "text_sample": {
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "metadata": {
+          "type": "jsonb",
+          "nullable": true,
+          "default": null,
+          "max_length": null,
+          "description": ""
+        },
+        "detected_at": {
+          "type": "timestamp without time zone",
+          "nullable": true,
+          "default": "now()",
+          "max_length": null,
+          "description": ""
+        },
+        "handled": {
+          "type": "boolean",
+          "nullable": true,
+          "default": "false",
+          "max_length": null,
+          "description": ""
+        },
+        "action_taken": {
+          "type": "character varying",
+          "nullable": true,
+          "default": null,
+          "max_length": 100,
+          "description": ""
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": [
+        {
+          "column": "job_id",
+          "references": "jobs.id"
+        }
+      ],
       "indexes": []
     },
     "security_test_table": {

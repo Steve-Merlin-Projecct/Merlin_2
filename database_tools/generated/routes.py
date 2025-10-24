@@ -1,6 +1,6 @@
 """
 Auto-generated API Routes
-Generated from database schema on 2025-09-12 13:08:25
+Generated from database schema on 2025-10-24 02:33:15
 """
 
 from flask import Blueprint, request, jsonify
@@ -88,6 +88,87 @@ def delete_analyzed_jobs(id):
     try:
         with get_db_session() as db:
             success = AnalyzedJobsCRUD.delete(db, id)
+            if success:
+                return jsonify({'message': 'Record deleted successfully'})
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# ApifyApplicationSubmissions Routes
+apify_application_submissions_bp = Blueprint('apify_application_submissions', __name__, url_prefix='/api/apify-application-submissions')
+
+@apify_application_submissions_bp.route('/', methods=['GET'])
+def get_apify_application_submissions_list():
+    """
+    Get all apify_application_submissions records
+    """
+    try:
+        skip = request.args.get('skip', 0, type=int)
+        limit = request.args.get('limit', 100, type=int)
+        
+        with get_db_session() as db:
+            records = ApifyApplicationSubmissionsCRUD.get_all(db, skip=skip, limit=limit)
+            return jsonify([record.to_dict() for record in records])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@apify_application_submissions_bp.route('/<uuid:submission_id>', methods=['GET'])
+def get_apify_application_submissions_by_id(submission_id):
+    """
+    Get apify_application_submissions by ID
+    """
+    try:
+        with get_db_session() as db:
+            record = ApifyApplicationSubmissionsCRUD.get_by_id(db, submission_id)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@apify_application_submissions_bp.route('/', methods=['POST'])
+def create_apify_application_submissions():
+    """
+    Create new apify_application_submissions record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = ApifyApplicationSubmissionsCRUD.create(db, data)
+            return jsonify(record.to_dict()), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@apify_application_submissions_bp.route('/<uuid:submission_id>', methods=['PUT'])
+def update_apify_application_submissions(submission_id):
+    """
+    Update apify_application_submissions record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = ApifyApplicationSubmissionsCRUD.update(db, submission_id, data)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@apify_application_submissions_bp.route('/<uuid:submission_id>', methods=['DELETE'])
+def delete_apify_application_submissions(submission_id):
+    """
+    Delete apify_application_submissions record
+    """
+    try:
+        with get_db_session() as db:
+            success = ApifyApplicationSubmissionsCRUD.delete(db, submission_id)
             if success:
                 return jsonify({'message': 'Record deleted successfully'})
             return jsonify({'error': 'Record not found'}), 404
@@ -655,6 +736,168 @@ def delete_consistency_validation_logs(id):
     try:
         with get_db_session() as db:
             success = ConsistencyValidationLogsCRUD.delete(db, id)
+            if success:
+                return jsonify({'message': 'Record deleted successfully'})
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# DashboardMetricsDaily Routes
+dashboard_metrics_daily_bp = Blueprint('dashboard_metrics_daily', __name__, url_prefix='/api/dashboard-metrics-daily')
+
+@dashboard_metrics_daily_bp.route('/', methods=['GET'])
+def get_dashboard_metrics_daily_list():
+    """
+    Get all dashboard_metrics_daily records
+    """
+    try:
+        skip = request.args.get('skip', 0, type=int)
+        limit = request.args.get('limit', 100, type=int)
+        
+        with get_db_session() as db:
+            records = DashboardMetricsDailyCRUD.get_all(db, skip=skip, limit=limit)
+            return jsonify([record.to_dict() for record in records])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_daily_bp.route('/<uuid:id>', methods=['GET'])
+def get_dashboard_metrics_daily_by_id(id):
+    """
+    Get dashboard_metrics_daily by ID
+    """
+    try:
+        with get_db_session() as db:
+            record = DashboardMetricsDailyCRUD.get_by_id(db, id)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_daily_bp.route('/', methods=['POST'])
+def create_dashboard_metrics_daily():
+    """
+    Create new dashboard_metrics_daily record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = DashboardMetricsDailyCRUD.create(db, data)
+            return jsonify(record.to_dict()), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_daily_bp.route('/<uuid:id>', methods=['PUT'])
+def update_dashboard_metrics_daily(id):
+    """
+    Update dashboard_metrics_daily record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = DashboardMetricsDailyCRUD.update(db, id, data)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_daily_bp.route('/<uuid:id>', methods=['DELETE'])
+def delete_dashboard_metrics_daily(id):
+    """
+    Delete dashboard_metrics_daily record
+    """
+    try:
+        with get_db_session() as db:
+            success = DashboardMetricsDailyCRUD.delete(db, id)
+            if success:
+                return jsonify({'message': 'Record deleted successfully'})
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# DashboardMetricsHourly Routes
+dashboard_metrics_hourly_bp = Blueprint('dashboard_metrics_hourly', __name__, url_prefix='/api/dashboard-metrics-hourly')
+
+@dashboard_metrics_hourly_bp.route('/', methods=['GET'])
+def get_dashboard_metrics_hourly_list():
+    """
+    Get all dashboard_metrics_hourly records
+    """
+    try:
+        skip = request.args.get('skip', 0, type=int)
+        limit = request.args.get('limit', 100, type=int)
+        
+        with get_db_session() as db:
+            records = DashboardMetricsHourlyCRUD.get_all(db, skip=skip, limit=limit)
+            return jsonify([record.to_dict() for record in records])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_hourly_bp.route('/<uuid:id>', methods=['GET'])
+def get_dashboard_metrics_hourly_by_id(id):
+    """
+    Get dashboard_metrics_hourly by ID
+    """
+    try:
+        with get_db_session() as db:
+            record = DashboardMetricsHourlyCRUD.get_by_id(db, id)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_hourly_bp.route('/', methods=['POST'])
+def create_dashboard_metrics_hourly():
+    """
+    Create new dashboard_metrics_hourly record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = DashboardMetricsHourlyCRUD.create(db, data)
+            return jsonify(record.to_dict()), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_hourly_bp.route('/<uuid:id>', methods=['PUT'])
+def update_dashboard_metrics_hourly(id):
+    """
+    Update dashboard_metrics_hourly record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = DashboardMetricsHourlyCRUD.update(db, id, data)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@dashboard_metrics_hourly_bp.route('/<uuid:id>', methods=['DELETE'])
+def delete_dashboard_metrics_hourly(id):
+    """
+    Delete dashboard_metrics_hourly record
+    """
+    try:
+        with get_db_session() as db:
+            success = DashboardMetricsHourlyCRUD.delete(db, id)
             if success:
                 return jsonify({'message': 'Record deleted successfully'})
             return jsonify({'error': 'Record not found'}), 404
@@ -1303,6 +1546,87 @@ def delete_job_analysis_queue(id):
     try:
         with get_db_session() as db:
             success = JobAnalysisQueueCRUD.delete(db, id)
+            if success:
+                return jsonify({'message': 'Record deleted successfully'})
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# JobAnalysisTiers Routes
+job_analysis_tiers_bp = Blueprint('job_analysis_tiers', __name__, url_prefix='/api/job-analysis-tiers')
+
+@job_analysis_tiers_bp.route('/', methods=['GET'])
+def get_job_analysis_tiers_list():
+    """
+    Get all job_analysis_tiers records
+    """
+    try:
+        skip = request.args.get('skip', 0, type=int)
+        limit = request.args.get('limit', 100, type=int)
+        
+        with get_db_session() as db:
+            records = JobAnalysisTiersCRUD.get_all(db, skip=skip, limit=limit)
+            return jsonify([record.to_dict() for record in records])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@job_analysis_tiers_bp.route('/<uuid:id>', methods=['GET'])
+def get_job_analysis_tiers_by_id(id):
+    """
+    Get job_analysis_tiers by ID
+    """
+    try:
+        with get_db_session() as db:
+            record = JobAnalysisTiersCRUD.get_by_id(db, id)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@job_analysis_tiers_bp.route('/', methods=['POST'])
+def create_job_analysis_tiers():
+    """
+    Create new job_analysis_tiers record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = JobAnalysisTiersCRUD.create(db, data)
+            return jsonify(record.to_dict()), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@job_analysis_tiers_bp.route('/<uuid:id>', methods=['PUT'])
+def update_job_analysis_tiers(id):
+    """
+    Update job_analysis_tiers record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = JobAnalysisTiersCRUD.update(db, id, data)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@job_analysis_tiers_bp.route('/<uuid:id>', methods=['DELETE'])
+def delete_job_analysis_tiers(id):
+    """
+    Delete job_analysis_tiers record
+    """
+    try:
+        with get_db_session() as db:
+            success = JobAnalysisTiersCRUD.delete(db, id)
             if success:
                 return jsonify({'message': 'Record deleted successfully'})
             return jsonify({'error': 'Record not found'}), 404
@@ -3004,6 +3328,87 @@ def delete_recovery_statistics(id):
     try:
         with get_db_session() as db:
             success = RecoveryStatisticsCRUD.delete(db, id)
+            if success:
+                return jsonify({'message': 'Record deleted successfully'})
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# SecurityDetections Routes
+security_detections_bp = Blueprint('security_detections', __name__, url_prefix='/api/security-detections')
+
+@security_detections_bp.route('/', methods=['GET'])
+def get_security_detections_list():
+    """
+    Get all security_detections records
+    """
+    try:
+        skip = request.args.get('skip', 0, type=int)
+        limit = request.args.get('limit', 100, type=int)
+        
+        with get_db_session() as db:
+            records = SecurityDetectionsCRUD.get_all(db, skip=skip, limit=limit)
+            return jsonify([record.to_dict() for record in records])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@security_detections_bp.route('/<uuid:id>', methods=['GET'])
+def get_security_detections_by_id(id):
+    """
+    Get security_detections by ID
+    """
+    try:
+        with get_db_session() as db:
+            record = SecurityDetectionsCRUD.get_by_id(db, id)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@security_detections_bp.route('/', methods=['POST'])
+def create_security_detections():
+    """
+    Create new security_detections record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = SecurityDetectionsCRUD.create(db, data)
+            return jsonify(record.to_dict()), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@security_detections_bp.route('/<uuid:id>', methods=['PUT'])
+def update_security_detections(id):
+    """
+    Update security_detections record
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        with get_db_session() as db:
+            record = SecurityDetectionsCRUD.update(db, id, data)
+            if record:
+                return jsonify(record.to_dict())
+            return jsonify({'error': 'Record not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@security_detections_bp.route('/<uuid:id>', methods=['DELETE'])
+def delete_security_detections(id):
+    """
+    Delete security_detections record
+    """
+    try:
+        with get_db_session() as db:
+            success = SecurityDetectionsCRUD.delete(db, id)
             if success:
                 return jsonify({'message': 'Record deleted successfully'})
             return jsonify({'error': 'Record not found'}), 404

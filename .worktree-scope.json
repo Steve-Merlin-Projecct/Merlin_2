@@ -1,11 +1,11 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "create-securitydetections-table-in-production-data",
+  "description": "||Create security_detections table in production database",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/database/**",
+      "tests/test_*create_securitydetections_table_in_production_data*.py",
+      "docs/*create-securitydetections-table-in-production-data*.md"
 
     ],
     "exclude": [
@@ -16,6 +16,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:10:26+00:00",
   "out_of_scope_policy": "warn"
 }

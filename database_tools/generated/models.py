@@ -1,6 +1,6 @@
 """
 Auto-generated SQLAlchemy Models
-Generated from database schema on 2025-09-12 13:08:25
+Generated from database schema on 2025-10-24 02:33:15
 """
 
 from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Date, Text, ForeignKey, JSON
@@ -147,6 +147,58 @@ class AnalyzedJobs(Base):
         return f"<AnalyzedJobs({self.id})>"
 
 
+class ApifyApplicationSubmissions(Base):
+    __tablename__ = "apify_application_submissions"
+
+    submission_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+    application_id = Column(String(255))
+    job_id = Column(String(255), nullable=False)
+    actor_run_id = Column(String(255))
+    status = Column(String(50), nullable=False)
+    form_platform = Column(String(50), nullable=False)
+    form_type = Column(String(100))
+    fields_filled = Column(JSON)
+    submission_confirmed = Column(Boolean)
+    confirmation_message = Column(Text)
+    screenshot_urls = Column(JSON)
+    screenshot_metadata = Column(JSON)
+    error_message = Column(Text)
+    error_details = Column(JSON)
+    submitted_at = Column(DateTime, nullable=False)
+    reviewed_at = Column(DateTime)
+    created_at = Column(DateTime, nullable=False)
+    updated_at = Column(DateTime, nullable=False)
+    reviewed_by = Column(String(255))
+    review_notes = Column(Text)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "submission_id": self.submission_id,
+            "application_id": self.application_id,
+            "job_id": self.job_id,
+            "actor_run_id": self.actor_run_id,
+            "status": self.status,
+            "form_platform": self.form_platform,
+            "form_type": self.form_type,
+            "fields_filled": self.fields_filled,
+            "submission_confirmed": self.submission_confirmed,
+            "confirmation_message": self.confirmation_message,
+            "screenshot_urls": self.screenshot_urls,
+            "screenshot_metadata": self.screenshot_metadata,
+            "error_message": self.error_message,
+            "error_details": self.error_details,
+            "submitted_at": self.submitted_at,
+            "reviewed_at": self.reviewed_at,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "reviewed_by": self.reviewed_by,
+            "review_notes": self.review_notes,
+        }
+
+    def __repr__(self) -> str:
+        return f"<ApifyApplicationSubmissions({self.submission_id})>"
+
+
 class ApplicationDocuments(Base):
     __tablename__ = "application_documents"
 
@@ -231,8 +283,8 @@ class CleanedJobScrapeSources(Base):
     processed_to_jobs = Column(Boolean)
     job_id = Column(UUID(as_uuid=True), ForeignKey('jobs.id'))
     processed_at = Column(DateTime)
-    cleanedjobscrapes = relationship('CleanedJobScrapes', back_populates='cleaned_job_scrape_sources')
     jobs = relationship('Jobs', back_populates='cleaned_job_scrape_sources')
+    cleanedjobscrapes = relationship('CleanedJobScrapes', back_populates='cleaned_job_scrape_sources')
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -400,6 +452,130 @@ class ConsistencyValidationLogs(Base):
 
     def __repr__(self) -> str:
         return f"<ConsistencyValidationLogs({self.id})>"
+
+
+class DashboardMetricsDaily(Base):
+    __tablename__ = "dashboard_metrics_daily"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+    metric_date = Column(Date, unique=True, nullable=False)
+    jobs_scraped_count = Column(Integer)
+    jobs_cleaned_count = Column(Integer)
+    jobs_deduplicated_count = Column(Integer)
+    scraping_errors_count = Column(Integer)
+    scraping_avg_duration_ms = Column(Integer)
+    scraping_peak_hour = Column(Integer)
+    jobs_analyzed_count = Column(Integer)
+    ai_requests_sent = Column(Integer)
+    ai_tokens_input = Column(Integer)
+    ai_tokens_output = Column(Integer)
+    ai_cost_incurred = Column(Float)
+    ai_avg_duration_ms = Column(Integer)
+    ai_model_used = Column(String(100))
+    applications_sent_count = Column(Integer)
+    applications_success_count = Column(Integer)
+    applications_failed_count = Column(Integer)
+    documents_generated_count = Column(Integer)
+    application_avg_duration_ms = Column(Integer)
+    success_rate = Column(Float)
+    pipeline_conversion_rate = Column(Float)
+    pipeline_bottleneck = Column(String(50))
+    total_pipeline_jobs = Column(Integer)
+    jobs_trend_pct = Column(Float)
+    applications_trend_pct = Column(Float)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "metric_date": self.metric_date,
+            "jobs_scraped_count": self.jobs_scraped_count,
+            "jobs_cleaned_count": self.jobs_cleaned_count,
+            "jobs_deduplicated_count": self.jobs_deduplicated_count,
+            "scraping_errors_count": self.scraping_errors_count,
+            "scraping_avg_duration_ms": self.scraping_avg_duration_ms,
+            "scraping_peak_hour": self.scraping_peak_hour,
+            "jobs_analyzed_count": self.jobs_analyzed_count,
+            "ai_requests_sent": self.ai_requests_sent,
+            "ai_tokens_input": self.ai_tokens_input,
+            "ai_tokens_output": self.ai_tokens_output,
+            "ai_cost_incurred": self.ai_cost_incurred,
+            "ai_avg_duration_ms": self.ai_avg_duration_ms,
+            "ai_model_used": self.ai_model_used,
+            "applications_sent_count": self.applications_sent_count,
+            "applications_success_count": self.applications_success_count,
+            "applications_failed_count": self.applications_failed_count,
+            "documents_generated_count": self.documents_generated_count,
+            "application_avg_duration_ms": self.application_avg_duration_ms,
+            "success_rate": self.success_rate,
+            "pipeline_conversion_rate": self.pipeline_conversion_rate,
+            "pipeline_bottleneck": self.pipeline_bottleneck,
+            "total_pipeline_jobs": self.total_pipeline_jobs,
+            "jobs_trend_pct": self.jobs_trend_pct,
+            "applications_trend_pct": self.applications_trend_pct,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+    def __repr__(self) -> str:
+        return f"<DashboardMetricsDaily({self.id})>"
+
+
+class DashboardMetricsHourly(Base):
+    __tablename__ = "dashboard_metrics_hourly"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+    metric_hour = Column(DateTime, unique=True, nullable=False)
+    jobs_scraped_count = Column(Integer)
+    jobs_cleaned_count = Column(Integer)
+    jobs_deduplicated_count = Column(Integer)
+    scraping_errors_count = Column(Integer)
+    scraping_avg_duration_ms = Column(Integer)
+    jobs_analyzed_count = Column(Integer)
+    ai_requests_sent = Column(Integer)
+    ai_tokens_input = Column(Integer)
+    ai_tokens_output = Column(Integer)
+    ai_cost_incurred = Column(Float)
+    ai_avg_duration_ms = Column(Integer)
+    applications_sent_count = Column(Integer)
+    applications_success_count = Column(Integer)
+    applications_failed_count = Column(Integer)
+    documents_generated_count = Column(Integer)
+    application_avg_duration_ms = Column(Integer)
+    pipeline_conversion_rate = Column(Float)
+    pipeline_bottleneck = Column(String(50))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "metric_hour": self.metric_hour,
+            "jobs_scraped_count": self.jobs_scraped_count,
+            "jobs_cleaned_count": self.jobs_cleaned_count,
+            "jobs_deduplicated_count": self.jobs_deduplicated_count,
+            "scraping_errors_count": self.scraping_errors_count,
+            "scraping_avg_duration_ms": self.scraping_avg_duration_ms,
+            "jobs_analyzed_count": self.jobs_analyzed_count,
+            "ai_requests_sent": self.ai_requests_sent,
+            "ai_tokens_input": self.ai_tokens_input,
+            "ai_tokens_output": self.ai_tokens_output,
+            "ai_cost_incurred": self.ai_cost_incurred,
+            "ai_avg_duration_ms": self.ai_avg_duration_ms,
+            "applications_sent_count": self.applications_sent_count,
+            "applications_success_count": self.applications_success_count,
+            "applications_failed_count": self.applications_failed_count,
+            "documents_generated_count": self.documents_generated_count,
+            "application_avg_duration_ms": self.application_avg_duration_ms,
+            "pipeline_conversion_rate": self.pipeline_conversion_rate,
+            "pipeline_bottleneck": self.pipeline_bottleneck,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+    def __repr__(self) -> str:
+        return f"<DashboardMetricsHourly({self.id})>"
 
 
 class DataCorrections(Base):
@@ -668,6 +844,57 @@ class JobAnalysisQueue(Base):
 
     def __repr__(self) -> str:
         return f"<JobAnalysisQueue({self.id})>"
+
+
+class JobAnalysisTiers(Base):
+    __tablename__ = "job_analysis_tiers"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+    job_id = Column(UUID(as_uuid=True), ForeignKey('jobs.id'), unique=True, nullable=False)
+    tier_1_completed = Column(Boolean)
+    tier_1_timestamp = Column(DateTime)
+    tier_1_tokens_used = Column(Integer)
+    tier_1_model = Column(String(50))
+    tier_1_response_time_ms = Column(Integer)
+    tier_2_completed = Column(Boolean)
+    tier_2_timestamp = Column(DateTime)
+    tier_2_tokens_used = Column(Integer)
+    tier_2_model = Column(String(50))
+    tier_2_response_time_ms = Column(Integer)
+    tier_3_completed = Column(Boolean)
+    tier_3_timestamp = Column(DateTime)
+    tier_3_tokens_used = Column(Integer)
+    tier_3_model = Column(String(50))
+    tier_3_response_time_ms = Column(Integer)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+    jobs = relationship('Jobs', back_populates='job_analysis_tiers')
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "job_id": self.job_id,
+            "tier_1_completed": self.tier_1_completed,
+            "tier_1_timestamp": self.tier_1_timestamp,
+            "tier_1_tokens_used": self.tier_1_tokens_used,
+            "tier_1_model": self.tier_1_model,
+            "tier_1_response_time_ms": self.tier_1_response_time_ms,
+            "tier_2_completed": self.tier_2_completed,
+            "tier_2_timestamp": self.tier_2_timestamp,
+            "tier_2_tokens_used": self.tier_2_tokens_used,
+            "tier_2_model": self.tier_2_model,
+            "tier_2_response_time_ms": self.tier_2_response_time_ms,
+            "tier_3_completed": self.tier_3_completed,
+            "tier_3_timestamp": self.tier_3_timestamp,
+            "tier_3_tokens_used": self.tier_3_tokens_used,
+            "tier_3_model": self.tier_3_model,
+            "tier_3_response_time_ms": self.tier_3_response_time_ms,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
+
+    def __repr__(self) -> str:
+        return f"<JobAnalysisTiers({self.id})>"
 
 
 class JobApplicationTracking(Base):
@@ -1204,8 +1431,8 @@ class LinkTracking(Base):
     created_by = Column(String(100))
     is_active = Column(Boolean)
     description = Column(Text)
-    jobs = relationship('Jobs', back_populates='link_tracking')
     jobapplications = relationship('JobApplications', back_populates='link_tracking')
+    jobs = relationship('Jobs', back_populates='link_tracking')
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -1297,8 +1524,8 @@ class PreAnalyzedJobs(Base):
     queued_for_analysis = Column(Boolean)
     created_at = Column(DateTime, default=datetime.utcnow)
     processed_at = Column(DateTime)
-    cleanedjobscrapes = relationship('CleanedJobScrapes', back_populates='pre_analyzed_jobs')
     companies = relationship('Companies', back_populates='pre_analyzed_jobs')
+    cleanedjobscrapes = relationship('CleanedJobScrapes', back_populates='pre_analyzed_jobs')
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -1406,6 +1633,39 @@ class RecoveryStatistics(Base):
 
     def __repr__(self) -> str:
         return f"<RecoveryStatistics({self.id})>"
+
+
+class SecurityDetections(Base):
+    __tablename__ = "security_detections"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+    job_id = Column(UUID(as_uuid=True), ForeignKey('jobs.id'))
+    detection_type = Column(String(50), nullable=False)
+    severity = Column(String(20), nullable=False)
+    pattern_matched = Column(Text)
+    text_sample = Column(Text)
+    metadata = Column(JSON)
+    detected_at = Column(DateTime)
+    handled = Column(Boolean)
+    action_taken = Column(String(100))
+    jobs = relationship('Jobs', back_populates='security_detections')
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "job_id": self.job_id,
+            "detection_type": self.detection_type,
+            "severity": self.severity,
+            "pattern_matched": self.pattern_matched,
+            "text_sample": self.text_sample,
+            "metadata": self.metadata,
+            "detected_at": self.detected_at,
+            "handled": self.handled,
+            "action_taken": self.action_taken,
+        }
+
+    def __repr__(self) -> str:
+        return f"<SecurityDetections({self.id})>"
 
 
 class SecurityTestTable(Base):
