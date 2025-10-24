@@ -33,6 +33,7 @@ except ImportError as e:
 
 from modules.storage import get_storage_backend
 from .template_engine import TemplateEngine
+from .pre_send_validator import PreSendValidator, ValidationConfig
 
 
 class DocumentGenerator:
@@ -52,7 +53,7 @@ class DocumentGenerator:
     - Support for multiple document types (resume, cover letter, etc.)
     """
 
-    def __init__(self):
+    def __init__(self, enable_validation: bool = True):
         """
         Initialize the document generator with template engine and storage
 
@@ -60,7 +61,11 @@ class DocumentGenerator:
         - Template engine for processing template files
         - Storage directories for generated documents
         - Cloud storage client for document persistence
+        - Pre-send validator for document validation
         - Logging configuration for debugging
+
+        Args:
+            enable_validation: Enable pre-send validation (default: True)
         """
         self.storage_dir = os.path.join(os.getcwd(), "storage")
         self.template_engine = TemplateEngine()
@@ -77,6 +82,22 @@ class DocumentGenerator:
         from modules.content.document_generation.csv_content_mapper import CSVContentMapper
 
         self.csv_mapper = CSVContentMapper()
+
+        # Initialize pre-send validator for document validation
+        self.enable_validation = enable_validation
+        if self.enable_validation:
+            try:
+                # Load validation config from environment or use defaults
+                validation_config = ValidationConfig.from_env()
+                self.validator = PreSendValidator(config=validation_config)
+                logging.info("Pre-send validator initialized successfully")
+            except Exception as e:
+                logging.error(f"Failed to initialize pre-send validator: {str(e)}")
+                self.validator = None
+                self.enable_validation = False
+        else:
+            self.validator = None
+            logging.info("Pre-send validation disabled")
 
     def generate_document_with_csv_mapping(
         self, data, document_type="resume", template_name=None, csv_mapping_path=None,
@@ -174,6 +195,42 @@ class DocumentGenerator:
             # Get the generated document path
             generated_path = result["output_path"]
 
+            # VALIDATION: Run pre-send validation before uploading
+            if self.enable_validation and self.validator:
+                logging.info(f"Running pre-send validation on generated document: {generated_path}")
+                validation_result = self.validator.validate_document(generated_path, document_type)
+
+                # Add validation result to response
+                result["validation"] = validation_result
+
+                # If validation fails, flag the document as unsafe
+                if not validation_result["safe_to_send"]:
+                    logging.error(
+                        f"VALIDATION FAILED: Document {generated_path} failed pre-send validation. "
+                        f"Errors: {len(validation_result['errors'])}"
+                    )
+                    result["validation_failed"] = True
+                    result["validation_errors"] = validation_result["errors"]
+
+                    # Return result WITHOUT uploading (do not send failed documents)
+                    result.update(
+                        {
+                            "file_path": generated_path,
+                            "filename": os.path.basename(generated_path),
+                            "storage_type": "local_only",
+                            "template_used": template_path,
+                            "document_type": document_type,
+                            "generation_method": "template_based",
+                            "safe_to_send": False,
+                            "status": "validation_failed"
+                        }
+                    )
+                    return result
+                else:
+                    logging.info(f"Pre-send validation PASSED for {generated_path}")
+                    result["validation_failed"] = False
+                    result["safe_to_send"] = True
+
             # Upload to object storage if available
             file_info = self.upload_to_storage(generated_path)
 
@@ -186,6 +243,8 @@ class DocumentGenerator:
                     "template_used": template_path,
                     "document_type": document_type,
                     "generation_method": "template_based",
+                    "safe_to_send": True,
+                    "status": "success"
                 }
             )
 

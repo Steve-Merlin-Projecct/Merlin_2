@@ -12,10 +12,13 @@ Description: Provides REST API for OAuth status checks, credential setup, author
 """
 
 import logging
+import os
+from pathlib import Path
 from flask import Blueprint, jsonify, request, redirect, session
 from modules.email_integration.gmail_oauth_official import get_gmail_oauth_manager, get_gmail_sender
 from modules.email_integration.gmail_setup_guide import get_setup_guide
 from modules.dashboard_api import require_dashboard_auth as require_auth
+from modules.content.document_generation.pre_send_validator import PreSendValidator, ValidationConfig
 
 logger = logging.getLogger(__name__)
 
@@ -155,7 +158,7 @@ def oauth_callback():
 @email_api.route("/send", methods=["POST"])
 @require_auth
 def send_email():
-    """Send email via Gmail API (scaffolded)"""
+    """Send email via Gmail API with pre-send document validation"""
 
     try:
         data = request.get_json()
@@ -173,14 +176,83 @@ def send_email():
         if not oauth_manager.is_authenticated():
             return jsonify({"success": False, "error": "Gmail OAuth not authenticated. Setup required."}), 401
 
-        # Use Gmail sender (scaffolded)
+        # PRE-SEND VALIDATION: Validate all attachments before sending
+        attachments = data.get("attachments", [])
+        validation_results = []
+        validation_failed = False
+
+        if attachments:
+            logger.info(f"Validating {len(attachments)} attachments before sending email")
+
+            # Initialize validator
+            validator = PreSendValidator(config=ValidationConfig.from_env())
+
+            for idx, attachment in enumerate(attachments):
+                attachment_path = attachment.get("path")
+                attachment_name = attachment.get("filename", f"attachment_{idx}")
+
+                if attachment_path and os.path.exists(attachment_path):
+                    # Validate document
+                    validation_result = validator.validate_document(
+                        attachment_path,
+                        document_type=attachment.get("type", "attachment")
+                    )
+                    validation_results.append(validation_result)
+
+                    # Check if validation passed
+                    if not validation_result["safe_to_send"]:
+                        validation_failed = True
+                        logger.error(
+                            f"Attachment validation FAILED: {attachment_name} - "
+                            f"{len(validation_result['errors'])} errors found"
+                        )
+                else:
+                    # Attachment file not found
+                    validation_failed = True
+                    logger.error(f"Attachment file not found: {attachment_path}")
+                    validation_results.append({
+                        "valid": False,
+                        "safe_to_send": False,
+                        "errors": [{
+                            "check_name": "file_exists",
+                            "severity": "critical",
+                            "message": f"Attachment file not found: {attachment_path}"
+                        }],
+                        "file_path": attachment_path
+                    })
+
+        # If validation failed, do NOT send email
+        if validation_failed:
+            logger.error("Email NOT sent - attachment validation failed")
+            return jsonify({
+                "success": False,
+                "error": "Pre-send validation failed - email NOT sent",
+                "validation_results": validation_results,
+                "message": "One or more attachments failed validation checks. Email was NOT sent to prevent sending invalid documents."
+            }), 400
+
+        # Validation passed - proceed with sending
+        if attachments and validation_results:
+            logger.info(f"All {len(attachments)} attachments validated successfully - proceeding to send email")
+
+        # Use Gmail sender
         gmail_sender = get_gmail_sender(oauth_manager)
         result = gmail_sender.send_job_application_email(
             to_email=data["to_email"],
             subject=data["subject"],
             body=data["body"],
-            attachments=data.get("attachments", []),
+            attachments=attachments,
         )
+
+        # Add validation results to response
+        if validation_results:
+            result["attachment_validation"] = {
+                "validated": True,
+                "attachments_count": len(attachments),
+                "all_passed": True
+            }
+
+        logger.info(f"Email sent successfully to {data['to_email']} with {len(attachments)} validated attachments")
 
         return jsonify({"success": True, "data": result})
 
