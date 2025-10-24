@@ -50,15 +50,12 @@ https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/batch
 
 **API Key:**
 
-**Dedicated Key (Recommended)**
-```
-STEVE_GLEN_TRACKING_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf
-```
+**Dedicated key for steve-glen.com integration**
 - ✅ steve-glen.com can ONLY access tracking ingest API
 - ✅ More secure (least privilege principle)
 - ✅ Cannot access database, AI, or other APIs
 
-**See:** `steve-glen-com-handoff/STEVE_GLEN_API_KEY.md` for configuration instructions.
+**Get the actual key from:** `steve-glen-com-handoff/STEVE_GLEN_API_KEY.md` 🔐
 
 **Test Health:**
 ```bash
@@ -91,7 +88,7 @@ Only 5 fields needed:
 
 ## 🚀 Quick Start
 
-### Step 1: Test Locally
+### Step 1: Test API Locally (Optional)
 
 ```bash
 # Start Flask server
@@ -154,22 +151,23 @@ Send them the entire **`steve-glen-com-handoff/`** folder (contains all docs, te
 ## ✅ What's Ready
 
 - [x] API endpoint created (`/api/tracking-ingest/batch`)
-- [x] Authentication working (API key)
+- [x] Authentication working (dedicated API key)
 - [x] Request validation (5-field simplified format)
 - [x] Database storage (`link_clicks` table)
-- [x] Test suite (`test_tracking_ingest.py`)
-- [x] Documentation (simplified & updated)
+- [x] API test suite (`test_tracking_ingest.py` - 6 tests)
+- [x] Documentation (simplified & organized)
+- [x] Handoff package (`steve-glen-com-handoff/` folder)
 - [x] Production URL configured
-- [x] API key generated
+- [x] API key generated (dedicated, secure)
 
 ---
 
 ## ⏳ Next Steps
 
-1. **Test Locally** - Run `test_tracking_ingest.py`
-2. **Deploy to Production** - Follow `DEPLOYMENT_CHECKLIST.md`
-3. **Share with steve-glen.com** - Send them `QUICK_START_STEVE_GLEN_COM.md`
-4. **Monitor** - Check logs for incoming events
+1. **Deploy to Production** - Follow `DEPLOYMENT_CHECKLIST.md`
+2. **Test Production** - Verify health endpoint responds
+3. **Share with steve-glen.com** - Send them `steve-glen-com-handoff/` folder
+4. **Monitor** - Check logs for incoming events after steve-glen.com integrates
 
 ---
 
@@ -182,15 +180,17 @@ curl https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/
 
 **Test Auth:**
 ```bash
+# Get API key from: steve-glen-com-handoff/STEVE_GLEN_API_KEY.md
 curl -X POST https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/test \
-  -H "X-API-Key: wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf" \
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
   -H "Content-Type: application/json"
 ```
 
 **Send Test Batch:**
 ```bash
+# Get API key from: steve-glen-com-handoff/STEVE_GLEN_API_KEY.md
 curl -X POST https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/batch \
-  -H "X-API-Key: wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf" \
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{"events":[{"tracking_id":"test-123","click_source":"linkedin"}]}'
 ```
@@ -211,7 +211,7 @@ curl -X POST https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking
 ```bash
 # steve-glen.com .env
 TRACKING_API_URL=https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/batch
-WEBHOOK_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf
+WEBHOOK_API_KEY=<see STEVE_GLEN_API_KEY.md in handoff folder>
 ```
 
 ---

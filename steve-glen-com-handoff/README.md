@@ -26,7 +26,7 @@ This folder contains everything needed to integrate steve-glen.com with the trac
 - Security features explained
 - Test commands with authentication
 
-**Key:** `STEVE_GLEN_TRACKING_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf`
+**Key:** See `STEVE_GLEN_API_KEY.md` file (kept secure in this folder) 🔐
 
 ### 📚 Reference Documentation
 
@@ -44,14 +44,15 @@ This folder contains everything needed to integrate steve-glen.com with the trac
 ```bash
 # Add to steve-glen.com .env file
 TRACKING_API_URL=https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/batch
-WEBHOOK_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf
+WEBHOOK_API_KEY=<see STEVE_GLEN_API_KEY.md file>
 ```
 
 ### Step 2: Test Connection
 
 ```bash
+# Use the API key from STEVE_GLEN_API_KEY.md
 curl -X POST https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/test \
-  -H "X-API-Key: wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf" \
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
   -H "Content-Type: application/json"
 ```
 
@@ -157,9 +158,12 @@ curl https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/
 - ✅ Follows principle of least privilege
 
 **Keep `STEVE_GLEN_API_KEY.md` secure:**
-- Do not commit to public repositories
-- Store in environment variables
-- Rotate periodically (instructions in file)
+- ⚠️ **Do NOT commit to public repositories**
+- ⚠️ **Do NOT share publicly**
+- ✅ Store in environment variables (production)
+- ✅ Add to .gitignore if committing code
+- ✅ Rotate periodically (instructions in file)
+- ✅ Delete this file after extracting the key
 
 ---
 

@@ -32,7 +32,7 @@ This folder contains **everything** needed to integrate steve-glen.com with the 
    - Troubleshooting
 
 3. **`STEVE_GLEN_API_KEY.md`** (4.2 KB) 🔐 **SENSITIVE**
-   - Dedicated API key: `wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf`
+   - Contains dedicated API key for steve-glen.com integration
    - Environment variable configuration (DigitalOcean and steve-glen.com)
    - Security features explained
    - Test commands with authentication
@@ -99,7 +99,7 @@ This folder contains **everything** needed to integrate steve-glen.com with the 
 ## 🔑 API Key Information
 
 **Key Name:** `STEVE_GLEN_TRACKING_API_KEY`
-**Key Value:** `wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf`
+**Key Value:** See `steve-glen-com-handoff/STEVE_GLEN_API_KEY.md` file 🔐
 
 **Security Features:**
 - ✅ Dedicated key (not shared with other APIs)
@@ -112,10 +112,10 @@ This folder contains **everything** needed to integrate steve-glen.com with the 
 ```bash
 # Add to steve-glen.com .env file
 TRACKING_API_URL=https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/api/tracking-ingest/batch
-WEBHOOK_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf
+WEBHOOK_API_KEY=<see STEVE_GLEN_API_KEY.md file>
 ```
 
-*(Note: They use `WEBHOOK_API_KEY` as their variable name, but it's our dedicated key)*
+*(Note: They use `WEBHOOK_API_KEY` as their variable name, but it's our dedicated key from the handoff folder)*
 
 ---
 
@@ -156,7 +156,8 @@ WEBHOOK_API_KEY=wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf
 ```
 
 **Updated references:**
-- Changed all API key examples to use dedicated key (`wR4kLmN7pQxS9vYzBcTgHjUiOeWqAsXdFrGhKnMbVlCxZaPoIuYtEwQsLkJnHmGf`)
+- Removed hardcoded API keys from all examples
+- Added references to secure key location (`steve-glen-com-handoff/STEVE_GLEN_API_KEY.md`)
 - Removed reference to deleted `SIMPLIFIED_REQUEST_FORMAT.md`
 - Updated "For steve-glen.com Team" section to point to handoff folder
 
