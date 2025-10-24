@@ -2,15 +2,15 @@
 title: Documentation Index
 type: reference
 created: 2025-10-21
-modified: 2025-10-21
+modified: 2025-10-24
 status: current
 related: README.md, CLAUDE.md, docs/worktrees/WORKTREE_COMPLETE_GUIDE.md
 ---
 
 # Documentation Index
 
-**Last Updated:** 2025-10-21
-**Librarian Operations:** Documentation organization and consolidation
+**Last Updated:** 2025-10-24
+**Librarian Operations:** Documentation organization, validation, and search
 
 ---
 
@@ -19,6 +19,42 @@ related: README.md, CLAUDE.md, docs/worktrees/WORKTREE_COMPLETE_GUIDE.md
 - **Project README:** [/README.md](../README.md)
 - **Quick Start Guide:** [/QUICKSTART.md](../QUICKSTART.md)
 - **System Instructions:** [/CLAUDE.md](../CLAUDE.md)
+
+---
+
+## Librarian System
+
+**Documentation management, validation, and search tools**
+
+### Quick Reference
+- **Tools Reference:** [`librarian-tools-reference.md`](librarian-tools-reference.md) - Comprehensive guide to all librarian tools
+- **Pre-Commit Hook:** [`librarian-pre-commit-hook.md`](librarian-pre-commit-hook.md) - Automated validation on commits
+- **CI/CD Workflow:** [`librarian-ci-cd-workflow.md`](librarian-ci-cd-workflow.md) - GitHub Actions validation
+- **Archival System:** [`automated-archival-system.md`](automated-archival-system.md) - Stale documentation management
+
+### Validation Tools
+```bash
+python tools/validate_metadata.py --all     # YAML frontmatter validation
+python tools/validate_location.py --all     # File organization check
+python tools/validate_links.py --all        # Internal link validation
+python tools/librarian_validate.py          # Unified validation
+```
+
+### Search & Discovery
+```bash
+python tools/build_index.py --rebuild       # Build searchable catalog
+python tools/query_catalog.py --keywords "api"  # Search documentation
+python tools/collect_metrics.py --report    # Documentation metrics
+```
+
+### Archival & Maintenance
+```bash
+python tools/auto_archive.py                # Check for stale docs
+python tools/auto_archive.py --execute      # Archive stale docs
+python tools/collect_metrics.py --json      # Generate metrics report
+```
+
+See: [`librarian-tools-reference.md`](librarian-tools-reference.md) for complete documentation
 
 ---
 
@@ -187,10 +223,29 @@ Task-specific documentation can be found in [`/tasks/`](../tasks/):
 
 ## Maintenance Notes
 
-**Last Organization:** 2025-10-21
-**Organized By:** Librarian Operations
+**Last Organization:** 2025-10-24
+**Organized By:** Librarian Operations & Worktree Improvements
 
-**Changes Made:**
+**Recent Changes (2025-10-24):**
+1. **Librarian System Integration:**
+   - Created comprehensive tools reference (librarian-tools-reference.md)
+   - Added pre-commit hook documentation
+   - Documented CI/CD validation workflow
+   - Documented automated archival system
+   - Added metadata to 370 files (coverage: 28.97% → 72.06%)
+   - Built searchable catalog (511 documents indexed)
+
+2. **Validation Infrastructure:**
+   - Installed pre-commit hooks (tools/install_hooks.sh)
+   - Created GitHub Actions workflow (.github/workflows/validate-docs.yml)
+   - Established validation standards and metrics
+
+3. **Documentation Organization:**
+   - Added Librarian System section to this index
+   - Updated modification dates
+   - Enhanced navigation with command examples
+
+**Previous Changes (2025-10-21):**
 1. Moved 32 loose documentation files from root to organized directories
 2. Created logical structure: implementation/, reports/, testing/, troubleshooting/, worktrees/
 3. Updated CLAUDE.md with worktree error prevention documentation (v4.3.3)
@@ -211,3 +266,4 @@ When adding new documentation:
 3. Add a brief description
 4. Update "Last Updated" date at top
 5. Note changes in "Maintenance Notes" section
+6. Run `python tools/build_index.py --incremental` to update catalog
