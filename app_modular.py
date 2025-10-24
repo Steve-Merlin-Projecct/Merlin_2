@@ -91,12 +91,12 @@ if security_check['weak_secrets']:
     logger.warning(f"Security audit found weak secrets. Please update them using utils/security_key_generator.py")
 
 # Set secure session key
-session_secret = os.environ.get("SESSION_SECRET")
-if not session_secret or len(session_secret) < 32:
-    session_secret = SecurityPatch.create_secure_session_key()
-    logger.warning("Generated temporary session key - set SESSION_SECRET environment variable")
+secret_key = os.environ.get("SECRET_KEY")
+if not secret_key or len(secret_key) < 32:
+    secret_key = SecurityPatch.create_secure_session_key()
+    logger.warning("Generated temporary session key - set SECRET_KEY environment variable")
 
-app.secret_key = session_secret
+app.secret_key = secret_key
 
 # Configure request size limit
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit

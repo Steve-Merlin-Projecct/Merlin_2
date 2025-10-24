@@ -119,10 +119,8 @@ class EnvironmentValidator:
         print("Validating Security Configuration...")
         print("-" * 70)
 
-        self.validate_required('SESSION_SECRET', min_length=32,
-                             description='Flask session encryption key')
         self.validate_required('SECRET_KEY', min_length=32,
-                             description='Application secret key')
+                             description='Flask secret key for session encryption and CSRF protection')
         self.validate_required('WEBHOOK_API_KEY', min_length=32,
                              description='API authentication key')
 

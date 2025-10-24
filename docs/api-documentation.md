@@ -393,7 +393,7 @@ The following routes were referenced in tests but do not exist:
 
 ### Critical
 - `WEBHOOK_API_KEY` - API authentication (min 32 chars)
-- `SESSION_SECRET` - Session encryption (min 32 chars)
+- `SECRET_KEY` - Flask session encryption and CSRF protection (min 32 chars)
 - `PGPASSWORD` / `DATABASE_PASSWORD` - Database password
 - `DATABASE_URL` - Full database connection string
 

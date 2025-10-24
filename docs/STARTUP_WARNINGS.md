@@ -10,7 +10,7 @@
 ```
 ERROR: Missing required environment variables:
   - DATABASE_URL
-  - SESSION_SECRET
+  - SECRET_KEY
   - WEBHOOK_API_KEY (present but weak)
 ```
 
@@ -26,7 +26,7 @@ WARNING: Weak secrets detected (less than 32 chars):
 
 ### 3. Temporary Session Key Generated
 ```
-WARNING: Generated temporary session key - set SESSION_SECRET environment variable
+WARNING: Generated temporary session key - set SECRET_KEY environment variable
 ```
 
 **Impact:** Sessions will not persist across server restarts
@@ -108,7 +108,7 @@ WARNING: This is a development server. Do not use it in a production deployment.
 
 ### Critical Issues (Must Fix)
 1. ❌ Set `DATABASE_URL` environment variable
-2. ❌ Set `SESSION_SECRET` environment variable (32+ chars)
+2. ❌ Set `SECRET_KEY` environment variable (32+ chars)
 3. ❌ Strengthen `WEBHOOK_API_KEY` (32+ chars)
 4. ❌ Set `GEMINI_API_KEY` for AI features
 5. ❌ Fix document template paths
@@ -134,7 +134,7 @@ python utils/security_key_generator.py
 cp .env.example .env
 
 # 3. Edit .env and set:
-#    - SESSION_SECRET (from security_key_generator.py)
+#    - SECRET_KEY (from security_key_generator.py)
 #    - WEBHOOK_API_KEY (from security_key_generator.py)
 #    - GEMINI_API_KEY (from Google Cloud Console)
 #    - DATABASE_URL (optional but recommended)

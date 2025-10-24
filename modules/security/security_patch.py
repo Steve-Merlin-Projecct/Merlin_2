@@ -319,9 +319,9 @@ class SecurityPatch:
             logger.warning(f"Weak secrets detected (less than 32 chars): {weak_secrets}")
 
         # Check session secret
-        session_secret = os.environ.get("SESSION_SECRET", "")
-        if len(session_secret) < 32:
-            weak_secrets.append("SESSION_SECRET")
+        secret_key = os.environ.get("SECRET_KEY", "")
+        if len(secret_key) < 32:
+            weak_secrets.append("SECRET_KEY")
 
         return {
             "weak_secrets": weak_secrets,
@@ -431,7 +431,7 @@ def validate_environment():
     """
     Ensure critical environment variables are set securely
     """
-    required_vars = ["DATABASE_URL", "SESSION_SECRET", "WEBHOOK_API_KEY"]
+    required_vars = ["DATABASE_URL", "SECRET_KEY", "WEBHOOK_API_KEY"]
 
     missing_vars = []
     weak_secrets = []

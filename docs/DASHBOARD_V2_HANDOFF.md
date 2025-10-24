@@ -76,7 +76,7 @@
 
 - **Environment Configuration** (`.env`)
   - Created with database credentials from docker-compose
-  - SESSION_SECRET and WEBHOOK_API_KEY configured
+  - SECRET_KEY and WEBHOOK_API_KEY configured
   - Ready for production use
 
 ### ✅ Documentation (Complete)
@@ -413,7 +413,7 @@ python app_modular.py
 ### Production Considerations:
 - Use production WSGI server (gunicorn, uwsgi)
 - Enable HTTPS
-- Set strong SESSION_SECRET and WEBHOOK_API_KEY
+- Set strong SECRET_KEY and WEBHOOK_API_KEY
 - Configure proper CORS origins
 - Enable rate limiting
 - Set up monitoring and logging
@@ -423,7 +423,7 @@ python app_modular.py
 ### Environment Variables (Production):
 ```bash
 DATABASE_URL=postgresql://user:pass@host:5432/db
-SESSION_SECRET=<64-char-hex-string>
+SECRET_KEY=<64-char-hex-string>
 WEBHOOK_API_KEY=<64-char-hex-string>
 FLASK_ENV=production
 FLASK_DEBUG=False

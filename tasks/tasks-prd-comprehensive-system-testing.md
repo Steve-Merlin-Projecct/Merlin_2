@@ -52,7 +52,7 @@
 - [x] 1.0 Environment Configuration & Security Setup
   - [x] 1.1 Generate secure secrets using `utils/security_key_generator.py`
   - [x] 1.2 Create `.env` file from `.env.example` template
-  - [x] 1.3 Set SESSION_SECRET (64-char hex from security_key_generator.py)
+  - [x] 1.3 Set SECRET_KEY (64-char hex from security_key_generator.py)
   - [x] 1.4 Set WEBHOOK_API_KEY (64-char hex, minimum 32 chars required)
   - [x] 1.5 Configure GEMINI_API_KEY for AI features (marked optional - not required for core testing)
   - [x] 1.6 Set DATABASE_URL as complete connection string
