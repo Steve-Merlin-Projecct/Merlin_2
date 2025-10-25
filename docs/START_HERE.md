@@ -1,3 +1,11 @@
+---
+title: "Start Here"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # 🚀 Dashboard V2 - START HERE
 
 **Welcome to the Dashboard V2 redesign!** Everything you need is organized and ready.

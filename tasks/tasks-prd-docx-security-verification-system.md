@@ -1,3 +1,11 @@
+---
+title: "Tasks Prd Docx Security Verification System"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Task List: DOCX Security Verification System
 
 **Source PRD:** `prd-docx-security-verification-system.md`

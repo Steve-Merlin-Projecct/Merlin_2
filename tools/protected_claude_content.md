@@ -1,3 +1,11 @@
+---
+title: "Protected Claude Content"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 ## Communication & Implementation Guide
 
 Before implementing changes, explain what you're going to do and why.

@@ -1,3 +1,11 @@
+---
+title: "Link Tracking Security Assessment"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Link Tracking Security Assessment Report
 
 **Assessment Date**: July 28, 2025  

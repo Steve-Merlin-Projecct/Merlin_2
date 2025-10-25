@@ -1,3 +1,11 @@
+---
+title: "Implementation Visual Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Implementation - Visual Guide
 
 Quick visual reference for task dependencies, priorities, and parallel work opportunities.

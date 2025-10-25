@@ -1,3 +1,11 @@
+---
+title: "Microsoft Docx Technical Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Microsoft DOCX Technical Analysis Report
 
 **Date:** October 9, 2025

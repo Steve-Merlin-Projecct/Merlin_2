@@ -1,3 +1,11 @@
+---
+title: "Simplified Usage Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Simplified Template Variables - Usage Guide
 
 ## Overview

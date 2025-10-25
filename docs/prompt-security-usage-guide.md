@@ -1,3 +1,11 @@
+---
+title: "Prompt Security Usage Guide"
+type: guide
+component: security
+status: draft
+tags: []
+---
+
 # Prompt Security Manager - Usage Guide
 **User vs Agent Change Detection**
 

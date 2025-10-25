@@ -1,3 +1,11 @@
+---
+title: "Observability Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Centralized Logging and Observability Guide
 
 ## Overview

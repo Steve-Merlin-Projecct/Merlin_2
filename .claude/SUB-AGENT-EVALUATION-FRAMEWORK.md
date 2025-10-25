@@ -1,3 +1,11 @@
+---
+title: "Sub Agent Evaluation Framework"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Sub-Agent Evaluation Framework
 
 **Purpose:** Systematic framework for evaluating whether a task pattern should become a specialized sub-agent.

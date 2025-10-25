@@ -1,3 +1,11 @@
+---
+title: "Building Sentences 1751526150641"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 You know how resumes are often written in a stilted style that often omits joining words or the subject. Is that actually effective?
 
 

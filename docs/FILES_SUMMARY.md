@@ -1,3 +1,11 @@
+---
+title: "Files Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Files Summary
 
 ## 📂 Essential Files to Review (In Order)

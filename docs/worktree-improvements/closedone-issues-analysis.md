@@ -1,3 +1,11 @@
+---
+title: "Closedone Issues Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # /tree closedone Issues Analysis
 **Date:** 2025-10-14
 **Operation:** Batch merge and cleanup of 11 completed worktrees

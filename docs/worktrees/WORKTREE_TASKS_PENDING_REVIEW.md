@@ -1,3 +1,11 @@
+---
+title: "Worktree Tasks Pending Review"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Tasks - Pending Review & Cleanup
 **Generated:** 2025-10-19
 **Source:** Extracted from worktree context before force merge

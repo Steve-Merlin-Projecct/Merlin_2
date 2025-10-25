@@ -1,3 +1,11 @@
+---
+title: "Integration Guide"
+type: guide
+component: application_automation
+status: draft
+tags: []
+---
+
 # Application Automation - Integration Guide
 
 ## Quick Start (5 Steps)

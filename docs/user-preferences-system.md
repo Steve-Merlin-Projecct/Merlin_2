@@ -1,3 +1,11 @@
+---
+title: "User Preferences System"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # User Preferences System
 
 **Version:** 1.0.0

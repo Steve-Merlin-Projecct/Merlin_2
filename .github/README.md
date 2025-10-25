@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # GitHub Configuration
 
 This directory contains GitHub-specific configuration for the Merlin Job Application System.

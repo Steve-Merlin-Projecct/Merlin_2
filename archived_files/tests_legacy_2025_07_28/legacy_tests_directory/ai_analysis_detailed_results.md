@@ -1,3 +1,11 @@
+---
+title: "Ai Analysis Detailed Results"
+type: technical_doc
+component: ai_analysis
+status: draft
+tags: []
+---
+
 # AI Analysis Test Results - Step 1.2 Implementation
 ## Automated Job Application System v2.16
 

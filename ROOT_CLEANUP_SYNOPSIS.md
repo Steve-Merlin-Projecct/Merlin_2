@@ -1,3 +1,11 @@
+---
+title: "Root Cleanup Synopsis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Root Directory Cleanup Synopsis
 
 **Date:** 2025-10-21

@@ -1,3 +1,11 @@
+---
+title: "Tasklist 1"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # File Organization Audit - Task List
 **Generated:** October 8, 2025
 **PRD:** `/tasks/file-organization-audit/prd.md`

@@ -1,3 +1,11 @@
+---
+title: "Dashboard Frontend Testing"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Frontend Testing Documentation
 Version 1.0 | Phase 6: Testing & Quality Assurance
 

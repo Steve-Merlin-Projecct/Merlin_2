@@ -1,3 +1,11 @@
+---
+title: "Deployment Checklist"
+type: technical_doc
+component: application_automation
+status: draft
+tags: []
+---
+
 # Deployment Checklist
 ## Application Automation Module - MVP to Production
 

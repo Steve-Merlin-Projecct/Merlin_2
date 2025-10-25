@@ -1,3 +1,11 @@
+---
+title: "Prd Deep Ole Stream Analysis"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Product Requirements Document: Deep OLE Stream Analysis
 
 **Version:** 1.0.0

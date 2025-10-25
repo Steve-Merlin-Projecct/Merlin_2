@@ -1,3 +1,11 @@
+---
+title: "Action Plan Resource Monitoring"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Action Plan: Real-Time Worktree Resource Monitoring
 
 **Based on:** PRD v1.0 - Real-Time Worktree Resource Monitoring

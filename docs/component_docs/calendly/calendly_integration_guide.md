@@ -1,3 +1,11 @@
+---
+title: "Calendly Integration Guide"
+type: guide
+component: calendly
+status: draft
+tags: []
+---
+
 # Calendly Integration - User Guide
 
 **Version**: 4.2.0

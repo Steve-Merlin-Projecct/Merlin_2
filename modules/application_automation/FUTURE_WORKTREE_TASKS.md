@@ -1,3 +1,11 @@
+---
+title: "Future Worktree Tasks"
+type: technical_doc
+component: application_automation
+status: draft
+tags: []
+---
+
 # Future Worktree Tasks & Project Separation Plan
 ## Application Automation Module
 

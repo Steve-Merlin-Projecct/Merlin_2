@@ -1,3 +1,11 @@
+---
+title: "Professional Writer"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Professional Writing Agent - Opus Model
 
 **Agent Type:** Specialized professional writing expert for job application materials

@@ -1,3 +1,11 @@
+---
+title: "Completion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Views Completion - Summary Report
 
 **Task:** Complete Dashboard Views (Applications, Analytics, Schema)

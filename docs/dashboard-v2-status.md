@@ -1,3 +1,11 @@
+---
+title: "Dashboard V2 Status"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Implementation Status
 
 ## Summary

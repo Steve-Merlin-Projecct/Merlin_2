@@ -1,3 +1,11 @@
+---
+title: "Claude Code Notes"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Claude Code in Devcontainers
 
 ## Auto-Update Warning (Expected Behavior)

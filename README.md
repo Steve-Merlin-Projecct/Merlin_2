@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Resume Template Conversion & Fixes
 
 **Mission:** Convert raw Microsoft Word templates into production-ready variable-based templates.

@@ -1,3 +1,11 @@
+---
+title: "Auto Restore Protection System"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Auto-Restore Protection System
 
 ## Overview

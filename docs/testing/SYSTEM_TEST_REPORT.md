@@ -1,3 +1,11 @@
+---
+title: "System Test Report"
+type: status_report
+component: general
+status: draft
+tags: []
+---
+
 # System Test Report - Script Testing Branch
 **Date:** October 9, 2025
 **Branch:** task/03-script-testing

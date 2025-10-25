@@ -1,3 +1,11 @@
+---
+title: "Dashboard V2 Handoff"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Handoff Document
 **Status**: Ready for Merge & Next Phase
 **Date**: October 10, 2025

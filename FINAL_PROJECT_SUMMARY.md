@@ -1,3 +1,11 @@
+---
+title: "Final Project Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Template Conversion Project - Final Summary
 
 ## ✅ Project Complete

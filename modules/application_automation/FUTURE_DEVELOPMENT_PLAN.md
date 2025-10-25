@@ -1,3 +1,11 @@
+---
+title: "Future Development Plan"
+type: technical_doc
+component: application_automation
+status: draft
+tags: []
+---
+
 # Future Development Plan
 ## Application Automation Module - Post-MVP Roadmap
 

@@ -2,7 +2,7 @@
 title: System Instructions (CLAUDE.md)
 type: reference
 created: 2024-08-15
-modified: 2025-10-21
+modified: 2025-10-24
 status: current
 related: README.md, docs/DOCUMENTATION_INDEX.md
 ---
@@ -10,7 +10,7 @@ related: README.md, docs/DOCUMENTATION_INDEX.md
 # Automated Job Application System
 Version 4.5.1
 Python 3.11 | Flask | PostgreSQL | Docker
-Last Updated: 2025-10-22
+Last Updated: 2025-10-24
 
 ## Project Overview
 
@@ -89,6 +89,32 @@ TREE_VERBOSE=true /tree build  # Verbose via env var
 
 See: `tasks/worktree-error-prevention/` for full documentation
 
+**Slash Command Loading in Worktrees (Known Limitation - v4.5.1):**
+Claude Code CLI only scans `.claude/commands/` on session initialization, not when changing directories with `cd`.
+
+**Symptoms:**
+- `/tree` or `/task` show "Unknown slash command" error in worktrees
+- Command files exist and are copied correctly to worktrees
+- Only affects mid-session directory changes
+
+**Workarounds:**
+1. **Quick Fix:** Use direct script execution
+   ```bash
+   bash /workspace/.claude/scripts/tree.sh <command>
+   ```
+2. **Permanent Fix:** Restart CLI session from worktree directory
+   ```bash
+   exit
+   cd /workspace/.trees/<worktree-name>
+   claude code
+   ```
+
+**Diagnostics:** Run `/tree refresh` or `bash /workspace/.claude/scripts/tree.sh refresh`
+
+**Auto-Documentation:** All new worktrees automatically include workaround instructions in PURPOSE.md
+
+See: `tasks/slash-command-worktree-loading/` for full investigation report
+
 
 
 ### Documentation Standards
@@ -111,6 +137,23 @@ See: `tasks/worktree-error-prevention/` for full documentation
 **External Research Guidelines:**
 - When suggesting new libraries, ensure compatibility with our existing stack.
 - Adapt external examples to match our coding standards and project structure.
+
+**Librarian System:**
+The project uses automated documentation management and validation tools:
+- **Validation**: Pre-commit hooks and CI/CD workflows enforce YAML frontmatter and file organization standards
+- **Search**: Searchable catalog (SQLite FTS5) with 511+ indexed documents
+- **Archival**: Automated stale documentation detection and lifecycle management
+- **Metrics**: Track documentation coverage, quality, and health
+
+**Quick Commands:**
+```bash
+python tools/validate_metadata.py --all --fix  # Add/fix YAML frontmatter
+python tools/build_index.py --incremental      # Update search catalog
+python tools/query_catalog.py --keywords "api" # Search documentation
+python tools/collect_metrics.py --report       # Generate health report
+```
+
+**See:** `docs/librarian-tools-reference.md` for complete documentation
 
 ### Code Quality Standards
 

@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Hub
 
 **Welcome to the Automated Job Application System Documentation**

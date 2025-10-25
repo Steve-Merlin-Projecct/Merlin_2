@@ -1,3 +1,11 @@
+---
+title: "Dashboard V2 Features"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Features & Testing Guide
 
 ## Overview

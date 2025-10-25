@@ -1,3 +1,11 @@
+---
+title: "Dashboard Access Fixed"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Access Fixed! ✓
 
 ## The Problem

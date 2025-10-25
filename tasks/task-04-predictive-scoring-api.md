@@ -1,3 +1,11 @@
+---
+title: "Task 04 Predictive Scoring Api"
+type: api_spec
+component: general
+status: draft
+tags: []
+---
+
 # Task 04: Predictive Scoring & Health API
 
 **Status:** Pending (Depends on Task 03)

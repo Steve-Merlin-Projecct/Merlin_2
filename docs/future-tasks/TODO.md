@@ -1,3 +1,11 @@
+---
+title: "Todo"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - TODO List
 
 ## 🚨 Critical (Next Session)

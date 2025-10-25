@@ -1,3 +1,11 @@
+---
+title: "Tasklist 1"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task List: Librarian Agent Enhancement System
 
 **Project:** Librarian Enhancements

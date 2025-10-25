@@ -1,3 +1,11 @@
+---
+title: "Tree Closedone Validation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # /tree closedone Validation Feature
 
 **Version:** 1.0

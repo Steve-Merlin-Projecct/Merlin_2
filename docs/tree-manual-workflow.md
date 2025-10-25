@@ -1,3 +1,11 @@
+---
+title: "Tree Manual Workflow"
+type: process
+component: general
+status: draft
+tags: []
+---
+
 # Manual Worktree Terminal Workflow
 
 ## Why Manual Terminals?

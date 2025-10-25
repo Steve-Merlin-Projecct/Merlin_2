@@ -1,3 +1,11 @@
+---
+title: "Next Worktree Package"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Next Worktree Package
 ## Outstanding Work from task/04-apply-assistant
 

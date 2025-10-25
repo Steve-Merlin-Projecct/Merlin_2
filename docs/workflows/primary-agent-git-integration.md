@@ -1,3 +1,11 @@
+---
+title: "Primary Agent Git Integration"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Primary Agent Git Integration Guide
 **Version:** 1.0
 **Date:** October 9, 2025

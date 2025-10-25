@@ -1,3 +1,11 @@
+---
+title: "Implementation Summary"
+type: technical_doc
+component: application_automation
+status: draft
+tags: []
+---
+
 # Application Automation Module - Implementation Summary
 
 **Date:** October 14, 2025

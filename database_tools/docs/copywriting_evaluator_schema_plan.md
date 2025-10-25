@@ -1,3 +1,11 @@
+---
+title: "Copywriting Evaluator Schema Plan"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Copywriting Evaluator Database Schema Migration Plan
 
 **Created:** September 5, 2025  

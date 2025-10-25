@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: analytics
+status: draft
+tags: []
+---
+
 # Analytics Module
 
 **Version:** 1.0.0

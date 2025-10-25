@@ -1,3 +1,11 @@
+---
+title: "Full Strategy Layer Personal Branding Document"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 ##### **You said:**
 
 ## **Let's talk about personal branding. What it is, in detail. How it is similar and different from personality. how different groups perceive it.**

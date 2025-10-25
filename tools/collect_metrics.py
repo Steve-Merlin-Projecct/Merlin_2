@@ -9,7 +9,7 @@ Usage: python tools/collect_metrics.py [--json] [--report]
 import sys
 import json
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 

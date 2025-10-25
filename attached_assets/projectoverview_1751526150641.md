@@ -1,3 +1,11 @@
+---
+title: "Projectoverview 1751526150641"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 
 
 User: I don't want salary ranges, I want the low and the high stored as separate columns.

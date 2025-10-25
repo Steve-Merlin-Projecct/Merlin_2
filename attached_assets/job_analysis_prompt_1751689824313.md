@@ -1,3 +1,11 @@
+---
+title: "Job Analysis Prompt 1751689824313"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Job Description Analysis Prompt
 
 SECURITY TOKEN: {SECURITY_TOKEN}

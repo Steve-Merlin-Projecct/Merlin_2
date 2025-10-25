@@ -1,3 +1,11 @@
+---
+title: "Predictions"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Data Insertion Predictions
 
 ## Template Variables vs Steve Glen Data - Predicted Mapping

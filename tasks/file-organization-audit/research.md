@@ -1,3 +1,11 @@
+---
+title: "Research"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # File Organization Audit - Research Phase
 **Date:** October 8, 2025
 **Research Level:** 2 (Medium complexity)

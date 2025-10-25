@@ -1,3 +1,11 @@
+---
+title: "Uiux Conversion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # UI/UX Designer Template Conversion Summary
 
 **Date:** 2025-10-21

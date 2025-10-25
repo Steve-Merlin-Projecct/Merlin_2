@@ -1,3 +1,11 @@
+---
+title: "Ui Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # User Preferences Dashboard - UI Visual Guide
 
 **Quick visual reference for the completed interface**

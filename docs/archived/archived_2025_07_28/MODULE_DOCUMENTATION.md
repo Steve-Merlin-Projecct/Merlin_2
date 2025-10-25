@@ -1,3 +1,11 @@
+---
+title: "Module Documentation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Module Documentation - Merlin Job Application System
 **Version**: 2.2 - Current State Documentation  
 **Date**: July 12, 2025  

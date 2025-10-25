@@ -1,3 +1,11 @@
+---
+title: "Microsoft Template Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Microsoft Template Analysis
 **Date**: October 9, 2025
 **Source**: Downloaded Microsoft Create templates

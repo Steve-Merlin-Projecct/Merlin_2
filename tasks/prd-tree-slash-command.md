@@ -1,3 +1,11 @@
+---
+title: "Prd Tree Slash Command"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: /tree Slash Command for Worktree Management
 
 ## Introduction/Overview

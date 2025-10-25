@@ -1,3 +1,11 @@
+---
+title: "Task 02 Tier1 Core Analysis Refactoring"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task 02: Tier 1 Core Analysis Refactoring
 
 **Related PRD**: `prd-gemini-prompt-optimization.md`

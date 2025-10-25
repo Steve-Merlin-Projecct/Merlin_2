@@ -1,3 +1,11 @@
+---
+title: "Testing Strategy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Testing Strategy for Job Application System
 **Version:** 1.0
 **Last Updated:** 2025-10-12

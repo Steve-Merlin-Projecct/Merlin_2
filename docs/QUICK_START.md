@@ -1,105 +1,138 @@
-# Dashboard V2 - Quick Start Guide
+---
+title: "Quick Start"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
 
-## 🚀 Immediate Use (No Setup Required)
+# Quick Start Guide - Seed Sentence Processing Pipeline
 
-### Standalone Demo Server
+## TL;DR - Run the Pipeline
+
 ```bash
-# Start the demo server (works without database)
-python dashboard_standalone.py
+# 1. Configure Gemini API Key
+export GEMINI_API_KEY="your-api-key-here"
 
-# Open in browser
-http://localhost:5001/dashboard
+# 2. Run the simplified pipeline (recommended for first run)
+python3 process_seeds_only.py
 
-# Login
-Password: demo
+# OR run the full pipeline with variations
+python3 process_seed_sentences_pipeline.py
 ```
 
-**What You Get:**
-- ✅ Beautiful cyberpunk dashboard UI
-- ✅ Real-time updates (SSE)
-- ✅ Jobs listing view
-- ✅ Navigation between views
-- ✅ Mock data for testing
+## What This Does
 
----
+Processes 300 Marketing Automation Manager seed sentences through a 5-stage copywriting evaluation pipeline:
 
-## 📁 Files to Review
+1. **Stage 1 - Keyword Filter:** Brand alignment check
+2. **Stage 2 - Truthfulness Assessment:** AI validation against 51 atomic truths
+3. **Stage 3 - Canadian Spelling:** US→Canadian conversion
+4. **Stage 4 - Tone Analysis:** 9-category tone classification
+5. **Stage 5 - Skill Analysis:** Job skill matching
 
-### Core Implementation:
-1. `DASHBOARD_V2_HANDOFF.md` - **START HERE** - Complete context and todos
-2. `static/css/dashboard_v2.css` - Beautiful custom CSS (589 lines)
-3. `frontend_templates/dashboard_v2.html` - Main dashboard with Alpine.js
-4. `frontend_templates/dashboard_jobs.html` - Jobs listing view
-5. `modules/dashboard_api_v2.py` - Optimized API endpoints
-6. `modules/realtime/sse_dashboard.py` - SSE real-time updates
-7. `modules/cache/simple_cache.py` - Caching layer
+## Files Overview
 
-### Database Migrations (Need Schema Fixes):
-8. `database_migrations/001_dashboard_optimization_indexes.sql`
-9. `database_migrations/002_dashboard_materialized_views.sql`
-10. `database_migrations/003_dashboard_aggregation_tables.sql`
-11. `run_dashboard_migrations.py` - Migration runner
+| File | Purpose | When to Use |
+|------|---------|-------------|
+| `process_seeds_only.py` | Process 300 seeds (no variations) | Fast execution, testing |
+| `process_seed_sentences_pipeline.py` | Process 300 seeds + 2,100 variations | Full production run |
+| `marketing_automation_seed_sentences_new.txt` | 300 source sentences | Read-only input |
+| `marketing_automation_atomic_truths.txt` | 51 truth statements | Read-only input |
+| `PROCESSING_REPORT.md` | Full documentation | Reference |
 
-### Documentation:
-12. `docs/dashboard-v2-features.md` - Feature list and API docs
-13. `docs/dashboard-v2-status.md` - Implementation status
-14. `docs/discovery-findings-dashboard-redesign.md` - Discovery analysis
+## Expected Output
 
----
+### Terminal Output
+- Real-time progress logs
+- Stage-by-stage statistics
+- Error tracking
+- Final summary
 
-## ⚠️ Critical Issue: Database Migrations
+### Report File
+- JSON file: `processing_report_YYYYMMDD_HHMMSS.json`
+- Contains:
+  - Total sentences processed
+  - Approval/rejection counts per stage
+  - Production-ready sentence count
+  - SQL verification queries
+  - Error log (if any)
 
-**Migrations are blocked** due to schema mismatch. They reference columns that don't exist:
-- `jobs.priority_score`
-- `jobs.salary_currency`
-- `jobs.location`
-- `jobs.experience_level`
+### Database Updates
+Tables populated:
+- `sentence_bank_resume` (28 sentences)
+- `sentence_bank_cover_letter` (272 sentences)
 
-**Action Required for Next Session:**
-1. Audit actual schema: `\d+ jobs` in psql
-2. Update migration SQL files with actual column names
-3. Run migrations: `python run_dashboard_migrations.py`
+Columns updated per sentence:
+- `keyword_filter_status` → 'approved' or 'rejected'
+- `truthfulness_status` → 'approved' or 'rejected'
+- `canadian_spelling_status` → 'completed'
+- `tone_analysis_status` → 'completed'
+- `skill_analysis_status` → 'completed'
 
-**Workaround:** Dashboard works without migrations (just slower)
+## Estimated Processing Time
 
----
+- **Seeds Only:** ~15-20 minutes
+  - 300 sentences ÷ 5 per batch = 60 API calls
+  - ~3 seconds per API call for AI stages
 
-## 🎯 Next Session Priorities
+- **With Variations:** ~2-3 hours
+  - 300 seeds + 2,100 variations = 2,400 sentences
+  - Additional variation generation time
 
-1. **Fix database migrations** (high priority)
-2. **Create Applications view** with timeline
-3. **Create Analytics view** with Chart.js
-4. **Connect views to real APIs** (currently mock data)
+## Verification Queries
 
-See `DASHBOARD_V2_HANDOFF.md` for complete TODO list and context.
+After processing, run these queries to check results:
 
----
+```sql
+-- Total production-ready sentences
+SELECT COUNT(*) FROM sentence_bank_resume
+WHERE keyword_filter_status = 'approved'
+  AND truthfulness_status = 'approved'
+  AND canadian_spelling_status = 'completed'
+  AND tone_analysis_status = 'completed'
+  AND skill_analysis_status = 'completed';
 
-## 🎨 What's New
+-- Stage-by-stage breakdown
+SELECT
+    COUNT(*) as total,
+    COUNT(CASE WHEN keyword_filter_status = 'approved' THEN 1 END) as stage_1_pass,
+    COUNT(CASE WHEN truthfulness_status = 'approved' THEN 1 END) as stage_2_pass,
+    COUNT(CASE WHEN canadian_spelling_status = 'completed' THEN 1 END) as stage_3_complete
+FROM sentence_bank_resume
+WHERE created_at >= CURRENT_DATE;
+```
 
-### Design:
-- Cyberpunk/modern dark theme
-- Glass morphism cards
-- Animated gradients & glows
-- Smooth transitions
-- Custom scrollbars
-- Responsive grid layouts
+## Troubleshooting
 
-### Features:
-- Single consolidated API (80% faster potential)
-- Real-time SSE updates
-- Three-tier caching
-- Navigation menu
-- Jobs filtering
-- Mock data for testing
+### Error: "GEMINI_API_KEY environment variable not found"
+```bash
+export GEMINI_API_KEY="your-key"
+```
 
-### Tech Stack:
-- Alpine.js (15KB, no build tools)
-- Custom CSS (no Tailwind)
-- Flask + PostgreSQL
-- Server-Sent Events
-- In-memory caching
+### Error: "column body_section violates check constraint"
+This is handled in the current version - should not occur.
 
----
+### Pipeline stalls or times out
+- Reduce batch size in pipeline_processor.py
+- Check network connection to Gemini API
+- Verify database connection
 
-**For complete context, read: `DASHBOARD_V2_HANDOFF.md`**
+### No sentences processed
+- Check if sentences already exist in database with non-'pending' status
+- Re-run will only process sentences with status='pending'
+
+## Current State
+
+- **Database:** Already contains 91 sentences from testing
+- **Status:** All set to 'pending' for processing
+- **Ready:** Pipeline tested and verified
+- **Blocking:** Gemini API key configuration
+
+## Support
+
+For detailed documentation see `PROCESSING_REPORT.md`
+
+For code details see inline comments in:
+- `process_seeds_only.py`
+- `process_seed_sentences_pipeline.py`

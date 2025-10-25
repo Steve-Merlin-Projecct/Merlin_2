@@ -1,3 +1,11 @@
+---
+title: "Commit Template"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Commit Message Guidelines
 
 ## Format

@@ -1,3 +1,11 @@
+---
+title: "Automation Reminder"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # DATABASE SCHEMA AUTOMATION REMINDER
 
 ## IMPORTANT: Use Automated Tools Only

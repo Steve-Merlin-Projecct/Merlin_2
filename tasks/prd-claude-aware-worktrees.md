@@ -1,3 +1,11 @@
+---
+title: "Prd Claude Aware Worktrees"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Claude-Aware Worktree Automation
 
 ## Introduction/Overview

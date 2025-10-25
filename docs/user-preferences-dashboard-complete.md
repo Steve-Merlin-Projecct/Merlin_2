@@ -1,3 +1,11 @@
+---
+title: "User Preferences Dashboard Complete"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # User Preferences Dashboard - Implementation Complete
 
 **Version:** 1.0.0

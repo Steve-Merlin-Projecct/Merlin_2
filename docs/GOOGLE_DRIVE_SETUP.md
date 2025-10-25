@@ -1,3 +1,11 @@
+---
+title: "Google Drive Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Google Drive API Setup Guide
 
 **Version:** 1.0

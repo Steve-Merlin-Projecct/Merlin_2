@@ -1,3 +1,11 @@
+---
+title: "Marketing Manager General Job Description"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # **Top qualities & skills — explained (what matters, and how it shows up day-to-day)**
 
 I’ll list the skills grouped so you can prioritize learning them. For each I say what it *actually* looks like on the job.

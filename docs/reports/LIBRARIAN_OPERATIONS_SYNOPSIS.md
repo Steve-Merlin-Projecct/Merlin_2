@@ -1,3 +1,11 @@
+---
+title: "Librarian Operations Synopsis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Librarian Operations Synopsis
 
 **Operation Date:** 2025-10-21

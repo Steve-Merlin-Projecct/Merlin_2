@@ -1,3 +1,11 @@
+---
+title: "Steve Glen Professional Background"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Steve Glen - Professional Background
 
 ## Contact Information

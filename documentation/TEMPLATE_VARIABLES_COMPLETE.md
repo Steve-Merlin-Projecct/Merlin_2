@@ -1,3 +1,11 @@
+---
+title: "Template Variables Complete"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Complete Template Variable Documentation
 
 This document lists ALL variables created for each template with descriptions of expected content.

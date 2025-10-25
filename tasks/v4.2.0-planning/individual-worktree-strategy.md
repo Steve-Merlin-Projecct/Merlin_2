@@ -1,3 +1,11 @@
+---
+title: "Individual Worktree Strategy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Individual Worktree Strategy
 
 **One Worktree Per Task - 13 Parallel Features**

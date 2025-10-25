@@ -1,3 +1,11 @@
+---
+title: "Merge Checklist"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard V2 - Merge Checklist
 
 ## Pre-Merge Verification

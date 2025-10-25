@@ -1,3 +1,11 @@
+---
+title: "Dashboard Redesign Simplified Approach"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Redesign - Simplified Approach (Single-User Focus)
 **Date**: October 9, 2025
 **Revision**: Based on single-user requirement

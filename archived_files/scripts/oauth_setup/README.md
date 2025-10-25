@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Gmail OAuth Setup Scripts (Archived)
 
 **Status:** ARCHIVED - OAuth Integration Complete  

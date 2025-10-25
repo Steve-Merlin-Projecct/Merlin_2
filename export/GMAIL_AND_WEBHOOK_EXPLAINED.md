@@ -1,3 +1,11 @@
+---
+title: "Gmail And Webhook Explained"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Gmail OAuth & Webhook API Key - Complete Explanation
 
 ## Part 1: Gmail Email Access (1234.S.t.e.v.e.Glen@gmail.com)

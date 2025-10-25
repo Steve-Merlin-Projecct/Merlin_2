@@ -1,3 +1,11 @@
+---
+title: "Response Sanitization Layer"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Response Sanitization Layer - Defense Layer 6
 **Final Safeguard Against Malicious LLM Outputs**
 

@@ -1,3 +1,11 @@
+---
+title: "Claude Code Schema Protection"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Claude Code Schema Protection System
 
 ## Overview

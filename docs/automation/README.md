@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Automation
 
 This directory contains scripts and tools for automating documentation processes, maintenance, and quality assurance.

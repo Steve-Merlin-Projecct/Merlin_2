@@ -1,3 +1,11 @@
+---
+title: "Email Content Mapping Guide"
+type: guide
+component: email
+status: draft
+tags: []
+---
+
 # Email Content Mapping Guide
 **Version:** 4.2.0
 **Last Updated:** October 9, 2025

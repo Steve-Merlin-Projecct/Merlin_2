@@ -1,3 +1,11 @@
+---
+title: "Security Assessment Report"
+type: status_report
+component: security
+status: draft
+tags: []
+---
+
 # Security Assessment Report: APIFY → raw_job_scrapes Pipeline
 
 **Assessment Date:** July 24, 2025  

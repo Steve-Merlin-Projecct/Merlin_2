@@ -1,3 +1,11 @@
+---
+title: "Google Drive Implementation"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Google Drive Storage Implementation - Summary
 
 **Date:** October 6, 2025

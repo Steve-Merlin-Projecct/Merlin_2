@@ -1,3 +1,11 @@
+---
+title: "Worktree Quick Start"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Quick Start Guide
 
 ## 1. Stage and Build Worktrees

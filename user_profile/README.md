@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Steve Glen - User Profile Directory
 
 This directory contains all source materials and background information about Steve Glen for copywriting purposes.

@@ -1,0 +1,14 @@
+# Librarian Tools Dependencies
+# Python version: 3.11+
+
+# YAML parsing for frontmatter validation
+PyYAML>=6.0.1
+
+# Optional: Click for enhanced CLI (falls back to argparse if not available)
+click>=8.1.7
+
+# Optional: Markdown parsing for advanced link validation
+markdown>=3.5
+
+# Optional: TF-IDF for tag suggestions
+scikit-learn>=1.3.2

@@ -1,3 +1,11 @@
+---
+title: "Phase 5 Integration E2E Guide"
+type: guide
+component: integration
+status: draft
+tags: []
+---
+
 # Phase 5: Integration & End-to-End Testing Guide
 **Timeline:** Week 6 (5-6 working days)
 **Goal:** Fix integration tests and verify complete workflows work end-to-end

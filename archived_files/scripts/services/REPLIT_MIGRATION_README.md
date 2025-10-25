@@ -1,3 +1,11 @@
+---
+title: "Replit Migration Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Archived Replit-Specific Files
 
 **Archive Date:** October 6, 2025

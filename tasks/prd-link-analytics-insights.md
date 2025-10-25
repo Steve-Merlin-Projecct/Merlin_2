@@ -1,3 +1,11 @@
+---
+title: "Prd Link Analytics Insights"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Product Requirements Document: Link Analytics & Insights System
 
 **Version:** 1.0

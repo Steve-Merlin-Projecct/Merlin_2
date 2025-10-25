@@ -1,3 +1,11 @@
+---
+title: "Detailed Experience Responses"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Steve Glen - Detailed Experience Responses
 
 ## Raw Interview Responses for Reference

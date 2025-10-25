@@ -1,3 +1,11 @@
+---
+title: "Template Expected Inputs Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Template Expected Inputs Guide
 
 ## Overview

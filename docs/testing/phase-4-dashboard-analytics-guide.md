@@ -1,3 +1,11 @@
+---
+title: "Phase 4 Dashboard Analytics Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Phase 4: Dashboard & Analytics Testing Guide
 **Timeline:** Week 5 (3-4 working days)
 **Goal:** Test user interfaces and analytics tracking systems

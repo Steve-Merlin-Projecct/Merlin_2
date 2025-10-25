@@ -1,3 +1,11 @@
+---
+title: "Tier Complexity And Model Selection"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tier Complexity & Model Selection Strategy
 **Corrected Understanding: Tier 2/3 Are MORE Complex Than Tier 1**
 

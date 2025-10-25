@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Lock Advanced Features - Usage Guide
 
 **Version:** 1.0

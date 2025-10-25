@@ -2017,6 +2017,27 @@ $scope_patterns
 Files outside the detected patterns will generate warnings but are not blocked.
 For hard enforcement, see \`.worktree-scope.json\` and modify \`enforcement\` setting.
 
+## Slash Command Usage
+
+⚠️ **Known Limitation:** Claude Code CLI may not recognize \`/tree\` or \`/task\` commands
+in this worktree if you switched here mid-session.
+
+### Quick Fix (Use Direct Script Calls):
+\`\`\`bash
+bash /workspace/.claude/scripts/tree.sh <command>
+# Example: bash /workspace/.claude/scripts/tree.sh status
+\`\`\`
+
+### Permanent Fix:
+Restart Claude Code CLI session from this directory:
+\`\`\`bash
+exit                                      # Exit current session
+cd /workspace/.trees/$name                # Navigate to this worktree
+claude code                               # Start new session
+\`\`\`
+
+For diagnostics, run: \`/tree refresh\` or \`bash /workspace/.claude/scripts/tree.sh refresh\`
+
 ## Success Criteria
 
 - [ ] All functionality implemented
@@ -2109,6 +2130,27 @@ This worktree can work on files that are NOT claimed by any feature worktree, in
 ## Out of Scope
 
 All files that are claimed by feature worktrees are out of scope for librarian.
+
+## Slash Command Usage
+
+⚠️ **Known Limitation:** Claude Code CLI may not recognize \`/tree\` or \`/task\` commands
+in this worktree if you switched here mid-session.
+
+### Quick Fix (Use Direct Script Calls):
+\`\`\`bash
+bash /workspace/.claude/scripts/tree.sh <command>
+# Example: bash /workspace/.claude/scripts/tree.sh status
+\`\`\`
+
+### Permanent Fix:
+Restart Claude Code CLI session from this directory:
+\`\`\`bash
+exit                                      # Exit current session
+cd /workspace/.trees/librarian            # Navigate to this worktree
+claude code                               # Start new session
+\`\`\`
+
+For diagnostics, run: \`/tree refresh\` or \`bash /workspace/.claude/scripts/tree.sh refresh\`
 
 ## Success Criteria
 

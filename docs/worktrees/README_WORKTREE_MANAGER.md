@@ -1,3 +1,11 @@
+---
+title: "Readme Worktree Manager"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Manager
 
 **Task 00: Worktree Management Tools**

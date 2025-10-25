@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Jinja Template Directory
 
 This directory contains Word document templates used for generating resumes and cover letters.

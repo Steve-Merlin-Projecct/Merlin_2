@@ -1,3 +1,11 @@
+---
+title: "Restaurant Manager Variables"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Restaurant Manager Template Variables
 
 ## Complete Variable List

@@ -1,3 +1,11 @@
+---
+title: "Worktree Quick Reference"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # Git Worktree Quick Reference
 
 ## Worktree Manager CLI

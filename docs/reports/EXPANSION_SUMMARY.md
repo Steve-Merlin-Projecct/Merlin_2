@@ -1,3 +1,11 @@
+---
+title: "Expansion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Variable Expansion - Implementation Summary
 
 **Date:** 2025-10-12

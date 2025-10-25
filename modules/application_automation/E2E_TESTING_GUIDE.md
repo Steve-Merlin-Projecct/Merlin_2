@@ -1,3 +1,11 @@
+---
+title: "E2E Testing Guide"
+type: guide
+component: application_automation
+status: draft
+tags: []
+---
+
 # End-to-End Testing Guide
 ## Application Automation Module MVP
 

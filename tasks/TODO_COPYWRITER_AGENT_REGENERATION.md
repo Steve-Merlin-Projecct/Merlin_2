@@ -1,3 +1,11 @@
+---
+title: "Todo Copywriter Agent Regeneration"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # TODO: Regenerate Seed Sentences Using Copywriter Agent
 
 **Date Created:** 2025-10-11

@@ -1,3 +1,11 @@
+---
+title: "Uiux Designer Variables"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # Uiux Designer Template Variables
 
 ## Complete Variable List

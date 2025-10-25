@@ -1,3 +1,11 @@
+---
+title: "Future Tasks Rate Limiting"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Future Tasks - Rate Limiting System
 
 **Created:** 2025-10-11

@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Docker Dev Container Setup
 
 This configuration creates a secure, isolated development environment for the Merlin Job Application System with restricted filesystem access.

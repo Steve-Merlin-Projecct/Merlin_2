@@ -1,3 +1,11 @@
+---
+title: "Agent Creation Guidelines"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Agent Creation Guidelines
 *How to Build Effective Claude Code Agents*
 

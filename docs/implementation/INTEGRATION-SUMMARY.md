@@ -1,3 +1,11 @@
+---
+title: "Integration Summary"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Gemini Prompt Optimization - Integration Summary
 
 **Date:** 2025-10-14

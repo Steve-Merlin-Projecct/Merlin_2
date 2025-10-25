@@ -1,3 +1,11 @@
+---
+title: "Git Lock Improvements Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Lock Improvements Summary
 **Date:** 2025-10-12
 **Status:** Implemented and Tested ✅

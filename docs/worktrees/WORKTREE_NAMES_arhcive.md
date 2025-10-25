@@ -1,3 +1,11 @@
+---
+title: "Worktree Names Arhcive"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Names - Reference List
 
 This document contains all worktree names from the current work cycle for manual task documentation in the next cycle.

@@ -1,3 +1,11 @@
+---
+title: "Database Schema Actual"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 ================================================================================
 DATABASE SCHEMA AUDIT
 Dashboard V2 Completion - Schema Verification

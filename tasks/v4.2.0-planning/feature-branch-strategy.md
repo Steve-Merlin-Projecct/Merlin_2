@@ -1,3 +1,11 @@
+---
+title: "Feature Branch Strategy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # v4.2.0 Feature Branch & Worktree Strategy
 
 **Version:** 4.2.0

@@ -1,3 +1,11 @@
+---
+title: "Manual Merge Resolution"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Manual Merge Resolution - noxml to main
 
 **Situation**: The merge from noxml to main failed due to conflicts and was never completed.

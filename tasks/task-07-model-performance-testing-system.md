@@ -1,3 +1,11 @@
+---
+title: "Task 07 Model Performance Testing System"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Task 07: Model Performance Testing & Optimization System
 
 **Related PRD**: `prd-gemini-prompt-optimization.md`

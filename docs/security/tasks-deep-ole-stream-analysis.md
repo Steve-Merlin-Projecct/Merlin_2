@@ -1,3 +1,11 @@
+---
+title: "Tasks Deep Ole Stream Analysis"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Task List: Deep OLE Stream Analysis Implementation
 
 **Feature:** Deep OLE Stream Analysis

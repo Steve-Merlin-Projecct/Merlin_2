@@ -1,3 +1,11 @@
+---
+title: "Template Usage Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Template Usage Guide
 
 ## Converted Templates

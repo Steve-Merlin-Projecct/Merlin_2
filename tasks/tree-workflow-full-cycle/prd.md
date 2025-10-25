@@ -1,3 +1,11 @@
+---
+title: "Prd"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Tree Workflow Full-Cycle Automation
 
 **Version:** 1.0

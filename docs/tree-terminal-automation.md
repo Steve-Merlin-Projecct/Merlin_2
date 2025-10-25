@@ -1,3 +1,11 @@
+---
+title: "Tree Terminal Automation"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tree Command: Terminal Automation Deep-Dive
 
 **Version:** 4.3.1

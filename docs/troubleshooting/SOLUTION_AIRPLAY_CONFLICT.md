@@ -1,3 +1,11 @@
+---
+title: "Solution Airplay Conflict"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # SOLVED: 403 Error was AirPlay/AirTunes Conflict
 
 ## The Problem

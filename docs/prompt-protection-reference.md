@@ -1,3 +1,11 @@
+---
+title: "Prompt Protection Reference"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # Prompt Protection Reference Guide
 **Current State of Prompt Protection System**
 

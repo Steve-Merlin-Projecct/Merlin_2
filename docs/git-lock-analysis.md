@@ -1,3 +1,11 @@
+---
+title: "Git Lock Analysis"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Git Lock Issue Analysis
 **Date:** 2025-10-12
 **Context:** Worktree orchestration and git-orchestrator agent conflicts

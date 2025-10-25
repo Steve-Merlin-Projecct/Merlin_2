@@ -1,3 +1,11 @@
+---
+title: "Agent Template Conversion Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Agent Template Conversion Guide
 
 ## Purpose

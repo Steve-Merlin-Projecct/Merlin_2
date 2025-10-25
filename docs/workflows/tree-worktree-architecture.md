@@ -1,3 +1,11 @@
+---
+title: "Tree Worktree Architecture"
+type: architecture
+component: general
+status: draft
+tags: []
+---
+
 # /tree Worktree Architecture
 
 **Purpose**: Understanding the `.trees/` directory structure and why it's gitignored

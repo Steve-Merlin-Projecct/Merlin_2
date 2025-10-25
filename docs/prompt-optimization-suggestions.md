@@ -1,3 +1,11 @@
+---
+title: "Prompt Optimization Suggestions"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Gemini Prompt Optimization Suggestions
 **Version:** 1.0
 **Date:** 2025-10-12

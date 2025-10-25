@@ -1,3 +1,11 @@
+---
+title: "Prd Real Time Resource Monitoring"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # PRD: Real-Time Worktree Resource Monitoring
 
 ## Introduction/Overview

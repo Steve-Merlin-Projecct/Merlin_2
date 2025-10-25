@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Integration Documentation
 
 This directory contains documentation for all external and internal service integrations used by the Automated Job Application System.

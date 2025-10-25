@@ -1,3 +1,11 @@
+---
+title: "Testing Checklist Prompt Protection"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Prompt Protection Testing Checklist
 
 ## Pre-Testing Setup
