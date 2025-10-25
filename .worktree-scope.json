@@ -1,11 +1,12 @@
 {
-  "worktree": "migration-to-digit-ocean",
-  "description": "||migration to digit ocean",
+  "worktree": "resume-and-cover-letter-content-improvements",
+  "description": "||resume and cover letter content improvements",
   "scope": {
     "include": [
-      "modules/database/migrations/**",
-      "tests/test_*migration_to_digit_ocean*.py",
-      "docs/*migration-to-digit-ocean*.md"
+      "modules/document_generation/*cover*.py",
+      "modules/document_generation/*resume*.py",
+      "tests/test_*resume_and_cover_letter_content_improvements*.py",
+      "docs/*resume-and-cover-letter-content-improvements*.md"
 
     ],
     "exclude": [
@@ -16,6 +17,6 @@
     ]
   },
   "enforcement": "soft",
-  "created": "2025-10-21T02:55:47+00:00",
+  "created": "2025-10-22T23:11:04+00:00",
   "out_of_scope_policy": "warn"
 }
