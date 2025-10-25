@@ -1,3 +1,11 @@
+---
+title: "Readme Security Detections Deployment"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Detections & Job Analysis Tiers - Deployment Status
 
 **⚠️ PRODUCTION DEPLOYMENT REQUIRED ⚠️**

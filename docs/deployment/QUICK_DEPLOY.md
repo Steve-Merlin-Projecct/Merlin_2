@@ -1,3 +1,11 @@
+---
+title: "Quick Deploy"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Quick Deploy - Copy/Paste Guide
 
 **App:** https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/

@@ -1,3 +1,11 @@
+---
+title: "Readme"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # steve-glen.com Tracking API Integration Package
 
 **Generated:** 2025-10-24

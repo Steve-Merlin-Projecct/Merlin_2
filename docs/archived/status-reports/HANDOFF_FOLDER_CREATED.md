@@ -1,3 +1,11 @@
+---
+title: "Handoff Folder Created"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # steve-glen.com Handoff Folder Created
 
 **Date:** 2025-10-24

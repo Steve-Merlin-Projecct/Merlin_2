@@ -1,3 +1,11 @@
+---
+title: "Documentation Update Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Update Summary
 
 **Date:** 2025-10-24

@@ -1,3 +1,11 @@
+---
+title: "Start Here"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Link Tracking API Integration - START HERE
 
 **Created:** 2025-10-22

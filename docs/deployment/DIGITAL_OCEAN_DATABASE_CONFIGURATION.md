@@ -1,3 +1,11 @@
+---
+title: "Digital Ocean Database Configuration"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Digital Ocean Database Configuration
 
 **Date:** 2025-10-22

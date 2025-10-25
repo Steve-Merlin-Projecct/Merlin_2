@@ -1,3 +1,11 @@
+---
+title: "Docs Cleanup Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Documentation Cleanup Summary
 
 **Date:** 2025-10-24

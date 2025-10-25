@@ -1,3 +1,11 @@
+---
+title: "Production Endpoint Info"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Production Endpoint Configuration
 
 **For steve-glen.com Link Tracker Integration**

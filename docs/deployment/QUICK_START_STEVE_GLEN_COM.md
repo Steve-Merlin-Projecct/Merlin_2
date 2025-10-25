@@ -1,3 +1,11 @@
+---
+title: "Quick Start Steve Glen Com"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Quick Start Guide for steve-glen.com Integration
 
 **Production API Endpoint:** `https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app`

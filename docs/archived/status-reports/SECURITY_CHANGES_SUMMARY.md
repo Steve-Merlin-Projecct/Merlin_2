@@ -1,3 +1,11 @@
+---
+title: "Security Changes Summary"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Changes Summary
 
 **Date:** 2025-10-24

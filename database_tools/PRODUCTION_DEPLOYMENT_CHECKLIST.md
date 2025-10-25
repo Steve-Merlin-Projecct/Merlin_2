@@ -1,3 +1,11 @@
+---
+title: "Production Deployment Checklist"
+type: technical_doc
+component: database
+status: draft
+tags: []
+---
+
 # Production Deployment Checklist
 
 **Worktree**: create-securitydetections-table-in-production-data

@@ -1,3 +1,11 @@
+---
+title: "Tracking Ingest Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Tracking Ingest API Setup - Quick Start Guide
 
 **Created:** 2025-10-22

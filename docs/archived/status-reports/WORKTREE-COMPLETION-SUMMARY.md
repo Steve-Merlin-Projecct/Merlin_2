@@ -1,3 +1,11 @@
+---
+title: "Worktree Completion Summary"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Worktree Completion Summary
 
 **Worktree**: create-securitydetections-table-in-production-data

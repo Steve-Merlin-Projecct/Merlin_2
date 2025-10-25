@@ -1,3 +1,11 @@
+---
+title: "Deployment Checklist"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Deployment Checklist - Tracking Ingest API
 
 **Production Domain:** `https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app`

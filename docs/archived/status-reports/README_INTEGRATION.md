@@ -1,3 +1,11 @@
+---
+title: "Readme Integration"
+type: technical_doc
+component: integration
+status: draft
+tags: []
+---
+
 # Link Tracking Integration - Complete Summary
 
 **Created:** 2025-10-22

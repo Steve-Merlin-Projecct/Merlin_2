@@ -1,3 +1,11 @@
+---
+title: "Tracking Ingest Integration Guide"
+type: guide
+component: integration
+status: draft
+tags: []
+---
+
 # Tracking Ingest API Integration Guide
 
 **Version:** 1.0.1 (Updated)

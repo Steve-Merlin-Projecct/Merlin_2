@@ -182,10 +182,10 @@ See: `tasks/slash-command-worktree-loading/` for full investigation report
 
 **Librarian System:**
 The project uses automated documentation management and validation tools:
-- **Validation**: Pre-commit hooks and CI/CD workflows enforce YAML frontmatter and file organization standards
-- **Search**: Searchable catalog (SQLite FTS5) with 511+ indexed documents
+- **Validation**: YAML frontmatter and file organization standards enforcement
+- **Search**: Searchable catalog (SQLite FTS5) with 704 indexed documents (100% coverage)
 - **Archival**: Automated stale documentation detection and lifecycle management
-- **Metrics**: Track documentation coverage, quality, and health
+- **Metrics**: Real-time documentation coverage, quality, and health tracking
 
 **Quick Commands:**
 ```bash

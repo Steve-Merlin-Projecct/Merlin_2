@@ -1,3 +1,11 @@
+---
+title: "App Platform Deployment Guide"
+type: guide
+component: general
+status: draft
+tags: []
+---
+
 # Digital Ocean App Platform Deployment Guide
 
 **App:** https://merlin-sea-turtle-app-ckmbz.ondigitalocean.app/

@@ -1,3 +1,11 @@
+---
+title: "Security Note"
+type: technical_doc
+component: security
+status: draft
+tags: []
+---
+
 # Security Note - API Key Management
 
 **Date:** 2025-10-24

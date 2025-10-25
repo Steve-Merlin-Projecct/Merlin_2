@@ -1,3 +1,11 @@
+---
+title: "Api Key Security"
+type: api_spec
+component: security
+status: draft
+tags: []
+---
+
 # API Key Security - Important Information
 
 **Date:** 2025-10-24

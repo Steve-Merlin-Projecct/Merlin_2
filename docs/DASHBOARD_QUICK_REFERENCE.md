@@ -1,3 +1,11 @@
+---
+title: "Dashboard Quick Reference"
+type: reference
+component: general
+status: draft
+tags: []
+---
+
 # Dashboard Quick Reference
 
 **Last Updated:** 2025-10-22

@@ -1,3 +1,11 @@
+---
+title: "Automated Firewall Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # Automated Digital Ocean Firewall Configuration
 
 **Security Level:** Production-Ready

@@ -1,3 +1,11 @@
+---
+title: "Steve Glen Com Setup"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # steve-glen.com Integration - Complete Setup Guide
 
 **System Flow:** This system generates UUIDs → inserts them in resumes/cover letters → steve-glen.com tracks clicks → sends data back via API

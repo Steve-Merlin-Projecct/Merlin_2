@@ -1,3 +1,11 @@
+---
+title: "Production Deployment Needed"
+type: technical_doc
+component: general
+status: draft
+tags: []
+---
+
 # ⚠️ PRODUCTION DEPLOYMENT REQUIRED
 
 **Created**: 2025-10-24
