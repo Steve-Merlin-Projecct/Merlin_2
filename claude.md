@@ -1,16 +1,20 @@
 ---
 title: System Instructions (CLAUDE.md)
 type: reference
+component: general
 created: 2024-08-15
-modified: 2025-10-24
-status: current
-related: README.md, docs/DOCUMENTATION_INDEX.md
+updated: 2025-10-25
+status: active
+related:
+  - README.md
+  - docs/DOCUMENTATION_INDEX.md
+tags: []
 ---
 
 # Automated Job Application System
-Version 4.5.1
+Version 4.5.2
 Python 3.11 | Flask | PostgreSQL | Docker
-Last Updated: 2025-10-24
+Last Updated: 2025-10-25
 
 ## Project Overview
 
