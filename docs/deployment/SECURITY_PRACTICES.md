@@ -300,15 +300,15 @@ doctl apps logs <app-id> | grep -i "database\|connection"
 
 ### Flask Secret Keys
 
-**SECRET_KEY and SESSION_SECRET:**
+**SECRET_KEY (Flask session encryption and CSRF protection):**
 
 **Generation:**
 ```bash
-# Generate new secret key (64 characters)
+# Generate new secret key (64 characters recommended)
 python -c "import secrets; print(secrets.token_hex(32))"
 
-# Generate session secret (64 characters)
-python -c "import secrets; print(secrets.token_urlsafe(48))"
+# Or use the project's security key generator
+python utils/security_key_generator.py generate
 ```
 
 **Security Requirements:**

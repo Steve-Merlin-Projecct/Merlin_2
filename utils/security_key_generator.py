@@ -91,8 +91,8 @@ class SecurityKeyGenerator:
         """Audit all environment secrets for strength"""
         secret_keys = [
             'WEBHOOK_API_KEY',
-            'GEMINI_API_KEY', 
-            'SESSION_SECRET',
+            'GEMINI_API_KEY',
+            'SECRET_KEY',
             'PASSWORD_SALT',
             'DATABASE_URL'
         ]

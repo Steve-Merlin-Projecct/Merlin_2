@@ -73,7 +73,7 @@ Establish a comprehensive testing framework to validate the entire Automated Job
 
 #### Phase 1: Configuration & Setup (Priority: Critical)
 - [ ] Environment variable configuration
-  - Generate secure secrets (SESSION_SECRET, WEBHOOK_API_KEY)
+  - Generate secure secrets (SECRET_KEY, WEBHOOK_API_KEY)
   - Configure GEMINI_API_KEY for AI features
   - Set DATABASE_URL (optional but recommended)
   - Verify all .env settings
@@ -181,7 +181,7 @@ Establish a comprehensive testing framework to validate the entire Automated Job
 **Requirements:**
 ```bash
 # Critical Environment Variables
-SESSION_SECRET=<64-char-hex-string>          # Generated via security_key_generator.py
+SECRET_KEY=<64-char-hex-string>              # Generated via security_key_generator.py
 WEBHOOK_API_KEY=<64-char-hex-string>         # Generated via security_key_generator.py
 GEMINI_API_KEY=<google-api-key>              # From Google Cloud Console
 DATABASE_URL=postgresql://user:pass@host:port/db  # Full connection string
@@ -198,7 +198,7 @@ GMAIL_TOKEN_PATH=./storage/gmail_token.json
 #!/usr/bin/env python3
 # tests/validate_environment.py
 def validate_all_env_vars():
-    required = ['SESSION_SECRET', 'WEBHOOK_API_KEY', 'GEMINI_API_KEY', 'PGPASSWORD']
+    required = ['SECRET_KEY', 'WEBHOOK_API_KEY', 'GEMINI_API_KEY', 'PGPASSWORD']
     optional = ['DATABASE_URL', 'APIFY_API_TOKEN']
     # Validate presence, format, strength
 ```

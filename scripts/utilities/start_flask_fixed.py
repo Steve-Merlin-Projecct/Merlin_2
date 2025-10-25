@@ -26,7 +26,7 @@ os.environ['DATABASE_PASSWORD'] = 'goldmember'
 os.environ['PGPASSWORD'] = 'goldmember'
 
 # Set other required environment variables to avoid warnings
-os.environ['SESSION_SECRET'] = 'development-secret-key-' + os.urandom(16).hex()
+os.environ['SECRET_KEY'] = 'development-secret-key-' + os.urandom(16).hex()
 os.environ['WEBHOOK_API_KEY'] = 'development-key-' + os.urandom(16).hex()
 
 # Set Flask to run in debug mode
