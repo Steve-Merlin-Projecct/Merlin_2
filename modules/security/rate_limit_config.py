@@ -166,6 +166,12 @@ ENDPOINT_OVERRIDES: Dict[str, Dict[str, Any]] = {
         "cost_per_request": 0.0,
         "description": "Dashboard UI access",
     },
+    # Authentication endpoints - strict rate limiting to prevent brute force
+    "/dashboard/authenticate": {
+        "limit": "5/minute;20/hour",
+        "cost_per_request": 0.0,
+        "description": "Dashboard authentication endpoint (brute force protection)",
+    },
 }
 
 
