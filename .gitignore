@@ -120,3 +120,4 @@ database_tools/__pycache__/
 .claude-init.sh
 .claude-task-context.md
 PURPOSE.md
+.worktree-scope.json
