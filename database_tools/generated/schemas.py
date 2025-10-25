@@ -1,6 +1,6 @@
 """
 Auto-generated Pydantic Schemas
-Generated from database schema on 2025-09-12 13:08:25
+Generated from database schema on 2025-10-24 02:33:15
 """
 
 from pydantic import BaseModel, Field, ConfigDict
@@ -141,6 +141,62 @@ class AnalyzedJobsUpdate(BaseModel):
 class AnalyzedJobsResponse(AnalyzedJobsBase):
     id: str
     created_at: Optional[datetime] = None
+
+
+class ApifyApplicationSubmissionsBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    submission_id: str
+    application_id: Optional[str] = None
+    job_id: str
+    actor_run_id: Optional[str] = None
+    status: str
+    form_platform: str
+    form_type: Optional[str] = None
+    fields_filled: Optional[Dict[str, Any]] = None
+    submission_confirmed: Optional[bool] = None
+    confirmation_message: Optional[str] = None
+    screenshot_urls: Optional[Dict[str, Any]] = None
+    screenshot_metadata: Optional[Dict[str, Any]] = None
+    error_message: Optional[str] = None
+    error_details: Optional[Dict[str, Any]] = None
+    submitted_at: datetime
+    reviewed_at: Optional[datetime] = None
+    reviewed_by: Optional[str] = None
+    review_notes: Optional[str] = None
+
+
+class ApifyApplicationSubmissionsCreate(ApifyApplicationSubmissionsBase):
+    pass
+
+
+class ApifyApplicationSubmissionsUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    submission_id: Optional[str] = None
+    application_id: Optional[str] = None
+    job_id: Optional[str] = None
+    actor_run_id: Optional[str] = None
+    status: Optional[str] = None
+    form_platform: Optional[str] = None
+    form_type: Optional[str] = None
+    fields_filled: Optional[Dict[str, Any]] = None
+    submission_confirmed: Optional[bool] = None
+    confirmation_message: Optional[str] = None
+    screenshot_urls: Optional[Dict[str, Any]] = None
+    screenshot_metadata: Optional[Dict[str, Any]] = None
+    error_message: Optional[str] = None
+    error_details: Optional[Dict[str, Any]] = None
+    submitted_at: Optional[datetime] = None
+    reviewed_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    reviewed_by: Optional[str] = None
+    review_notes: Optional[str] = None
+
+
+class ApifyApplicationSubmissionsResponse(ApifyApplicationSubmissionsBase):
+    created_at: datetime
+    updated_at: datetime
 
 
 class ApplicationDocumentsBase(BaseModel):
@@ -422,6 +478,136 @@ class ConsistencyValidationLogsUpdate(BaseModel):
 class ConsistencyValidationLogsResponse(ConsistencyValidationLogsBase):
     id: str
     created_at: Optional[datetime] = None
+
+
+class DashboardMetricsDailyBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    metric_date: date
+    jobs_scraped_count: Optional[int] = None
+    jobs_cleaned_count: Optional[int] = None
+    jobs_deduplicated_count: Optional[int] = None
+    scraping_errors_count: Optional[int] = None
+    scraping_avg_duration_ms: Optional[int] = None
+    scraping_peak_hour: Optional[int] = None
+    jobs_analyzed_count: Optional[int] = None
+    ai_requests_sent: Optional[int] = None
+    ai_tokens_input: Optional[int] = None
+    ai_tokens_output: Optional[int] = None
+    ai_cost_incurred: Optional[float] = None
+    ai_avg_duration_ms: Optional[int] = None
+    ai_model_used: Optional[str] = None
+    applications_sent_count: Optional[int] = None
+    applications_success_count: Optional[int] = None
+    applications_failed_count: Optional[int] = None
+    documents_generated_count: Optional[int] = None
+    application_avg_duration_ms: Optional[int] = None
+    success_rate: Optional[float] = None
+    pipeline_conversion_rate: Optional[float] = None
+    pipeline_bottleneck: Optional[str] = None
+    total_pipeline_jobs: Optional[int] = None
+    jobs_trend_pct: Optional[float] = None
+    applications_trend_pct: Optional[float] = None
+
+
+class DashboardMetricsDailyCreate(DashboardMetricsDailyBase):
+    pass
+
+
+class DashboardMetricsDailyUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    metric_date: Optional[date] = None
+    jobs_scraped_count: Optional[int] = None
+    jobs_cleaned_count: Optional[int] = None
+    jobs_deduplicated_count: Optional[int] = None
+    scraping_errors_count: Optional[int] = None
+    scraping_avg_duration_ms: Optional[int] = None
+    scraping_peak_hour: Optional[int] = None
+    jobs_analyzed_count: Optional[int] = None
+    ai_requests_sent: Optional[int] = None
+    ai_tokens_input: Optional[int] = None
+    ai_tokens_output: Optional[int] = None
+    ai_cost_incurred: Optional[float] = None
+    ai_avg_duration_ms: Optional[int] = None
+    ai_model_used: Optional[str] = None
+    applications_sent_count: Optional[int] = None
+    applications_success_count: Optional[int] = None
+    applications_failed_count: Optional[int] = None
+    documents_generated_count: Optional[int] = None
+    application_avg_duration_ms: Optional[int] = None
+    success_rate: Optional[float] = None
+    pipeline_conversion_rate: Optional[float] = None
+    pipeline_bottleneck: Optional[str] = None
+    total_pipeline_jobs: Optional[int] = None
+    jobs_trend_pct: Optional[float] = None
+    applications_trend_pct: Optional[float] = None
+    updated_at: Optional[datetime] = None
+
+
+class DashboardMetricsDailyResponse(DashboardMetricsDailyBase):
+    id: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+
+class DashboardMetricsHourlyBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    metric_hour: datetime
+    jobs_scraped_count: Optional[int] = None
+    jobs_cleaned_count: Optional[int] = None
+    jobs_deduplicated_count: Optional[int] = None
+    scraping_errors_count: Optional[int] = None
+    scraping_avg_duration_ms: Optional[int] = None
+    jobs_analyzed_count: Optional[int] = None
+    ai_requests_sent: Optional[int] = None
+    ai_tokens_input: Optional[int] = None
+    ai_tokens_output: Optional[int] = None
+    ai_cost_incurred: Optional[float] = None
+    ai_avg_duration_ms: Optional[int] = None
+    applications_sent_count: Optional[int] = None
+    applications_success_count: Optional[int] = None
+    applications_failed_count: Optional[int] = None
+    documents_generated_count: Optional[int] = None
+    application_avg_duration_ms: Optional[int] = None
+    pipeline_conversion_rate: Optional[float] = None
+    pipeline_bottleneck: Optional[str] = None
+
+
+class DashboardMetricsHourlyCreate(DashboardMetricsHourlyBase):
+    pass
+
+
+class DashboardMetricsHourlyUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    metric_hour: Optional[datetime] = None
+    jobs_scraped_count: Optional[int] = None
+    jobs_cleaned_count: Optional[int] = None
+    jobs_deduplicated_count: Optional[int] = None
+    scraping_errors_count: Optional[int] = None
+    scraping_avg_duration_ms: Optional[int] = None
+    jobs_analyzed_count: Optional[int] = None
+    ai_requests_sent: Optional[int] = None
+    ai_tokens_input: Optional[int] = None
+    ai_tokens_output: Optional[int] = None
+    ai_cost_incurred: Optional[float] = None
+    ai_avg_duration_ms: Optional[int] = None
+    applications_sent_count: Optional[int] = None
+    applications_success_count: Optional[int] = None
+    applications_failed_count: Optional[int] = None
+    documents_generated_count: Optional[int] = None
+    application_avg_duration_ms: Optional[int] = None
+    pipeline_conversion_rate: Optional[float] = None
+    pipeline_bottleneck: Optional[str] = None
+    updated_at: Optional[datetime] = None
+
+
+class DashboardMetricsHourlyResponse(DashboardMetricsHourlyBase):
+    id: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class DataCorrectionsBase(BaseModel):
@@ -717,6 +903,59 @@ class JobAnalysisQueueUpdate(BaseModel):
 class JobAnalysisQueueResponse(JobAnalysisQueueBase):
     id: int
     created_at: Optional[datetime] = None
+
+
+class JobAnalysisTiersBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    job_id: str
+    tier_1_completed: Optional[bool] = None
+    tier_1_timestamp: Optional[datetime] = None
+    tier_1_tokens_used: Optional[int] = None
+    tier_1_model: Optional[str] = None
+    tier_1_response_time_ms: Optional[int] = None
+    tier_2_completed: Optional[bool] = None
+    tier_2_timestamp: Optional[datetime] = None
+    tier_2_tokens_used: Optional[int] = None
+    tier_2_model: Optional[str] = None
+    tier_2_response_time_ms: Optional[int] = None
+    tier_3_completed: Optional[bool] = None
+    tier_3_timestamp: Optional[datetime] = None
+    tier_3_tokens_used: Optional[int] = None
+    tier_3_model: Optional[str] = None
+    tier_3_response_time_ms: Optional[int] = None
+
+
+class JobAnalysisTiersCreate(JobAnalysisTiersBase):
+    pass
+
+
+class JobAnalysisTiersUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    job_id: Optional[str] = None
+    tier_1_completed: Optional[bool] = None
+    tier_1_timestamp: Optional[datetime] = None
+    tier_1_tokens_used: Optional[int] = None
+    tier_1_model: Optional[str] = None
+    tier_1_response_time_ms: Optional[int] = None
+    tier_2_completed: Optional[bool] = None
+    tier_2_timestamp: Optional[datetime] = None
+    tier_2_tokens_used: Optional[int] = None
+    tier_2_model: Optional[str] = None
+    tier_2_response_time_ms: Optional[int] = None
+    tier_3_completed: Optional[bool] = None
+    tier_3_timestamp: Optional[datetime] = None
+    tier_3_tokens_used: Optional[int] = None
+    tier_3_model: Optional[str] = None
+    tier_3_response_time_ms: Optional[int] = None
+    updated_at: Optional[datetime] = None
+
+
+class JobAnalysisTiersResponse(JobAnalysisTiersBase):
+    id: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class JobApplicationTrackingBase(BaseModel):
@@ -1522,6 +1761,42 @@ class RecoveryStatisticsUpdate(BaseModel):
 class RecoveryStatisticsResponse(RecoveryStatisticsBase):
     id: str
     created_at: Optional[datetime] = None
+
+
+class SecurityDetectionsBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    job_id: Optional[str] = None
+    detection_type: str
+    severity: str
+    pattern_matched: Optional[str] = None
+    text_sample: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    detected_at: Optional[datetime] = None
+    handled: Optional[bool] = None
+    action_taken: Optional[str] = None
+
+
+class SecurityDetectionsCreate(SecurityDetectionsBase):
+    pass
+
+
+class SecurityDetectionsUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    job_id: Optional[str] = None
+    detection_type: Optional[str] = None
+    severity: Optional[str] = None
+    pattern_matched: Optional[str] = None
+    text_sample: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    detected_at: Optional[datetime] = None
+    handled: Optional[bool] = None
+    action_taken: Optional[str] = None
+
+
+class SecurityDetectionsResponse(SecurityDetectionsBase):
+    id: str
 
 
 class SecurityTestTableBase(BaseModel):

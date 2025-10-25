@@ -5,6 +5,10 @@
       "comment": null
     },
     {
+      "name": "apify_application_submissions",
+      "comment": null
+    },
+    {
       "name": "application_documents",
       "comment": null
     },
@@ -30,6 +34,14 @@
     },
     {
       "name": "consistency_validation_logs",
+      "comment": null
+    },
+    {
+      "name": "dashboard_metrics_daily",
+      "comment": null
+    },
+    {
+      "name": "dashboard_metrics_hourly",
       "comment": null
     },
     {
@@ -62,6 +74,10 @@
     },
     {
       "name": "job_analysis_queue",
+      "comment": null
+    },
+    {
+      "name": "job_analysis_tiers",
       "comment": null
     },
     {
@@ -146,6 +162,10 @@
     },
     {
       "name": "recovery_statistics",
+      "comment": null
+    },
+    {
+      "name": "security_detections",
       "comment": null
     },
     {
@@ -848,6 +868,228 @@
         "comment": null
       }
     ],
+    "apify_application_submissions": [
+      {
+        "name": "submission_id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "gen_random_uuid()",
+        "position": 1,
+        "comment": null
+      },
+      {
+        "name": "application_id",
+        "data_type": "character varying",
+        "max_length": 255,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 2,
+        "comment": null
+      },
+      {
+        "name": "job_id",
+        "data_type": "character varying",
+        "max_length": 255,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 3,
+        "comment": null
+      },
+      {
+        "name": "actor_run_id",
+        "data_type": "character varying",
+        "max_length": 255,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 4,
+        "comment": null
+      },
+      {
+        "name": "status",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "'pending'::character varying",
+        "position": 5,
+        "comment": null
+      },
+      {
+        "name": "form_platform",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 6,
+        "comment": null
+      },
+      {
+        "name": "form_type",
+        "data_type": "character varying",
+        "max_length": 100,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 7,
+        "comment": null
+      },
+      {
+        "name": "fields_filled",
+        "data_type": "jsonb",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 8,
+        "comment": null
+      },
+      {
+        "name": "submission_confirmed",
+        "data_type": "boolean",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "false",
+        "position": 9,
+        "comment": null
+      },
+      {
+        "name": "confirmation_message",
+        "data_type": "text",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 10,
+        "comment": null
+      },
+      {
+        "name": "screenshot_urls",
+        "data_type": "jsonb",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 11,
+        "comment": null
+      },
+      {
+        "name": "screenshot_metadata",
+        "data_type": "jsonb",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 12,
+        "comment": null
+      },
+      {
+        "name": "error_message",
+        "data_type": "text",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 13,
+        "comment": null
+      },
+      {
+        "name": "error_details",
+        "data_type": "jsonb",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 14,
+        "comment": null
+      },
+      {
+        "name": "submitted_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "now()",
+        "position": 15,
+        "comment": null
+      },
+      {
+        "name": "reviewed_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 16,
+        "comment": null
+      },
+      {
+        "name": "created_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "now()",
+        "position": 17,
+        "comment": null
+      },
+      {
+        "name": "updated_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "now()",
+        "position": 18,
+        "comment": null
+      },
+      {
+        "name": "reviewed_by",
+        "data_type": "character varying",
+        "max_length": 255,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 19,
+        "comment": null
+      },
+      {
+        "name": "review_notes",
+        "data_type": "text",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 20,
+        "comment": null
+      }
+    ],
     "application_documents": [
       {
         "name": "document_id",
@@ -1162,7 +1404,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 3,
+        "position": 2,
         "comment": null
       },
       {
@@ -1173,7 +1415,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 4,
+        "position": 3,
         "comment": null
       },
       {
@@ -1184,7 +1426,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 6,
+        "position": 4,
         "comment": null
       },
       {
@@ -1195,7 +1437,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 7,
+        "position": 5,
         "comment": null
       },
       {
@@ -1206,7 +1448,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 8,
+        "position": 6,
         "comment": null
       },
       {
@@ -1217,7 +1459,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 9,
+        "position": 7,
         "comment": null
       },
       {
@@ -1228,7 +1470,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 11,
+        "position": 8,
         "comment": null
       },
       {
@@ -1239,7 +1481,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 12,
+        "position": 9,
         "comment": null
       },
       {
@@ -1250,7 +1492,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 13,
+        "position": 10,
         "comment": null
       },
       {
@@ -1261,7 +1503,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 14,
+        "position": 11,
         "comment": null
       },
       {
@@ -1272,7 +1514,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 15,
+        "position": 12,
         "comment": null
       },
       {
@@ -1283,7 +1525,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 16,
+        "position": 13,
         "comment": null
       },
       {
@@ -1294,7 +1536,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 17,
+        "position": 14,
         "comment": null
       },
       {
@@ -1305,7 +1547,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 19,
+        "position": 15,
         "comment": null
       },
       {
@@ -1316,7 +1558,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 20,
+        "position": 16,
         "comment": null
       },
       {
@@ -1327,7 +1569,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 21,
+        "position": 17,
         "comment": null
       },
       {
@@ -1338,7 +1580,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 22,
+        "position": 18,
         "comment": null
       },
       {
@@ -1349,7 +1591,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 23,
+        "position": 19,
         "comment": null
       },
       {
@@ -1360,7 +1602,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 24,
+        "position": 20,
         "comment": null
       },
       {
@@ -1371,7 +1613,7 @@
         "scale": null,
         "nullable": false,
         "default": null,
-        "position": 25,
+        "position": 21,
         "comment": null
       },
       {
@@ -1382,7 +1624,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 26,
+        "position": 22,
         "comment": null
       },
       {
@@ -1393,7 +1635,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 31,
+        "position": 23,
         "comment": null
       },
       {
@@ -1404,7 +1646,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 34,
+        "position": 24,
         "comment": null
       },
       {
@@ -1415,7 +1657,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 35,
+        "position": 25,
         "comment": null
       },
       {
@@ -1426,7 +1668,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 36,
+        "position": 26,
         "comment": null
       },
       {
@@ -1437,7 +1679,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 37,
+        "position": 27,
         "comment": null
       },
       {
@@ -1448,7 +1690,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 38,
+        "position": 28,
         "comment": null
       },
       {
@@ -1459,7 +1701,7 @@
         "scale": 2,
         "nullable": true,
         "default": "0.00",
-        "position": 41,
+        "position": 29,
         "comment": null
       },
       {
@@ -1470,7 +1712,7 @@
         "scale": 0,
         "nullable": true,
         "default": "0",
-        "position": 42,
+        "position": 30,
         "comment": null
       }
     ],
@@ -1604,7 +1846,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 14,
+        "position": 12,
         "comment": null
       },
       {
@@ -1615,7 +1857,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 15,
+        "position": 13,
         "comment": null
       },
       {
@@ -1626,7 +1868,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 16,
+        "position": 14,
         "comment": null
       },
       {
@@ -1637,7 +1879,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 17,
+        "position": 15,
         "comment": null
       },
       {
@@ -1648,7 +1890,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 18,
+        "position": 16,
         "comment": null
       },
       {
@@ -1659,7 +1901,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 19,
+        "position": 17,
         "comment": null
       },
       {
@@ -1670,7 +1912,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 20,
+        "position": 18,
         "comment": null
       },
       {
@@ -1681,7 +1923,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 21,
+        "position": 19,
         "comment": null
       }
     ],
@@ -1783,6 +2025,560 @@
         "nullable": true,
         "default": "now()",
         "position": 9,
+        "comment": null
+      }
+    ],
+    "dashboard_metrics_daily": [
+      {
+        "name": "id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "gen_random_uuid()",
+        "position": 1,
+        "comment": null
+      },
+      {
+        "name": "metric_date",
+        "data_type": "date",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 2,
+        "comment": null
+      },
+      {
+        "name": "jobs_scraped_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 3,
+        "comment": null
+      },
+      {
+        "name": "jobs_cleaned_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 4,
+        "comment": null
+      },
+      {
+        "name": "jobs_deduplicated_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 5,
+        "comment": null
+      },
+      {
+        "name": "scraping_errors_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 6,
+        "comment": null
+      },
+      {
+        "name": "scraping_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 7,
+        "comment": null
+      },
+      {
+        "name": "scraping_peak_hour",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 8,
+        "comment": null
+      },
+      {
+        "name": "jobs_analyzed_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 9,
+        "comment": null
+      },
+      {
+        "name": "ai_requests_sent",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 10,
+        "comment": null
+      },
+      {
+        "name": "ai_tokens_input",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 11,
+        "comment": null
+      },
+      {
+        "name": "ai_tokens_output",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 12,
+        "comment": null
+      },
+      {
+        "name": "ai_cost_incurred",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 10,
+        "scale": 4,
+        "nullable": true,
+        "default": "0.00",
+        "position": 13,
+        "comment": null
+      },
+      {
+        "name": "ai_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 14,
+        "comment": null
+      },
+      {
+        "name": "ai_model_used",
+        "data_type": "character varying",
+        "max_length": 100,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 15,
+        "comment": null
+      },
+      {
+        "name": "applications_sent_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 16,
+        "comment": null
+      },
+      {
+        "name": "applications_success_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 17,
+        "comment": null
+      },
+      {
+        "name": "applications_failed_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 18,
+        "comment": null
+      },
+      {
+        "name": "documents_generated_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 19,
+        "comment": null
+      },
+      {
+        "name": "application_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 20,
+        "comment": null
+      },
+      {
+        "name": "success_rate",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 5,
+        "scale": 2,
+        "nullable": true,
+        "default": "0.00",
+        "position": 21,
+        "comment": null
+      },
+      {
+        "name": "pipeline_conversion_rate",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 5,
+        "scale": 2,
+        "nullable": true,
+        "default": "0.00",
+        "position": 22,
+        "comment": null
+      },
+      {
+        "name": "pipeline_bottleneck",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 23,
+        "comment": null
+      },
+      {
+        "name": "total_pipeline_jobs",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 24,
+        "comment": null
+      },
+      {
+        "name": "jobs_trend_pct",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 5,
+        "scale": 2,
+        "nullable": true,
+        "default": "0.00",
+        "position": 25,
+        "comment": null
+      },
+      {
+        "name": "applications_trend_pct",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 5,
+        "scale": 2,
+        "nullable": true,
+        "default": "0.00",
+        "position": 26,
+        "comment": null
+      },
+      {
+        "name": "created_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "position": 27,
+        "comment": null
+      },
+      {
+        "name": "updated_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "position": 28,
+        "comment": null
+      }
+    ],
+    "dashboard_metrics_hourly": [
+      {
+        "name": "id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "gen_random_uuid()",
+        "position": 1,
+        "comment": null
+      },
+      {
+        "name": "metric_hour",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 2,
+        "comment": null
+      },
+      {
+        "name": "jobs_scraped_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 3,
+        "comment": null
+      },
+      {
+        "name": "jobs_cleaned_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 4,
+        "comment": null
+      },
+      {
+        "name": "jobs_deduplicated_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 5,
+        "comment": null
+      },
+      {
+        "name": "scraping_errors_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 6,
+        "comment": null
+      },
+      {
+        "name": "scraping_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 7,
+        "comment": null
+      },
+      {
+        "name": "jobs_analyzed_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 8,
+        "comment": null
+      },
+      {
+        "name": "ai_requests_sent",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 9,
+        "comment": null
+      },
+      {
+        "name": "ai_tokens_input",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 10,
+        "comment": null
+      },
+      {
+        "name": "ai_tokens_output",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 11,
+        "comment": null
+      },
+      {
+        "name": "ai_cost_incurred",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 10,
+        "scale": 4,
+        "nullable": true,
+        "default": "0.00",
+        "position": 12,
+        "comment": null
+      },
+      {
+        "name": "ai_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 13,
+        "comment": null
+      },
+      {
+        "name": "applications_sent_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 14,
+        "comment": null
+      },
+      {
+        "name": "applications_success_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 15,
+        "comment": null
+      },
+      {
+        "name": "applications_failed_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 16,
+        "comment": null
+      },
+      {
+        "name": "documents_generated_count",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 17,
+        "comment": null
+      },
+      {
+        "name": "application_avg_duration_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": "0",
+        "position": 18,
+        "comment": null
+      },
+      {
+        "name": "pipeline_conversion_rate",
+        "data_type": "numeric",
+        "max_length": null,
+        "precision": 5,
+        "scale": 2,
+        "nullable": true,
+        "default": "0.00",
+        "position": 19,
+        "comment": null
+      },
+      {
+        "name": "pipeline_bottleneck",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 20,
+        "comment": null
+      },
+      {
+        "name": "created_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "position": 21,
+        "comment": null
+      },
+      {
+        "name": "updated_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "position": 22,
         "comment": null
       }
     ],
@@ -2298,7 +3094,7 @@
         "scale": null,
         "nullable": false,
         "default": null,
-        "position": 5,
+        "position": 3,
         "comment": null
       },
       {
@@ -2309,7 +3105,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 6,
+        "position": 4,
         "comment": null
       },
       {
@@ -2320,7 +3116,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 7,
+        "position": 5,
         "comment": null
       },
       {
@@ -2331,7 +3127,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 8,
+        "position": 6,
         "comment": null
       },
       {
@@ -2342,7 +3138,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 9,
+        "position": 7,
         "comment": null
       }
     ],
@@ -2734,6 +3530,217 @@
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
         "position": 9,
+        "comment": null
+      }
+    ],
+    "job_analysis_tiers": [
+      {
+        "name": "id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "gen_random_uuid()",
+        "position": 1,
+        "comment": null
+      },
+      {
+        "name": "job_id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 2,
+        "comment": null
+      },
+      {
+        "name": "tier_1_completed",
+        "data_type": "boolean",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "false",
+        "position": 3,
+        "comment": null
+      },
+      {
+        "name": "tier_1_timestamp",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 4,
+        "comment": null
+      },
+      {
+        "name": "tier_1_tokens_used",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 5,
+        "comment": null
+      },
+      {
+        "name": "tier_1_model",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 6,
+        "comment": null
+      },
+      {
+        "name": "tier_1_response_time_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 7,
+        "comment": null
+      },
+      {
+        "name": "tier_2_completed",
+        "data_type": "boolean",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "false",
+        "position": 8,
+        "comment": null
+      },
+      {
+        "name": "tier_2_timestamp",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 9,
+        "comment": null
+      },
+      {
+        "name": "tier_2_tokens_used",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 10,
+        "comment": null
+      },
+      {
+        "name": "tier_2_model",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 11,
+        "comment": null
+      },
+      {
+        "name": "tier_2_response_time_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 12,
+        "comment": null
+      },
+      {
+        "name": "tier_3_completed",
+        "data_type": "boolean",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "false",
+        "position": 13,
+        "comment": null
+      },
+      {
+        "name": "tier_3_timestamp",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 14,
+        "comment": null
+      },
+      {
+        "name": "tier_3_tokens_used",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 15,
+        "comment": null
+      },
+      {
+        "name": "tier_3_model",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 16,
+        "comment": null
+      },
+      {
+        "name": "tier_3_response_time_ms",
+        "data_type": "integer",
+        "max_length": null,
+        "precision": 32,
+        "scale": 0,
+        "nullable": true,
+        "default": null,
+        "position": 17,
+        "comment": null
+      },
+      {
+        "name": "created_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "now()",
+        "position": 18,
+        "comment": null
+      },
+      {
+        "name": "updated_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "now()",
+        "position": 19,
         "comment": null
       }
     ],
@@ -3637,7 +4644,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 6,
+        "position": 5,
         "comment": null
       },
       {
@@ -3648,7 +4655,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 8,
+        "position": 6,
         "comment": null
       }
     ],
@@ -3762,7 +4769,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 6,
+        "position": 5,
         "comment": null
       },
       {
@@ -3773,7 +4780,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 7,
+        "position": 6,
         "comment": null
       },
       {
@@ -3784,7 +4791,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 8,
+        "position": 7,
         "comment": null
       },
       {
@@ -3795,7 +4802,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 10,
+        "position": 8,
         "comment": null
       },
       {
@@ -3806,7 +4813,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 12,
+        "position": 9,
         "comment": null
       },
       {
@@ -3817,7 +4824,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 13,
+        "position": 10,
         "comment": null
       },
       {
@@ -3828,7 +4835,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 15,
+        "position": 11,
         "comment": null
       },
       {
@@ -3839,7 +4846,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 18,
+        "position": 12,
         "comment": null
       },
       {
@@ -3850,7 +4857,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 19,
+        "position": 13,
         "comment": null
       },
       {
@@ -3861,7 +4868,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 21,
+        "position": 14,
         "comment": null
       },
       {
@@ -3872,7 +4879,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 24,
+        "position": 15,
         "comment": null
       },
       {
@@ -3883,7 +4890,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 25,
+        "position": 16,
         "comment": null
       },
       {
@@ -3894,7 +4901,7 @@
         "scale": null,
         "nullable": true,
         "default": "'not_applied'::character varying",
-        "position": 26,
+        "position": 17,
         "comment": null
       },
       {
@@ -3905,7 +4912,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 27,
+        "position": 18,
         "comment": null
       },
       {
@@ -3916,7 +4923,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 28,
+        "position": 19,
         "comment": null
       },
       {
@@ -3927,7 +4934,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 30,
+        "position": 20,
         "comment": null
       },
       {
@@ -3938,7 +4945,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 32,
+        "position": 21,
         "comment": null
       },
       {
@@ -3949,7 +4956,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 34,
+        "position": 22,
         "comment": null
       },
       {
@@ -3960,7 +4967,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 35,
+        "position": 23,
         "comment": null
       },
       {
@@ -3971,7 +4978,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 36,
+        "position": 24,
         "comment": null
       },
       {
@@ -3982,7 +4989,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 37,
+        "position": 25,
         "comment": null
       },
       {
@@ -3993,7 +5000,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 38,
+        "position": 26,
         "comment": null
       },
       {
@@ -4004,7 +5011,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 39,
+        "position": 27,
         "comment": null
       },
       {
@@ -4015,7 +5022,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 40,
+        "position": 28,
         "comment": null
       },
       {
@@ -4026,7 +5033,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 41,
+        "position": 29,
         "comment": null
       },
       {
@@ -4037,7 +5044,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 42,
+        "position": 30,
         "comment": null
       },
       {
@@ -4048,7 +5055,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 43,
+        "position": 31,
         "comment": null
       },
       {
@@ -4059,7 +5066,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 44,
+        "position": 32,
         "comment": null
       },
       {
@@ -4070,7 +5077,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 45,
+        "position": 33,
         "comment": null
       },
       {
@@ -4081,7 +5088,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 46,
+        "position": 34,
         "comment": null
       },
       {
@@ -4092,7 +5099,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 47,
+        "position": 35,
         "comment": null
       },
       {
@@ -4103,7 +5110,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 48,
+        "position": 36,
         "comment": null
       },
       {
@@ -4114,7 +5121,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 49,
+        "position": 37,
         "comment": null
       },
       {
@@ -4125,7 +5132,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 50,
+        "position": 38,
         "comment": null
       },
       {
@@ -4136,7 +5143,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 51,
+        "position": 39,
         "comment": null
       },
       {
@@ -4147,7 +5154,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 52,
+        "position": 40,
         "comment": null
       },
       {
@@ -4158,7 +5165,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 53,
+        "position": 41,
         "comment": null
       },
       {
@@ -4169,7 +5176,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 54,
+        "position": 42,
         "comment": null
       },
       {
@@ -4180,7 +5187,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 55,
+        "position": 43,
         "comment": null
       },
       {
@@ -4191,7 +5198,7 @@
         "scale": null,
         "nullable": true,
         "default": "'CAD'::character varying",
-        "position": 56,
+        "position": 44,
         "comment": null
       },
       {
@@ -4202,7 +5209,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 57,
+        "position": 45,
         "comment": null
       },
       {
@@ -4213,7 +5220,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 58,
+        "position": 46,
         "comment": null
       },
       {
@@ -4224,7 +5231,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 59,
+        "position": 47,
         "comment": null
       },
       {
@@ -4235,7 +5242,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 60,
+        "position": 48,
         "comment": null
       },
       {
@@ -4246,7 +5253,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 61,
+        "position": 49,
         "comment": null
       },
       {
@@ -4257,7 +5264,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 62,
+        "position": 50,
         "comment": null
       },
       {
@@ -4268,7 +5275,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 63,
+        "position": 51,
         "comment": null
       },
       {
@@ -4279,7 +5286,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 64,
+        "position": 52,
         "comment": null
       },
       {
@@ -4290,7 +5297,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 65,
+        "position": 53,
         "comment": null
       },
       {
@@ -4301,7 +5308,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 66,
+        "position": 54,
         "comment": null
       },
       {
@@ -4312,7 +5319,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 67,
+        "position": 55,
         "comment": null
       },
       {
@@ -4323,7 +5330,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 68,
+        "position": 56,
         "comment": null
       },
       {
@@ -4334,7 +5341,7 @@
         "scale": 0,
         "nullable": true,
         "default": "0",
-        "position": 69,
+        "position": 57,
         "comment": null
       },
       {
@@ -4345,7 +5352,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 70,
+        "position": 58,
         "comment": null
       },
       {
@@ -4356,7 +5363,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 71,
+        "position": 59,
         "comment": null
       }
     ],
@@ -5364,6 +6371,118 @@
         "comment": null
       }
     ],
+    "security_detections": [
+      {
+        "name": "id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": "gen_random_uuid()",
+        "position": 1,
+        "comment": null
+      },
+      {
+        "name": "job_id",
+        "data_type": "uuid",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 2,
+        "comment": null
+      },
+      {
+        "name": "detection_type",
+        "data_type": "character varying",
+        "max_length": 50,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 3,
+        "comment": null
+      },
+      {
+        "name": "severity",
+        "data_type": "character varying",
+        "max_length": 20,
+        "precision": null,
+        "scale": null,
+        "nullable": false,
+        "default": null,
+        "position": 4,
+        "comment": null
+      },
+      {
+        "name": "pattern_matched",
+        "data_type": "text",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 5,
+        "comment": null
+      },
+      {
+        "name": "text_sample",
+        "data_type": "text",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 6,
+        "comment": null
+      },
+      {
+        "name": "metadata",
+        "data_type": "jsonb",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 7,
+        "comment": null
+      },
+      {
+        "name": "detected_at",
+        "data_type": "timestamp without time zone",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "now()",
+        "position": 8,
+        "comment": null
+      },
+      {
+        "name": "handled",
+        "data_type": "boolean",
+        "max_length": null,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": "false",
+        "position": 9,
+        "comment": null
+      },
+      {
+        "name": "action_taken",
+        "data_type": "character varying",
+        "max_length": 100,
+        "precision": null,
+        "scale": null,
+        "nullable": true,
+        "default": null,
+        "position": 10,
+        "comment": null
+      }
+    ],
     "security_test_table": [
       {
         "name": "id",
@@ -5408,7 +6527,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 4,
+        "position": 3,
         "comment": null
       },
       {
@@ -5419,7 +6538,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 5,
+        "position": 4,
         "comment": null
       },
       {
@@ -5430,7 +6549,7 @@
         "scale": null,
         "nullable": true,
         "default": "'Draft'::character varying",
-        "position": 9,
+        "position": 5,
         "comment": null
       },
       {
@@ -5441,7 +6560,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 10,
+        "position": 6,
         "comment": null
       },
       {
@@ -5452,7 +6571,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 13,
+        "position": 7,
         "comment": null
       },
       {
@@ -5463,7 +6582,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 14,
+        "position": 8,
         "comment": null
       },
       {
@@ -5474,7 +6593,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 15,
+        "position": 9,
         "comment": null
       },
       {
@@ -5485,7 +6604,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 16,
+        "position": 10,
         "comment": null
       },
       {
@@ -5496,7 +6615,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 17,
+        "position": 11,
         "comment": null
       },
       {
@@ -5507,7 +6626,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 18,
+        "position": 12,
         "comment": null
       },
       {
@@ -5518,7 +6637,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 19,
+        "position": 13,
         "comment": null
       },
       {
@@ -5529,7 +6648,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 20,
+        "position": 14,
         "comment": null
       },
       {
@@ -5540,7 +6659,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 21,
+        "position": 15,
         "comment": null
       },
       {
@@ -5551,7 +6670,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 22,
+        "position": 16,
         "comment": null
       },
       {
@@ -5562,7 +6681,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 23,
+        "position": 17,
         "comment": null
       },
       {
@@ -5573,7 +6692,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 24,
+        "position": 18,
         "comment": null
       },
       {
@@ -5584,7 +6703,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 25,
+        "position": 19,
         "comment": null
       },
       {
@@ -5595,7 +6714,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 26,
+        "position": 20,
         "comment": null
       },
       {
@@ -5606,7 +6725,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 27,
+        "position": 21,
         "comment": null
       },
       {
@@ -5617,7 +6736,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 28,
+        "position": 22,
         "comment": null
       },
       {
@@ -5628,7 +6747,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 29,
+        "position": 23,
         "comment": null
       },
       {
@@ -5639,7 +6758,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 30,
+        "position": 24,
         "comment": null
       },
       {
@@ -5650,7 +6769,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 31,
+        "position": 25,
         "comment": null
       },
       {
@@ -5661,7 +6780,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 32,
+        "position": 26,
         "comment": null
       }
     ],
@@ -5729,7 +6848,7 @@
         "scale": null,
         "nullable": true,
         "default": "'Draft'::character varying",
-        "position": 9,
+        "position": 6,
         "comment": null
       },
       {
@@ -5740,7 +6859,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 13,
+        "position": 7,
         "comment": null
       },
       {
@@ -5751,7 +6870,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 14,
+        "position": 8,
         "comment": null
       },
       {
@@ -5762,7 +6881,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 15,
+        "position": 9,
         "comment": null
       },
       {
@@ -5773,7 +6892,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 16,
+        "position": 10,
         "comment": null
       },
       {
@@ -5784,7 +6903,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 17,
+        "position": 11,
         "comment": null
       },
       {
@@ -5795,7 +6914,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 18,
+        "position": 12,
         "comment": null
       },
       {
@@ -5806,7 +6925,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 19,
+        "position": 13,
         "comment": null
       },
       {
@@ -5817,7 +6936,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 20,
+        "position": 14,
         "comment": null
       },
       {
@@ -5828,7 +6947,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 21,
+        "position": 15,
         "comment": null
       },
       {
@@ -5839,7 +6958,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 22,
+        "position": 16,
         "comment": null
       },
       {
@@ -5850,7 +6969,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 23,
+        "position": 17,
         "comment": null
       },
       {
@@ -5861,7 +6980,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 24,
+        "position": 18,
         "comment": null
       },
       {
@@ -5872,7 +6991,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 25,
+        "position": 19,
         "comment": null
       },
       {
@@ -5883,7 +7002,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 26,
+        "position": 20,
         "comment": null
       },
       {
@@ -5894,7 +7013,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 27,
+        "position": 21,
         "comment": null
       },
       {
@@ -5905,7 +7024,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 28,
+        "position": 22,
         "comment": null
       },
       {
@@ -5916,7 +7035,7 @@
         "scale": null,
         "nullable": true,
         "default": "'pending'::character varying",
-        "position": 29,
+        "position": 23,
         "comment": null
       },
       {
@@ -5927,7 +7046,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 30,
+        "position": 24,
         "comment": null
       },
       {
@@ -5938,7 +7057,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 31,
+        "position": 25,
         "comment": null
       },
       {
@@ -5949,7 +7068,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 32,
+        "position": 26,
         "comment": null
       }
     ],
@@ -6129,7 +7248,7 @@
         "scale": 2,
         "nullable": true,
         "default": null,
-        "position": 5,
+        "position": 4,
         "comment": null
       },
       {
@@ -6140,7 +7259,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 7,
+        "position": 5,
         "comment": null
       },
       {
@@ -6151,7 +7270,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 8,
+        "position": 6,
         "comment": null
       },
       {
@@ -6162,7 +7281,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 9,
+        "position": 7,
         "comment": null
       },
       {
@@ -6173,7 +7292,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 10,
+        "position": 8,
         "comment": null
       },
       {
@@ -6184,7 +7303,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 11,
+        "position": 9,
         "comment": null
       },
       {
@@ -6195,7 +7314,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 12,
+        "position": 10,
         "comment": null
       },
       {
@@ -6206,7 +7325,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 13,
+        "position": 11,
         "comment": null
       },
       {
@@ -6217,7 +7336,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 14,
+        "position": 12,
         "comment": null
       },
       {
@@ -6228,7 +7347,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 15,
+        "position": 13,
         "comment": null
       },
       {
@@ -6239,7 +7358,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 16,
+        "position": 14,
         "comment": null
       },
       {
@@ -6250,7 +7369,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 17,
+        "position": 15,
         "comment": null
       },
       {
@@ -6261,7 +7380,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 18,
+        "position": 16,
         "comment": null
       },
       {
@@ -6272,7 +7391,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 19,
+        "position": 17,
         "comment": null
       },
       {
@@ -6283,7 +7402,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 20,
+        "position": 18,
         "comment": null
       },
       {
@@ -6294,7 +7413,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 21,
+        "position": 19,
         "comment": null
       },
       {
@@ -6305,7 +7424,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 22,
+        "position": 20,
         "comment": null
       },
       {
@@ -6316,7 +7435,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 23,
+        "position": 21,
         "comment": null
       },
       {
@@ -6327,7 +7446,7 @@
         "scale": 2,
         "nullable": true,
         "default": null,
-        "position": 24,
+        "position": 22,
         "comment": null
       },
       {
@@ -6338,7 +7457,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 25,
+        "position": 23,
         "comment": null
       },
       {
@@ -6349,7 +7468,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 26,
+        "position": 24,
         "comment": null
       },
       {
@@ -6360,7 +7479,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 27,
+        "position": 25,
         "comment": null
       },
       {
@@ -6371,7 +7490,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 28,
+        "position": 26,
         "comment": null
       },
       {
@@ -6382,7 +7501,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 29,
+        "position": 27,
         "comment": null
       },
       {
@@ -6393,7 +7512,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 30,
+        "position": 28,
         "comment": null
       },
       {
@@ -6404,7 +7523,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 31,
+        "position": 29,
         "comment": null
       },
       {
@@ -6415,7 +7534,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 32,
+        "position": 30,
         "comment": null
       },
       {
@@ -6426,7 +7545,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 33,
+        "position": 31,
         "comment": null
       },
       {
@@ -6437,7 +7556,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 34,
+        "position": 32,
         "comment": null
       },
       {
@@ -6448,7 +7567,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 35,
+        "position": 33,
         "comment": null
       },
       {
@@ -6459,7 +7578,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 36,
+        "position": 34,
         "comment": null
       },
       {
@@ -6470,7 +7589,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 37,
+        "position": 35,
         "comment": null
       },
       {
@@ -6481,7 +7600,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 38,
+        "position": 36,
         "comment": null
       },
       {
@@ -6492,7 +7611,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 39,
+        "position": 37,
         "comment": null
       },
       {
@@ -6503,7 +7622,7 @@
         "scale": 0,
         "nullable": true,
         "default": null,
-        "position": 40,
+        "position": 38,
         "comment": null
       },
       {
@@ -6514,7 +7633,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 43,
+        "position": 39,
         "comment": null
       },
       {
@@ -6525,7 +7644,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 44,
+        "position": 40,
         "comment": null
       },
       {
@@ -6536,7 +7655,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 45,
+        "position": 41,
         "comment": null
       },
       {
@@ -6547,7 +7666,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 46,
+        "position": 42,
         "comment": null
       },
       {
@@ -6558,7 +7677,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 47,
+        "position": 43,
         "comment": null
       },
       {
@@ -6569,7 +7688,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 48,
+        "position": 44,
         "comment": null
       },
       {
@@ -6580,7 +7699,7 @@
         "scale": null,
         "nullable": true,
         "default": "false",
-        "position": 49,
+        "position": 45,
         "comment": null
       },
       {
@@ -6591,7 +7710,7 @@
         "scale": null,
         "nullable": true,
         "default": "true",
-        "position": 50,
+        "position": 46,
         "comment": null
       },
       {
@@ -6602,7 +7721,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 51,
+        "position": 47,
         "comment": null
       },
       {
@@ -6613,7 +7732,7 @@
         "scale": null,
         "nullable": true,
         "default": "CURRENT_TIMESTAMP",
-        "position": 52,
+        "position": 48,
         "comment": null
       },
       {
@@ -6624,7 +7743,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 53,
+        "position": 49,
         "comment": null
       },
       {
@@ -6635,7 +7754,7 @@
         "scale": null,
         "nullable": true,
         "default": null,
-        "position": 54,
+        "position": 50,
         "comment": null
       }
     ],
@@ -7058,14 +8177,14 @@
   "constraints": {
     "analyzed_jobs": [
       {
-        "name": "2200_294956_4_not_null",
+        "name": "2200_16392_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_294956_1_not_null",
+        "name": "2200_16392_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7100,14 +8219,79 @@
         "foreign_column": "deduplication_key"
       }
     ],
-    "application_documents": [
+    "apify_application_submissions": [
       {
-        "name": "2200_114736_3_not_null",
+        "name": "2200_17517_18_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
+      {
+        "name": "valid_platform",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "apify_application_submissions",
+        "foreign_column": "form_platform"
+      },
+      {
+        "name": "2200_17517_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "valid_status",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "apify_application_submissions",
+        "foreign_column": "status"
+      },
+      {
+        "name": "2200_17517_5_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17517_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17517_6_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17517_15_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17517_17_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "apify_application_submissions_pkey",
+        "type": "PRIMARY KEY",
+        "column": "submission_id",
+        "foreign_table": "apify_application_submissions",
+        "foreign_column": "submission_id"
+      }
+    ],
+    "application_documents": [
       {
         "name": "job_application_documents_document_type_check",
         "type": "CHECK",
@@ -7116,21 +8300,28 @@
         "foreign_column": "document_type"
       },
       {
-        "name": "2200_114736_1_not_null",
+        "name": "2200_16405_7_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114736_7_not_null",
+        "name": "2200_16405_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114736_4_not_null",
+        "name": "2200_16405_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16405_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7176,6 +8367,13 @@
         "type": "UNIQUE",
         "column": "document_type",
         "foreign_table": "application_documents",
+        "foreign_column": "document_type"
+      },
+      {
+        "name": "job_application_documents_job_application_id_document_type__key",
+        "type": "UNIQUE",
+        "column": "document_type",
+        "foreign_table": "application_documents",
         "foreign_column": "document_name"
       },
       {
@@ -7184,20 +8382,6 @@
         "column": "document_type",
         "foreign_table": "application_documents",
         "foreign_column": "job_application_id"
-      },
-      {
-        "name": "job_application_documents_job_application_id_document_type__key",
-        "type": "UNIQUE",
-        "column": "document_type",
-        "foreign_table": "application_documents",
-        "foreign_column": "document_type"
-      },
-      {
-        "name": "job_application_documents_job_application_id_document_type__key",
-        "type": "UNIQUE",
-        "column": "document_name",
-        "foreign_table": "application_documents",
-        "foreign_column": "document_name"
       },
       {
         "name": "job_application_documents_job_application_id_document_type__key",
@@ -7212,11 +8396,18 @@
         "column": "document_name",
         "foreign_table": "application_documents",
         "foreign_column": "document_type"
+      },
+      {
+        "name": "job_application_documents_job_application_id_document_type__key",
+        "type": "UNIQUE",
+        "column": "document_name",
+        "foreign_table": "application_documents",
+        "foreign_column": "document_name"
       }
     ],
     "application_settings": [
       {
-        "name": "2200_24590_1_not_null",
+        "name": "2200_16412_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7232,21 +8423,21 @@
     ],
     "canadian_spellings": [
       {
-        "name": "2200_352278_3_not_null",
+        "name": "2200_16417_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352278_2_not_null",
+        "name": "2200_16417_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352278_1_not_null",
+        "name": "2200_16417_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7262,25 +8453,18 @@
     ],
     "cleaned_job_scrape_sources": [
       {
-        "name": "2200_122937_3_not_null",
+        "name": "2200_16425_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_122937_1_not_null",
+        "name": "2200_16425_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
-      },
-      {
-        "name": "cleaned_job_scrape_sources_cleaned_job_id_fkey",
-        "type": "FOREIGN KEY",
-        "column": "cleaned_job_id",
-        "foreign_table": "cleaned_job_scrapes",
-        "foreign_column": "cleaned_job_id"
       },
       {
         "name": "cleaned_job_scrape_sources_job_id_fkey",
@@ -7288,6 +8472,13 @@
         "column": "job_id",
         "foreign_table": "jobs",
         "foreign_column": "id"
+      },
+      {
+        "name": "cleaned_job_scrape_sources_cleaned_job_id_fkey",
+        "type": "FOREIGN KEY",
+        "column": "cleaned_job_id",
+        "foreign_table": "cleaned_job_scrapes",
+        "foreign_column": "cleaned_job_id"
       },
       {
         "name": "cleaned_job_scrape_sources_pkey",
@@ -7301,14 +8492,14 @@
         "type": "UNIQUE",
         "column": "cleaned_job_id",
         "foreign_table": "cleaned_job_scrape_sources",
-        "foreign_column": "original_scrape_id"
+        "foreign_column": "cleaned_job_id"
       },
       {
         "name": "cleaned_job_scrape_sources_cleaned_job_id_original_scrape_i_key",
         "type": "UNIQUE",
         "column": "cleaned_job_id",
         "foreign_table": "cleaned_job_scrape_sources",
-        "foreign_column": "cleaned_job_id"
+        "foreign_column": "original_scrape_id"
       },
       {
         "name": "cleaned_job_scrape_sources_cleaned_job_id_original_scrape_i_key",
@@ -7327,14 +8518,7 @@
     ],
     "cleaned_job_scrapes": [
       {
-        "name": "2200_49162_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_49162_25_not_null",
+        "name": "2200_16431_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7348,6 +8532,13 @@
         "foreign_column": "confidence_score"
       },
       {
+        "name": "2200_16431_21_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
         "name": "cleaned_job_scrapes_pkey",
         "type": "PRIMARY KEY",
         "column": "cleaned_job_id",
@@ -7357,14 +8548,14 @@
     ],
     "companies": [
       {
-        "name": "2200_32768_1_not_null",
+        "name": "2200_16443_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_32768_2_not_null",
+        "name": "2200_16443_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7380,14 +8571,14 @@
     ],
     "consistency_validation_logs": [
       {
-        "name": "2200_319523_2_not_null",
+        "name": "2200_16450_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319523_1_not_null",
+        "name": "2200_16450_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7401,16 +8592,76 @@
         "foreign_column": "id"
       }
     ],
-    "data_corrections": [
+    "dashboard_metrics_daily": [
       {
-        "name": "2200_319533_2_not_null",
+        "name": "2200_17484_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319533_1_not_null",
+        "name": "2200_17484_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "dashboard_metrics_daily_pkey",
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "foreign_table": "dashboard_metrics_daily",
+        "foreign_column": "id"
+      },
+      {
+        "name": "dashboard_metrics_daily_metric_date_key",
+        "type": "UNIQUE",
+        "column": "metric_date",
+        "foreign_table": "dashboard_metrics_daily",
+        "foreign_column": "metric_date"
+      }
+    ],
+    "dashboard_metrics_hourly": [
+      {
+        "name": "2200_17455_2_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17455_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "dashboard_metrics_hourly_pkey",
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "foreign_table": "dashboard_metrics_hourly",
+        "foreign_column": "id"
+      },
+      {
+        "name": "dashboard_metrics_hourly_metric_hour_key",
+        "type": "UNIQUE",
+        "column": "metric_hour",
+        "foreign_table": "dashboard_metrics_hourly",
+        "foreign_column": "metric_hour"
+      }
+    ],
+    "data_corrections": [
+      {
+        "name": "2200_16458_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16458_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7426,14 +8677,14 @@
     ],
     "document_jobs": [
       {
-        "name": "2200_24576_1_not_null",
+        "name": "2200_16466_7_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_24576_7_not_null",
+        "name": "2200_16466_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7456,32 +8707,32 @@
         "foreign_column": "confidence_score"
       },
       {
-        "name": "document_sentences_sentiment_category_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "document_sentences",
-        "foreign_column": "sentiment_category"
-      },
-      {
-        "name": "2200_114688_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_114688_3_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
         "name": "document_sentences_tone_score_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "document_sentences",
         "foreign_column": "tone_score"
+      },
+      {
+        "name": "2200_16471_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16471_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "document_sentences_sentiment_category_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "document_sentences",
+        "foreign_column": "sentiment_category"
       },
       {
         "name": "document_sentences_document_job_id_fkey",
@@ -7516,26 +8767,26 @@
         "type": "UNIQUE",
         "column": "sentence_order",
         "foreign_table": "document_sentences",
-        "foreign_column": "sentence_order"
+        "foreign_column": "document_job_id"
       },
       {
         "name": "document_sentences_document_job_id_sentence_order_key",
         "type": "UNIQUE",
         "column": "sentence_order",
         "foreign_table": "document_sentences",
-        "foreign_column": "document_job_id"
+        "foreign_column": "sentence_order"
       }
     ],
     "document_template_metadata": [
       {
-        "name": "2200_155648_9_not_null",
+        "name": "2200_16481_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_155648_1_not_null",
+        "name": "2200_16481_9_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7558,21 +8809,21 @@
     ],
     "document_tone_analysis": [
       {
-        "name": "2200_32876_1_not_null",
+        "name": "2200_16487_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_32876_5_not_null",
+        "name": "2200_16487_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_32876_2_not_null",
+        "name": "2200_16487_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7588,42 +8839,42 @@
     ],
     "error_log": [
       {
-        "name": "2200_360449_6_not_null",
+        "name": "2200_16493_8_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_360449_7_not_null",
+        "name": "2200_16493_7_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_360449_3_not_null",
+        "name": "2200_16493_6_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_360449_2_not_null",
+        "name": "2200_16493_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_360449_1_not_null",
+        "name": "2200_16493_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_360449_8_not_null",
+        "name": "2200_16493_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7646,21 +8897,21 @@
     ],
     "failure_logs": [
       {
-        "name": "2200_319488_1_not_null",
+        "name": "2200_16502_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319488_2_not_null",
+        "name": "2200_16502_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319488_3_not_null",
+        "name": "2200_16502_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7676,25 +8927,18 @@
     ],
     "job_analysis_queue": [
       {
-        "name": "2200_212993_2_not_null",
+        "name": "2200_16511_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_212993_1_not_null",
+        "name": "2200_16511_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
-      },
-      {
-        "name": "job_analysis_queue_status_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "job_analysis_queue",
-        "foreign_column": "status"
       },
       {
         "name": "job_analysis_queue_priority_check",
@@ -7702,6 +8946,13 @@
         "column": null,
         "foreign_table": "job_analysis_queue",
         "foreign_column": "priority"
+      },
+      {
+        "name": "job_analysis_queue_status_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "job_analysis_queue",
+        "foreign_column": "status"
       },
       {
         "name": "job_analysis_queue_job_id_fkey",
@@ -7725,30 +8976,67 @@
         "foreign_column": "job_id"
       }
     ],
+    "job_analysis_tiers": [
+      {
+        "name": "2200_17608_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17608_2_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "job_analysis_tiers_job_id_fkey",
+        "type": "FOREIGN KEY",
+        "column": "job_id",
+        "foreign_table": "jobs",
+        "foreign_column": "id"
+      },
+      {
+        "name": "job_analysis_tiers_pkey",
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "foreign_table": "job_analysis_tiers",
+        "foreign_column": "id"
+      },
+      {
+        "name": "job_analysis_tiers_job_id_key",
+        "type": "UNIQUE",
+        "column": "job_id",
+        "foreign_table": "job_analysis_tiers",
+        "foreign_column": "job_id"
+      }
+    ],
     "job_application_tracking": [
       {
-        "name": "2200_114723_5_not_null",
+        "name": "2200_16524_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114723_4_not_null",
+        "name": "2200_16524_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114723_1_not_null",
+        "name": "2200_16524_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114723_3_not_null",
+        "name": "2200_16524_5_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7771,7 +9059,7 @@
     ],
     "job_applications": [
       {
-        "name": "2200_32839_1_not_null",
+        "name": "2200_16530_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7794,25 +9082,25 @@
     ],
     "job_ats_keywords": [
       {
+        "name": "2200_16538_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16538_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
         "name": "job_ats_keywords_keyword_category_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "job_ats_keywords",
         "foreign_column": "keyword_category"
-      },
-      {
-        "name": "2200_106598_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_106598_3_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
       },
       {
         "name": "job_ats_keywords_pkey",
@@ -7826,14 +9114,14 @@
         "type": "UNIQUE",
         "column": "job_id",
         "foreign_table": "job_ats_keywords",
-        "foreign_column": "keyword"
+        "foreign_column": "job_id"
       },
       {
         "name": "job_ats_keywords_job_id_keyword_key",
         "type": "UNIQUE",
         "column": "job_id",
         "foreign_table": "job_ats_keywords",
-        "foreign_column": "job_id"
+        "foreign_column": "keyword"
       },
       {
         "name": "job_ats_keywords_job_id_keyword_key",
@@ -7852,14 +9140,14 @@
     ],
     "job_benefits": [
       {
-        "name": "2200_114762_3_not_null",
+        "name": "2200_16544_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_114762_1_not_null",
+        "name": "2200_16544_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7910,14 +9198,14 @@
     ],
     "job_certifications": [
       {
-        "name": "2200_188448_1_not_null",
+        "name": "2200_16550_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_188448_3_not_null",
+        "name": "2200_16550_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7940,14 +9228,14 @@
     ],
     "job_education_requirements": [
       {
-        "name": "2200_196620_1_not_null",
+        "name": "2200_16556_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_196620_2_not_null",
+        "name": "2200_16556_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -7970,21 +9258,21 @@
     ],
     "job_logs": [
       {
-        "name": "2200_24583_1_not_null",
+        "name": "2200_16564_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_24583_5_not_null",
+        "name": "2200_16564_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_24583_2_not_null",
+        "name": "2200_16564_5_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8000,14 +9288,14 @@
     ],
     "job_platforms_found": [
       {
-        "name": "2200_122921_1_not_null",
+        "name": "2200_16569_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_122921_3_not_null",
+        "name": "2200_16569_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8032,14 +9320,14 @@
         "type": "UNIQUE",
         "column": "job_id",
         "foreign_table": "job_platforms_found",
-        "foreign_column": "job_id"
+        "foreign_column": "platform_name"
       },
       {
         "name": "job_platforms_found_job_id_platform_name_key",
         "type": "UNIQUE",
         "column": "job_id",
         "foreign_table": "job_platforms_found",
-        "foreign_column": "platform_name"
+        "foreign_column": "job_id"
       },
       {
         "name": "job_platforms_found_job_id_platform_name_key",
@@ -8058,14 +9346,14 @@
     ],
     "job_red_flags_details": [
       {
-        "name": "2200_188462_3_not_null",
+        "name": "2200_16576_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_188462_1_not_null",
+        "name": "2200_16576_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8088,14 +9376,14 @@
     ],
     "job_required_documents": [
       {
-        "name": "2200_188419_1_not_null",
+        "name": "2200_16584_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_188419_3_not_null",
+        "name": "2200_16584_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8118,7 +9406,14 @@
     ],
     "job_required_skills": [
       {
-        "name": "2200_114777_3_not_null",
+        "name": "2200_16590_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16590_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8130,13 +9425,6 @@
         "column": null,
         "foreign_table": "job_required_skills",
         "foreign_column": "skill_level"
-      },
-      {
-        "name": "2200_114777_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
       },
       {
         "name": "job_required_skills_job_id_fkey",
@@ -8183,14 +9471,7 @@
     ],
     "job_skills": [
       {
-        "name": "2200_106522_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_106522_3_not_null",
+        "name": "2200_16596_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8202,6 +9483,13 @@
         "column": null,
         "foreign_table": "job_skills",
         "foreign_column": "importance_rating"
+      },
+      {
+        "name": "2200_16596_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
       },
       {
         "name": "job_skills_pkey",
@@ -8229,26 +9517,26 @@
         "type": "UNIQUE",
         "column": "skill_name",
         "foreign_table": "job_skills",
-        "foreign_column": "job_id"
+        "foreign_column": "skill_name"
       },
       {
         "name": "job_skills_job_id_skill_name_key",
         "type": "UNIQUE",
         "column": "skill_name",
         "foreign_table": "job_skills",
-        "foreign_column": "skill_name"
+        "foreign_column": "job_id"
       }
     ],
     "job_stress_indicators": [
       {
-        "name": "2200_188433_3_not_null",
+        "name": "2200_16604_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_188433_1_not_null",
+        "name": "2200_16604_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8271,7 +9559,21 @@
     ],
     "jobs": [
       {
-        "name": "2200_32777_1_not_null",
+        "name": "jobs_estimated_stress_level_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "jobs",
+        "foreign_column": "estimated_stress_level"
+      },
+      {
+        "name": "2200_16611_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16611_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8283,20 +9585,6 @@
         "column": null,
         "foreign_table": "jobs",
         "foreign_column": "prestige_factor"
-      },
-      {
-        "name": "2200_32777_3_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "jobs_estimated_stress_level_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "jobs",
-        "foreign_column": "estimated_stress_level"
       },
       {
         "name": "jobs_company_id_fkey",
@@ -8315,14 +9603,14 @@
     ],
     "keyword_filters": [
       {
-        "name": "2200_352267_2_not_null",
+        "name": "2200_16627_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352267_1_not_null",
+        "name": "2200_16627_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8338,14 +9626,14 @@
     ],
     "link_clicks": [
       {
-        "name": "2200_327700_1_not_null",
+        "name": "2200_16635_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_327700_2_not_null",
+        "name": "2200_16635_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8368,52 +9656,52 @@
     ],
     "link_tracking": [
       {
-        "name": "2200_327680_4_not_null",
+        "name": "2200_16643_5_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_327680_1_not_null",
+        "name": "2200_16643_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_327680_6_not_null",
+        "name": "2200_16643_6_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_327680_7_not_null",
+        "name": "2200_16643_7_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_327680_5_not_null",
+        "name": "2200_16643_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
-      },
-      {
-        "name": "fk_link_tracking_job",
-        "type": "FOREIGN KEY",
-        "column": "job_id",
-        "foreign_table": "jobs",
-        "foreign_column": "id"
       },
       {
         "name": "fk_link_tracking_application",
         "type": "FOREIGN KEY",
         "column": "application_id",
         "foreign_table": "job_applications",
+        "foreign_column": "id"
+      },
+      {
+        "name": "fk_link_tracking_job",
+        "type": "FOREIGN KEY",
+        "column": "job_id",
+        "foreign_table": "jobs",
         "foreign_column": "id"
       },
       {
@@ -8426,28 +9714,28 @@
     ],
     "performance_metrics": [
       {
-        "name": "2200_352288_5_not_null",
+        "name": "2200_16651_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352288_2_not_null",
+        "name": "2200_16651_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352288_3_not_null",
+        "name": "2200_16651_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_352288_1_not_null",
+        "name": "2200_16651_5_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8463,25 +9751,18 @@
     ],
     "pre_analyzed_jobs": [
       {
-        "name": "2200_303104_4_not_null",
+        "name": "2200_16658_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_303104_1_not_null",
+        "name": "2200_16658_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
-      },
-      {
-        "name": "pre_analyzed_jobs_cleaned_scrape_id_fkey",
-        "type": "FOREIGN KEY",
-        "column": "cleaned_scrape_id",
-        "foreign_table": "cleaned_job_scrapes",
-        "foreign_column": "cleaned_job_id"
       },
       {
         "name": "pre_analyzed_jobs_company_id_fkey",
@@ -8489,6 +9770,13 @@
         "column": "company_id",
         "foreign_table": "companies",
         "foreign_column": "id"
+      },
+      {
+        "name": "pre_analyzed_jobs_cleaned_scrape_id_fkey",
+        "type": "FOREIGN KEY",
+        "column": "cleaned_scrape_id",
+        "foreign_table": "cleaned_job_scrapes",
+        "foreign_column": "cleaned_job_id"
       },
       {
         "name": "pre_analyzed_jobs_pkey",
@@ -8500,28 +9788,28 @@
     ],
     "raw_job_scrapes": [
       {
-        "name": "2200_49152_3_not_null",
+        "name": "2200_16669_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_49152_2_not_null",
+        "name": "2200_16669_6_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_49152_1_not_null",
+        "name": "2200_16669_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_49152_6_not_null",
+        "name": "2200_16669_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8537,7 +9825,7 @@
     ],
     "recovery_statistics": [
       {
-        "name": "2200_319510_1_not_null",
+        "name": "2200_16677_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8555,20 +9843,13 @@
         "type": "UNIQUE",
         "column": "date",
         "foreign_table": "recovery_statistics",
-        "foreign_column": "failure_type"
+        "foreign_column": "date"
       },
       {
         "name": "recovery_statistics_date_failure_type_key",
         "type": "UNIQUE",
         "column": "date",
         "foreign_table": "recovery_statistics",
-        "foreign_column": "date"
-      },
-      {
-        "name": "recovery_statistics_date_failure_type_key",
-        "type": "UNIQUE",
-        "column": "failure_type",
-        "foreign_table": "recovery_statistics",
         "foreign_column": "failure_type"
       },
       {
@@ -8577,6 +9858,50 @@
         "column": "failure_type",
         "foreign_table": "recovery_statistics",
         "foreign_column": "date"
+      },
+      {
+        "name": "recovery_statistics_date_failure_type_key",
+        "type": "UNIQUE",
+        "column": "failure_type",
+        "foreign_table": "recovery_statistics",
+        "foreign_column": "failure_type"
+      }
+    ],
+    "security_detections": [
+      {
+        "name": "2200_17589_4_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17589_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_17589_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "security_detections_job_id_fkey",
+        "type": "FOREIGN KEY",
+        "column": "job_id",
+        "foreign_table": "jobs",
+        "foreign_column": "id"
+      },
+      {
+        "name": "security_detections_pkey",
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "foreign_table": "security_detections",
+        "foreign_column": "id"
       }
     ],
     "sentence_bank_cover_letter": [
@@ -8588,7 +9913,14 @@
         "foreign_column": "tone_strength"
       },
       {
-        "name": "2200_32824_1_not_null",
+        "name": "2200_16689_2_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16689_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8602,13 +9934,6 @@
         "foreign_column": "status"
       },
       {
-        "name": "2200_32824_2_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
         "name": "sentence_bank_cover_letter_pkey",
         "type": "PRIMARY KEY",
         "column": "id",
@@ -8618,25 +9943,25 @@
     ],
     "sentence_bank_resume": [
       {
+        "name": "sentence_bank_resume_tone_strength_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "sentence_bank_resume",
+        "foreign_column": "tone_strength"
+      },
+      {
+        "name": "2200_16705_2_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
         "name": "check_body_section_resume",
         "type": "CHECK",
         "column": null,
         "foreign_table": "sentence_bank_resume",
         "foreign_column": "body_section"
-      },
-      {
-        "name": "2200_32809_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_32809_2_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
       },
       {
         "name": "sentence_bank_resume_stage_check",
@@ -8646,11 +9971,11 @@
         "foreign_column": "status"
       },
       {
-        "name": "sentence_bank_resume_tone_strength_check",
+        "name": "2200_16705_1_not_null",
         "type": "CHECK",
         "column": null,
-        "foreign_table": "sentence_bank_resume",
-        "foreign_column": "tone_strength"
+        "foreign_table": null,
+        "foreign_column": null
       },
       {
         "name": "sentence_bank_resume_experience_id_fkey",
@@ -8669,14 +9994,14 @@
     ],
     "user_candidate_info": [
       {
-        "name": "2200_409600_2_not_null",
+        "name": "2200_16721_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_409600_1_not_null",
+        "name": "2200_16721_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8699,18 +10024,53 @@
     ],
     "user_job_preferences": [
       {
-        "name": "user_job_preferences_experience_level_maximum_check",
+        "name": "user_job_preferences_experience_level_minimum_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "user_job_preferences",
-        "foreign_column": "experience_level_maximum"
+        "foreign_column": "experience_level_minimum"
       },
       {
-        "name": "2200_40960_1_not_null",
+        "name": "valid_hours_range",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "user_job_preferences",
+        "foreign_column": "hours_per_week_minimum"
+      },
+      {
+        "name": "2200_16729_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
+      },
+      {
+        "name": "valid_hours_range",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "user_job_preferences",
+        "foreign_column": "hours_per_week_maximum"
+      },
+      {
+        "name": "valid_company_size_range",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "user_job_preferences",
+        "foreign_column": "company_size_minimum"
+      },
+      {
+        "name": "valid_company_size_range",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "user_job_preferences",
+        "foreign_column": "company_size_maximum"
+      },
+      {
+        "name": "user_job_preferences_work_life_balance_importance_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "user_job_preferences",
+        "foreign_column": "acceptable_stress"
       },
       {
         "name": "user_job_preferences_work_arrangement_check",
@@ -8727,11 +10087,11 @@
         "foreign_column": "industry_prestige_importance"
       },
       {
-        "name": "valid_company_size_range",
+        "name": "user_job_preferences_experience_level_maximum_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "user_job_preferences",
-        "foreign_column": "company_size_minimum"
+        "foreign_column": "experience_level_maximum"
       },
       {
         "name": "user_job_preferences_company_mission_alignment_importance_check",
@@ -8739,41 +10099,6 @@
         "column": null,
         "foreign_table": "user_job_preferences",
         "foreign_column": "company_mission_alignment_importance"
-      },
-      {
-        "name": "valid_company_size_range",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "user_job_preferences",
-        "foreign_column": "company_size_maximum"
-      },
-      {
-        "name": "valid_hours_range",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "user_job_preferences",
-        "foreign_column": "hours_per_week_minimum"
-      },
-      {
-        "name": "valid_hours_range",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "user_job_preferences",
-        "foreign_column": "hours_per_week_maximum"
-      },
-      {
-        "name": "user_job_preferences_work_life_balance_importance_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "user_job_preferences",
-        "foreign_column": "acceptable_stress"
-      },
-      {
-        "name": "user_job_preferences_experience_level_minimum_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "user_job_preferences",
-        "foreign_column": "experience_level_minimum"
       },
       {
         "name": "fk_user_job_preferences_candidate",
@@ -8799,21 +10124,21 @@
     ],
     "user_preference_packages": [
       {
-        "name": "2200_311296_2_not_null",
+        "name": "2200_16766_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_311296_1_not_null",
+        "name": "2200_16766_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_311296_3_not_null",
+        "name": "2200_16766_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8836,25 +10161,18 @@
     ],
     "user_preferred_industries": [
       {
+        "name": "2200_16775_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
         "name": "user_preferred_industries_priority_level_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "user_preferred_industries",
         "foreign_column": "priority_level"
-      },
-      {
-        "name": "2200_122962_3_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_122962_4_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
       },
       {
         "name": "user_preferred_industries_preference_type_check",
@@ -8864,7 +10182,14 @@
         "foreign_column": "preference_type"
       },
       {
-        "name": "2200_122962_1_not_null",
+        "name": "2200_16775_4_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16775_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -8889,6 +10214,13 @@
         "type": "UNIQUE",
         "column": "user_id",
         "foreign_table": "user_preferred_industries",
+        "foreign_column": "preference_type"
+      },
+      {
+        "name": "user_preferred_industries_user_id_industry_name_preference__key",
+        "type": "UNIQUE",
+        "column": "user_id",
+        "foreign_table": "user_preferred_industries",
         "foreign_column": "user_id"
       },
       {
@@ -8901,9 +10233,9 @@
       {
         "name": "user_preferred_industries_user_id_industry_name_preference__key",
         "type": "UNIQUE",
-        "column": "user_id",
+        "column": "industry_name",
         "foreign_table": "user_preferred_industries",
-        "foreign_column": "preference_type"
+        "foreign_column": "user_id"
       },
       {
         "name": "user_preferred_industries_user_id_industry_name_preference__key",
@@ -8922,7 +10254,14 @@
       {
         "name": "user_preferred_industries_user_id_industry_name_preference__key",
         "type": "UNIQUE",
-        "column": "industry_name",
+        "column": "preference_type",
+        "foreign_table": "user_preferred_industries",
+        "foreign_column": "industry_name"
+      },
+      {
+        "name": "user_preferred_industries_user_id_industry_name_preference__key",
+        "type": "UNIQUE",
+        "column": "preference_type",
         "foreign_table": "user_preferred_industries",
         "foreign_column": "user_id"
       },
@@ -8932,29 +10271,36 @@
         "column": "preference_type",
         "foreign_table": "user_preferred_industries",
         "foreign_column": "preference_type"
-      },
-      {
-        "name": "user_preferred_industries_user_id_industry_name_preference__key",
-        "type": "UNIQUE",
-        "column": "preference_type",
-        "foreign_table": "user_preferred_industries",
-        "foreign_column": "user_id"
-      },
-      {
-        "name": "user_preferred_industries_user_id_industry_name_preference__key",
-        "type": "UNIQUE",
-        "column": "preference_type",
-        "foreign_table": "user_preferred_industries",
-        "foreign_column": "industry_name"
       }
     ],
     "work_experiences": [
+      {
+        "name": "chk_work_experiences_dates",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "work_experiences",
+        "foreign_column": "end_date"
+      },
       {
         "name": "work_experiences_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "work_experiences",
-        "foreign_column": "end_date"
+        "foreign_column": "start_date"
+      },
+      {
+        "name": "2200_16782_4_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16782_5_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
       },
       {
         "name": "chk_work_experiences_dates",
@@ -8962,55 +10308,6 @@
         "column": null,
         "foreign_table": "work_experiences",
         "foreign_column": "start_date"
-      },
-      {
-        "name": "work_experiences_display_order_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "work_experiences",
-        "foreign_column": "display_order"
-      },
-      {
-        "name": "work_experiences_check",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": "work_experiences",
-        "foreign_column": "start_date"
-      },
-      {
-        "name": "2200_425984_1_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_425984_2_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_425984_3_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_425984_4_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
-      },
-      {
-        "name": "2200_425984_5_not_null",
-        "type": "CHECK",
-        "column": null,
-        "foreign_table": null,
-        "foreign_column": null
       },
       {
         "name": "chk_work_experiences_user_id_not_null",
@@ -9020,11 +10317,39 @@
         "foreign_column": "user_id"
       },
       {
-        "name": "chk_work_experiences_dates",
+        "name": "work_experiences_check",
         "type": "CHECK",
         "column": null,
         "foreign_table": "work_experiences",
         "foreign_column": "end_date"
+      },
+      {
+        "name": "2200_16782_2_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "work_experiences_display_order_check",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": "work_experiences",
+        "foreign_column": "display_order"
+      },
+      {
+        "name": "2200_16782_3_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
+      },
+      {
+        "name": "2200_16782_1_not_null",
+        "type": "CHECK",
+        "column": null,
+        "foreign_table": null,
+        "foreign_column": null
       },
       {
         "name": "fk_work_experiences_user",
@@ -9045,20 +10370,13 @@
         "type": "UNIQUE",
         "column": "user_id",
         "foreign_table": "work_experiences",
-        "foreign_column": "user_id"
+        "foreign_column": "display_order"
       },
       {
         "name": "uq_user_display_order",
         "type": "UNIQUE",
         "column": "user_id",
         "foreign_table": "work_experiences",
-        "foreign_column": "display_order"
-      },
-      {
-        "name": "uq_user_display_order",
-        "type": "UNIQUE",
-        "column": "display_order",
-        "foreign_table": "work_experiences",
         "foreign_column": "user_id"
       },
       {
@@ -9067,39 +10385,46 @@
         "column": "display_order",
         "foreign_table": "work_experiences",
         "foreign_column": "display_order"
+      },
+      {
+        "name": "uq_user_display_order",
+        "type": "UNIQUE",
+        "column": "display_order",
+        "foreign_table": "work_experiences",
+        "foreign_column": "user_id"
       }
     ],
     "workflow_checkpoints": [
       {
-        "name": "2200_319499_4_not_null",
+        "name": "2200_16795_5_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319499_5_not_null",
+        "name": "2200_16795_4_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319499_3_not_null",
+        "name": "2200_16795_3_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319499_2_not_null",
+        "name": "2200_16795_2_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
         "foreign_column": null
       },
       {
-        "name": "2200_319499_1_not_null",
+        "name": "2200_16795_1_not_null",
         "type": "CHECK",
         "column": null,
         "foreign_table": null,
@@ -9136,12 +10461,46 @@
         "definition": "CREATE INDEX idx_analyzed_jobs_department ON public.analyzed_jobs USING btree (department) WHERE (department IS NOT NULL)"
       },
       {
+        "name": "idx_analyzed_jobs_eligible",
+        "definition": "CREATE INDEX idx_analyzed_jobs_eligible ON public.analyzed_jobs USING btree (eligibility_flag, ai_analysis_completed, created_at DESC) WHERE ((eligibility_flag = true) AND ((application_status)::text = 'not_applied'::text))"
+      },
+      {
         "name": "idx_analyzed_jobs_hiring_manager",
         "definition": "CREATE INDEX idx_analyzed_jobs_hiring_manager ON public.analyzed_jobs USING btree (hiring_manager) WHERE (hiring_manager IS NOT NULL)"
       },
       {
         "name": "idx_analyzed_jobs_job_id",
         "definition": "CREATE INDEX idx_analyzed_jobs_job_id ON public.analyzed_jobs USING btree (job_id)"
+      }
+    ],
+    "apify_application_submissions": [
+      {
+        "name": "apify_application_submissions_pkey",
+        "definition": "CREATE UNIQUE INDEX apify_application_submissions_pkey ON public.apify_application_submissions USING btree (submission_id)"
+      },
+      {
+        "name": "idx_apify_application_submissions_actor_run_id",
+        "definition": "CREATE INDEX idx_apify_application_submissions_actor_run_id ON public.apify_application_submissions USING btree (actor_run_id)"
+      },
+      {
+        "name": "idx_apify_application_submissions_application_id",
+        "definition": "CREATE INDEX idx_apify_application_submissions_application_id ON public.apify_application_submissions USING btree (application_id)"
+      },
+      {
+        "name": "idx_apify_application_submissions_job_id",
+        "definition": "CREATE INDEX idx_apify_application_submissions_job_id ON public.apify_application_submissions USING btree (job_id)"
+      },
+      {
+        "name": "idx_apify_application_submissions_platform",
+        "definition": "CREATE INDEX idx_apify_application_submissions_platform ON public.apify_application_submissions USING btree (form_platform)"
+      },
+      {
+        "name": "idx_apify_application_submissions_status",
+        "definition": "CREATE INDEX idx_apify_application_submissions_status ON public.apify_application_submissions USING btree (status)"
+      },
+      {
+        "name": "idx_apify_application_submissions_submitted_at",
+        "definition": "CREATE INDEX idx_apify_application_submissions_submitted_at ON public.apify_application_submissions USING btree (submitted_at DESC)"
       }
     ],
     "application_documents": [
@@ -9162,6 +10521,24 @@
       {
         "name": "application_settings_pkey",
         "definition": "CREATE UNIQUE INDEX application_settings_pkey ON public.application_settings USING btree (setting_key)"
+      }
+    ],
+    "application_summary_mv": [
+      {
+        "name": "idx_app_summary_application_id",
+        "definition": "CREATE UNIQUE INDEX idx_app_summary_application_id ON public.application_summary_mv USING btree (application_id)"
+      },
+      {
+        "name": "idx_app_summary_company",
+        "definition": "CREATE INDEX idx_app_summary_company ON public.application_summary_mv USING btree (company_name)"
+      },
+      {
+        "name": "idx_app_summary_created",
+        "definition": "CREATE INDEX idx_app_summary_created ON public.application_summary_mv USING btree (created_at DESC)"
+      },
+      {
+        "name": "idx_app_summary_status",
+        "definition": "CREATE INDEX idx_app_summary_status ON public.application_summary_mv USING btree (application_status)"
       }
     ],
     "canadian_spellings": [
@@ -9238,12 +10615,52 @@
       {
         "name": "idx_companies_name_lower",
         "definition": "CREATE INDEX idx_companies_name_lower ON public.companies USING btree (lower((name)::text))"
+      },
+      {
+        "name": "idx_companies_name_trgm",
+        "definition": "CREATE INDEX idx_companies_name_trgm ON public.companies USING gin (name gin_trgm_ops)"
       }
     ],
     "consistency_validation_logs": [
       {
         "name": "consistency_validation_logs_pkey",
         "definition": "CREATE UNIQUE INDEX consistency_validation_logs_pkey ON public.consistency_validation_logs USING btree (id)"
+      }
+    ],
+    "dashboard_metrics_daily": [
+      {
+        "name": "dashboard_metrics_daily_metric_date_key",
+        "definition": "CREATE UNIQUE INDEX dashboard_metrics_daily_metric_date_key ON public.dashboard_metrics_daily USING btree (metric_date)"
+      },
+      {
+        "name": "dashboard_metrics_daily_pkey",
+        "definition": "CREATE UNIQUE INDEX dashboard_metrics_daily_pkey ON public.dashboard_metrics_daily USING btree (id)"
+      },
+      {
+        "name": "idx_metrics_daily_created",
+        "definition": "CREATE INDEX idx_metrics_daily_created ON public.dashboard_metrics_daily USING btree (created_at DESC)"
+      },
+      {
+        "name": "idx_metrics_daily_date",
+        "definition": "CREATE INDEX idx_metrics_daily_date ON public.dashboard_metrics_daily USING btree (metric_date DESC)"
+      }
+    ],
+    "dashboard_metrics_hourly": [
+      {
+        "name": "dashboard_metrics_hourly_metric_hour_key",
+        "definition": "CREATE UNIQUE INDEX dashboard_metrics_hourly_metric_hour_key ON public.dashboard_metrics_hourly USING btree (metric_hour)"
+      },
+      {
+        "name": "dashboard_metrics_hourly_pkey",
+        "definition": "CREATE UNIQUE INDEX dashboard_metrics_hourly_pkey ON public.dashboard_metrics_hourly USING btree (id)"
+      },
+      {
+        "name": "idx_metrics_hourly_created",
+        "definition": "CREATE INDEX idx_metrics_hourly_created ON public.dashboard_metrics_hourly USING btree (created_at DESC)"
+      },
+      {
+        "name": "idx_metrics_hourly_hour",
+        "definition": "CREATE INDEX idx_metrics_hourly_hour ON public.dashboard_metrics_hourly USING btree (metric_hour DESC)"
       }
     ],
     "data_corrections": [
@@ -9314,6 +10731,36 @@
         "definition": "CREATE UNIQUE INDEX job_analysis_queue_pkey ON public.job_analysis_queue USING btree (id)"
       }
     ],
+    "job_analysis_tiers": [
+      {
+        "name": "idx_job_analysis_tiers_created",
+        "definition": "CREATE INDEX idx_job_analysis_tiers_created ON public.job_analysis_tiers USING btree (created_at)"
+      },
+      {
+        "name": "idx_job_analysis_tiers_job_id",
+        "definition": "CREATE INDEX idx_job_analysis_tiers_job_id ON public.job_analysis_tiers USING btree (job_id)"
+      },
+      {
+        "name": "idx_job_analysis_tiers_tier1",
+        "definition": "CREATE INDEX idx_job_analysis_tiers_tier1 ON public.job_analysis_tiers USING btree (tier_1_completed)"
+      },
+      {
+        "name": "idx_job_analysis_tiers_tier2",
+        "definition": "CREATE INDEX idx_job_analysis_tiers_tier2 ON public.job_analysis_tiers USING btree (tier_2_completed)"
+      },
+      {
+        "name": "idx_job_analysis_tiers_tier3",
+        "definition": "CREATE INDEX idx_job_analysis_tiers_tier3 ON public.job_analysis_tiers USING btree (tier_3_completed)"
+      },
+      {
+        "name": "job_analysis_tiers_job_id_key",
+        "definition": "CREATE UNIQUE INDEX job_analysis_tiers_job_id_key ON public.job_analysis_tiers USING btree (job_id)"
+      },
+      {
+        "name": "job_analysis_tiers_pkey",
+        "definition": "CREATE UNIQUE INDEX job_analysis_tiers_pkey ON public.job_analysis_tiers USING btree (id)"
+      }
+    ],
     "job_application_tracking": [
       {
         "name": "idx_job_application_tracking_app_id",
@@ -9329,6 +10776,22 @@
       }
     ],
     "job_applications": [
+      {
+        "name": "idx_applications_created_status",
+        "definition": "CREATE INDEX idx_applications_created_status ON public.job_applications USING btree (created_at DESC, application_status)"
+      },
+      {
+        "name": "idx_job_apps_created_at",
+        "definition": "CREATE INDEX idx_job_apps_created_at ON public.job_applications USING btree (created_at DESC)"
+      },
+      {
+        "name": "idx_job_apps_job_id",
+        "definition": "CREATE INDEX idx_job_apps_job_id ON public.job_applications USING btree (job_id)"
+      },
+      {
+        "name": "idx_job_apps_status",
+        "definition": "CREATE INDEX idx_job_apps_status ON public.job_applications USING btree (application_status)"
+      },
       {
         "name": "job_applications_pkey",
         "definition": "CREATE UNIQUE INDEX job_applications_pkey ON public.job_applications USING btree (id)"
@@ -9474,8 +10937,16 @@
         "definition": "CREATE INDEX idx_jobs_company_analysis ON public.jobs USING btree (company_id, analysis_completed)"
       },
       {
+        "name": "idx_jobs_company_id",
+        "definition": "CREATE INDEX idx_jobs_company_id ON public.jobs USING btree (company_id)"
+      },
+      {
         "name": "idx_jobs_created_at",
         "definition": "CREATE INDEX idx_jobs_created_at ON public.jobs USING btree (created_at DESC)"
+      },
+      {
+        "name": "idx_jobs_eligibility_status",
+        "definition": "CREATE INDEX idx_jobs_eligibility_status ON public.jobs USING btree (eligibility_flag, application_status, created_at DESC) WHERE (eligibility_flag = true)"
       },
       {
         "name": "idx_jobs_title_lower",
@@ -9540,6 +11011,10 @@
     ],
     "pre_analyzed_jobs": [
       {
+        "name": "idx_pre_analyzed_queued",
+        "definition": "CREATE INDEX idx_pre_analyzed_queued ON public.pre_analyzed_jobs USING btree (queued_for_analysis, created_at DESC) WHERE (queued_for_analysis = true)"
+      },
+      {
         "name": "pre_analyzed_jobs_pkey",
         "definition": "CREATE UNIQUE INDEX pre_analyzed_jobs_pkey ON public.pre_analyzed_jobs USING btree (id)"
       }
@@ -9574,6 +11049,28 @@
       {
         "name": "recovery_statistics_pkey",
         "definition": "CREATE UNIQUE INDEX recovery_statistics_pkey ON public.recovery_statistics USING btree (id)"
+      }
+    ],
+    "security_detections": [
+      {
+        "name": "idx_security_detections_detected_at",
+        "definition": "CREATE INDEX idx_security_detections_detected_at ON public.security_detections USING btree (detected_at)"
+      },
+      {
+        "name": "idx_security_detections_job_id",
+        "definition": "CREATE INDEX idx_security_detections_job_id ON public.security_detections USING btree (job_id)"
+      },
+      {
+        "name": "idx_security_detections_severity",
+        "definition": "CREATE INDEX idx_security_detections_severity ON public.security_detections USING btree (severity)"
+      },
+      {
+        "name": "idx_security_detections_type",
+        "definition": "CREATE INDEX idx_security_detections_type ON public.security_detections USING btree (detection_type)"
+      },
+      {
+        "name": "security_detections_pkey",
+        "definition": "CREATE UNIQUE INDEX security_detections_pkey ON public.security_detections USING btree (id)"
       }
     ],
     "sentence_bank_cover_letter": [
@@ -9685,6 +11182,6 @@
       }
     ]
   },
-  "generated_at": "2025-09-12T13:08:24.645397",
-  "database_name": "neondb"
+  "generated_at": "2025-10-24T02:33:14.910196",
+  "database_name": "unknown"
 }

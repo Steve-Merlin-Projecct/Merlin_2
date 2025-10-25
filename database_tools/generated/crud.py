@@ -1,6 +1,6 @@
 """
 Auto-generated CRUD Operations
-Generated from database schema on 2025-09-12 13:08:25
+Generated from database schema on 2025-10-24 02:33:15
 """
 
 from sqlalchemy.orm import Session
@@ -88,6 +88,84 @@ class AnalyzedJobsCRUD:
         Get analyzed_jobs records by status
         """
         return db.query(AnalyzedJobs).filter(AnalyzedJobs.application_status == status).all()
+
+
+
+class ApifyApplicationSubmissionsCRUD:
+    """
+    CRUD operations for apify_application_submissions table
+    """
+
+    @staticmethod
+    def create(db: Session, obj_data: Dict[str, Any]) -> ApifyApplicationSubmissions:
+        """
+        Create a new apify_application_submissions record
+        """
+        db_obj = ApifyApplicationSubmissions(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def get_by_id(db: Session, submission_id: UUID) -> Optional[ApifyApplicationSubmissions]:
+        """
+        Get apify_application_submissions by ID
+        """
+        return db.query(ApifyApplicationSubmissions).filter(ApifyApplicationSubmissions.submission_id == submission_id).first()
+
+    @staticmethod
+    def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[ApifyApplicationSubmissions]:
+        """
+        Get all apify_application_submissions records with pagination
+        """
+        return db.query(ApifyApplicationSubmissions).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def update(db: Session, submission_id: UUID, update_data: Dict[str, Any]) -> Optional[ApifyApplicationSubmissions]:
+        """
+        Update apify_application_submissions record
+        """
+        db_obj = db.query(ApifyApplicationSubmissions).filter(ApifyApplicationSubmissions.submission_id == submission_id).first()
+        if db_obj:
+            for field, value in update_data.items():
+                if hasattr(db_obj, field):
+                    setattr(db_obj, field, value)
+            db.commit()
+            db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def delete(db: Session, submission_id: UUID) -> bool:
+        """
+        Delete apify_application_submissions record
+        """
+        db_obj = db.query(ApifyApplicationSubmissions).filter(ApifyApplicationSubmissions.submission_id == submission_id).first()
+        if db_obj:
+            db.delete(db_obj)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def search(db: Session, query: str, limit: int = 50) -> List[ApifyApplicationSubmissions]:
+        """
+        Search apify_application_submissions records by text content
+        """
+        return db.query(ApifyApplicationSubmissions).filter(
+            db.or_(
+                ApifyApplicationSubmissions.application_id.ilike(f'%{query}%'),
+                ApifyApplicationSubmissions.job_id.ilike(f'%{query}%'),
+                ApifyApplicationSubmissions.actor_run_id.ilike(f'%{query}%'),
+            )
+        ).limit(limit).all()
+
+    @staticmethod
+    def get_by_status(db: Session, status: str) -> List[ApifyApplicationSubmissions]:
+        """
+        Get apify_application_submissions records by status
+        """
+        return db.query(ApifyApplicationSubmissions).filter(ApifyApplicationSubmissions.status == status).all()
 
 
 
@@ -577,6 +655,145 @@ class ConsistencyValidationLogsCRUD:
                 ConsistencyValidationLogs.issue_type.ilike(f'%{query}%'),
                 ConsistencyValidationLogs.severity.ilike(f'%{query}%'),
                 ConsistencyValidationLogs.description.ilike(f'%{query}%'),
+            )
+        ).limit(limit).all()
+
+
+
+class DashboardMetricsDailyCRUD:
+    """
+    CRUD operations for dashboard_metrics_daily table
+    """
+
+    @staticmethod
+    def create(db: Session, obj_data: Dict[str, Any]) -> DashboardMetricsDaily:
+        """
+        Create a new dashboard_metrics_daily record
+        """
+        db_obj = DashboardMetricsDaily(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def get_by_id(db: Session, id: UUID) -> Optional[DashboardMetricsDaily]:
+        """
+        Get dashboard_metrics_daily by ID
+        """
+        return db.query(DashboardMetricsDaily).filter(DashboardMetricsDaily.id == id).first()
+
+    @staticmethod
+    def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[DashboardMetricsDaily]:
+        """
+        Get all dashboard_metrics_daily records with pagination
+        """
+        return db.query(DashboardMetricsDaily).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def update(db: Session, id: UUID, update_data: Dict[str, Any]) -> Optional[DashboardMetricsDaily]:
+        """
+        Update dashboard_metrics_daily record
+        """
+        db_obj = db.query(DashboardMetricsDaily).filter(DashboardMetricsDaily.id == id).first()
+        if db_obj:
+            for field, value in update_data.items():
+                if hasattr(db_obj, field):
+                    setattr(db_obj, field, value)
+            db.commit()
+            db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def delete(db: Session, id: UUID) -> bool:
+        """
+        Delete dashboard_metrics_daily record
+        """
+        db_obj = db.query(DashboardMetricsDaily).filter(DashboardMetricsDaily.id == id).first()
+        if db_obj:
+            db.delete(db_obj)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def search(db: Session, query: str, limit: int = 50) -> List[DashboardMetricsDaily]:
+        """
+        Search dashboard_metrics_daily records by text content
+        """
+        return db.query(DashboardMetricsDaily).filter(
+            db.or_(
+                DashboardMetricsDaily.ai_model_used.ilike(f'%{query}%'),
+                DashboardMetricsDaily.pipeline_bottleneck.ilike(f'%{query}%'),
+            )
+        ).limit(limit).all()
+
+
+
+class DashboardMetricsHourlyCRUD:
+    """
+    CRUD operations for dashboard_metrics_hourly table
+    """
+
+    @staticmethod
+    def create(db: Session, obj_data: Dict[str, Any]) -> DashboardMetricsHourly:
+        """
+        Create a new dashboard_metrics_hourly record
+        """
+        db_obj = DashboardMetricsHourly(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def get_by_id(db: Session, id: UUID) -> Optional[DashboardMetricsHourly]:
+        """
+        Get dashboard_metrics_hourly by ID
+        """
+        return db.query(DashboardMetricsHourly).filter(DashboardMetricsHourly.id == id).first()
+
+    @staticmethod
+    def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[DashboardMetricsHourly]:
+        """
+        Get all dashboard_metrics_hourly records with pagination
+        """
+        return db.query(DashboardMetricsHourly).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def update(db: Session, id: UUID, update_data: Dict[str, Any]) -> Optional[DashboardMetricsHourly]:
+        """
+        Update dashboard_metrics_hourly record
+        """
+        db_obj = db.query(DashboardMetricsHourly).filter(DashboardMetricsHourly.id == id).first()
+        if db_obj:
+            for field, value in update_data.items():
+                if hasattr(db_obj, field):
+                    setattr(db_obj, field, value)
+            db.commit()
+            db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def delete(db: Session, id: UUID) -> bool:
+        """
+        Delete dashboard_metrics_hourly record
+        """
+        db_obj = db.query(DashboardMetricsHourly).filter(DashboardMetricsHourly.id == id).first()
+        if db_obj:
+            db.delete(db_obj)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def search(db: Session, query: str, limit: int = 50) -> List[DashboardMetricsHourly]:
+        """
+        Search dashboard_metrics_hourly records by text content
+        """
+        return db.query(DashboardMetricsHourly).filter(
+            db.or_(
+                DashboardMetricsHourly.pipeline_bottleneck.ilike(f'%{query}%'),
             )
         ).limit(limit).all()
 
@@ -1157,6 +1374,77 @@ class JobAnalysisQueueCRUD:
         Get job_analysis_queue records by status
         """
         return db.query(JobAnalysisQueue).filter(JobAnalysisQueue.status == status).all()
+
+
+
+class JobAnalysisTiersCRUD:
+    """
+    CRUD operations for job_analysis_tiers table
+    """
+
+    @staticmethod
+    def create(db: Session, obj_data: Dict[str, Any]) -> JobAnalysisTiers:
+        """
+        Create a new job_analysis_tiers record
+        """
+        db_obj = JobAnalysisTiers(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def get_by_id(db: Session, id: UUID) -> Optional[JobAnalysisTiers]:
+        """
+        Get job_analysis_tiers by ID
+        """
+        return db.query(JobAnalysisTiers).filter(JobAnalysisTiers.id == id).first()
+
+    @staticmethod
+    def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[JobAnalysisTiers]:
+        """
+        Get all job_analysis_tiers records with pagination
+        """
+        return db.query(JobAnalysisTiers).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def update(db: Session, id: UUID, update_data: Dict[str, Any]) -> Optional[JobAnalysisTiers]:
+        """
+        Update job_analysis_tiers record
+        """
+        db_obj = db.query(JobAnalysisTiers).filter(JobAnalysisTiers.id == id).first()
+        if db_obj:
+            for field, value in update_data.items():
+                if hasattr(db_obj, field):
+                    setattr(db_obj, field, value)
+            db.commit()
+            db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def delete(db: Session, id: UUID) -> bool:
+        """
+        Delete job_analysis_tiers record
+        """
+        db_obj = db.query(JobAnalysisTiers).filter(JobAnalysisTiers.id == id).first()
+        if db_obj:
+            db.delete(db_obj)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def search(db: Session, query: str, limit: int = 50) -> List[JobAnalysisTiers]:
+        """
+        Search job_analysis_tiers records by text content
+        """
+        return db.query(JobAnalysisTiers).filter(
+            db.or_(
+                JobAnalysisTiers.tier_1_model.ilike(f'%{query}%'),
+                JobAnalysisTiers.tier_2_model.ilike(f'%{query}%'),
+                JobAnalysisTiers.tier_3_model.ilike(f'%{query}%'),
+            )
+        ).limit(limit).all()
 
 
 
@@ -2660,6 +2948,77 @@ class RecoveryStatisticsCRUD:
         return db.query(RecoveryStatistics).filter(
             db.or_(
                 RecoveryStatistics.failure_type.ilike(f'%{query}%'),
+            )
+        ).limit(limit).all()
+
+
+
+class SecurityDetectionsCRUD:
+    """
+    CRUD operations for security_detections table
+    """
+
+    @staticmethod
+    def create(db: Session, obj_data: Dict[str, Any]) -> SecurityDetections:
+        """
+        Create a new security_detections record
+        """
+        db_obj = SecurityDetections(**obj_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def get_by_id(db: Session, id: UUID) -> Optional[SecurityDetections]:
+        """
+        Get security_detections by ID
+        """
+        return db.query(SecurityDetections).filter(SecurityDetections.id == id).first()
+
+    @staticmethod
+    def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[SecurityDetections]:
+        """
+        Get all security_detections records with pagination
+        """
+        return db.query(SecurityDetections).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def update(db: Session, id: UUID, update_data: Dict[str, Any]) -> Optional[SecurityDetections]:
+        """
+        Update security_detections record
+        """
+        db_obj = db.query(SecurityDetections).filter(SecurityDetections.id == id).first()
+        if db_obj:
+            for field, value in update_data.items():
+                if hasattr(db_obj, field):
+                    setattr(db_obj, field, value)
+            db.commit()
+            db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def delete(db: Session, id: UUID) -> bool:
+        """
+        Delete security_detections record
+        """
+        db_obj = db.query(SecurityDetections).filter(SecurityDetections.id == id).first()
+        if db_obj:
+            db.delete(db_obj)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def search(db: Session, query: str, limit: int = 50) -> List[SecurityDetections]:
+        """
+        Search security_detections records by text content
+        """
+        return db.query(SecurityDetections).filter(
+            db.or_(
+                SecurityDetections.detection_type.ilike(f'%{query}%'),
+                SecurityDetections.severity.ilike(f'%{query}%'),
+                SecurityDetections.pattern_matched.ilike(f'%{query}%'),
             )
         ).limit(limit).all()
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Database Schema - Job Application System</title>
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/static/css/unified-theme.css" rel="stylesheet">
     <style>
@@ -182,7 +182,7 @@
                     <div class="card-body">
                         <div class="auto-generated-note">
                             <i class="fas fa-robot me-2"></i>
-                            <strong>Auto-generated:</strong> This schema was automatically generated from the live database on 2025-09-12 13:07:20. 
+                            <strong>Auto-generated:</strong> This schema was automatically generated from the live database on 2025-10-24 02:32:41. 
                             Run <code>python tools/schema_html_generator.py</code> to update.
                         </div>
                         
@@ -474,6 +474,88 @@
                 </div>
                 <div class="table-field">
                     <span class="field-name">additional_insights</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">apify_application_submissions</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">submission_id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_id</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">job_id</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">actor_run_id</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">status</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">form_platform</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">form_type</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">fields_filled</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">submission_confirmed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">confirmation_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">screenshot_urls</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">screenshot_metadata</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_message</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">error_details</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">submitted_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">reviewed_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">reviewed_by</span>
+                    <span class="field-type">VARCHAR(255)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">review_notes</span>
                     <span class="field-type">TEXT</span>
                 </div>
             </div>            <div class="table-box">
@@ -801,6 +883,210 @@
                     <span class="field-type">TIMESTAMP</span>
                 </div>
             </div>            <div class="table-box">
+                <div class="table-header">dashboard_metrics_daily</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">metric_date</span>
+                    <span class="field-type">DATE</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_scraped_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_cleaned_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_deduplicated_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraping_errors_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraping_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraping_peak_hour</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_analyzed_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_requests_sent</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_tokens_input</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_tokens_output</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_cost_incurred</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_model_used</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_sent_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_success_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_failed_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">documents_generated_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">success_rate</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pipeline_conversion_rate</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pipeline_bottleneck</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">total_pipeline_jobs</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_trend_pct</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_trend_pct</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">dashboard_metrics_hourly</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">metric_hour</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_scraped_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_cleaned_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_deduplicated_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraping_errors_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">scraping_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">jobs_analyzed_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_requests_sent</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_tokens_input</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_tokens_output</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_cost_incurred</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">ai_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_sent_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_success_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">applications_failed_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">documents_generated_count</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">application_avg_duration_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pipeline_conversion_rate</span>
+                    <span class="field-type">NUMERIC</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pipeline_bottleneck</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
                 <div class="table-header">data_corrections</div>
                 <div class="table-field">
                     <span class="field-name primary-key">id</span>
@@ -1084,6 +1370,84 @@
                 </div>
                 <div class="table-field">
                     <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+            </div>            <div class="table-box">
+                <div class="table-header">job_analysis_tiers</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_1_completed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_1_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_1_tokens_used</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_1_model</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_1_response_time_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_2_completed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_2_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_2_tokens_used</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_2_model</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_2_response_time_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_3_completed</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_3_timestamp</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_3_tokens_used</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_3_model</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">tier_3_response_time_ms</span>
+                    <span class="field-type">INTEGER</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">created_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">updated_at</span>
                     <span class="field-type">TIMESTAMP</span>
                 </div>
             </div>            <div class="table-box">
@@ -1997,6 +2361,48 @@
                     <span class="field-type">TIMESTAMP</span>
                 </div>
             </div>            <div class="table-box">
+                <div class="table-header">security_detections</div>
+                <div class="table-field">
+                    <span class="field-name primary-key">id</span>
+                    <span class="field-type">UUID (PK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name foreign-key">job_id</span>
+                    <span class="field-type">UUID (FK)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">detection_type</span>
+                    <span class="field-type">VARCHAR(50)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">severity</span>
+                    <span class="field-type">VARCHAR(20)</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">pattern_matched</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">text_sample</span>
+                    <span class="field-type">TEXT</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">metadata</span>
+                    <span class="field-type">JSONB</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">detected_at</span>
+                    <span class="field-type">TIMESTAMP</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">handled</span>
+                    <span class="field-type">BOOLEAN</span>
+                </div>
+                <div class="table-field">
+                    <span class="field-name">action_taken</span>
+                    <span class="field-type">VARCHAR(100)</span>
+                </div>
+            </div>            <div class="table-box">
                 <div class="table-header">security_test_table</div>
                 <div class="table-field">
                     <span class="field-name">id</span>
@@ -2818,7 +3224,7 @@
                 </div>
             </div>
                                 <div class="relationship-note">
-                                    <strong>Relationships:</strong> jobs.id → link_tracking.job_id | job_applications.id → link_tracking.application_id
+                                    <strong>Relationships:</strong> job_applications.id → link_tracking.application_id | jobs.id → link_tracking.job_id
                                 </div>
                             </div>
                         </div>
