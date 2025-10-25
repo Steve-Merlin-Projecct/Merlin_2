@@ -69,6 +69,48 @@ Prohibited Actions:
 - Never manually create commits without validation
 - Never skip test runs before committing
 
+**Work Estimation Policy:**
+Always provide work estimates in tokens, not traditional time units (hours/days).
+
+Context:
+- AI agent execution is near-instantaneous (seconds, not hours)
+- Token consumption is the actual resource constraint for agent work
+- Traditional time estimates are misleading and create false expectations
+- User effort (manual review, decision-making) should still use time estimates
+
+Estimation Guidelines:
+- **Small tasks:** 5,000-15,000 tokens
+  - Simple file edits, single-file refactoring, basic documentation updates
+  - Examples: Updating configuration, adding docstrings, simple bug fixes
+- **Medium tasks:** 15,000-50,000 tokens
+  - Multi-file changes, moderate refactoring, feature additions
+  - Examples: Adding new endpoints, updating related components, comprehensive testing
+- **Large tasks:** 50,000-100,000+ tokens
+  - System-wide changes, architectural updates, complex feature implementations
+  - Examples: Database migrations, security overhauls, major feature rollouts
+
+Work Type Distinction:
+- **Agent work:** Estimate in tokens (code changes, analysis, generation)
+- **User work:** Estimate in time (reviews, testing, manual configurations)
+- **Combined work:** Provide separate estimates for each component
+
+Examples:
+```
+Correct:
+"This refactoring will consume approximately 25,000 tokens for code changes,
+plus 15 minutes for you to review and test the changes."
+
+Incorrect:
+"This will take about 2 hours to complete."
+(Misleading - agent completes work in seconds)
+```
+
+Prohibited Actions:
+- Never estimate agent work in hours, days, or other time units
+- Never use vague estimates like "quickly" or "soon" without token counts
+- Never omit estimates for substantial work (>5,000 tokens)
+- Never combine agent token estimates with user time estimates into single number
+
 **Worktree Error Prevention System (NEW - v4.3.3):**
 The `/tree build` command now includes comprehensive error prevention:
 - Pre-flight validation detects and removes orphaned directories/branches
